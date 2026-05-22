@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-05-22T12:21:40.856Z",
+  "generatedAt": "2026-05-22T14:29:20.728Z",
   "outputDir": "crawl-preview",
   "totalSources": 18,
-  "totalEvents": 496,
+  "totalEvents": 285,
   "totalErrors": 0,
   "organizations": [
     {
@@ -33,31 +33,13 @@
       "warningCount": 3
     },
     {
-      "organizationId": "fitschedule",
-      "organizationName": "FitSchedule",
-      "file": "crawl-preview/fitschedule.json",
-      "sourceCount": 1,
-      "eventCount": 171,
-      "errorCount": 0,
-      "warningCount": 3
-    },
-    {
-      "organizationId": "icn-korea",
-      "organizationName": "ICN Korea",
-      "file": "crawl-preview/icn-korea.json",
-      "sourceCount": 1,
-      "eventCount": 0,
-      "errorCount": 0,
-      "warningCount": 2
-    },
-    {
       "organizationId": "inba-pnba",
       "organizationName": "INBA / PNBA",
       "file": "crawl-preview/inba-pnba.json",
       "sourceCount": 1,
-      "eventCount": 40,
+      "eventCount": 0,
       "errorCount": 0,
-      "warningCount": 4
+      "warningCount": 6
     },
     {
       "organizationId": "j-classic",

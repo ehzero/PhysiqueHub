@@ -72,12 +72,12 @@ export async function crawlNacKorea(
         : [];
     const warnings = [
       "NAC Korea 공식 대회접수 카테고리의 공개 상품 목록을 수집합니다.",
-      "공식 접수 HTML에는 2026 대회일/장소가 직접 노출되지 않아 FitSchedule 후보값으로 보강하고 needs-review로 둡니다.",
+      "공식 접수 HTML에는 2026 대회일/장소가 직접 노출되지 않아 보조 후보값으로 보강하고 needs-review로 둡니다.",
       `${pageData.products.length}개 접수 상품을 종목 후보로 추출했습니다.`,
     ];
 
     if (!fitScheduleCandidate) {
-      warnings.push("FitSchedule에서 NAC Korea 후보 일정을 찾지 못해 날짜/장소는 비워둡니다.");
+      warnings.push("보조 후보에서 NAC Korea 일정을 찾지 못해 날짜/장소는 비워둡니다.");
     }
 
     if (events.length === 0) {
@@ -152,13 +152,13 @@ function createNacEvent(
       field: "date" as const,
       severity: "warning" as const,
       message:
-        "NAC Korea 공식 접수 HTML에 대회일이 직접 노출되지 않아 FitSchedule 후보값으로 보강했습니다.",
+        "NAC Korea 공식 접수 HTML에 대회일이 직접 노출되지 않아 보조 후보값으로 보강했습니다.",
     },
     {
       field: "location" as const,
       severity: "warning" as const,
       message:
-        "NAC Korea 공식 접수 HTML에 장소가 직접 노출되지 않아 FitSchedule 후보값으로 보강했습니다.",
+        "NAC Korea 공식 접수 HTML에 장소가 직접 노출되지 않아 보조 후보값으로 보강했습니다.",
     },
   ];
 
@@ -166,7 +166,7 @@ function createNacEvent(
     qualityIssues.push({
       field: "source" as const,
       severity: "warning" as const,
-      message: "FitSchedule 보조 후보를 찾지 못했습니다.",
+      message: "보조 후보를 찾지 못했습니다.",
     });
   }
 
@@ -212,7 +212,7 @@ function createNacEvent(
     confidence: "low",
     qualityIssues,
     notes:
-      "NAC Korea 공식 대회접수 상품 목록을 기준으로 수집했습니다. 날짜/장소는 공식 HTML에 직접 노출되지 않아 FitSchedule 후보와 교차 보강한 preview 데이터입니다.",
+      "NAC Korea 공식 대회접수 상품 목록을 기준으로 수집했습니다. 날짜/장소는 공식 HTML에 직접 노출되지 않아 보조 후보와 교차 보강한 preview 데이터입니다.",
   });
 }
 
@@ -270,7 +270,7 @@ function degradeCandidateDate(date: CompetitionDateRange): CompetitionDateRange 
     startsOn: date.startsOn,
     endsOn: date.endsOn,
     timezone: date.timezone,
-    rawText: date.rawText ? `${date.rawText} (FitSchedule 보조)` : "FitSchedule 보조",
+    rawText: date.rawText ? `${date.rawText} (보조 후보)` : "보조 후보",
     confidence: "low",
   };
 }
@@ -282,7 +282,7 @@ function degradeCandidateLocation(location: CompetitionLocation): CompetitionLoc
     city: location.city,
     venue: location.venue,
     address: location.address,
-    rawText: location.rawText ? `${location.rawText} (FitSchedule 보조)` : "FitSchedule 보조",
+    rawText: location.rawText ? `${location.rawText} (보조 후보)` : "보조 후보",
     confidence: "low",
   };
 }

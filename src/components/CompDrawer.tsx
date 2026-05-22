@@ -1,7 +1,14 @@
 "use client";
 
 import { useEffect } from "react";
-import { Competition, parseDate, regStatus, daysBetween, fmtDate, TODAY } from "@/lib/data";
+import {
+  Competition,
+  parseDate,
+  regStatusAt,
+  daysBetween,
+  fmtDate,
+  formatDday,
+} from "@/lib/data";
 import { Icons } from "./Icons";
 import { PosterFigure, posterFigureColor } from "./PosterFigure";
 
@@ -13,9 +20,17 @@ interface CompDrawerProps {
   onClose: () => void;
   isSaved: boolean;
   onToggleSave: (id: string) => void;
+  today: Date;
 }
 
-export function CompDrawer({ comp, isOpen, onClose, isSaved, onToggleSave }: CompDrawerProps) {
+export function CompDrawer({
+  comp,
+  isOpen,
+  onClose,
+  isSaved,
+  onToggleSave,
+  today,
+}: CompDrawerProps) {
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") onClose();
@@ -33,11 +48,22 @@ export function CompDrawer({ comp, isOpen, onClose, isSaved, onToggleSave }: Com
     );
   }
 
-  const status = regStatus(comp);
+  const status = regStatusAt(comp, today);
   const compDate = parseDate(comp.date);
-  const ddComp = Math.round((compDate.getTime() - TODAY.getTime()) / 86400000);
-  const ddClose = daysBetween(TODAY, comp.regClose);
-  const variant = comp.id.charCodeAt(2) % 6;
+  const ddComp = Math.round((compDate.getTime() - today.getTime()) / 86400000);
+  const ddClose = daysBetween(today, comp.regClose);
+  const variant = comp.id.charCodeAt(Math.min(2, comp.id.length - 1)) % 6;
+  const dateLabel = comp.dateEnd
+    ? `${fmtDate(comp.date, { style: "long" })} → ${fmtDate(comp.dateEnd, { style: "long" })}`
+    : fmtDate(comp.date, { style: "long" });
+  const registrationLabel =
+    comp.registrationStatus === "unknown"
+      ? comp.regClose === comp.date
+        ? status.kind === "closed"
+          ? "접수 마감"
+          : "공식 접수 정보 확인 필요"
+        : `마감 ${fmtDate(comp.regClose, { style: "long" })}`
+      : `${fmtDate(comp.regOpen, { style: "long" })} → ${fmtDate(comp.regClose, { style: "long" })}`;
 
   return (
     <>
@@ -72,15 +98,15 @@ export function CompDrawer({ comp, isOpen, onClose, isSaved, onToggleSave }: Com
           <div className="drawer-status-bar">
             <div className="cell">
               <div className="lbl">대회일</div>
-              <div className="val">D{ddComp >= 0 ? "-" : "+"}{Math.abs(ddComp)}</div>
+              <div className="val">{formatDday(ddComp)}</div>
             </div>
             <div className={`cell ${status.kind === "urgent" ? "urgent" : ""}`}>
               <div className="lbl">접수 마감</div>
-              <div className="val">{ddClose >= 0 ? `D-${ddClose}` : "마감"}</div>
+              <div className="val">{ddClose >= 0 ? formatDday(ddClose) : "마감"}</div>
             </div>
             <div className="cell">
               <div className="lbl">참가비</div>
-              <div className="val">{(comp.fee / 10000).toFixed(0)}만원</div>
+              <div className="val">{comp.fee > 0 ? `${(comp.fee / 10000).toFixed(0)}만원` : "확인"}</div>
             </div>
             <div className="cell">
               <div className="lbl">참가 가능</div>
@@ -95,12 +121,12 @@ export function CompDrawer({ comp, isOpen, onClose, isSaved, onToggleSave }: Com
           <dl className="kv-grid">
             <dt>개최일</dt>
             <dd>
-              {fmtDate(comp.date, { style: "long" })} ({DAYS_KO[parseDate(comp.date).getDay()]}요일)
+              {dateLabel} ({DAYS_KO[parseDate(comp.date).getDay()]}요일)
             </dd>
 
             <dt>접수 기간</dt>
             <dd>
-              {fmtDate(comp.regOpen, { style: "long" })} → {fmtDate(comp.regClose, { style: "long" })}
+              {registrationLabel}
             </dd>
 
             <dt>장소</dt>
@@ -122,7 +148,7 @@ export function CompDrawer({ comp, isOpen, onClose, isSaved, onToggleSave }: Com
             <dd>{comp.classes}</dd>
 
             <dt>참가비</dt>
-            <dd className="mono">₩ {comp.fee.toLocaleString()}</dd>
+            <dd className="mono">{comp.fee > 0 ? `₩ ${comp.fee.toLocaleString()}` : "확인 필요"}</dd>
 
             <dt>대회 이력</dt>
             <dd>
@@ -148,7 +174,9 @@ export function CompDrawer({ comp, isOpen, onClose, isSaved, onToggleSave }: Com
             <dt>공식 채널</dt>
             <dd>
               <a
-                href="#"
+                href={comp.sourceUrl || comp.registrationUrl || "#"}
+                target="_blank"
+                rel="noreferrer"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -157,20 +185,25 @@ export function CompDrawer({ comp, isOpen, onClose, isSaved, onToggleSave }: Com
                   paddingBottom: 1,
                 }}
               >
-                Instagram {comp.instagram} {Icons.ext}
+                공식 소스 {Icons.ext}
               </a>
             </dd>
           </dl>
         </div>
 
         <div className="drawer-actions-row">
-          <button className="cta-btn accent">
+          <a
+            className="cta-btn accent"
+            href={comp.registrationUrl || comp.sourceUrl || "#"}
+            target={comp.registrationUrl || comp.sourceUrl ? "_blank" : undefined}
+            rel={comp.registrationUrl || comp.sourceUrl ? "noreferrer" : undefined}
+          >
             {status.kind === "closed"
               ? "접수 마감"
               : status.kind === "soon"
               ? "접수 예정"
               : "접수 페이지로 →"}
-          </button>
+          </a>
         </div>
       </aside>
     </>

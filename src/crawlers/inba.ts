@@ -49,10 +49,12 @@ export async function crawlInbaPnba(
     const $ = cheerio.load(html);
     const rows = extractScheduleRows($);
     const competitionRows = rows.filter((row) => !/workshop/i.test(row.title));
-    const events = competitionRows.map((row) => createInbaEvent(row, fetchedAt));
+    const normalizedEvents = competitionRows.map((row) => createInbaEvent(row, fetchedAt));
+    const events = normalizedEvents.filter((event) => event.location.country === "KR");
     const skippedWorkshops = rows.length - competitionRows.length;
+    const skippedGlobalEvents = normalizedEvents.length - events.length;
     const warnings = [
-      "공식 Events Schedule 테이블을 기준으로 수집합니다.",
+      "공식 글로벌 Events Schedule 테이블을 fetch하되, 정규화 결과는 한국 대회만 유지합니다.",
       "일정 페이지가 일부 브라우저형 UA에는 Cloudflare challenge를 반환할 수 있어 preview crawler UA 기준으로 검증했습니다.",
       "상세 페이지는 이번 단계에서 순회하지 않고 목록 테이블의 날짜/지역/대회명/상세 URL만 정규화합니다.",
     ];
@@ -61,8 +63,12 @@ export async function crawlInbaPnba(
       warnings.push(`대회가 아닌 Workshop 행 ${skippedWorkshops}건은 제외했습니다.`);
     }
 
+    if (skippedGlobalEvents > 0) {
+      warnings.push(`한국 대회가 아닌 글로벌 일정 ${skippedGlobalEvents}건은 정규화 단계에서 제외했습니다.`);
+    }
+
     if (events.length === 0) {
-      warnings.push("Events Schedule 테이블에서 수집 가능한 대회 행을 찾지 못했습니다.");
+      warnings.push("Events Schedule 테이블에서 한국 대회로 정규화할 수 있는 행을 찾지 못했습니다.");
     }
 
     sources.push({
@@ -241,6 +247,7 @@ function inferCountry(rawText: string, regionOrCountry: string | undefined): str
   }
 
   const countries: Array<[RegExp, string]> = [
+    [/korea|seoul|busan|incheon|daegu|daejeon|gwangju|gyeonggi|jeju/i, "KR"],
     [/china|shanghai/i, "CN"],
     [/singapore/i, "SG"],
     [/hungary|budapest/i, "HU"],

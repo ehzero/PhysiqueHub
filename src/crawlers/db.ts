@@ -3,6 +3,8 @@ import { prisma } from "../lib/prisma";
 import type { CompetitionScheduleDraft } from "../types/competitionSchedule";
 import type { CrawlPreviewResult, CrawlSourceSummary } from "./types";
 
+const NON_SYNCABLE_ORGANIZATION_IDS = new Set(["fitschedule"]);
+
 export interface CrawlSyncOptions {
   dryRun?: boolean;
   requireStartsOn?: boolean;
@@ -97,6 +99,14 @@ function getSkipReason(
 
   if (!event.source?.sourceUrl || !event.source?.sourceType || !event.source?.fetchedAt) {
     return "source.sourceUrl/sourceType/fetchedAt 중 누락된 값이 있습니다.";
+  }
+
+  if (NON_SYNCABLE_ORGANIZATION_IDS.has(event.organizationId)) {
+    return "공식 단체가 아닌 보조 수집 소스 이벤트는 DB에 저장하지 않습니다.";
+  }
+
+  if (event.source.sourceType === "aggregator") {
+    return "집계/보조 소스 기반 후보 이벤트는 공식 원본 검수 전 DB에 저장하지 않습니다.";
   }
 
   if (options.requireStartsOn && !event.date?.startsOn) {
@@ -249,6 +259,13 @@ function getSourceProgressRows(
   const sourcesByOrganization = new Map<string, CrawlSourceSummary[]>();
 
   for (const source of result.sources) {
+    if (
+      NON_SYNCABLE_ORGANIZATION_IDS.has(source.organizationId) ||
+      source.url.includes("fitschedule.co.kr")
+    ) {
+      continue;
+    }
+
     const sources = sourcesByOrganization.get(source.organizationId) ?? [];
     sources.push(source);
     sourcesByOrganization.set(source.organizationId, sources);

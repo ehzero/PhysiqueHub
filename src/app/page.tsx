@@ -1,5 +1,5 @@
-import PhysiqueHubApp from "./PhysiqueHubApp";
+import { PhysiqueHubPage } from "./PhysiqueHubPage";
 
 export default function Home() {
-  return <PhysiqueHubApp />;
+  return <PhysiqueHubPage initialRoute="home" />;
 }

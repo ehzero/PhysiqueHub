@@ -28,10 +28,13 @@ export function ContactDrawer({ isOpen, onClose }: ContactDrawerProps) {
 
   return (
     <>
-      <div className={`drawer-back ${isOpen ? "open" : ""}`} onClick={onClose} />
+      <div
+        className={`drawer-back ${isOpen ? "open" : ""}`}
+        onClick={onClose}
+      />
       <aside className={`drawer ${isOpen ? "open" : ""}`}>
         <div className="drawer-head">
-          <span className="crumb">문의 · PHYSIQUEHUB</span>
+          <span className="crumb">문의</span>
           <div className="drawer-actions">
             <button className="icon-btn" onClick={onClose} aria-label="close">
               {Icons.close}
@@ -43,8 +46,8 @@ export function ContactDrawer({ isOpen, onClose }: ContactDrawerProps) {
           <div className="contact-intro">
             <h2 className="page-title">문의하기</h2>
             <p className="page-subtitle">
-            대회 정보 등록, 일정 정정, 서비스 오류, 기타 문의를 남겨주세요.
-            확인 후 필요한 내용을 반영하겠습니다.
+              대회 정보 등록, 일정 정정, 서비스 오류, 기타 문의를 남겨주세요.
+              확인 후 필요한 내용을 반영하겠습니다.
             </p>
           </div>
 
@@ -86,9 +89,7 @@ export function ContactDrawer({ isOpen, onClose }: ContactDrawerProps) {
         </div>
 
         <div className="drawer-actions-row">
-          <button className="cta-btn accent">
-            문의 보내기 →
-          </button>
+          <button className="cta-btn accent">문의 보내기 →</button>
         </div>
       </aside>
     </>

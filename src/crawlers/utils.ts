@@ -334,6 +334,7 @@ export function createScheduleDraft(input: {
       status: input.registration?.status ?? "unknown",
       opensAt: input.registration?.opensAt,
       closesAt: input.registration?.closesAt,
+      fee: input.registration?.fee,
       registrationUrl: input.registration?.registrationUrl,
       rawText: input.registration?.rawText,
       confidence: registrationConfidence,

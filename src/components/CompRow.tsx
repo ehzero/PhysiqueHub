@@ -1,6 +1,6 @@
 "use client";
 
-import { Competition, regStatus, dday, fmtDate } from "@/lib/data";
+import { Competition, regStatusAt, ddayAt, fmtDate, formatDday } from "@/lib/data";
 import { Icons } from "./Icons";
 
 interface CompRowProps {
@@ -8,16 +8,17 @@ interface CompRowProps {
   onOpen: (c: Competition) => void;
   isSaved: boolean;
   onToggleSave: (id: string) => void;
+  today: Date;
 }
 
-export function CompRow({ comp, onOpen }: CompRowProps) {
-  const status = regStatus(comp);
-  const dd = dday(comp.date);
+export function CompRow({ comp, onOpen, today }: CompRowProps) {
+  const status = regStatusAt(comp, today);
+  const dd = ddayAt(comp.date, today);
 
   return (
     <div className="comp-row" onClick={() => onOpen(comp)}>
       <div className="row-date">
-        <span className="day">D{dd >= 0 ? "-" : "+"}{Math.abs(dd)}</span>
+        <span className="day">{formatDday(dd)}</span>
         <span className="mo">{fmtDate(comp.date, { style: "long" })}</span>
       </div>
       <div>

@@ -1,11 +1,7 @@
 import type { CompetitionScheduleDraft } from "../types/competitionSchedule";
 import type { CrawlOrganizationId } from "./config";
-import {
-  crawlAgonas,
-  crawlIcnKorea,
-  crawlKclassicRelatedCandidates,
-} from "./candidates";
-import { crawlFitSchedule } from "./fitschedule";
+import { crawlAgonas } from "./agonas";
+import { crawlKclassicRelatedCandidates } from "./candidates";
 import { crawlIfbbNpcAgp } from "./ifbb";
 import { crawlInbaPnba } from "./inba";
 import { crawlKclassic } from "./kclassic";
@@ -45,10 +41,6 @@ const CRAWLER_GROUPS: Array<{
     crawler: crawlAgonas,
   },
   {
-    organizationIds: ["icn-korea"],
-    crawler: crawlIcnKorea,
-  },
-  {
     organizationIds: ["musa", "wngp", "bob", "anbc"],
     crawler: crawlUnmo,
   },
@@ -75,10 +67,6 @@ const CRAWLER_GROUPS: Array<{
   {
     organizationIds: ["inba-pnba"],
     crawler: crawlInbaPnba,
-  },
-  {
-    organizationIds: ["fitschedule"],
-    crawler: crawlFitSchedule,
   },
   {
     organizationIds: ["monsterzym"],

@@ -4,8 +4,12 @@ export interface Competition {
   org: string;
   orgShort: string;
   date: string;
+  dateEnd?: string;
   regOpen: string;
   regClose: string;
+  registrationStatus?: string;
+  registrationUrl?: string;
+  sourceUrl?: string;
   region: string;
   venue: string;
   categories: string[];
@@ -14,6 +18,9 @@ export interface Competition {
   natural: boolean;
   beginner: boolean;
   rookie: boolean;
+  regional?: boolean;
+  proPath?: boolean;
+  internationalRoute?: boolean;
   scale: "대형" | "중형" | "소형";
   poster: "amber" | "deep" | "sage" | "navy" | "rose" | "lime";
   tags: string[];
@@ -25,7 +32,7 @@ export interface Competition {
 export interface RegStatus {
   label: string;
   short: string;
-  kind: "open" | "urgent" | "closed" | "soon";
+  kind: "open" | "urgent" | "closed" | "soon" | "unknown";
 }
 
 const now = new Date();
@@ -410,6 +417,7 @@ export interface Filters {
   beginner?: boolean;
   natural?: boolean;
   savedOnly?: boolean;
+  showPast?: boolean;
 }
 
 export function parseDate(s: string): Date {
@@ -423,16 +431,42 @@ export function daysBetween(a: Date | string, b: string): number {
 }
 
 export function dday(dateStr: string): number {
-  return daysBetween(TODAY, dateStr);
+  return ddayAt(dateStr, TODAY);
+}
+
+export function ddayAt(dateStr: string, today: Date): number {
+  return daysBetween(today, dateStr);
+}
+
+export function formatDday(days: number): string {
+  if (days === 0) return "D-Day";
+  return days > 0 ? `D-${days}` : `D+${Math.abs(days)}`;
 }
 
 export function regStatus(c: Competition): RegStatus {
-  const dOpen = daysBetween(TODAY, c.regOpen);
-  const dClose = daysBetween(TODAY, c.regClose);
-  if (dOpen > 0) return { label: "접수 예정", short: `D-${dOpen}`, kind: "soon" };
+  return regStatusAt(c, TODAY);
+}
+
+export function regStatusAt(c: Competition, today: Date): RegStatus {
+  if (c.registrationStatus === "closed" || c.registrationStatus === "cancelled") {
+    return { label: "접수 마감", short: "마감", kind: "closed" };
+  }
+  if (c.registrationStatus === "scheduled") {
+    return { label: "접수 예정", short: "예정", kind: "soon" };
+  }
+  if (c.registrationStatus === "unknown" && c.regClose === c.date) {
+    if (ddayAt(c.date, today) <= 0) {
+      return { label: "접수 마감", short: "마감", kind: "closed" };
+    }
+    return { label: "확인 필요", short: "확인", kind: "unknown" };
+  }
+
+  const dOpen = daysBetween(today, c.regOpen);
+  const dClose = daysBetween(today, c.regClose);
+  if (dOpen > 0) return { label: "접수 예정", short: formatDday(dOpen), kind: "soon" };
   if (dClose < 0) return { label: "접수 마감", short: "마감", kind: "closed" };
-  if (dClose <= 7) return { label: "마감 임박", short: `D-${dClose}`, kind: "urgent" };
-  return { label: "접수 중", short: `D-${dClose}`, kind: "open" };
+  if (dClose <= 7) return { label: "마감 임박", short: formatDday(dClose), kind: "urgent" };
+  return { label: "접수 중", short: formatDday(dClose), kind: "open" };
 }
 
 export function fmtDate(s: string, opts: { style?: "long" | "mono" } = {}): string {

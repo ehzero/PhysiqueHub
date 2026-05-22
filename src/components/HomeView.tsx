@@ -3,89 +3,89 @@
 import { useState } from "react";
 import {
   Competition,
-  COMPETITIONS,
-  TODAY,
+  ddayAt,
   parseDate,
-  regStatus,
-  dday,
+  regStatusAt,
   fmtDate,
 } from "@/lib/data";
 import { FeatCard } from "./FeatCard";
 import { CompRow } from "./CompRow";
 import { Icons } from "./Icons";
+import type { CompetitionFilterOptions } from "@/lib/competition-client";
 
 const DOWS = ["일", "월", "화", "수", "목", "금", "토"];
 
+const SORT_OPTIONS = [
+  { value: "date", label: "대회일 빠른 순" },
+  { value: "deadline", label: "접수 마감 임박 순" },
+  { value: "scale", label: "대회 규모 큰 순" },
+];
+
 interface HomeViewProps {
+  comps: Competition[];
+  beginnerComps: Competition[];
+  totalCount?: number;
   saved: string[];
   toggleSave: (id: string) => void;
   openComp: (c: Competition) => void;
   setRoute: (r: string) => void;
+  filterOptions?: CompetitionFilterOptions;
+  today: Date;
+  hasNextPage?: boolean;
+  isLoadingPage: boolean;
+  isFetchingNextPage: boolean;
+  fetchNextPage: () => void;
 }
 
 export function HomeView({
+  comps,
+  beginnerComps,
+  totalCount,
   saved,
   toggleSave,
   openComp,
   setRoute,
+  filterOptions,
+  today,
+  hasNextPage,
+  isLoadingPage,
+  isFetchingNextPage,
+  fetchNextPage,
 }: HomeViewProps) {
   const [activePreset, setActivePreset] = useState("all");
-  const [activeRegion, setActiveRegion] = useState<string | null>(null);
+  const [activeOrganization, setActiveOrganization] = useState<string | null>(
+    null,
+  );
   const [sortBy, setSortBy] = useState("date");
+  const [sortOpen, setSortOpen] = useState(false);
 
-  const upcoming = COMPETITIONS.filter((c) => dday(c.date) >= -1);
+  const upcoming = comps.filter((c) => ddayAt(c.date, today) >= -1);
 
   const counts = {
-    all: upcoming.length,
-    open: upcoming.filter((c) => ["open", "urgent"].includes(regStatus(c).kind))
-      .length,
-    urgent: upcoming.filter((c) => regStatus(c).kind === "urgent").length,
-    thisMonth: upcoming.filter((c) => {
-      const d = parseDate(c.date);
-      return (
-        d.getMonth() === TODAY.getMonth() &&
-        d.getFullYear() === TODAY.getFullYear()
-      );
-    }).length,
-    nextMonth: upcoming.filter((c) => {
-      const d = parseDate(c.date);
-      const nm = new Date(TODAY.getFullYear(), TODAY.getMonth() + 1, 1);
-      return (
-        d.getMonth() === nm.getMonth() && d.getFullYear() === nm.getFullYear()
-      );
-    }).length,
-    beginner: upcoming.filter((c) => c.beginner).length,
-    natural: upcoming.filter((c) => c.natural).length,
-    saved: saved.length,
+    all: filterOptions ? sumCounts(filterOptions.organizations) : 0,
+    open: filterOptions?.registrationStatuses.find((status) => status.status === "open")?.count ?? 0,
+    beginner: filterOptions?.flags.beginnerAny ?? 0,
+    natural: filterOptions?.flags.natural ?? 0,
+    regional: filterOptions?.flags.regional ?? 0,
+    proPath: filterOptions?.flags.proPath ?? 0,
+    internationalRoute:
+      filterOptions?.flags.internationalRoute ?? 0,
   };
 
   let feed = upcoming.slice();
   if (activePreset === "open")
-    feed = feed.filter((c) => ["open", "urgent"].includes(regStatus(c).kind));
-  else if (activePreset === "urgent")
-    feed = feed.filter((c) => regStatus(c).kind === "urgent");
-  else if (activePreset === "thisMonth") {
-    feed = feed.filter((c) => {
-      const d = parseDate(c.date);
-      return (
-        d.getMonth() === TODAY.getMonth() &&
-        d.getFullYear() === TODAY.getFullYear()
-      );
-    });
-  } else if (activePreset === "nextMonth") {
-    feed = feed.filter((c) => {
-      const d = parseDate(c.date);
-      const nm = new Date(TODAY.getFullYear(), TODAY.getMonth() + 1, 1);
-      return (
-        d.getMonth() === nm.getMonth() && d.getFullYear() === nm.getFullYear()
-      );
-    });
-  } else if (activePreset === "beginner") feed = feed.filter((c) => c.beginner);
+    feed = feed.filter((c) =>
+      ["open", "urgent"].includes(regStatusAt(c, today).kind),
+    );
+  else if (activePreset === "beginner") feed = feed.filter((c) => c.beginner);
   else if (activePreset === "natural") feed = feed.filter((c) => c.natural);
-  else if (activePreset === "saved")
-    feed = feed.filter((c) => saved.includes(c.id));
+  else if (activePreset === "regional") feed = feed.filter((c) => c.regional);
+  else if (activePreset === "proPath") feed = feed.filter((c) => c.proPath);
+  else if (activePreset === "internationalRoute")
+    feed = feed.filter((c) => c.internationalRoute);
 
-  if (activeRegion) feed = feed.filter((c) => c.region === activeRegion);
+  if (activeOrganization)
+    feed = feed.filter((c) => c.org === activeOrganization);
 
   feed.sort((a, b) => {
     if (sortBy === "deadline")
@@ -100,51 +100,69 @@ export function HomeView({
   const featured = feed.slice(0, 3);
   const restList = feed.slice(3);
 
-  const regionCounts: Record<string, number> = {};
-  upcoming.forEach((c) => {
-    regionCounts[c.region] = (regionCounts[c.region] || 0) + 1;
-  });
-  const regionsSorted = Object.entries(regionCounts).sort(
-    (a, b) => b[1] - a[1],
-  );
+  const organizationFilters = filterOptions
+    ? [
+        {
+          id: null,
+          label: "전체 단체",
+          n: sumCounts(filterOptions.organizations),
+          title: "전체 단체",
+        },
+        ...filterOptions.organizations.map((organization) => ({
+          id: organization.name,
+          label: organization.shortName || organization.name,
+          n: organization.count,
+          title: organization.name,
+        })),
+      ]
+    : [{ id: null, label: "전체 단체", n: 0, title: "전체 단체" }];
 
-  const dateLine = `${TODAY.getFullYear()}.${String(TODAY.getMonth() + 1).padStart(2, "0")}.${String(TODAY.getDate()).padStart(2, "0")} (${DOWS[TODAY.getDay()]})`;
+  const dateLine = `${today.getFullYear()}.${String(today.getMonth() + 1).padStart(2, "0")}.${String(today.getDate()).padStart(2, "0")} (${DOWS[today.getDay()]})`;
 
   const presets = [
     { id: "all", label: "전체", n: counts.all },
-    { id: "open", label: "접수 중", n: counts.open },
-    { id: "urgent", label: "마감 임박", n: counts.urgent, accent: true },
-    {
-      id: "thisMonth",
-      label: `${TODAY.getMonth() + 1}월 대회`,
-      n: counts.thisMonth,
-    },
-    {
-      id: "nextMonth",
-      label: `${TODAY.getMonth() + 2 > 12 ? 1 : TODAY.getMonth() + 2}월 대회`,
-      n: counts.nextMonth,
-    },
-    { id: "beginner", label: "입문자 환영", n: counts.beginner },
-    { id: "natural", label: "내추럴", n: counts.natural },
-    {
-      id: "saved",
-      label: "저장 대회",
-      n: counts.saved,
-      disabled: counts.saved === 0,
-    },
+    ...(filterOptions
+      ? [
+          { id: "open", label: "접수 중", n: counts.open },
+          { id: "natural", label: "내추럴", n: counts.natural },
+          { id: "beginner", label: "루키·입문", n: counts.beginner },
+          { id: "regional", label: "리저널", n: counts.regional },
+          { id: "proPath", label: "프로카드·퀄리파이어", n: counts.proPath },
+          {
+            id: "internationalRoute",
+            label: "국제·대표 루트",
+            n: counts.internationalRoute,
+          },
+        ]
+      : []),
   ];
 
   const feedLabel =
     {
-      all: "전체 대회",
-      open: "접수 중인 대회",
-      urgent: "마감이 임박한 대회",
-      thisMonth: `${TODAY.getMonth() + 1}월 대회`,
-      nextMonth: `${TODAY.getMonth() + 2 > 12 ? 1 : TODAY.getMonth() + 2}월 대회`,
-      beginner: "입문자가 나가기 좋은 대회",
-      natural: "내추럴 대회",
-      saved: "저장한 대회",
-    }[activePreset] || "전체 대회";
+      all: "전체",
+      open: "접수 중",
+      natural: "내추럴",
+      beginner: "루키·입문",
+      regional: "리저널",
+      proPath: "프로카드·퀄리파이어",
+      internationalRoute: "국제·대표 루트",
+    }[activePreset] || "전체";
+  const isAllOrganization = !activeOrganization;
+  const isAllCategory = activePreset === "all";
+  const feedTitle = isAllOrganization
+    ? isAllCategory
+      ? "전체 대회"
+      : feedLabel
+    : isAllCategory
+      ? activeOrganization
+      : `${activeOrganization} · ${feedLabel}`;
+  const sortLabel = SORT_OPTIONS.find(
+    (option) => option.value === sortBy,
+  )?.label;
+  const feedCount =
+    isAllOrganization && isAllCategory
+      ? (totalCount ?? counts.all)
+      : feed.length;
 
   return (
     <main className="home-main">
@@ -154,7 +172,7 @@ export function HomeView({
           <div className="dash-row">
             <div className="dash-meta">
               <span className="eyebrow" style={{ color: "var(--ink)" }}>
-                SEASON {TODAY.getFullYear()}
+                SEASON {today.getFullYear()}
               </span>
               <span className="mono dash-date">{dateLine}</span>
             </div>
@@ -167,52 +185,45 @@ export function HomeView({
         <div className="container">
           <div className="preset-row">
             <div className="preset-chips" role="tablist">
-              {presets.map((p) => (
+              {organizationFilters.map((organization) => (
                 <button
-                  key={p.id}
-                  className={`preset-chip ${activePreset === p.id ? "on" : ""} ${p.accent && p.n > 0 ? "accent" : ""}`}
-                  disabled={!!p.disabled}
-                  onClick={() => setActivePreset(p.id)}
+                  key={organization.id ?? "all-organizations"}
+                  className={`preset-chip ${activeOrganization === organization.id ? "on" : ""}`}
+                  title={organization.title}
+                  onClick={() =>
+                    setActiveOrganization(
+                      activeOrganization === organization.id
+                        ? null
+                        : organization.id,
+                    )
+                  }
                 >
-                  <span>{p.label}</span>
-                  <span className="preset-sep" aria-hidden="true">|</span>
-                  <span className="preset-cnt mono">{p.n}</span>
+                  <span>{organization.label}</span>
+                  <span className="preset-sep" aria-hidden="true">
+                    |
+                  </span>
+                  <span className="preset-cnt mono">{organization.n}</span>
                 </button>
               ))}
             </div>
-            <div className="preset-actions">
-              <label className="sort-pick">
-                <span className="sort-icon" aria-label="정렬">
-                  {Icons.sort}
-                </span>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                >
-                  <option value="date">대회일 빠른 순</option>
-                  <option value="deadline">접수 마감 임박 순</option>
-                  <option value="scale">대회 규모 큰 순</option>
-                </select>
-                <span className="sort-chevron">{Icons.chevronDown}</span>
-              </label>
-            </div>
           </div>
-          <div className="region-chips">
-            <button
-              className={`region-chip ${activeRegion === null ? "on" : ""}`}
-              onClick={() => setActiveRegion(null)}
-            >
-              전체 지역
-            </button>
-            {regionsSorted.map(([r, n]) => (
+          <div className="organization-chips">
+            {presets.map((p) => (
               <button
-                key={r}
-                className={`region-chip ${activeRegion === r ? "on" : ""}`}
-                onClick={() => setActiveRegion(activeRegion === r ? null : r)}
+                key={p.id}
+                className={`organization-chip ${activePreset === p.id ? "on" : ""}`}
+                onClick={() => setActivePreset(p.id)}
               >
-                {r} <span className="mono">{n}</span>
+                {p.label} <span className="mono">{p.n}</span>
               </button>
             ))}
+            <button
+              type="button"
+              className="organization-chip"
+              onClick={() => setRoute("list")}
+            >
+              더보기
+            </button>
           </div>
         </div>
       </section>
@@ -222,13 +233,53 @@ export function HomeView({
         <div className="container">
           <div className="feed-head">
             <div>
-              <h2 className="page-title feed-h">
-                {feedLabel}
-                {activeRegion && (
-                  <span className="page-title-sub feed-h-sub"> · {activeRegion}</span>
+              <h2 className="page-title feed-h">{feedTitle}</h2>
+              <p className="page-subtitle feed-sub mono">
+                {feedCount} EVENTS
+              </p>
+            </div>
+            <div
+              className="sort-actions"
+              onBlur={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget)) {
+                  setSortOpen(false);
+                }
+              }}
+            >
+              <div className="sort-menu">
+                <button
+                  type="button"
+                  className="sort-pick"
+                  aria-haspopup="listbox"
+                  aria-expanded={sortOpen}
+                  onClick={() => setSortOpen((open) => !open)}
+                >
+                  <span className="sort-icon" aria-hidden="true">
+                    {Icons.sort}
+                  </span>
+                  <span className="sort-label">{sortLabel}</span>
+                  <span className="sort-chevron">{Icons.chevronDown}</span>
+                </button>
+                {sortOpen && (
+                  <div className="sort-menu-list" role="listbox">
+                    {SORT_OPTIONS.map((option) => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        className={`sort-option ${sortBy === option.value ? "on" : ""}`}
+                        role="option"
+                        aria-selected={sortBy === option.value}
+                        onClick={() => {
+                          setSortBy(option.value);
+                          setSortOpen(false);
+                        }}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
                 )}
-              </h2>
-              <p className="page-subtitle feed-sub mono">{feed.length} EVENTS</p>
+              </div>
             </div>
           </div>
 
@@ -244,17 +295,21 @@ export function HomeView({
                 NO RESULTS
               </div>
               <p style={{ fontSize: 18, marginBottom: 16 }}>
-                조건에 맞는 대회가 없습니다.
+                {isLoadingPage
+                  ? "대회 목록을 불러오는 중입니다."
+                  : "조건에 맞는 대회가 없습니다."}
               </p>
-              <button
-                className="cta-btn"
-                onClick={() => {
-                  setActivePreset("all");
-                  setActiveRegion(null);
-                }}
-              >
-                필터 초기화
-              </button>
+              {!isLoadingPage && (
+                <button
+                  className="cta-btn"
+                  onClick={() => {
+                    setActivePreset("all");
+                    setActiveOrganization(null);
+                  }}
+                >
+                  필터 초기화
+                </button>
+              )}
             </div>
           ) : (
             <>
@@ -267,6 +322,7 @@ export function HomeView({
                       onOpen={openComp}
                       isSaved={saved.includes(c.id)}
                       onToggleSave={toggleSave}
+                      today={today}
                     />
                   ))}
                 </div>
@@ -280,6 +336,7 @@ export function HomeView({
                       onOpen={openComp}
                       isSaved={saved.includes(c.id)}
                       onToggleSave={toggleSave}
+                      today={today}
                     />
                   ))}
                 </div>
@@ -287,9 +344,20 @@ export function HomeView({
             </>
           )}
 
-          <div style={{ textAlign: "center", marginTop: 48 }}>
+          <div className="home-feed-actions">
+            <button
+              className="cta-btn"
+              disabled={!hasNextPage || isFetchingNextPage}
+              onClick={() => fetchNextPage()}
+            >
+              {isFetchingNextPage
+                ? "불러오는 중"
+                : hasNextPage
+                  ? "10개 더보기"
+                  : "더 불러올 대회 없음"}
+            </button>
             <button className="cta-btn" onClick={() => setRoute("list")}>
-              필터 더 보기 / 전체 목록 페이지로 {Icons.arrow}
+              전체 목록 보기 {Icons.arrow}
             </button>
           </div>
         </div>
@@ -302,7 +370,7 @@ export function HomeView({
           style={{ paddingTop: 64, background: "var(--bg-sub)" }}
         >
           <div className="container">
-            <BeginnerPicks onOpen={openComp} />
+            <BeginnerPicks comps={beginnerComps} onOpen={openComp} today={today} />
           </div>
         </section>
       )}
@@ -310,14 +378,21 @@ export function HomeView({
   );
 }
 
-function BeginnerPicks({ onOpen }: { onOpen: (c: Competition) => void }) {
-  const picks = COMPETITIONS.filter(
-    (c) => c.beginner && dday(c.date) > 0,
-  ).slice(0, 5);
+function sumCounts(items: Array<{ count: number }>): number {
+  return items.reduce((total, item) => total + item.count, 0);
+}
+
+function BeginnerPicks({
+  comps,
+  onOpen,
+}: {
+  comps: Competition[];
+  onOpen: (c: Competition) => void;
+  today: Date;
+}) {
   return (
     <div className="pick-row">
       <div className="pick-head">
-        <div className="num">04 / FIRST STAGE</div>
         <h3 className="page-title">입문자가 찾는 대회</h3>
         <p className="page-subtitle">
           첫 무대를 준비 중이라면 루키 부문이 있거나, 입문자 비중이 높은
@@ -325,7 +400,7 @@ function BeginnerPicks({ onOpen }: { onOpen: (c: Competition) => void }) {
         </p>
       </div>
       <ul className="pick-list">
-        {picks.map((c, i) => (
+        {comps.map((c, i) => (
           <li key={c.id} className="pick-item" onClick={() => onOpen(c)}>
             <span className="pick-num">{String(i + 1).padStart(2, "0")}</span>
             <span className="pick-ttl">

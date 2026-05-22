@@ -1,6 +1,6 @@
 "use client";
 
-import { Competition, dday, fmtDate, regStatus } from "@/lib/data";
+import { Competition, ddayAt, fmtDate, formatDday, regStatusAt } from "@/lib/data";
 import { Icons } from "./Icons";
 import { PosterFigure, posterFigureColor } from "./PosterFigure";
 
@@ -9,11 +9,18 @@ interface FeatCardProps {
   onOpen: (c: Competition) => void;
   isSaved: boolean;
   onToggleSave: (id: string) => void;
+  today: Date;
 }
 
-export function FeatCard({ comp, onOpen, isSaved, onToggleSave }: FeatCardProps) {
-  const status = regStatus(comp);
-  const dd = dday(comp.date);
+export function FeatCard({
+  comp,
+  onOpen,
+  isSaved,
+  onToggleSave,
+  today,
+}: FeatCardProps) {
+  const status = regStatusAt(comp, today);
+  const dd = ddayAt(comp.date, today);
   const variant = comp.id.charCodeAt(2) % 6;
 
   return (
@@ -31,7 +38,7 @@ export function FeatCard({ comp, onOpen, isSaved, onToggleSave }: FeatCardProps)
           {isSaved ? Icons.bookmarkFilled : Icons.bookmark}
         </button>
         <div className="poster-date">
-          <span className="day">D{dd >= 0 ? "-" : "+"}{Math.abs(dd)}</span>
+          <span className="day">{formatDday(dd)}</span>
           <span className="mo">{fmtDate(comp.date, { style: "long" })}</span>
         </div>
       </div>

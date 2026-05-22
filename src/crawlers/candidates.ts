@@ -55,16 +55,16 @@ export async function crawlAgonas(
     .map(toAgonasEvent);
   const errors = fitScheduleResult.errors.map((error) => ({
     ...error,
-    message: `아고나스 후보 수집 중 FitSchedule 보조 소스 오류: ${error.message}`,
+    message: `아고나스 후보 수집 중 보조 소스 오류: ${error.message}`,
   }));
   const sourceWarnings = [
-    "FitSchedule 보조 데이터에서 아고나스 후보 일정을 필터링했습니다.",
+    "보조 데이터에서 아고나스 후보 일정을 필터링했습니다.",
     "공식 단체 홈페이지가 아닌 보조 집계 소스이므로 sourceType은 aggregator로 두고 reviewStatus는 needs-review로 유지합니다.",
     "Naver Cafe 상세/접수 링크는 registration.registrationUrl 및 source.detailUrl에 보존합니다.",
   ];
 
   if (events.length === 0) {
-    sourceWarnings.push("FitSchedule payload에서 아고나스 후보 일정을 찾지 못했습니다.");
+    sourceWarnings.push("보조 payload에서 아고나스 후보 일정을 찾지 못했습니다.");
   }
 
   return {
@@ -104,7 +104,7 @@ export async function crawlIcnKorea(
       ok: true,
       count: 0,
       warnings: [
-        "현재 FitSchedule 공개 payload에서 ICN Korea 2026 일정 후보를 찾지 못했습니다.",
+        "현재 보조 공개 payload에서 ICN Korea 2026 일정 후보를 찾지 못했습니다.",
         "공식 일정 페이지 또는 공식 SNS/접수 앱 URL이 확인되면 별도 공식 소스 크롤러로 승격해야 합니다.",
       ],
       fetchedAt,
@@ -117,7 +117,7 @@ export async function crawlIcnKorea(
       url: FITSCHEDULE_URL,
       ok: false,
       count: 0,
-      warnings: ["ICN Korea 후보 감시용 FitSchedule fetch에 실패했습니다."],
+      warnings: ["ICN Korea 후보 감시용 보조 소스 fetch에 실패했습니다."],
     });
   }
 
@@ -211,7 +211,7 @@ function toAgonasEvent(event: CompetitionScheduleDraft): CompetitionScheduleDraf
     },
     location,
     divisions: event.divisions,
-    tags: uniqueTexts(["아고나스", "FitSchedule", "Naver Cafe", ...event.tags]),
+    tags: uniqueTexts(["아고나스", "Naver Cafe", ...event.tags.filter((tag) => tag !== "FitSchedule")]),
     flags: {
       ...event.flags,
     },
@@ -224,7 +224,12 @@ function toAgonasEvent(event: CompetitionScheduleDraft): CompetitionScheduleDraf
       sourceUpdatedAt: event.source.sourceUpdatedAt,
       fetchedAt,
       parserName: PARSER_NAME,
-      rawHtml: JSON.stringify(event),
+      rawHtml: JSON.stringify({
+        title: event.title,
+        date: event.date,
+        location: event.location,
+        detailUrl,
+      }),
       rawTitle: event.source.rawTitle ?? event.title,
       rawDateText: event.date.rawText,
       rawLocationText,
@@ -236,11 +241,11 @@ function toAgonasEvent(event: CompetitionScheduleDraft): CompetitionScheduleDraf
       {
         field: "source",
         severity: "warning",
-        message: "공식 홈페이지가 아닌 FitSchedule/Naver Cafe 기반 후보 데이터입니다.",
+        message: "공식 홈페이지가 아닌 보조 소스/Naver Cafe 기반 후보 데이터입니다.",
       },
     ],
     notes:
-      "아고나스 후보 일정입니다. FitSchedule 집계값과 Naver Cafe 링크를 보존했으며, 공식 원본 확인 후 승인해야 합니다.",
+      "아고나스 후보 일정입니다. 보조 집계값과 Naver Cafe 링크를 보존했으며, 공식 원본 확인 후 승인해야 합니다.",
   });
 }
 

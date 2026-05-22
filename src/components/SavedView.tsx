@@ -10,9 +10,16 @@ interface SavedViewProps {
   toggleSave: (id: string) => void;
   openComp: (c: Competition) => void;
   setRoute: (r: string) => void;
+  today: Date;
 }
 
-export function SavedView({ comps, saved, toggleSave, openComp, setRoute }: SavedViewProps) {
+export function SavedView({
+  comps,
+  toggleSave,
+  openComp,
+  setRoute,
+  today,
+}: SavedViewProps) {
   return (
     <main>
       <section className="page-head">
@@ -53,6 +60,7 @@ export function SavedView({ comps, saved, toggleSave, openComp, setRoute }: Save
                   onOpen={openComp}
                   isSaved={true}
                   onToggleSave={toggleSave}
+                  today={today}
                 />
               ))}
             </div>

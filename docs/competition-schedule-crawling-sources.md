@@ -21,7 +21,7 @@
 | 3 | INBA / PNBA | `https://naturalbodybuilding.com/events-schedule/` | 중간 | 공식 글로벌 Events Schedule 테이블 수집 가능. 일부 UA는 Cloudflare challenge를 받아 crawler UA 기준으로 검증 필요. |
 | 3 | NAC Korea | `https://www.nackorea.com/product/list.html?cate_no=28` | 중간 | 한국 공식 접수 카테고리에 12개 접수 상품이 노출됨. 날짜/장소는 공식 HTML에 직접 노출되지 않아 FitSchedule 보조값 검수 필요. |
 | 4 | ICN Korea | 공식 일정 URL 추가 확인 필요 | 낮음 | 국내 활동과 내추럴 대회 개최 이력은 확인되지만, 2026 공식 일정 페이지는 안정적으로 확인하지 못함. `icn-korea.json`은 0건 감시 파일로 생성됨. |
-| 4 | 아고나스 | `https://www.fitschedule.co.kr/` | 낮음 | FitSchedule에 잠백이카페-아고나스 대회 3건이 노출됨. 공식 원본 확인 전까지 후보 데이터로만 유지함. |
+| 4 | 아고나스 | `https://jambaekee.com/category/agonas-%EB%8C%80%ED%9A%8C/75/` | 중간 | 잠백이 AGONAS 공식 접수 카테고리에 2026 수원/광명/서울 상품 3건이 노출됨. 날짜/장소는 상품 HTML에 직접 노출되지 않아 보조 후보값으로 low confidence 보강. |
 | 보류/preview | Monsterzym | `https://event.monsterzym.com/` | 기술적 가능, 운영 보류 | 이벤트 카드 HTML에서 10건 수집 가능. 다만 robots `User-agent: * Disallow: /` 확인으로 운영 자동 수집 전 허가 필요. |
 | 보조 | FitSchedule | `https://www.fitschedule.co.kr/` | 높음 | Next.js payload에서 집계 일정 수집 가능. 공식 단체는 아니므로 원본 확인/누락 탐지용 보조 소스로만 사용. |
 
@@ -181,11 +181,12 @@
 - 크롤링 가능성: 중간
 - 확인 근거:
   - 공식 Events Schedule 테이블에 `Date`, `Location`, `Event` 컬럼과 상세 링크가 HTML로 노출됨.
-  - 2026년 기준 워크숍을 제외한 대회 일정 40건을 수집함.
+  - 2026년 기준 워크숍을 제외한 글로벌 대회 일정 40건이 노출되지만, PhysiqueHub 정규화 결과에는 한국 대회만 유지함.
   - 일부 브라우저형 User-Agent는 Cloudflare 관리형 챌린지를 반환했으나, preview crawler UA로는 공식 HTML 수집이 가능했음.
   - 한국 로컬 공식 일정 페이지는 이번 조사에서 안정적인 공식 URL을 확인하지 못함.
 - 구현 메모:
   - 목록 테이블만으로 날짜, 지역, 대회명, 상세 URL을 정규화한다.
+  - 글로벌 소스 fetch는 유지하되 `location.country === "KR"`로 정규화된 이벤트만 preview/DB 저장 대상으로 둔다.
   - 상세 페이지 순회는 접수 마감, 종목, 포스터 이미지 보강 단계에서 추가한다.
   - 국내 사용자 화면에는 전체 글로벌 일정 또는 아시아권/메이저 대회 필터를 별도로 둘지 검토한다.
 
@@ -256,17 +257,18 @@
 
 ### 아고나스
 
-- 보조 소스:
-  - FitSchedule: `https://www.fitschedule.co.kr/competitions`
-- 크롤링 가능성: 낮음
+- 공식 소스:
+  - 잠백이 AGONAS 대회 카테고리: `https://jambaekee.com/category/agonas-%EB%8C%80%ED%9A%8C/75/`
+- 크롤링 가능성: 중간
 - 확인 근거:
-  - FitSchedule에 `잠백이카페 - 아고나스 대회`로 2026년 수원, 광명, 서울 일정이 노출됨.
+  - Cafe24 상품 목록에 `2026 아고나스 수원`, `2026 아고나스 광명`, `2026 아고나스 서울` 접수 상품 3건이 노출됨.
+  - 상세 상품 HTML에서 판매가와 종목 옵션은 수집 가능함.
+  - 대회일/장소는 공식 상품 HTML 본문에 직접 노출되지 않아 보조 후보값과 제목 매칭으로 낮은 신뢰도로 보강함.
 - 구현 메모:
-  - `agonasParser`로 FitSchedule 후보 일정 3건을 `crawl-preview/agonas.json`에 생성함.
-  - 수집 이벤트는 `아고나스 수원`, `아고나스 광명`, `아고나스 서울`이며 Naver Cafe 링크를 상세/접수 URL로 보존한다.
-  - 공식 홈페이지가 아닌 보조 집계 데이터이므로 `confidence: "low"`, `reviewStatus: "needs-review"`로 유지한다.
+  - `jambaekee-agonas-registration-preview` 파서로 공식 접수 상품 3건을 `crawl-preview/agonas.json`에 생성함.
+  - `sourceUrl`과 `detailUrl`은 잠백이 공식 카테고리/상품 URL만 보존한다.
+  - 날짜/장소는 `confidence: "low"`, 전체 이벤트는 검수 전까지 `reviewStatus: "needs-review"`로 유지한다.
   - 연맹이라기보다 대회 브랜드/커뮤니티 주최 성격으로 보이므로 `organization`보다 `event_brand`로 모델링할지 검토한다.
-  - 공식 원본 URL을 확인하기 전까지는 FitSchedule 누락 감지 후보로만 유지한다.
 
 ### WBPF / WBFF / OCB
 
@@ -324,7 +326,7 @@
 | `oneClassicParser` | ONE CLASSIC | 공식 랜딩 페이지 텍스트 파싱, 시즌 변경 감지 |
 | `nacKoreaParser` | NAC Korea | 공식 접수 상품 목록 + FitSchedule 후보 일정 교차 보강 |
 | `candidateSourceMonitor` | ICN Korea, J-Classic, SSA Korea, WFF Korea | 공개 HTML/보조 집계 소스에서 0건 후보도 단체별 JSON으로 남겨 후속 검수 상태 추적 |
-| `agonasParser` | 아고나스 | FitSchedule 후보 일정 필터링, Naver Cafe 상세/접수 링크 보존 |
+| `agonasParser` | 아고나스 | 잠백이 AGONAS 공식 접수 상품 목록 + 상세 상품 옵션 파싱 |
 
 ## 단체별 수집 완료 체크 리스트
 
@@ -354,11 +356,11 @@
 | J-Classic | 0건 감시 | [x] | [x] | [ ] | [ ] | `j-classic.json` 생성, KISMOS 공개 HTML에서 일정 상품 미확인 |
 | SSA Korea | 0건 감시 | [x] | [x] | [ ] | [ ] | `ssa-korea.json` 생성, KISMOS 공개 HTML에서 일정 상품 미확인 |
 | WFF Korea | 0건 감시 | [x] | [x] | [ ] | [ ] | `wff-korea.json` 생성, KISMOS 공개 HTML에서 일정 상품 미확인 |
-| INBA / PNBA | 샘플 수집 | [x] | [x] | [x] | [ ] | 공식 Events Schedule 40건 수집, Workshop 2건 제외 |
+| INBA / PNBA | 0건 감시 | [x] | [x] | [ ] | [ ] | 공식 Events Schedule은 fetch하되 한국 대회만 정규화, 현재 2026 한국 대회 미확인 |
 | ONE CLASSIC | 샘플 수집 | [x] | [x] | [x] | [ ] | 공식 대회일정 페이지에서 2026.05.16-17 대전 한밭대학교 1건 수집 |
 | NAC Korea | 샘플 수집 | [x] | [x] | [x] | [ ] | 공식 접수 상품 12개 수집, 날짜/장소는 FitSchedule 보조값으로 low confidence |
 | ICN Korea | 0건 감시 | [ ] | [x] | [ ] | [ ] | `icn-korea.json` 생성, 2026 공식 일정 URL 추가 확인 필요 |
-| 아고나스 | 후보 수집 | [ ] | [x] | [x] | [ ] | FitSchedule 후보 3건 수집, 공식 원본 URL 검수 필요 |
+| 아고나스 | 샘플 수집 | [x] | [x] | [x] | [ ] | 잠백이 AGONAS 공식 접수 상품 3건 수집, 날짜/장소는 보조 후보값으로 low confidence |
 | WBPF / WBFF / OCB | 후보 추적 | [ ] | [ ] | [ ] | [ ] | 글로벌 단체 존재, 한국 내 최신 일정은 추가 확인 필요 |
 | Monsterzym | 샘플 수집(운영 보류) | [x] | [x] | [x] | [ ] | event.monsterzym.com 카드 10건 수집, robots 차단으로 운영 전 허가 필요 |
 | FitSchedule | 샘플 수집 | [x] | [x] | [x] | [ ] | Next.js competitions payload 171건 수집, 공식 원본 검증용 보조 데이터 |

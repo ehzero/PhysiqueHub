@@ -1,6 +1,7 @@
 "use client";
 
 import { Competition, Filters } from "@/lib/data";
+import type { CompetitionFilterOptions } from "@/lib/competition-client";
 import { Icons } from "./Icons";
 import { CompRow } from "./CompRow";
 import { FilterRail } from "./FilterRail";
@@ -13,8 +14,10 @@ interface ListViewProps {
   openComp: (c: Competition) => void;
   filters: Filters;
   setFilters: (fn: (f: Filters) => Filters) => void;
+  filterOptions?: CompetitionFilterOptions;
   search: string;
   setSearch: (s: string) => void;
+  today: Date;
 }
 
 export function ListView({
@@ -25,8 +28,10 @@ export function ListView({
   openComp,
   filters,
   setFilters,
+  filterOptions,
   search,
   setSearch,
+  today,
 }: ListViewProps) {
   return (
     <main>
@@ -43,7 +48,7 @@ export function ListView({
           >
             <div>
               <h1 className="page-title">
-                대회 탐색
+                대회 목록
                 <span
                   style={{
                     color: "var(--ink-4)",
@@ -81,6 +86,7 @@ export function ListView({
             filters={filters}
             setFilters={setFilters}
             allComps={allComps}
+            filterOptions={filterOptions}
           />
           <div>
             {comps.length === 0 ? (
@@ -106,6 +112,7 @@ export function ListView({
                     onOpen={openComp}
                     isSaved={saved.includes(c.id)}
                     onToggleSave={toggleSave}
+                    today={today}
                   />
                 ))}
               </div>

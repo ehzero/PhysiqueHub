@@ -59,10 +59,17 @@ export function Nav({ route, setRoute, savedCount, onOpenContact }: NavProps) {
           <div className="nav-actions">
             <button
               className="icon-btn"
-              aria-label="contact"
+              aria-label="문의"
               onClick={onOpenContact}
             >
               {Icons.contact}
+            </button>
+            <button
+              className={`icon-btn ${route === "list" ? "active" : ""}`}
+              aria-label="대회 검색"
+              onClick={() => setRoute("list")}
+            >
+              {Icons.search}
             </button>
           </div>
         </div>

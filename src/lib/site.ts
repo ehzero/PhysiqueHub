@@ -14,6 +14,6 @@ export const SITE_NAV_LINKS = [
 export function getSiteUrl() {
   return (
     process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
-    "https://physiquehub.example"
+    "https://physiquehub.kr"
   );
 }
