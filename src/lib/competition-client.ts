@@ -60,6 +60,26 @@ export interface CompetitionListPage {
   hasNextPage: boolean;
 }
 
+export type CompetitionSortOption =
+  | "date-asc"
+  | "date-desc"
+  | "deadline-asc"
+  | "updated-desc";
+
+export interface CompetitionPageOptions {
+  startsFrom?: string;
+  beginnerAny?: boolean;
+  natural?: boolean;
+  regional?: boolean;
+  proPath?: boolean;
+  internationalRoute?: boolean;
+  organizationId?: string;
+  registrationStatus?: string | string[];
+  sort?: CompetitionSortOption;
+  page?: number;
+  pageSize?: number;
+}
+
 interface ApiCompetitionListItem {
   id: string;
   organizationId: string;
@@ -112,11 +132,10 @@ const POSTER_THEMES: Competition["poster"][] = [
 
 export async function fetchCompetitionList(
   seasonYear: number,
-  options: { startsFrom?: string; beginnerAny?: boolean } = {},
+  options: CompetitionPageOptions = {},
 ): Promise<Competition[]> {
   const page = await fetchCompetitionPage(seasonYear, {
-    startsFrom: options.startsFrom,
-    beginnerAny: options.beginnerAny,
+    ...options,
     page: 1,
     pageSize: 500,
   });
@@ -126,25 +145,43 @@ export async function fetchCompetitionList(
 
 export async function fetchCompetitionPage(
   seasonYear: number,
-  options: {
-    startsFrom?: string;
-    beginnerAny?: boolean;
-    page?: number;
-    pageSize?: number;
-  } = {},
+  options: CompetitionPageOptions = {},
 ): Promise<CompetitionListPage> {
   const params = new URLSearchParams({
     seasonYear: String(seasonYear),
     page: String(options.page ?? 1),
     pageSize: String(options.pageSize ?? 10),
-    sort: "date-asc",
+    sort: options.sort ?? "date-asc",
   });
 
   if (options.startsFrom) {
     params.set("startsFrom", options.startsFrom);
   }
+  if (options.organizationId) {
+    params.set("organizationId", options.organizationId);
+  }
+  if (options.registrationStatus) {
+    params.set(
+      "registrationStatus",
+      Array.isArray(options.registrationStatus)
+        ? options.registrationStatus.join(",")
+        : options.registrationStatus,
+    );
+  }
   if (options.beginnerAny !== undefined) {
     params.set("beginnerAny", String(options.beginnerAny));
+  }
+  if (options.natural !== undefined) {
+    params.set("natural", String(options.natural));
+  }
+  if (options.regional !== undefined) {
+    params.set("regional", String(options.regional));
+  }
+  if (options.proPath !== undefined) {
+    params.set("proPath", String(options.proPath));
+  }
+  if (options.internationalRoute !== undefined) {
+    params.set("internationalRoute", String(options.internationalRoute));
   }
 
   const response = await fetch(`/api/competitions?${params.toString()}`);

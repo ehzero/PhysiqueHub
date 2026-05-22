@@ -24,6 +24,9 @@ export interface CompetitionListQuery {
   beginnerFriendly?: boolean;
   rookieClass?: boolean;
   proQualifier?: boolean;
+  regional?: boolean;
+  proPath?: boolean;
+  internationalRoute?: boolean;
   sort: CompetitionSort;
 }
 
@@ -53,6 +56,9 @@ export function parseCompetitionListQuery(searchParams: URLSearchParams): Compet
     beginnerFriendly: parseBooleanParam(searchParams.get("beginnerFriendly")),
     rookieClass: parseBooleanParam(searchParams.get("rookieClass")),
     proQualifier: parseBooleanParam(searchParams.get("proQualifier")),
+    regional: parseBooleanParam(searchParams.get("regional")),
+    proPath: parseBooleanParam(searchParams.get("proPath")),
+    internationalRoute: parseBooleanParam(searchParams.get("internationalRoute")),
     sort: parseSort(searchParams.get("sort")),
   };
 }
@@ -96,14 +102,23 @@ export function buildCompetitionWhere(
   }
 
   if (query.beginnerAny !== undefined) {
-    const beginnerConditions: Prisma.CompetitionScheduleWhereInput[] = [
-      { flagsJson: { contains: `"beginnerFriendly":${query.beginnerAny}` } },
-      { flagsJson: { contains: `"rookieClass":${query.beginnerAny}` } },
-    ];
-    where.AND = [
-      ...(Array.isArray(where.AND) ? where.AND : []),
-      query.beginnerAny ? { OR: beginnerConditions } : { NOT: { OR: beginnerConditions } },
-    ];
+    addFlagAnyFilter(where, ["beginnerFriendly", "rookieClass"], query.beginnerAny);
+  }
+
+  if (query.proPath !== undefined) {
+    addFlagAnyFilter(where, ["proQualifier", "proCard"], query.proPath);
+  }
+
+  if (query.internationalRoute !== undefined) {
+    addFlagAnyFilter(
+      where,
+      ["international", "nationalTeamRoute"],
+      query.internationalRoute,
+    );
+  }
+
+  if (query.regional !== undefined) {
+    addRegionalFilter(where, query.regional);
   }
 
   const flagFilters = [
@@ -124,6 +139,39 @@ export function buildCompetitionWhere(
   }
 
   return where;
+}
+
+function addRegionalFilter(
+  where: Prisma.CompetitionScheduleWhereInput,
+  value: boolean,
+) {
+  const conditions: Prisma.CompetitionScheduleWhereInput[] = [
+    { flagsJson: { contains: `"regional":${value}` } },
+    { title: { contains: "리저널", mode: "insensitive" } },
+    { title: { contains: "regional", mode: "insensitive" } },
+    { tagsJson: { contains: "리저널", mode: "insensitive" } },
+    { tagsJson: { contains: "regional", mode: "insensitive" } },
+  ];
+
+  where.AND = [
+    ...(Array.isArray(where.AND) ? where.AND : []),
+    value ? { OR: conditions } : { NOT: { OR: conditions } },
+  ];
+}
+
+function addFlagAnyFilter(
+  where: Prisma.CompetitionScheduleWhereInput,
+  flags: string[],
+  value: boolean,
+) {
+  const conditions: Prisma.CompetitionScheduleWhereInput[] = flags.map((flag) => ({
+    flagsJson: { contains: `"${flag}":${value}` },
+  }));
+
+  where.AND = [
+    ...(Array.isArray(where.AND) ? where.AND : []),
+    value ? { OR: conditions } : { NOT: { OR: conditions } },
+  ];
 }
 
 export function getCompetitionOrderBy(

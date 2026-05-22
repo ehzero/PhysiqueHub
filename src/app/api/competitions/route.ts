@@ -41,6 +41,9 @@ export async function GET(request: Request) {
       beginnerFriendly: query.beginnerFriendly,
       rookieClass: query.rookieClass,
       proQualifier: query.proQualifier,
+      regional: query.regional,
+      proPath: query.proPath,
+      internationalRoute: query.internationalRoute,
       sort: query.sort,
     },
   });

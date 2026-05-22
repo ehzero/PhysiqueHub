@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   Competition,
   Filters,
@@ -78,25 +78,6 @@ export default function PhysiqueHubApp({
     queryKey: ["competition-filters", seasonYear, queryStartsFrom ?? "all"],
     queryFn: () => fetchCompetitionFilters(seasonYear, { startsFrom: queryStartsFrom }),
   });
-  const {
-    data: homeCompetitionPages,
-    fetchNextPage: fetchNextHomeCompetitionPage,
-    hasNextPage: hasNextHomeCompetitionPage,
-    isLoading: isLoadingHomeCompetitions,
-    isFetchingNextPage: isFetchingNextHomeCompetitionPage,
-  } = useInfiniteQuery({
-    queryKey: ["home-competitions", seasonYear, upcomingStartsFrom],
-    queryFn: ({ pageParam }) =>
-      fetchCompetitionPage(seasonYear, {
-        startsFrom: upcomingStartsFrom,
-        page: pageParam,
-        pageSize: 10,
-      }),
-    initialPageParam: 1,
-    getNextPageParam: (lastPage) =>
-      lastPage.hasNextPage ? lastPage.page + 1 : undefined,
-    enabled: route === "home",
-  });
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -149,7 +130,9 @@ export default function PhysiqueHubApp({
     <div className="shell">
       <Nav
         route={route}
-        setRoute={navigateToRoute}
+        setRoute={(nextRoute) =>
+          setRoute(isAppRoute(nextRoute) ? nextRoute : "home")
+        }
         savedCount={saved.length}
         onOpenContact={() => setContactOpen(true)}
       />
@@ -174,19 +157,15 @@ export default function PhysiqueHubApp({
 
       {route === "home" && (
         <HomeView
-          comps={homeCompetitionPages?.pages.flatMap((page) => page.items) ?? []}
+          seasonYear={seasonYear}
+          startsFrom={upcomingStartsFrom}
           beginnerComps={beginnerCompetitions}
-          totalCount={homeCompetitionPages?.pages[0]?.total}
           saved={saved}
           toggleSave={toggleSave}
           openComp={openComp}
           setRoute={navigateToRoute}
           filterOptions={showPast ? undefined : filterOptions}
           today={today}
-          hasNextPage={hasNextHomeCompetitionPage}
-          isLoadingPage={isLoadingHomeCompetitions}
-          isFetchingNextPage={isFetchingNextHomeCompetitionPage}
-          fetchNextPage={fetchNextHomeCompetitionPage}
         />
       )}
 

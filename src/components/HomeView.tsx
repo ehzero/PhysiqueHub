@@ -1,69 +1,61 @@
 "use client";
 
 import { useState } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import {
   Competition,
-  ddayAt,
-  parseDate,
-  regStatusAt,
   fmtDate,
 } from "@/lib/data";
 import { FeatCard } from "./FeatCard";
 import { CompRow } from "./CompRow";
 import { Icons } from "./Icons";
-import type { CompetitionFilterOptions } from "@/lib/competition-client";
+import {
+  fetchCompetitionPage,
+  type CompetitionFilterOptions,
+  type CompetitionPageOptions,
+} from "@/lib/competition-client";
 
 const DOWS = ["일", "월", "화", "수", "목", "금", "토"];
 
 const SORT_OPTIONS = [
   { value: "date", label: "대회일 빠른 순" },
   { value: "deadline", label: "접수 마감 임박 순" },
-  { value: "scale", label: "대회 규모 큰 순" },
+  { value: "updated", label: "최근 업데이트 순" },
 ];
 
 interface HomeViewProps {
-  comps: Competition[];
+  seasonYear: number;
+  startsFrom: string;
   beginnerComps: Competition[];
-  totalCount?: number;
   saved: string[];
   toggleSave: (id: string) => void;
   openComp: (c: Competition) => void;
   setRoute: (r: string) => void;
   filterOptions?: CompetitionFilterOptions;
   today: Date;
-  hasNextPage?: boolean;
-  isLoadingPage: boolean;
-  isFetchingNextPage: boolean;
-  fetchNextPage: () => void;
 }
 
 export function HomeView({
-  comps,
+  seasonYear,
+  startsFrom,
   beginnerComps,
-  totalCount,
   saved,
   toggleSave,
   openComp,
   setRoute,
   filterOptions,
   today,
-  hasNextPage,
-  isLoadingPage,
-  isFetchingNextPage,
-  fetchNextPage,
 }: HomeViewProps) {
   const [activePreset, setActivePreset] = useState("all");
-  const [activeOrganization, setActiveOrganization] = useState<string | null>(
+  const [activeOrganizationId, setActiveOrganizationId] = useState<string | null>(
     null,
   );
   const [sortBy, setSortBy] = useState("date");
   const [sortOpen, setSortOpen] = useState(false);
 
-  const upcoming = comps.filter((c) => ddayAt(c.date, today) >= -1);
-
   const counts = {
     all: filterOptions ? sumCounts(filterOptions.organizations) : 0,
-    open: filterOptions?.registrationStatuses.find((status) => status.status === "open")?.count ?? 0,
+    open: sumStatusCounts(filterOptions?.registrationStatuses, ["open", "urgent"]),
     beginner: filterOptions?.flags.beginnerAny ?? 0,
     natural: filterOptions?.flags.natural ?? 0,
     regional: filterOptions?.flags.regional ?? 0,
@@ -72,31 +64,32 @@ export function HomeView({
       filterOptions?.flags.internationalRoute ?? 0,
   };
 
-  let feed = upcoming.slice();
-  if (activePreset === "open")
-    feed = feed.filter((c) =>
-      ["open", "urgent"].includes(regStatusAt(c, today).kind),
-    );
-  else if (activePreset === "beginner") feed = feed.filter((c) => c.beginner);
-  else if (activePreset === "natural") feed = feed.filter((c) => c.natural);
-  else if (activePreset === "regional") feed = feed.filter((c) => c.regional);
-  else if (activePreset === "proPath") feed = feed.filter((c) => c.proPath);
-  else if (activePreset === "internationalRoute")
-    feed = feed.filter((c) => c.internationalRoute);
-
-  if (activeOrganization)
-    feed = feed.filter((c) => c.org === activeOrganization);
-
-  feed.sort((a, b) => {
-    if (sortBy === "deadline")
-      return parseDate(a.regClose).getTime() - parseDate(b.regClose).getTime();
-    if (sortBy === "scale") {
-      const order: Record<string, number> = { 대형: 0, 중형: 1, 소형: 2 };
-      return order[a.scale] - order[b.scale];
-    }
-    return parseDate(a.date).getTime() - parseDate(b.date).getTime();
+  const queryOptions = getHomeQueryOptions({
+    activeOrganizationId,
+    activePreset,
+    sortBy,
+    startsFrom,
+  });
+  const {
+    data: homeCompetitionPages,
+    fetchNextPage,
+    hasNextPage,
+    isLoading: isLoadingPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["home-competitions", seasonYear, queryOptions],
+    queryFn: ({ pageParam }) =>
+      fetchCompetitionPage(seasonYear, {
+        ...queryOptions,
+        page: pageParam,
+        pageSize: 10,
+      }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) =>
+      lastPage.hasNextPage ? lastPage.page + 1 : undefined,
   });
 
+  const feed = homeCompetitionPages?.pages.flatMap((page) => page.items) ?? [];
   const featured = feed.slice(0, 3);
   const restList = feed.slice(3);
 
@@ -109,7 +102,7 @@ export function HomeView({
           title: "전체 단체",
         },
         ...filterOptions.organizations.map((organization) => ({
-          id: organization.name,
+          id: organization.id,
           label: organization.shortName || organization.name,
           n: organization.count,
           title: organization.name,
@@ -147,22 +140,22 @@ export function HomeView({
       proPath: "프로카드·퀄리파이어",
       internationalRoute: "국제·대표 루트",
     }[activePreset] || "전체";
-  const isAllOrganization = !activeOrganization;
+  const isAllOrganization = !activeOrganizationId;
   const isAllCategory = activePreset === "all";
+  const activeOrganizationName = organizationFilters.find(
+    (organization) => organization.id === activeOrganizationId,
+  )?.title ?? activeOrganizationId ?? "전체 단체";
   const feedTitle = isAllOrganization
     ? isAllCategory
       ? "전체 대회"
       : feedLabel
     : isAllCategory
-      ? activeOrganization
-      : `${activeOrganization} · ${feedLabel}`;
+      ? activeOrganizationName
+      : `${activeOrganizationName} · ${feedLabel}`;
   const sortLabel = SORT_OPTIONS.find(
     (option) => option.value === sortBy,
   )?.label;
-  const feedCount =
-    isAllOrganization && isAllCategory
-      ? (totalCount ?? counts.all)
-      : feed.length;
+  const feedCount = homeCompetitionPages?.pages[0]?.total ?? 0;
 
   return (
     <main className="home-main">
@@ -188,11 +181,11 @@ export function HomeView({
               {organizationFilters.map((organization) => (
                 <button
                   key={organization.id ?? "all-organizations"}
-                  className={`preset-chip ${activeOrganization === organization.id ? "on" : ""}`}
+                  className={`preset-chip ${activeOrganizationId === organization.id ? "on" : ""}`}
                   title={organization.title}
                   onClick={() =>
-                    setActiveOrganization(
-                      activeOrganization === organization.id
+                    setActiveOrganizationId(
+                      activeOrganizationId === organization.id
                         ? null
                         : organization.id,
                     )
@@ -304,7 +297,7 @@ export function HomeView({
                   className="cta-btn"
                   onClick={() => {
                     setActivePreset("all");
-                    setActiveOrganization(null);
+                    setActiveOrganizationId(null);
                   }}
                 >
                   필터 초기화
@@ -380,6 +373,61 @@ export function HomeView({
 
 function sumCounts(items: Array<{ count: number }>): number {
   return items.reduce((total, item) => total + item.count, 0);
+}
+
+function sumStatusCounts(
+  statuses: Array<{ status: string; count: number }> | undefined,
+  activeStatuses: string[],
+): number {
+  if (!statuses) {
+    return 0;
+  }
+
+  return statuses
+    .filter((status) => activeStatuses.includes(status.status))
+    .reduce((total, status) => total + status.count, 0);
+}
+
+function getHomeQueryOptions({
+  activeOrganizationId,
+  activePreset,
+  sortBy,
+  startsFrom,
+}: {
+  activeOrganizationId: string | null;
+  activePreset: string;
+  sortBy: string;
+  startsFrom: string;
+}): CompetitionPageOptions {
+  const options: CompetitionPageOptions = {
+    startsFrom,
+    sort:
+      sortBy === "deadline"
+        ? "deadline-asc"
+        : sortBy === "updated"
+          ? "updated-desc"
+          : "date-asc",
+  };
+
+  if (activeOrganizationId) {
+    options.organizationId = activeOrganizationId;
+  }
+
+  if (activePreset === "open") {
+    options.registrationStatus = ["open", "urgent"];
+  } else if (activePreset === "beginner") {
+    options.beginnerAny = true;
+  } else if (activePreset === "natural") {
+    options.natural = true;
+  } else if (activePreset === "regional") {
+    options.regional = true;
+  } else if (activePreset === "proPath") {
+    options.proPath = true;
+  } else if (activePreset === "internationalRoute") {
+    options.internationalRoute = true;
+  }
+
+  return options;
 }
 
 function BeginnerPicks({
