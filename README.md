@@ -1,36 +1,23 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PhysiqueHub
 
-## Getting Started
+PhysiqueHub는 피트니스·보디빌딩 대회 일정을 수집하고 탐색하기 위한 프로젝트입니다.
 
-First, run the development server:
+이 `README.md`를 프로젝트의 대표 문서로 사용합니다. 세부 조사 자료나 보조 문서는 `docs/` 아래에 두되, 전체 구조와 어떤 문서를 먼저 봐야 하는지는 이 파일에서 안내합니다.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 문서 구조
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+| 문서 | 용도 |
+| --- | --- |
+| [`docs/fitness-bodybuilding-competition-context.md`](docs/fitness-bodybuilding-competition-context.md) | 피트니스·보디빌딩 대회와 단체에 대한 핵심 도메인 맥락. IFBB Pro League, NPC Worldwide, KBBF, NABBA, PCA, 내추럴 단체, 한국 로컬 대회 축을 구분하는 기준 문서입니다. |
+| [`docs/competition-schedule-crawling-sources.md`](docs/competition-schedule-crawling-sources.md) | 대회 일정 수집 대상 공식 소스와 크롤링 가능성 조사 메모입니다. |
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 문서 운영 원칙
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- README는 프로젝트의 대표 문서이자 문서 인덱스로 유지합니다.
+- 실행 방법, 프레임워크 기본 설명, DB 명령처럼 코드나 설정에서 바로 확인할 수 있는 내용은 README에 반복하지 않습니다.
+- 데이터 구조를 설명해야 할 때는 문서보다 타입 정의 파일을 우선 기준으로 삼습니다.
+- 피트니스·보디빌딩 대회와 단체에 관한 도메인 맥락은 `docs/fitness-bodybuilding-competition-context.md`를 기준으로 유지합니다.
 
-## Learn More
+## 로컬 설정
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+환경변수 예시는 [`.env.example`](.env.example)에 둡니다.

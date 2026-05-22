@@ -1,0 +1,100 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model CompetitionSchedule {
+  id                    String    @id
+  organizationId        String
+  organizationName      String
+  organizationShortName String?
+  title                 String
+  subtitle              String?
+  aliasesJson           String    @default("[]")
+  seasonYear            Int?
+
+  dateStartsOn          DateTime?
+  dateEndsOn            DateTime?
+  dateTimezone          String    @default("Asia/Seoul")
+  dateRawText           String?
+  dateConfidence        String    @default("low")
+
+  registrationOpensAt    DateTime?
+  registrationClosesAt   DateTime?
+  registrationStatus     String    @default("unknown")
+  registrationUrl        String?
+  registrationRawText    String?
+  registrationConfidence String    @default("low")
+  feeCurrency            String    @default("UNKNOWN")
+  feeMinAmount           Int?
+  feeMaxAmount           Int?
+  feeRawText             String?
+
+  country            String  @default("KR")
+  region             String?
+  city               String?
+  venue              String?
+  address            String?
+  locationRawText    String?
+  locationConfidence String  @default("low")
+
+  divisionsJson String @default("[]")
+  tagsJson      String @default("[]")
+  flagsJson     String @default("{}")
+
+  posterImageUrl  String?
+  thumbnailUrl    String?
+  imageSourceUrl  String?
+
+  sourceType          String
+  sourceUrl           String
+  canonicalUrl        String?
+  detailUrl           String?
+  sourceEventId       String?
+  sourceUpdatedAt     DateTime?
+  fetchedAt           DateTime
+  parserName          String?
+  parserVersion       String?
+  rawHash             String?
+  rawTitle            String?
+  rawDateText         String?
+  rawLocationText     String?
+  rawRegistrationText String?
+
+  crawlStatus      String @default("not-started")
+  reviewStatus     String @default("pending")
+  confidence       String @default("low")
+  qualityIssuesJson String @default("[]")
+  notes            String?
+
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  normalizedAt DateTime?
+
+  @@unique([organizationId, sourceEventId], name: "competition_schedule_org_source_event_unique")
+  @@index([organizationId])
+  @@index([seasonYear])
+  @@index([dateStartsOn])
+  @@index([registrationStatus])
+  @@index([reviewStatus])
+  @@index([crawlStatus])
+}
+
+model CompetitionSourceProgress {
+  organizationId    String  @id
+  organizationName  String
+  status            String  @default("not-started")
+  sourceConfirmed   Boolean @default(false)
+  parserImplemented Boolean @default(false)
+  sampleCollected   Boolean @default(false)
+  reviewed          Boolean @default(false)
+  sourceUrlsJson    String  @default("[]")
+  note              String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}

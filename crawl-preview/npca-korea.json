@@ -1,0 +1,1523 @@
+{
+  "generatedAt": "2026-05-22T09:39:58.995Z",
+  "organizationId": "npca-korea",
+  "organizationName": "NPCA Korea",
+  "sources": [
+    {
+      "organizationId": "npca-korea",
+      "organizationName": "NPCA Korea",
+      "url": "https://coachn.co.kr/sub/competitions_list.php?sca=NPCA%EC%A0%91%EC%88%98",
+      "ok": true,
+      "count": 16,
+      "warnings": [
+        "CoachN 대회신청 공개 목록을 PCA/NPCA 공식 접수 앱 원천으로 사용합니다.",
+        "2026-05-22 확인 기준 robots.txt는 404로 확인되어 공개 목록/상세만 저빈도로 수집합니다."
+      ],
+      "fetchedAt": "2026-05-22T09:39:59.174Z"
+    }
+  ],
+  "events": [
+    {
+      "id": "npca-korea:31",
+      "organizationId": "npca-korea",
+      "organizationName": "NPCA Korea",
+      "organizationShortName": "NPCA",
+      "title": "2026 NPCA JEJU POINT LEAGUE(2026 엔피씨에이 제주 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-05-30",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 5월 30일(토)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-05-26T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=31",
+        "rawText": "대회접수마감: 2026-05-26T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "rawText": "서귀포 월드컵리조트 범섬관",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "NPCA",
+        "NPCA Korea",
+        "내추럴"
+      ],
+      "flags": {
+        "natural": true
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=NPCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=31",
+        "sourceEventId": "31",
+        "fetchedAt": "2026-05-22T09:40:51.147Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "b4364a932d4c7dc5",
+        "rawTitle": "2026 NPCA JEJU POINT LEAGUE(2026 엔피씨에이 제주 포인트리그)",
+        "rawDateText": "2026년 5월 30일(토)",
+        "rawLocationText": "서귀포 월드컵리조트 범섬관",
+        "rawRegistrationText": "data-deadline=1779721200"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:40:51.147Z",
+      "updatedAt": "2026-05-22T09:40:51.147Z",
+      "normalizedAt": "2026-05-22T09:40:51.147Z"
+    },
+    {
+      "id": "npca-korea:33",
+      "organizationId": "npca-korea",
+      "organizationName": "NPCA Korea",
+      "organizationShortName": "NPCA",
+      "title": "2026 NPCA HWASEONG POINT LEAGUE(2026 엔피씨에이 화성 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-06-07",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 6월 7일(일)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-06-02T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=33",
+        "rawText": "대회접수마감: 2026-06-02T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "venue": "장안대학교 체육관",
+        "rawText": "장안대학교 체육관",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "NPCA",
+        "NPCA Korea",
+        "내추럴"
+      ],
+      "flags": {
+        "natural": true
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=NPCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=33",
+        "sourceEventId": "33",
+        "fetchedAt": "2026-05-22T09:40:55.415Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "be7e72ba40d4396d",
+        "rawTitle": "2026 NPCA HWASEONG POINT LEAGUE(2026 엔피씨에이 화성 포인트리그)",
+        "rawDateText": "2026년 6월 7일(일)",
+        "rawLocationText": "장안대학교 체육관",
+        "rawRegistrationText": "data-deadline=1780326000"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:40:55.415Z",
+      "updatedAt": "2026-05-22T09:40:55.415Z",
+      "normalizedAt": "2026-05-22T09:40:55.415Z"
+    },
+    {
+      "id": "npca-korea:35",
+      "organizationId": "npca-korea",
+      "organizationName": "NPCA Korea",
+      "organizationShortName": "NPCA",
+      "title": "2026 NPCA INCHEON POINT LEAGUE(2026 엔피씨에이 인천 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-06-14",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 6월 14일(일)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-06-09T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=35",
+        "rawText": "대회접수마감: 2026-06-09T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "인천 하버파크 그랜드볼룸",
+        "rawText": "인천 하버파크 그랜드볼룸",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "NPCA",
+        "NPCA Korea",
+        "내추럴"
+      ],
+      "flags": {
+        "natural": true
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=NPCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=35",
+        "sourceEventId": "35",
+        "fetchedAt": "2026-05-22T09:40:59.432Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "6187ed9d9cb6ba28",
+        "rawTitle": "2026 NPCA INCHEON POINT LEAGUE(2026 엔피씨에이 인천 포인트리그)",
+        "rawDateText": "2026년 6월 14일(일)",
+        "rawLocationText": "인천 하버파크 그랜드볼룸",
+        "rawRegistrationText": "data-deadline=1780930800"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:40:59.432Z",
+      "updatedAt": "2026-05-22T09:40:59.432Z",
+      "normalizedAt": "2026-05-22T09:40:59.432Z"
+    },
+    {
+      "id": "npca-korea:37",
+      "organizationId": "npca-korea",
+      "organizationName": "NPCA Korea",
+      "organizationShortName": "NPCA",
+      "title": "2026 NPCA DAEJEON POINT LEAGUE(2026 엔피씨에이 대전 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-06-21",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 6월 21일(일)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-06-16T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=37",
+        "rawText": "대회접수마감: 2026-06-16T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "대전광역시/충청권역",
+        "rawText": "대전광역시/충청권역",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "NPCA",
+        "NPCA Korea",
+        "내추럴"
+      ],
+      "flags": {
+        "natural": true
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=NPCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=37",
+        "sourceEventId": "37",
+        "fetchedAt": "2026-05-22T09:41:03.870Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "2fd24c21ca1f6e6c",
+        "rawTitle": "2026 NPCA DAEJEON POINT LEAGUE(2026 엔피씨에이 대전 포인트리그)",
+        "rawDateText": "2026년 6월 21일(일)",
+        "rawLocationText": "대전광역시/충청권역",
+        "rawRegistrationText": "data-deadline=1781535600"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:41:03.870Z",
+      "updatedAt": "2026-05-22T09:41:03.870Z",
+      "normalizedAt": "2026-05-22T09:41:03.870Z"
+    },
+    {
+      "id": "npca-korea:39",
+      "organizationId": "npca-korea",
+      "organizationName": "NPCA Korea",
+      "organizationShortName": "NPCA",
+      "title": "2026 NPCA YANGSAN POINT LEAGUE(2026 엔피씨에이 양산 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-06-28",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 6월 28일(일)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-06-23T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=39",
+        "rawText": "대회접수마감: 2026-06-23T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "rawText": "김해 가야대학교 공연장",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "NPCA",
+        "NPCA Korea",
+        "내추럴"
+      ],
+      "flags": {
+        "natural": true
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=NPCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=39",
+        "sourceEventId": "39",
+        "fetchedAt": "2026-05-22T09:41:05.597Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "7ee063b0cba4eaf1",
+        "rawTitle": "2026 NPCA YANGSAN POINT LEAGUE(2026 엔피씨에이 양산 포인트리그)",
+        "rawDateText": "2026년 6월 28일(일)",
+        "rawLocationText": "김해 가야대학교 공연장",
+        "rawRegistrationText": "data-deadline=1782140400"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:41:05.597Z",
+      "updatedAt": "2026-05-22T09:41:05.597Z",
+      "normalizedAt": "2026-05-22T09:41:05.597Z"
+    },
+    {
+      "id": "npca-korea:41",
+      "organizationId": "npca-korea",
+      "organizationName": "NPCA Korea",
+      "organizationShortName": "NPCA",
+      "title": "2026 NPCA BUSAN POINT LEAGUE(2026 엔피씨에이 부산 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-07-05",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 7월 5일 (일)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-07-01T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=41",
+        "rawText": "대회접수마감: 2026-07-01T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "rawText": "동명대학교 대강당",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "NPCA",
+        "NPCA Korea",
+        "내추럴"
+      ],
+      "flags": {
+        "natural": true
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=NPCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=41",
+        "sourceEventId": "41",
+        "fetchedAt": "2026-05-22T09:41:09.871Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "4b4a5a566176f325",
+        "rawTitle": "2026 NPCA BUSAN POINT LEAGUE(2026 엔피씨에이 부산 포인트리그)",
+        "rawDateText": "2026년 7월 5일 (일)",
+        "rawLocationText": "동명대학교 대강당",
+        "rawRegistrationText": "data-deadline=1782831600"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:41:09.871Z",
+      "updatedAt": "2026-05-22T09:41:09.871Z",
+      "normalizedAt": "2026-05-22T09:41:09.871Z"
+    },
+    {
+      "id": "npca-korea:43",
+      "organizationId": "npca-korea",
+      "organizationName": "NPCA Korea",
+      "organizationShortName": "NPCA",
+      "title": "2026 NPCA ULSAN POINT LEAGUE(2026 엔피씨에이 울산 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-07-12",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 7월 12일 (일)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-07-07T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=43",
+        "rawText": "대회접수마감: 2026-07-07T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "울산kbs홀",
+        "venue": "울산kbs홀",
+        "rawText": "울산kbs홀",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "NPCA",
+        "NPCA Korea",
+        "내추럴"
+      ],
+      "flags": {
+        "natural": true
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=NPCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=43",
+        "sourceEventId": "43",
+        "fetchedAt": "2026-05-22T09:41:12.213Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "4a0be86a9932c34b",
+        "rawTitle": "2026 NPCA ULSAN POINT LEAGUE(2026 엔피씨에이 울산 포인트리그)",
+        "rawDateText": "2026년 7월 12일 (일)",
+        "rawLocationText": "울산kbs홀",
+        "rawRegistrationText": "data-deadline=1783350000"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:41:12.213Z",
+      "updatedAt": "2026-05-22T09:41:12.213Z",
+      "normalizedAt": "2026-05-22T09:41:12.213Z"
+    },
+    {
+      "id": "npca-korea:45",
+      "organizationId": "npca-korea",
+      "organizationName": "NPCA Korea",
+      "organizationShortName": "NPCA",
+      "title": "2026 NPCA SEJONG POINT LEAGUE(2026 엔피씨에이 세종 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-07-19",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 7월 19일 (일)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-07-14T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=45",
+        "rawText": "대회접수마감: 2026-07-14T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "세종특별시/인근지역",
+        "rawText": "세종특별시/인근지역",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "NPCA",
+        "NPCA Korea",
+        "내추럴"
+      ],
+      "flags": {
+        "natural": true
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=NPCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=45",
+        "sourceEventId": "45",
+        "fetchedAt": "2026-05-22T09:41:16.975Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "05c8a5cf30068ec3",
+        "rawTitle": "2026 NPCA SEJONG POINT LEAGUE(2026 엔피씨에이 세종 포인트리그)",
+        "rawDateText": "2026년 7월 19일 (일)",
+        "rawLocationText": "세종특별시/인근지역",
+        "rawRegistrationText": "data-deadline=1783954800"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:41:16.975Z",
+      "updatedAt": "2026-05-22T09:41:16.975Z",
+      "normalizedAt": "2026-05-22T09:41:16.975Z"
+    },
+    {
+      "id": "npca-korea:47",
+      "organizationId": "npca-korea",
+      "organizationName": "NPCA Korea",
+      "organizationShortName": "NPCA",
+      "title": "2026 NPCA CHEONAN POINT LEAGUE(2026 엔피씨에이 천안 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-07-26",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 7월 26일 (일)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-07-21T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=47",
+        "rawText": "대회접수마감: 2026-07-21T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "대전 선샤인 호텔",
+        "venue": "대전 선샤인 호텔",
+        "rawText": "대전 선샤인 호텔",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "NPCA",
+        "NPCA Korea",
+        "내추럴"
+      ],
+      "flags": {
+        "natural": true
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=NPCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=47",
+        "sourceEventId": "47",
+        "fetchedAt": "2026-05-22T09:41:21.524Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "10424719e48eb64f",
+        "rawTitle": "2026 NPCA CHEONAN POINT LEAGUE(2026 엔피씨에이 천안 포인트리그)",
+        "rawDateText": "2026년 7월 26일 (일)",
+        "rawLocationText": "대전 선샤인 호텔",
+        "rawRegistrationText": "data-deadline=1784559600"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:41:21.524Z",
+      "updatedAt": "2026-05-22T09:41:21.524Z",
+      "normalizedAt": "2026-05-22T09:41:21.524Z"
+    },
+    {
+      "id": "npca-korea:49",
+      "organizationId": "npca-korea",
+      "organizationName": "NPCA Korea",
+      "organizationShortName": "NPCA",
+      "title": "2026 NPCA GWANGJU POINT LEAGUE(2026 엔피씨에이 광주 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-08-09",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 8월 9일 (일)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-08-04T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=49",
+        "rawText": "대회접수마감: 2026-08-04T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "광주 동강대학교 체육관",
+        "venue": "광주 동강대학교 체육관",
+        "rawText": "광주 동강대학교 체육관",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "NPCA",
+        "NPCA Korea",
+        "내추럴"
+      ],
+      "flags": {
+        "natural": true
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=NPCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=49",
+        "sourceEventId": "49",
+        "fetchedAt": "2026-05-22T09:41:24.907Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "f27eea03b130c054",
+        "rawTitle": "2026 NPCA GWANGJU POINT LEAGUE(2026 엔피씨에이 광주 포인트리그)",
+        "rawDateText": "2026년 8월 9일 (일)",
+        "rawLocationText": "광주 동강대학교 체육관",
+        "rawRegistrationText": "data-deadline=1785769200"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:41:24.907Z",
+      "updatedAt": "2026-05-22T09:41:24.907Z",
+      "normalizedAt": "2026-05-22T09:41:24.907Z"
+    },
+    {
+      "id": "npca-korea:51",
+      "organizationId": "npca-korea",
+      "organizationName": "NPCA Korea",
+      "organizationShortName": "NPCA",
+      "title": "2026 NPCA SUWON POINT LEAGUE(2026 엔피씨에이 수원 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-08-16",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 8월 16일 (일)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-08-11T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=51",
+        "rawText": "대회접수마감: 2026-08-11T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "venue": "장안대학교 체육관",
+        "rawText": "장안대학교 체육관",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "NPCA",
+        "NPCA Korea",
+        "내추럴"
+      ],
+      "flags": {
+        "natural": true
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=NPCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=51",
+        "sourceEventId": "51",
+        "fetchedAt": "2026-05-22T09:41:29.982Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "fcde72a5837332b3",
+        "rawTitle": "2026 NPCA SUWON POINT LEAGUE(2026 엔피씨에이 수원 포인트리그)",
+        "rawDateText": "2026년 8월 16일 (일)",
+        "rawLocationText": "장안대학교 체육관",
+        "rawRegistrationText": "data-deadline=1786374000"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:41:29.982Z",
+      "updatedAt": "2026-05-22T09:41:29.982Z",
+      "normalizedAt": "2026-05-22T09:41:29.982Z"
+    },
+    {
+      "id": "npca-korea:53",
+      "organizationId": "npca-korea",
+      "organizationName": "NPCA Korea",
+      "organizationShortName": "NPCA",
+      "title": "2026 NPCA BUCHEON POINT LEAGUE(2026 엔피씨에이 부천 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-08-23",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 8월 23일 (일)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-08-18T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=53",
+        "rawText": "대회접수마감: 2026-08-18T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "인천 하버파크 호텔 그랜드볼룸",
+        "venue": "인천 하버파크 호텔 그랜드볼룸",
+        "rawText": "인천 하버파크 호텔 그랜드볼룸",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "NPCA",
+        "NPCA Korea",
+        "내추럴"
+      ],
+      "flags": {
+        "natural": true
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=NPCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=53",
+        "sourceEventId": "53",
+        "fetchedAt": "2026-05-22T09:41:31.343Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "6c904831e7ccc672",
+        "rawTitle": "2026 NPCA BUCHEON POINT LEAGUE(2026 엔피씨에이 부천 포인트리그)",
+        "rawDateText": "2026년 8월 23일 (일)",
+        "rawLocationText": "인천 하버파크 호텔 그랜드볼룸",
+        "rawRegistrationText": "data-deadline=1786978800"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:41:31.343Z",
+      "updatedAt": "2026-05-22T09:41:31.343Z",
+      "normalizedAt": "2026-05-22T09:41:31.343Z"
+    },
+    {
+      "id": "npca-korea:55",
+      "organizationId": "npca-korea",
+      "organizationName": "NPCA Korea",
+      "organizationShortName": "NPCA",
+      "title": "2026 NPCA GOYANG POINT LEAGUE(2026 엔피씨에이 고양 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-08-30",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 8월 30일 (일)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-08-25T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=55",
+        "rawText": "대회접수마감: 2026-08-25T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "rawText": "파주 엠파이브 방송센타",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "NPCA",
+        "NPCA Korea",
+        "내추럴"
+      ],
+      "flags": {
+        "natural": true
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=NPCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=55",
+        "sourceEventId": "55",
+        "fetchedAt": "2026-05-22T09:41:33.507Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "6cba59d7efc716e1",
+        "rawTitle": "2026 NPCA GOYANG POINT LEAGUE(2026 엔피씨에이 고양 포인트리그)",
+        "rawDateText": "2026년 8월 30일 (일)",
+        "rawLocationText": "파주 엠파이브 방송센타",
+        "rawRegistrationText": "data-deadline=1787583600"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:41:33.507Z",
+      "updatedAt": "2026-05-22T09:41:33.507Z",
+      "normalizedAt": "2026-05-22T09:41:33.507Z"
+    },
+    {
+      "id": "npca-korea:70",
+      "organizationId": "npca-korea",
+      "organizationName": "NPCA Korea",
+      "organizationShortName": "NPCA",
+      "title": "2026 NPCA CHANGWON POINT LEAGUE(2026 엔피씨에이 창원 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-09-06",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 9월 6일 (일)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-09-01T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=70",
+        "rawText": "대회접수마감: 2026-09-01T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "rawText": "창원시 인근",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        },
+        {
+          "name": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        }
+      ],
+      "tags": [
+        "NPCA",
+        "NPCA Korea",
+        "내추럴"
+      ],
+      "flags": {
+        "natural": true
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=NPCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=70",
+        "sourceEventId": "70",
+        "fetchedAt": "2026-05-22T09:41:35.418Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "3b11b3f7716928c6",
+        "rawTitle": "2026 NPCA CHANGWON POINT LEAGUE(2026 엔피씨에이 창원 포인트리그)",
+        "rawDateText": "2026년 9월 6일 (일)",
+        "rawLocationText": "창원시 인근",
+        "rawRegistrationText": "data-deadline=1788188400"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:41:35.418Z",
+      "updatedAt": "2026-05-22T09:41:35.418Z",
+      "normalizedAt": "2026-05-22T09:41:35.418Z"
+    },
+    {
+      "id": "npca-korea:72",
+      "organizationId": "npca-korea",
+      "organizationName": "NPCA Korea",
+      "organizationShortName": "NPCA",
+      "title": "2026 NPCA YONGIN POINT LEAGUE(2026 엔피씨에이 용인 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-09-13",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 9월 13일 (일)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-09-08T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=72",
+        "rawText": "대회접수마감: 2026-09-08T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "rawText": "용인시 인근",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        },
+        {
+          "name": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        }
+      ],
+      "tags": [
+        "NPCA",
+        "NPCA Korea",
+        "내추럴"
+      ],
+      "flags": {
+        "natural": true
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=NPCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=72",
+        "sourceEventId": "72",
+        "fetchedAt": "2026-05-22T09:41:38.884Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "ae6b929c48039ed6",
+        "rawTitle": "2026 NPCA YONGIN POINT LEAGUE(2026 엔피씨에이 용인 포인트리그)",
+        "rawDateText": "2026년 9월 13일 (일)",
+        "rawLocationText": "용인시 인근",
+        "rawRegistrationText": "data-deadline=1788793200"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:41:38.884Z",
+      "updatedAt": "2026-05-22T09:41:38.884Z",
+      "normalizedAt": "2026-05-22T09:41:38.884Z"
+    },
+    {
+      "id": "npca-korea:74",
+      "organizationId": "npca-korea",
+      "organizationName": "NPCA Korea",
+      "organizationShortName": "NPCA",
+      "title": "2026 NPCA SUPER SERIES(2026 엔피씨에이 슈퍼시리즈)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-09-20",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 9월 20일 (일)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-09-15T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=74",
+        "rawText": "대회접수마감: 2026-09-15T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "rawText": "추후공지",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        },
+        {
+          "name": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "NPCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        }
+      ],
+      "tags": [
+        "NPCA",
+        "NPCA Korea",
+        "내추럴"
+      ],
+      "flags": {
+        "natural": true
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=NPCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=74",
+        "sourceEventId": "74",
+        "fetchedAt": "2026-05-22T09:41:41.528Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "92bfbe8c60fc6259",
+        "rawTitle": "2026 NPCA SUPER SERIES(2026 엔피씨에이 슈퍼시리즈)",
+        "rawDateText": "2026년 9월 20일 (일)",
+        "rawLocationText": "추후공지",
+        "rawRegistrationText": "data-deadline=1789398000"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:41:41.528Z",
+      "updatedAt": "2026-05-22T09:41:41.528Z",
+      "normalizedAt": "2026-05-22T09:41:41.528Z"
+    }
+  ],
+  "errors": []
+}

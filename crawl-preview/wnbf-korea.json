@@ -1,0 +1,226 @@
+{
+  "generatedAt": "2026-05-22T09:53:34.397Z",
+  "organizationId": "wnbf-korea",
+  "organizationName": "WNBF Korea",
+  "sources": [
+    {
+      "organizationId": "wnbf-korea",
+      "organizationName": "WNBF Korea",
+      "url": "https://www.wnbfkorea1.com/26",
+      "ok": true,
+      "count": 3,
+      "warnings": [
+        "robots.txt에서 공개 페이지 접근은 허용됩니다.",
+        "Imweb 텍스트 위젯의 대회 신청 섹션을 기준으로 수집합니다.",
+        "버튼 링크는 신청/문의 폼 성격일 수 있어 registrationUrl 또는 detailUrl로만 보존합니다."
+      ],
+      "fetchedAt": "2026-05-22T09:53:34.764Z"
+    }
+  ],
+  "events": [
+    {
+      "id": "wnbf-korea:2ce117f0472b5c03",
+      "organizationId": "wnbf-korea",
+      "organizationName": "WNBF Korea",
+      "organizationShortName": "WNBF",
+      "title": "WNBF asia 프로쇼 (정선) 하이원리조트",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-08-29",
+        "endsOn": "2026-08-30",
+        "timezone": "Asia/Seoul",
+        "rawText": "26, 8.29(체크인)/30(본대회)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-06-07T23:59:00+09:00",
+        "registrationUrl": "https://www.wnbfkorea1.com/430420633",
+        "rawText": "아시아 프로쇼 한국대회 1차 접수참가접수비용(500.000원)6월7일까지, 접수 후 1일이내 입금되어야합니다.(폴리 그라프 비용 별도(100.000원) 70달러2차(60만)3차(70만)4차(80만원)(변동될수있음)*(폴리그라프 검사는 참가접수 완료 후 대 검철청 검사관님이 출전선수에게 직접 연락 후 스케줄 잡아 드립니다)월드프로전(케나다) 참가하시는 프로님들은 반드시 26, 8. 30 WNBFKOREA 14th 아시아 프로쇼 에 참가해야만 WNBF worlds 참가자격획득월드전 사전심사에 미 출전 후 개인적으로 월드전 참가하실 수 없음(프로박탈) 환불규정 (질병 외에 환불되지 않습니다) all fees are non- refundadle, 질병환불 시 50% 지급됨26년 월드프로전 (한국 멤버쉽 가입 필수)보류!26년 WNBFkorea 프로전 참가비 입금계좌 (농협 312-0201-3223-71 WNBFKOREA) 참가신청 후 1일이내 입금 완료 시 신청완료됩니다.아시아 프로쇼 종목(맨즈 보디빌딩, 맨즈 피지크, 우먼 비키니) 3종목. 클래식 피지크(보류)상금 1위 1.000달러, 2위 500달러, 3위 300달러",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "정선",
+        "venue": "하이원리조트",
+        "rawText": "정선 하이원리조트",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "맨즈 보디빌딩",
+          "group": "mens",
+          "rawText": "맨즈 보디빌딩"
+        },
+        {
+          "name": "맨즈 피지크",
+          "group": "mens",
+          "rawText": "맨즈 피지크"
+        },
+        {
+          "name": "우먼 비키니",
+          "group": "womens",
+          "rawText": "우먼 비키니"
+        }
+      ],
+      "tags": [
+        "WNBF",
+        "WNBF Korea",
+        "내추럴",
+        "폴리그라프"
+      ],
+      "flags": {
+        "natural": true,
+        "beginnerFriendly": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-homepage",
+        "sourceUrl": "https://www.wnbfkorea1.com/26",
+        "detailUrl": "https://www.wnbfkorea1.com/430420633",
+        "sourceEventId": "2ce117f0472b5c03",
+        "fetchedAt": "2026-05-22T09:53:34.764Z",
+        "parserName": "wnbf-korea-imweb-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "ed5a93507ffe411c",
+        "rawTitle": "WNBF asia 프로쇼 (정선) 하이원리조트 26, 8.29(체크인)/30(본대회)",
+        "rawDateText": "26, 8.29(체크인)/30(본대회)",
+        "rawLocationText": "정선 하이원리조트",
+        "rawRegistrationText": "아시아 프로쇼 한국대회 1차 접수참가접수비용(500.000원)6월7일까지, 접수 후 1일이내 입금되어야합니다.(폴리 그라프 비용 별도(100.000원) 70달러2차(60만)3차(70만)4차(80만원)(변동될수있음)*(폴리그라프 검사는 참가접수 완료 후 대 검철청 검사관님이 출전선수에게 직접 연락 후 스케줄 잡아 드립니다)월드프로전(케나다) 참가하시는 프로님들은 반드시 26, 8. 30 WNBFKOREA 14th 아시아 프로쇼 에 참가해야만 WNBF worlds 참가자격획득월드전 사전심사에 미 출전 후 개인적으로 월드전 참가하실 수 없음(프로박탈) 환불규정 (질병 외에 환불되지 않습니다) all fees are non- refundadle, 질병환불 시 50% 지급됨26년 월드프로전 (한국 멤버쉽 가입 필수)보류!26년 WNBFkorea 프로전 참가비 입금계좌 (농협 312-0201-3223-71 WNBFKOREA) 참가신청 후 1일이내 입금 완료 시 신청완료됩니다.아시아 프로쇼 종목(맨즈 보디빌딩, 맨즈 피지크, 우먼 비키니) 3종목. 클래식 피지크(보류)상금 1위 1.000달러, 2위 500달러, 3위 300달러"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "medium",
+      "qualityIssues": [],
+      "notes": "WNBF Korea 공식 Imweb 대회참가 신청 페이지의 텍스트 위젯에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:53:34.764Z",
+      "updatedAt": "2026-05-22T09:53:34.764Z",
+      "normalizedAt": "2026-05-22T09:53:34.764Z"
+    },
+    {
+      "id": "wnbf-korea:90e57876e7f70001",
+      "organizationId": "wnbf-korea",
+      "organizationName": "WNBF Korea",
+      "organizationShortName": "WNBF",
+      "title": "WNBF 한국 아마추어 (정선) 하이원리조트",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-08-29",
+        "endsOn": "2026-08-30",
+        "timezone": "Asia/Seoul",
+        "rawText": "26, 8.29(체크인)/30(본대회)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "opensAt": "2026-05-13T00:00:00+09:00",
+        "closesAt": "2026-06-07T23:59:00+09:00",
+        "registrationUrl": "https://www.wnbfkorea1.com/328663973",
+        "rawText": "폴리그라프(거짓말탐지기)검사는 사전검사로, 폴리그라프를 통과하지 못할 경우 WNBF 대회 참가 자격이 10년동안 정지됩니다.*(폴리그라프 검사비용은 100.000원이며, 참가접수완료 후 대 검찰청 검사관님이 출전선수에게 직접 연락 후 스케줄 잡아 드립니다.)모든 경기는 5명 이상의 선수가 한 체급에 참가했을 경우 진행됩니다. 한 체급에 5명 미만의 선수가 출전 시 다른 체급과 통합하여 진행됩니다.참가 신청 일로부터 1일 이내로 참가 접수비를 납부 하셔야 참가 접수가 완료 됩니다.입금계좌 : NH농협 312-0201-3223-71(WNBFKOREA) 26, 8. 30 WNBFKOREA 14th 아마추어/ 프로쇼(정선 하이원리조트) 사전접수1차접수간은 2026,5.13(월)~ 6.7일까지입니다. 2차(30만),3차(35만),4차(40만)1차 접수비 250.000원 (추가 종목 100,000원)/ 환불규정 :질병50% 외 모든 비용은 환불이 되지 않습니다. (All fees are non-refundable)",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "정선",
+        "venue": "하이원리조트",
+        "rawText": "정선 하이원리조트",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "WNBF",
+        "WNBF Korea",
+        "내추럴",
+        "폴리그라프"
+      ],
+      "flags": {
+        "natural": true,
+        "beginnerFriendly": true,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-homepage",
+        "sourceUrl": "https://www.wnbfkorea1.com/26",
+        "detailUrl": "https://www.wnbfkorea1.com/328663973",
+        "sourceEventId": "90e57876e7f70001",
+        "fetchedAt": "2026-05-22T09:53:34.764Z",
+        "parserName": "wnbf-korea-imweb-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "fc60687a5fb10271",
+        "rawTitle": "WNBF 한국 아마추어 (정선) 하이원리조트 26, 8.29(체크인)/30(본대회)",
+        "rawDateText": "26, 8.29(체크인)/30(본대회)",
+        "rawLocationText": "정선 하이원리조트",
+        "rawRegistrationText": "폴리그라프(거짓말탐지기)검사는 사전검사로, 폴리그라프를 통과하지 못할 경우 WNBF 대회 참가 자격이 10년동안 정지됩니다.*(폴리그라프 검사비용은 100.000원이며, 참가접수완료 후 대 검찰청 검사관님이 출전선수에게 직접 연락 후 스케줄 잡아 드립니다.)모든 경기는 5명 이상의 선수가 한 체급에 참가했을 경우 진행됩니다. 한 체급에 5명 미만의 선수가 출전 시 다른 체급과 통합하여 진행됩니다.참가 신청 일로부터 1일 이내로 참가 접수비를 납부 하셔야 참가 접수가 완료 됩니다.입금계좌 : NH농협 312-0201-3223-71(WNBFKOREA) 26, 8. 30 WNBFKOREA 14th 아마추어/ 프로쇼(정선 하이원리조트) 사전접수1차접수간은 2026,5.13(월)~ 6.7일까지입니다. 2차(30만),3차(35만),4차(40만)1차 접수비 250.000원 (추가 종목 100,000원)/ 환불규정 :질병50% 외 모든 비용은 환불이 되지 않습니다. (All fees are non-refundable)"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "medium",
+      "qualityIssues": [],
+      "notes": "WNBF Korea 공식 Imweb 대회참가 신청 페이지의 텍스트 위젯에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:53:34.764Z",
+      "updatedAt": "2026-05-22T09:53:34.764Z",
+      "normalizedAt": "2026-05-22T09:53:34.764Z"
+    },
+    {
+      "id": "wnbf-korea:fe0d23d0888720b0",
+      "organizationId": "wnbf-korea",
+      "organizationName": "WNBF Korea",
+      "organizationShortName": "WNBF",
+      "title": "WNBF Worlds 아마추어/프로쇼",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-11-21",
+        "timezone": "unknown",
+        "rawText": "26년 월드 프로전 케나다(켈거리) 11월 21일",
+        "confidence": "medium"
+      },
+      "registration": {
+        "status": "unknown",
+        "registrationUrl": "https://www.wnbfkorea1.com/1385356940",
+        "rawText": "월드전 신청은 코리아 맨버쉽에 가입이되어 있어야 합니다 (항공권,숙박,참가비,폴리그라프,보험 별도) 개인 접수 (26년 월드 프로전 케나다(켈거리) 11월 21일(토)월드프로전에 참가하시는 모든 프로분들은 WNBFKOREA 14th 아시아프로쇼 **대회 월드프로전 사전심사에 참가해야만 WNBF worlds 참가자격획득월드전 사전심사에 미 출전 후 개인적으로 월드전 참가하실 수 없음(프로박탈) * 환불규정 (질병 외에 환불되지 않습니다) 질병환불 시 50% 지급됨1위하신 프로님은 협회 회의 후 지원금 후원. 26년 월드프로전 26년 WNBF worlds 월드 아마추어/프로전 참가시 한국 멤버쉽 가입 필수입니다.(멤버쉽가입은 보류중이니 인스타DM이나 문의사항에 작성해주세요)",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "CA",
+        "city": "켈거리",
+        "rawText": "케나다(켈거리)",
+        "confidence": "medium"
+      },
+      "divisions": [],
+      "tags": [
+        "WNBF",
+        "WNBF Korea",
+        "내추럴",
+        "폴리그라프"
+      ],
+      "flags": {
+        "natural": true,
+        "beginnerFriendly": true,
+        "international": true
+      },
+      "source": {
+        "sourceType": "official-homepage",
+        "sourceUrl": "https://www.wnbfkorea1.com/26",
+        "detailUrl": "https://www.wnbfkorea1.com/1385356940",
+        "sourceEventId": "fe0d23d0888720b0",
+        "fetchedAt": "2026-05-22T09:53:34.764Z",
+        "parserName": "wnbf-korea-imweb-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "1812a1bd0ad6d9ed",
+        "rawTitle": "WNBF Worlds 아마추어/프로쇼",
+        "rawDateText": "26년 월드 프로전 케나다(켈거리) 11월 21일",
+        "rawLocationText": "케나다(켈거리)",
+        "rawRegistrationText": "월드전 신청은 코리아 맨버쉽에 가입이되어 있어야 합니다 (항공권,숙박,참가비,폴리그라프,보험 별도) 개인 접수 (26년 월드 프로전 케나다(켈거리) 11월 21일(토)월드프로전에 참가하시는 모든 프로분들은 WNBFKOREA 14th 아시아프로쇼 **대회 월드프로전 사전심사에 참가해야만 WNBF worlds 참가자격획득월드전 사전심사에 미 출전 후 개인적으로 월드전 참가하실 수 없음(프로박탈) * 환불규정 (질병 외에 환불되지 않습니다) 질병환불 시 50% 지급됨1위하신 프로님은 협회 회의 후 지원금 후원. 26년 월드프로전 26년 WNBF worlds 월드 아마추어/프로전 참가시 한국 멤버쉽 가입 필수입니다.(멤버쉽가입은 보류중이니 인스타DM이나 문의사항에 작성해주세요)"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "medium",
+      "qualityIssues": [],
+      "notes": "WNBF Korea 공식 Imweb 대회참가 신청 페이지의 텍스트 위젯에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:53:34.764Z",
+      "updatedAt": "2026-05-22T09:53:34.764Z",
+      "normalizedAt": "2026-05-22T09:53:34.764Z"
+    }
+  ],
+  "errors": []
+}

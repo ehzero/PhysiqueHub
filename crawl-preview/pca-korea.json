@@ -1,0 +1,1588 @@
+{
+  "generatedAt": "2026-05-22T09:39:58.995Z",
+  "organizationId": "pca-korea",
+  "organizationName": "PCA Korea",
+  "sources": [
+    {
+      "organizationId": "pca-korea",
+      "organizationName": "PCA Korea",
+      "url": "https://coachn.co.kr/sub/competitions_list.php?sca=PCA%EC%A0%91%EC%88%98",
+      "ok": true,
+      "count": 16,
+      "warnings": [
+        "CoachN 대회신청 공개 목록을 PCA/NPCA 공식 접수 앱 원천으로 사용합니다.",
+        "2026-05-22 확인 기준 robots.txt는 404로 확인되어 공개 목록/상세만 저빈도로 수집합니다."
+      ],
+      "fetchedAt": "2026-05-22T09:39:59.084Z"
+    }
+  ],
+  "events": [
+    {
+      "id": "pca-korea:30",
+      "organizationId": "pca-korea",
+      "organizationName": "PCA Korea",
+      "organizationShortName": "PCA",
+      "title": "2026 PCA JEJU POINT LEAGUE(2026 피씨에이 제주 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-05-30",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 5월 30일 (토)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-05-26T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=30",
+        "rawText": "대회접수마감: 2026-05-26T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "rawText": "서귀포 월드컵리조트 범섬관",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "클래식 보디빌딩(CLASSIC BODYBUILDING)",
+          "group": "mens",
+          "rawText": "클래식 보디빌딩(CLASSIC BODYBUILDING)"
+        },
+        {
+          "name": "PCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "PCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "PCA",
+        "PCA Korea"
+      ],
+      "flags": {
+        "natural": false
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=PCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=30",
+        "sourceEventId": "30",
+        "fetchedAt": "2026-05-22T09:39:59.231Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "fe0c9bf19e55c9db",
+        "rawTitle": "2026 PCA JEJU POINT LEAGUE(2026 피씨에이 제주 포인트리그)",
+        "rawDateText": "2026년 5월 30일 (토)",
+        "rawLocationText": "서귀포 월드컵리조트 범섬관",
+        "rawRegistrationText": "data-deadline=1779721200"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:39:59.231Z",
+      "updatedAt": "2026-05-22T09:39:59.231Z",
+      "normalizedAt": "2026-05-22T09:39:59.231Z"
+    },
+    {
+      "id": "pca-korea:32",
+      "organizationId": "pca-korea",
+      "organizationName": "PCA Korea",
+      "organizationShortName": "PCA",
+      "title": "2026 PCA HWASEONG POINT LEAGUE(2026 피씨에이 화성 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-06-06",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 6월 6일 (토)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-06-02T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=32",
+        "rawText": "대회접수마감: 2026-06-02T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "venue": "장안대학교 실내체육관",
+        "rawText": "장안대학교 실내체육관",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "클래식 보디빌딩(CLASSIC BODYBUILDING)",
+          "group": "mens",
+          "rawText": "클래식 보디빌딩(CLASSIC BODYBUILDING)"
+        },
+        {
+          "name": "PCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "PCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "PCA",
+        "PCA Korea"
+      ],
+      "flags": {
+        "natural": false
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=PCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=32",
+        "sourceEventId": "32",
+        "fetchedAt": "2026-05-22T09:40:01.910Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "b1e6c8c84035f20b",
+        "rawTitle": "2026 PCA HWASEONG POINT LEAGUE(2026 피씨에이 화성 포인트리그)",
+        "rawDateText": "2026년 6월 6일 (토)",
+        "rawLocationText": "장안대학교 실내체육관",
+        "rawRegistrationText": "data-deadline=1780326000"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:40:01.910Z",
+      "updatedAt": "2026-05-22T09:40:01.910Z",
+      "normalizedAt": "2026-05-22T09:40:01.910Z"
+    },
+    {
+      "id": "pca-korea:34",
+      "organizationId": "pca-korea",
+      "organizationName": "PCA Korea",
+      "organizationShortName": "PCA",
+      "title": "2026 PCA INCHEON POINT LEAGUE(2026 피씨에이 인천 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-06-13",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 6월 13일 (토)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-06-09T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=34",
+        "rawText": "대회접수마감: 2026-06-09T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "인천 하버파크호텔 그랜드볼룸",
+        "venue": "인천 하버파크호텔 그랜드볼룸",
+        "rawText": "인천 하버파크호텔 그랜드볼룸",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "클래식 보디빌딩(CLASSIC BODYBUILDING)",
+          "group": "mens",
+          "rawText": "클래식 보디빌딩(CLASSIC BODYBUILDING)"
+        },
+        {
+          "name": "PCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "PCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "PCA",
+        "PCA Korea"
+      ],
+      "flags": {
+        "natural": false
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=PCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=34",
+        "sourceEventId": "34",
+        "fetchedAt": "2026-05-22T09:40:03.513Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "edd31f99d8ce8db7",
+        "rawTitle": "2026 PCA INCHEON POINT LEAGUE(2026 피씨에이 인천 포인트리그)",
+        "rawDateText": "2026년 6월 13일 (토)",
+        "rawLocationText": "인천 하버파크호텔 그랜드볼룸",
+        "rawRegistrationText": "data-deadline=1780930800"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:40:03.513Z",
+      "updatedAt": "2026-05-22T09:40:03.513Z",
+      "normalizedAt": "2026-05-22T09:40:03.513Z"
+    },
+    {
+      "id": "pca-korea:36",
+      "organizationId": "pca-korea",
+      "organizationName": "PCA Korea",
+      "organizationShortName": "PCA",
+      "title": "2026 PCA DAEJEON POINT LEAGUE(2026 피씨에이 대전 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-06-20",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 6월 20일 (토)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-06-16T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=36",
+        "rawText": "대회접수마감: 2026-06-16T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "대전광역시/ 충청권역",
+        "rawText": "대전광역시/ 충청권역",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "클래식 보디빌딩(CLASSIC BODYBUILDING)",
+          "group": "mens",
+          "rawText": "클래식 보디빌딩(CLASSIC BODYBUILDING)"
+        },
+        {
+          "name": "PCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "PCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "PCA",
+        "PCA Korea"
+      ],
+      "flags": {
+        "natural": false
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=PCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=36",
+        "sourceEventId": "36",
+        "fetchedAt": "2026-05-22T09:40:07.011Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "dc9ec7c1d539a205",
+        "rawTitle": "2026 PCA DAEJEON POINT LEAGUE(2026 피씨에이 대전 포인트리그)",
+        "rawDateText": "2026년 6월 20일 (토)",
+        "rawLocationText": "대전광역시/ 충청권역",
+        "rawRegistrationText": "data-deadline=1781535600"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:40:07.011Z",
+      "updatedAt": "2026-05-22T09:40:07.011Z",
+      "normalizedAt": "2026-05-22T09:40:07.011Z"
+    },
+    {
+      "id": "pca-korea:38",
+      "organizationId": "pca-korea",
+      "organizationName": "PCA Korea",
+      "organizationShortName": "PCA",
+      "title": "2026 PCA YANGSAN POINT LEAGUE(2026 피씨에이 양산 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-06-27",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 6월 27일 (토)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-06-23T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=38",
+        "rawText": "대회접수마감: 2026-06-23T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "rawText": "김해 가야대학교 공연장",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "클래식 보디빌딩(CLASSIC BODYBUILDING)",
+          "group": "mens",
+          "rawText": "클래식 보디빌딩(CLASSIC BODYBUILDING)"
+        },
+        {
+          "name": "PCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "PCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "PCA",
+        "PCA Korea"
+      ],
+      "flags": {
+        "natural": false
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=PCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=38",
+        "sourceEventId": "38",
+        "fetchedAt": "2026-05-22T09:40:10.155Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "dd7a9a8b050ca396",
+        "rawTitle": "2026 PCA YANGSAN POINT LEAGUE(2026 피씨에이 양산 포인트리그)",
+        "rawDateText": "2026년 6월 27일 (토)",
+        "rawLocationText": "김해 가야대학교 공연장",
+        "rawRegistrationText": "data-deadline=1782140400"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:40:10.155Z",
+      "updatedAt": "2026-05-22T09:40:10.155Z",
+      "normalizedAt": "2026-05-22T09:40:10.155Z"
+    },
+    {
+      "id": "pca-korea:40",
+      "organizationId": "pca-korea",
+      "organizationName": "PCA Korea",
+      "organizationShortName": "PCA",
+      "title": "2026 PCA BUSAN POINT LEAGUE(2026 피씨에이 부산 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-07-04",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 7월 4일 (토)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-06-30T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=40",
+        "rawText": "대회접수마감: 2026-06-30T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "rawText": "동명대학교 대강당",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "클래식 보디빌딩(CLASSIC BODYBUILDING)",
+          "group": "mens",
+          "rawText": "클래식 보디빌딩(CLASSIC BODYBUILDING)"
+        },
+        {
+          "name": "PCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "PCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "PCA",
+        "PCA Korea"
+      ],
+      "flags": {
+        "natural": false
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=PCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=40",
+        "sourceEventId": "40",
+        "fetchedAt": "2026-05-22T09:40:15.207Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "a0363c4173dd3e1a",
+        "rawTitle": "2026 PCA BUSAN POINT LEAGUE(2026 피씨에이 부산 포인트리그)",
+        "rawDateText": "2026년 7월 4일 (토)",
+        "rawLocationText": "동명대학교 대강당",
+        "rawRegistrationText": "data-deadline=1782745200"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:40:15.207Z",
+      "updatedAt": "2026-05-22T09:40:15.207Z",
+      "normalizedAt": "2026-05-22T09:40:15.207Z"
+    },
+    {
+      "id": "pca-korea:42",
+      "organizationId": "pca-korea",
+      "organizationName": "PCA Korea",
+      "organizationShortName": "PCA",
+      "title": "2026 PCA ULSAN POINT LEAGUE(2026 피씨에이 울산 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-07-11",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 7월 11일 (토)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-07-07T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=42",
+        "rawText": "대회접수마감: 2026-07-07T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "울산kbs홀",
+        "venue": "울산kbs홀",
+        "rawText": "울산kbs홀",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "클래식 보디빌딩(CLASSIC BODYBUILDING)",
+          "group": "mens",
+          "rawText": "클래식 보디빌딩(CLASSIC BODYBUILDING)"
+        },
+        {
+          "name": "PCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "PCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "PCA",
+        "PCA Korea"
+      ],
+      "flags": {
+        "natural": false
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=PCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=42",
+        "sourceEventId": "42",
+        "fetchedAt": "2026-05-22T09:40:18.074Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "71b45cafad1f71a3",
+        "rawTitle": "2026 PCA ULSAN POINT LEAGUE(2026 피씨에이 울산 포인트리그)",
+        "rawDateText": "2026년 7월 11일 (토)",
+        "rawLocationText": "울산kbs홀",
+        "rawRegistrationText": "data-deadline=1783350000"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:40:18.074Z",
+      "updatedAt": "2026-05-22T09:40:18.074Z",
+      "normalizedAt": "2026-05-22T09:40:18.074Z"
+    },
+    {
+      "id": "pca-korea:44",
+      "organizationId": "pca-korea",
+      "organizationName": "PCA Korea",
+      "organizationShortName": "PCA",
+      "title": "2026 PCA SEJONG POINT LEAGUE(2026 피씨에이 세종 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-07-18",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 7월 18일 (토)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-07-14T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=44",
+        "rawText": "대회접수마감: 2026-07-14T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "세종특별시/인근지역",
+        "rawText": "세종특별시/인근지역",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "클래식 보디빌딩(CLASSIC BODYBUILDING)",
+          "group": "mens",
+          "rawText": "클래식 보디빌딩(CLASSIC BODYBUILDING)"
+        },
+        {
+          "name": "PCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "PCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "PCA",
+        "PCA Korea"
+      ],
+      "flags": {
+        "natural": false
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=PCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=44",
+        "sourceEventId": "44",
+        "fetchedAt": "2026-05-22T09:40:22.434Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "1e4128ed3b078556",
+        "rawTitle": "2026 PCA SEJONG POINT LEAGUE(2026 피씨에이 세종 포인트리그)",
+        "rawDateText": "2026년 7월 18일 (토)",
+        "rawLocationText": "세종특별시/인근지역",
+        "rawRegistrationText": "data-deadline=1783954800"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:40:22.434Z",
+      "updatedAt": "2026-05-22T09:40:22.434Z",
+      "normalizedAt": "2026-05-22T09:40:22.434Z"
+    },
+    {
+      "id": "pca-korea:46",
+      "organizationId": "pca-korea",
+      "organizationName": "PCA Korea",
+      "organizationShortName": "PCA",
+      "title": "2026 PCA CHEONAN POINT LEAGUE(2026 피씨에이 천안 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-07-25",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 7월 25일 (토)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-07-21T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=46",
+        "rawText": "대회접수마감: 2026-07-21T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "대전 선샤인 호텔",
+        "venue": "대전 선샤인 호텔",
+        "rawText": "대전 선샤인 호텔",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "클래식 보디빌딩(CLASSIC BODYBUILDING)",
+          "group": "mens",
+          "rawText": "클래식 보디빌딩(CLASSIC BODYBUILDING)"
+        },
+        {
+          "name": "PCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "PCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "PCA",
+        "PCA Korea"
+      ],
+      "flags": {
+        "natural": false
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=PCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=46",
+        "sourceEventId": "46",
+        "fetchedAt": "2026-05-22T09:40:24.036Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "a0796176787686b8",
+        "rawTitle": "2026 PCA CHEONAN POINT LEAGUE(2026 피씨에이 천안 포인트리그)",
+        "rawDateText": "2026년 7월 25일 (토)",
+        "rawLocationText": "대전 선샤인 호텔",
+        "rawRegistrationText": "data-deadline=1784559600"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:40:24.036Z",
+      "updatedAt": "2026-05-22T09:40:24.036Z",
+      "normalizedAt": "2026-05-22T09:40:24.036Z"
+    },
+    {
+      "id": "pca-korea:48",
+      "organizationId": "pca-korea",
+      "organizationName": "PCA Korea",
+      "organizationShortName": "PCA",
+      "title": "2026 PCA GWANGJU POINT LEAGUE(2026 피씨에이 광주 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-08-08",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 8월 8일 (토)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-08-04T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=48",
+        "rawText": "대회접수마감: 2026-08-04T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "광주 동강대학교 체육관",
+        "venue": "광주 동강대학교 체육관",
+        "rawText": "광주 동강대학교 체육관",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "클래식 보디빌딩(CLASSIC BODYBUILDING)",
+          "group": "mens",
+          "rawText": "클래식 보디빌딩(CLASSIC BODYBUILDING)"
+        },
+        {
+          "name": "PCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "PCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "PCA",
+        "PCA Korea"
+      ],
+      "flags": {
+        "natural": false
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=PCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=48",
+        "sourceEventId": "48",
+        "fetchedAt": "2026-05-22T09:40:25.562Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "a07485d7cbf9003c",
+        "rawTitle": "2026 PCA GWANGJU POINT LEAGUE(2026 피씨에이 광주 포인트리그)",
+        "rawDateText": "2026년 8월 8일 (토)",
+        "rawLocationText": "광주 동강대학교 체육관",
+        "rawRegistrationText": "data-deadline=1785769200"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:40:25.562Z",
+      "updatedAt": "2026-05-22T09:40:25.562Z",
+      "normalizedAt": "2026-05-22T09:40:25.562Z"
+    },
+    {
+      "id": "pca-korea:50",
+      "organizationId": "pca-korea",
+      "organizationName": "PCA Korea",
+      "organizationShortName": "PCA",
+      "title": "2026 PCA SUWON POINT LEAGUE(2026 피씨에이 수원 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-08-15",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 8월 15일 (토)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-08-11T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=50",
+        "rawText": "대회접수마감: 2026-08-11T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "venue": "장안대학교 체육관",
+        "rawText": "장안대학교 체육관",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "클래식 보디빌딩(CLASSIC BODYBUILDING)",
+          "group": "mens",
+          "rawText": "클래식 보디빌딩(CLASSIC BODYBUILDING)"
+        },
+        {
+          "name": "PCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "PCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "PCA",
+        "PCA Korea"
+      ],
+      "flags": {
+        "natural": false
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=PCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=50",
+        "sourceEventId": "50",
+        "fetchedAt": "2026-05-22T09:40:30.423Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "09cf779bb54d0404",
+        "rawTitle": "2026 PCA SUWON POINT LEAGUE(2026 피씨에이 수원 포인트리그)",
+        "rawDateText": "2026년 8월 15일 (토)",
+        "rawLocationText": "장안대학교 체육관",
+        "rawRegistrationText": "data-deadline=1786374000"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:40:30.423Z",
+      "updatedAt": "2026-05-22T09:40:30.423Z",
+      "normalizedAt": "2026-05-22T09:40:30.423Z"
+    },
+    {
+      "id": "pca-korea:52",
+      "organizationId": "pca-korea",
+      "organizationName": "PCA Korea",
+      "organizationShortName": "PCA",
+      "title": "2026 PCA BUCHEON POINT LEAGUE(2026 피씨에이 부천 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-08-22",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 8월 22일 (토)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-08-18T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=52",
+        "rawText": "대회접수마감: 2026-08-18T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "인천 하버파크 호텔 그랜드볼룸",
+        "venue": "인천 하버파크 호텔 그랜드볼룸",
+        "rawText": "인천 하버파크 호텔 그랜드볼룸",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "클래식 보디빌딩(CLASSIC BODYBUILDING)",
+          "group": "mens",
+          "rawText": "클래식 보디빌딩(CLASSIC BODYBUILDING)"
+        },
+        {
+          "name": "PCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "PCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "PCA",
+        "PCA Korea"
+      ],
+      "flags": {
+        "natural": false
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=PCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=52",
+        "sourceEventId": "52",
+        "fetchedAt": "2026-05-22T09:40:33.855Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "e49aa1573a862739",
+        "rawTitle": "2026 PCA BUCHEON POINT LEAGUE(2026 피씨에이 부천 포인트리그)",
+        "rawDateText": "2026년 8월 22일 (토)",
+        "rawLocationText": "인천 하버파크 호텔 그랜드볼룸",
+        "rawRegistrationText": "data-deadline=1786978800"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:40:33.855Z",
+      "updatedAt": "2026-05-22T09:40:33.855Z",
+      "normalizedAt": "2026-05-22T09:40:33.855Z"
+    },
+    {
+      "id": "pca-korea:54",
+      "organizationId": "pca-korea",
+      "organizationName": "PCA Korea",
+      "organizationShortName": "PCA",
+      "title": "2026 PCA GOYANG POINT LEAGUE(2026 피씨에이 고양 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-08-29",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 8월 29일 (토)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-08-25T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=54",
+        "rawText": "대회접수마감: 2026-08-25T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "rawText": "파주 엠파이브 방송센타",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "클래식 보디빌딩(CLASSIC BODYBUILDING)",
+          "group": "mens",
+          "rawText": "클래식 보디빌딩(CLASSIC BODYBUILDING)"
+        },
+        {
+          "name": "PCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "PCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "PCA",
+        "PCA Korea"
+      ],
+      "flags": {
+        "natural": false
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=PCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=54",
+        "sourceEventId": "54",
+        "fetchedAt": "2026-05-22T09:40:35.551Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "6780b96df57632ad",
+        "rawTitle": "2026 PCA GOYANG POINT LEAGUE(2026 피씨에이 고양 포인트리그)",
+        "rawDateText": "2026년 8월 29일 (토)",
+        "rawLocationText": "파주 엠파이브 방송센타",
+        "rawRegistrationText": "data-deadline=1787583600"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:40:35.551Z",
+      "updatedAt": "2026-05-22T09:40:35.551Z",
+      "normalizedAt": "2026-05-22T09:40:35.551Z"
+    },
+    {
+      "id": "pca-korea:69",
+      "organizationId": "pca-korea",
+      "organizationName": "PCA Korea",
+      "organizationShortName": "PCA",
+      "title": "2026 PCA CHANGWON POINT LEAGUE(2026 피씨에이 창원 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-09-05",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 9월 5일 (토)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-09-01T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=69",
+        "rawText": "대회접수마감: 2026-09-01T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "rawText": "창원시 인근",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "클래식 보디빌딩(CLASSIC BODYBUILDING)",
+          "group": "mens",
+          "rawText": "클래식 보디빌딩(CLASSIC BODYBUILDING)"
+        },
+        {
+          "name": "PCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "PCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "PCA",
+        "PCA Korea"
+      ],
+      "flags": {
+        "natural": false
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=PCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=69",
+        "sourceEventId": "69",
+        "fetchedAt": "2026-05-22T09:40:39.462Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "57cb69422e72497a",
+        "rawTitle": "2026 PCA CHANGWON POINT LEAGUE(2026 피씨에이 창원 포인트리그)",
+        "rawDateText": "2026년 9월 5일 (토)",
+        "rawLocationText": "창원시 인근",
+        "rawRegistrationText": "data-deadline=1788188400"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:40:39.462Z",
+      "updatedAt": "2026-05-22T09:40:39.462Z",
+      "normalizedAt": "2026-05-22T09:40:39.462Z"
+    },
+    {
+      "id": "pca-korea:71",
+      "organizationId": "pca-korea",
+      "organizationName": "PCA Korea",
+      "organizationShortName": "PCA",
+      "title": "2026 PCA YONGIN POINT LEAGUE(2026 피씨에이 용인 포인트리그)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-09-12",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 9월 12일 (토)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-09-08T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=71",
+        "rawText": "대회접수마감: 2026-09-08T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "rawText": "용인시 인근",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "클래식 보디빌딩(CLASSIC BODYBUILDING)",
+          "group": "mens",
+          "rawText": "클래식 보디빌딩(CLASSIC BODYBUILDING)"
+        },
+        {
+          "name": "PCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "PCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "PCA",
+        "PCA Korea"
+      ],
+      "flags": {
+        "natural": false
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=PCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=71",
+        "sourceEventId": "71",
+        "fetchedAt": "2026-05-22T09:40:44.552Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "ab9b7ed27642d801",
+        "rawTitle": "2026 PCA YONGIN POINT LEAGUE(2026 피씨에이 용인 포인트리그)",
+        "rawDateText": "2026년 9월 12일 (토)",
+        "rawLocationText": "용인시 인근",
+        "rawRegistrationText": "data-deadline=1788793200"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:40:44.552Z",
+      "updatedAt": "2026-05-22T09:40:44.552Z",
+      "normalizedAt": "2026-05-22T09:40:44.552Z"
+    },
+    {
+      "id": "pca-korea:73",
+      "organizationId": "pca-korea",
+      "organizationName": "PCA Korea",
+      "organizationShortName": "PCA",
+      "title": "2026 PCA SUPER SERIES(2026 피씨에이 슈퍼시리즈)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-09-19",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 9월 19일 (토)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "open",
+        "closesAt": "2026-09-15T00:00:00+09:00",
+        "registrationUrl": "https://coachn.co.kr/sub/competitions_info.php?id=73",
+        "rawText": "대회접수마감: 2026-09-15T00:00:00+09:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "rawText": "추후공지",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "보디빌딩(BODYBUILDING)",
+          "group": "mens",
+          "rawText": "보디빌딩(BODYBUILDING)"
+        },
+        {
+          "name": "클래식 보디빌딩(CLASSIC BODYBUILDING)",
+          "group": "mens",
+          "rawText": "클래식 보디빌딩(CLASSIC BODYBUILDING)"
+        },
+        {
+          "name": "PCA 클래식 피지크(CLASSIC PHYSIQUE)",
+          "group": "mens",
+          "rawText": "PCA 클래식 피지크(CLASSIC PHYSIQUE)"
+        },
+        {
+          "name": "머슬모델(MUSCLE MODEL)",
+          "group": "mens",
+          "rawText": "머슬모델(MUSCLE MODEL)"
+        },
+        {
+          "name": "피지크(PHYSIQUE)",
+          "group": "mens",
+          "rawText": "피지크(PHYSIQUE)"
+        },
+        {
+          "name": "남자 스포츠모델(MEN'S SPORT MODEL)",
+          "group": "mens",
+          "rawText": "남자 스포츠모델(MEN'S SPORT MODEL)"
+        },
+        {
+          "name": "여자 스포츠모델(WOMEN'S SPORT MODEL)",
+          "group": "womens",
+          "rawText": "여자 스포츠모델(WOMEN'S SPORT MODEL)"
+        },
+        {
+          "name": "비키니(BIKINI)",
+          "group": "womens",
+          "rawText": "비키니(BIKINI)"
+        }
+      ],
+      "tags": [
+        "PCA",
+        "PCA Korea"
+      ],
+      "flags": {
+        "natural": false
+      },
+      "source": {
+        "sourceType": "official-registration-app",
+        "sourceUrl": "https://coachn.co.kr/sub/competitions_list.php?sca=PCA%EC%A0%91%EC%88%98",
+        "detailUrl": "https://coachn.co.kr/sub/competitions_info.php?id=73",
+        "sourceEventId": "73",
+        "fetchedAt": "2026-05-22T09:40:46.066Z",
+        "parserName": "coachn-pca-npca-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "ee055074a592aece",
+        "rawTitle": "2026 PCA SUPER SERIES(2026 피씨에이 슈퍼시리즈)",
+        "rawDateText": "2026년 9월 19일 (토)",
+        "rawLocationText": "추후공지",
+        "rawRegistrationText": "data-deadline=1789398000"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",
+      "createdAt": "2026-05-22T09:40:46.066Z",
+      "updatedAt": "2026-05-22T09:40:46.066Z",
+      "normalizedAt": "2026-05-22T09:40:46.066Z"
+    }
+  ],
+  "errors": []
+}

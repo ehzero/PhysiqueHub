@@ -1,0 +1,3549 @@
+{
+  "generatedAt": "2026-05-22T08:59:52.237Z",
+  "organizationId": "kbbf",
+  "organizationName": "대한보디빌딩협회",
+  "sources": [
+    {
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회 국내대회",
+      "url": "https://bodybuilding.or.kr/contest_kr",
+      "ok": true,
+      "count": 19,
+      "warnings": [
+        "게시글 상세 본문 표를 우선 파싱합니다. 이미지/HWP 첨부에만 있는 세부 정보는 별도 검수가 필요합니다."
+      ],
+      "fetchedAt": "2026-05-22T08:59:52.998Z"
+    },
+    {
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회 국제대회",
+      "url": "https://bodybuilding.or.kr/contest_inti",
+      "ok": true,
+      "count": 20,
+      "warnings": [
+        "게시글 상세 본문 표를 우선 파싱합니다. 이미지/HWP 첨부에만 있는 세부 정보는 별도 검수가 필요합니다."
+      ],
+      "fetchedAt": "2026-05-22T09:01:21.917Z"
+    },
+    {
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회 시도대회",
+      "url": "https://bodybuilding.or.kr/contest_city",
+      "ok": true,
+      "count": 20,
+      "warnings": [
+        "게시글 상세 본문 표를 우선 파싱합니다. 이미지/HWP 첨부에만 있는 세부 정보는 별도 검수가 필요합니다."
+      ],
+      "fetchedAt": "2026-05-22T09:02:35.812Z"
+    }
+  ],
+  "events": [
+    {
+      "id": "kbbf:15400415",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2022 SBS 스포츠 Mr. & Ms. Korea",
+      "seasonYear": 2022,
+      "date": {
+        "startsOn": "2022-09-16",
+        "endsOn": "2022-09-18",
+        "timezone": "Asia/Seoul",
+        "rawText": "2022-09-16 - 2022-09-18",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "closed",
+        "closesAt": "2022-08-30T18:00:00+09:00",
+        "registrationUrl": "https://app.sports.or.kr/app_bd/app/main.do",
+        "rawText": "2022-08-30 18:00:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "rawText": "경기 시흥 웨이브파크",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국내대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_kr",
+        "detailUrl": "https://bodybuilding.or.kr/contest_kr/?bmode=view&idx=15400415",
+        "sourceEventId": "15400415",
+        "sourceUpdatedAt": "2022-08-05 09:40",
+        "fetchedAt": "2026-05-22T09:01:21.521Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "89e62c91480170d0",
+        "rawTitle": "2022 SBS 스포츠 Mr. & Ms. Korea",
+        "rawDateText": "2022-09-16 - 2022-09-18",
+        "rawLocationText": "경기 시흥 웨이브파크",
+        "rawRegistrationText": "2022-08-30 18:00:00"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: 20220805094018_- 2022 SBS 스포츠 Mr. & Ms. Korea 개최요강 v.1.hwp5824KB",
+      "createdAt": "2026-05-22T09:01:21.521Z",
+      "updatedAt": "2026-05-22T09:01:21.521Z",
+      "normalizedAt": "2026-05-22T09:01:21.521Z"
+    },
+    {
+      "id": "kbbf:15400414",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2022년 인천광역시장배 전국피트니스 선수권대회",
+      "seasonYear": 2022,
+      "date": {
+        "startsOn": "2022-10-02",
+        "endsOn": "2022-10-02",
+        "timezone": "Asia/Seoul",
+        "rawText": "2022-10-02 - 2022-10-02",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "unknown",
+        "registrationUrl": "https://app.sports.or.kr/app_bd/app/main.do",
+        "rawText": "-",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "venue": "베스트웨스턴 하버파크호텔",
+        "rawText": "베스트웨스턴 하버파크호텔",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국내대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_kr",
+        "detailUrl": "https://bodybuilding.or.kr/contest_kr/?bmode=view&idx=15400414",
+        "sourceEventId": "15400414",
+        "sourceUpdatedAt": "2022-09-28 09:38",
+        "fetchedAt": "2026-05-22T09:01:17.345Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "23baf311b4e4b3aa",
+        "rawTitle": "2022년 인천광역시장배 전국피트니스 선수권대회",
+        "rawDateText": "2022-10-02 - 2022-10-02",
+        "rawLocationText": "베스트웨스턴 하버파크호텔",
+        "rawRegistrationText": "-"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: 20220928093833_- 2022 인천시장배 전국피트니스선수권 대회 개최요강(참가신청 기간 연장).pdf776KB",
+      "createdAt": "2026-05-22T09:01:17.345Z",
+      "updatedAt": "2026-05-22T09:01:17.345Z",
+      "normalizedAt": "2026-05-22T09:01:17.345Z"
+    },
+    {
+      "id": "kbbf:15400416",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2023년 제30회 대학보디빌딩대회 겸 제24회 고교보디빌딩대회 및 제16회 미즈피트니스대회",
+      "seasonYear": 2023,
+      "date": {
+        "startsOn": "2023-04-08",
+        "endsOn": "2023-04-09",
+        "timezone": "Asia/Seoul",
+        "rawText": "2023-04-08 - 2023-04-09",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "closed",
+        "closesAt": "2023-03-21T18:00:00+09:00",
+        "registrationUrl": "https://app.sports.or.kr/app_bd/app/main.do",
+        "rawText": "2023-03-21 18:00:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "venue": "충남 공주문예회관",
+        "rawText": "충남 공주문예회관",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국내대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_kr",
+        "detailUrl": "https://bodybuilding.or.kr/contest_kr/?bmode=view&idx=15400416",
+        "sourceEventId": "15400416",
+        "sourceUpdatedAt": "2023-03-02 13:19",
+        "fetchedAt": "2026-05-22T09:01:01.571Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "2339417c676e2f58",
+        "rawTitle": "2023년 제30회 대학보디빌딩대회 겸 제24회 고교보디빌딩대회 및 제16회 미즈피트니스대회",
+        "rawDateText": "2023-04-08 - 2023-04-09",
+        "rawLocationText": "충남 공주문예회관",
+        "rawRegistrationText": "2023-03-21 18:00:00"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: 20230315160520_20230302131909_- 2023 30회 대학 & 24회 고교 & 16회 미즈대회 개최요강 v.1 (7).pdf1432KB",
+      "createdAt": "2026-05-22T09:01:01.571Z",
+      "updatedAt": "2026-05-22T09:01:01.571Z",
+      "normalizedAt": "2026-05-22T09:01:01.571Z"
+    },
+    {
+      "id": "kbbf:15400418",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "SBS 스포츠 Mr. & Ms. Korea",
+      "seasonYear": 2023,
+      "date": {
+        "startsOn": "2023-06-02",
+        "endsOn": "2023-06-04",
+        "timezone": "Asia/Seoul",
+        "rawText": "2023-06-02 - 2023-06-04",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "closed",
+        "closesAt": "2023-05-19T18:00:00+09:00",
+        "registrationUrl": "https://app.sports.or.kr/app_bd/app/main.do",
+        "rawText": "2023-05-19 18:00:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "경상북도 경산실내체육관",
+        "venue": "경상북도 경산실내체육관",
+        "rawText": "경상북도 경산실내체육관",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국내대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_kr",
+        "detailUrl": "https://bodybuilding.or.kr/contest_kr/?bmode=view&idx=15400418",
+        "sourceEventId": "15400418",
+        "sourceUpdatedAt": "2023-04-24 16:46",
+        "fetchedAt": "2026-05-22T09:00:59.361Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "951a76fd7e3b9894",
+        "rawTitle": "SBS 스포츠 Mr. & Ms. Korea",
+        "rawDateText": "2023-06-02 - 2023-06-04",
+        "rawLocationText": "경상북도 경산실내체육관",
+        "rawRegistrationText": "2023-05-19 18:00:00"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: 20230424164639_- 2023 SBS 스포츠 Mr. & Ms. Korea 개최요강.hwp5956KB",
+      "createdAt": "2026-05-22T09:00:59.361Z",
+      "updatedAt": "2026-05-22T09:00:59.361Z",
+      "normalizedAt": "2026-05-22T09:00:59.361Z"
+    },
+    {
+      "id": "kbbf:15400167",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2023년 인천광역시장배 전국 피트니스 선수권 대회",
+      "seasonYear": 2023,
+      "date": {
+        "startsOn": "2023-07-16",
+        "endsOn": "2023-07-16",
+        "timezone": "Asia/Seoul",
+        "rawText": "2023-07-16 - 2023-07-16",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "closed",
+        "closesAt": "2023-07-06T18:00:00+09:00",
+        "registrationUrl": "https://app.sports.or.kr/app_bd/app/main.do",
+        "rawText": "2023-07-06 18:00:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "인천광역시 베스트웨스턴 하버파크호텔",
+        "venue": "인천광역시 베스트웨스턴 하버파크호텔",
+        "rawText": "인천광역시 베스트웨스턴 하버파크호텔",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국내대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_kr",
+        "detailUrl": "https://bodybuilding.or.kr/contest_kr/?bmode=view&idx=15400167",
+        "sourceEventId": "15400167",
+        "sourceUpdatedAt": "2023-05-08 15:44",
+        "fetchedAt": "2026-05-22T09:00:56.028Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "e6f05d7c20a684f1",
+        "rawTitle": "2023년 인천광역시장배 전국 피트니스 선수권 대회",
+        "rawDateText": "2023-07-16 - 2023-07-16",
+        "rawLocationText": "인천광역시 베스트웨스턴 하버파크호텔",
+        "rawRegistrationText": "2023-07-06 18:00:00"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: 20230508154403_- 2023 인천시장배 전국피트니스선수권 대회 개최요강.hwp5904KB",
+      "createdAt": "2026-05-22T09:00:56.028Z",
+      "updatedAt": "2026-05-22T09:00:56.028Z",
+      "normalizedAt": "2026-05-22T09:00:56.028Z"
+    },
+    {
+      "id": "kbbf:15974445",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "제53회 Mr. YMCA 선발대회",
+      "seasonYear": 2023,
+      "date": {
+        "startsOn": "2023-09-09",
+        "endsOn": "2023-09-10",
+        "timezone": "Asia/Seoul",
+        "rawText": "2023-09-09 - 2023-09-10",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "closed",
+        "closesAt": "2023-08-25T18:00:00+09:00",
+        "registrationUrl": "https://app.sports.or.kr/app_bd/app/main.do",
+        "rawText": "2023-08-25 18:00:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "경상남도 하동문화예술회관",
+        "venue": "경상남도 하동문화예술회관",
+        "rawText": "경상남도 하동문화예술회관",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국내대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_kr",
+        "detailUrl": "https://bodybuilding.or.kr/contest_kr/?bmode=view&idx=15974445",
+        "sourceEventId": "15974445",
+        "sourceUpdatedAt": "2023-08-07 14:55",
+        "fetchedAt": "2026-05-22T09:00:51.881Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "1917a021daef93e0",
+        "rawTitle": "제53회 Mr. YMCA 선발대회",
+        "rawDateText": "2023-09-09 - 2023-09-10",
+        "rawLocationText": "경상남도 하동문화예술회관",
+        "rawRegistrationText": "2023-08-25 18:00:00"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "createdAt": "2026-05-22T09:00:51.881Z",
+      "updatedAt": "2026-05-22T09:00:51.881Z",
+      "normalizedAt": "2026-05-22T09:00:51.881Z"
+    },
+    {
+      "id": "kbbf:18151017",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2024년 제31회 대학보디빌딩대회 겸 제25회 고교보디빌딩대회 및 제17회 미즈피트니스대회(2024년도 IFBB 아시아선수권대회 국가대표 선발전)",
+      "seasonYear": 2024,
+      "date": {
+        "startsOn": "2024-04-13",
+        "endsOn": "2024-04-14",
+        "timezone": "Asia/Seoul",
+        "rawText": "2024-04-13 - 2024-04-14",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "closed",
+        "closesAt": "2024-03-26T18:00:00+09:00",
+        "rawText": "2024-03-26 18:00:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "대구보건대학교 인당아트홀",
+        "venue": "대구보건대학교 인당아트홀",
+        "rawText": "대구보건대학교 인당아트홀",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국내대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": true,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_kr",
+        "detailUrl": "https://bodybuilding.or.kr/contest_kr/?bmode=view&idx=18151017",
+        "sourceEventId": "18151017",
+        "sourceUpdatedAt": "2024-02-23 15:23",
+        "fetchedAt": "2026-05-22T09:00:48.481Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "d091eff67da537e9",
+        "rawTitle": "2024년 제31회 대학보디빌딩대회 겸 제25회 고교보디빌딩대회 및 제17회 미즈피트니스대회(2024년도 IFBB 아시아선수권대회 국가대표 선발전)",
+        "rawDateText": "2024-04-13 - 2024-04-14",
+        "rawLocationText": "대구보건대학교 인당아트홀",
+        "rawRegistrationText": "2024-03-26 18:00:00"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "createdAt": "2026-05-22T09:00:48.481Z",
+      "updatedAt": "2026-05-22T09:00:48.481Z",
+      "normalizedAt": "2026-05-22T09:00:48.481Z"
+    },
+    {
+      "id": "kbbf:42855189",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2024년 인천광역시장배 전국 피트니스 선수권 대회",
+      "seasonYear": 2024,
+      "date": {
+        "startsOn": "2024-08-03",
+        "timezone": "Asia/Seoul",
+        "rawText": "2024-08-03",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "closed",
+        "closesAt": "2024-07-25T18:00:00+09:00",
+        "registrationUrl": "https://app.sports.or.kr/app_bd/app/main.do",
+        "rawText": "2024-07-25 18:00:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "인천광역시 하버파크 호텔 〔인천광역시 중구 제물량로 217〕",
+        "venue": "인천광역시 하버파크 호텔 〔인천광역시 중구 제물량로 217〕",
+        "rawText": "인천광역시 하버파크 호텔 〔인천광역시 중구 제물량로 217〕",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국내대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_kr",
+        "detailUrl": "https://bodybuilding.or.kr/contest_kr/?bmode=view&idx=42855189",
+        "sourceEventId": "42855189",
+        "sourceUpdatedAt": "2024-07-15 11:40",
+        "fetchedAt": "2026-05-22T09:00:45.262Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "c96acff07156d75f",
+        "rawTitle": "2024년 인천광역시장배 전국 피트니스 선수권 대회",
+        "rawDateText": "2024-08-03",
+        "rawLocationText": "인천광역시 하버파크 호텔 〔인천광역시 중구 제물량로 217〕",
+        "rawRegistrationText": "2024-07-25 18:00:00"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: - 2024 인천시장배 전국피트니스선수권 대회 개최요강.hwp4992KB",
+      "createdAt": "2026-05-22T09:00:45.262Z",
+      "updatedAt": "2026-05-22T09:00:45.262Z",
+      "normalizedAt": "2026-05-22T09:00:45.262Z"
+    },
+    {
+      "id": "kbbf:42862946",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "제54회 Mr. YMCA 선발대회",
+      "seasonYear": 2024,
+      "date": {
+        "startsOn": "2024-08-17",
+        "endsOn": "2024-08-18",
+        "timezone": "Asia/Seoul",
+        "rawText": "2024-08-17 - 2024-08-18",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "closed",
+        "closesAt": "2024-07-30T18:00:00+09:00",
+        "registrationUrl": "https://app.sports.or.kr/app_bd/app/main.do",
+        "rawText": "2024-07-30 18:00:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "신한대학교 의정부캠퍼스 벧엘관 (경기도 의정부시 호암로 95 소재)",
+        "rawText": "신한대학교 의정부캠퍼스 벧엘관 (경기도 의정부시 호암로 95 소재)",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국내대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_kr",
+        "detailUrl": "https://bodybuilding.or.kr/contest_kr/?bmode=view&idx=42862946",
+        "sourceEventId": "42862946",
+        "sourceUpdatedAt": "2024-07-15 11:53",
+        "fetchedAt": "2026-05-22T09:00:41.621Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "8334355f4fb84d06",
+        "rawTitle": "제54회 Mr. YMCA 선발대회",
+        "rawDateText": "2024-08-17 - 2024-08-18",
+        "rawLocationText": "신한대학교 의정부캠퍼스 벧엘관 (경기도 의정부시 호암로 95 소재)",
+        "rawRegistrationText": "2024-07-30 18:00:00"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: - 제54회 Mr. YMCA 선발대회 개최요강.hwp4224KB",
+      "createdAt": "2026-05-22T09:00:41.621Z",
+      "updatedAt": "2026-05-22T09:00:41.621Z",
+      "normalizedAt": "2026-05-22T09:00:41.621Z"
+    },
+    {
+      "id": "kbbf:81076702",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2024 Mr. & Ms. Korea",
+      "seasonYear": 2024,
+      "date": {
+        "startsOn": "2024-09-27",
+        "endsOn": "2024-09-29",
+        "timezone": "Asia/Seoul",
+        "rawText": "2024. 9. 27.(금) ~ 9. 29.(일)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "closed",
+        "closesAt": "2024-09-05T18:00:00+09:00",
+        "registrationUrl": "https://app.sports.or.kr/app_bd/app/main.do",
+        "rawText": "2024-09-05 18:00:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "한국체육대학교 필승관 대강당 〔서울 송파구 양재대로 1239(오륜동)〕",
+        "rawText": "한국체육대학교 필승관 대강당 〔서울 송파구 양재대로 1239(오륜동)〕",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국내대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_kr",
+        "detailUrl": "https://bodybuilding.or.kr/contest_kr/?bmode=view&idx=81076702",
+        "sourceEventId": "81076702",
+        "sourceUpdatedAt": "2024-08-23 13:18",
+        "fetchedAt": "2026-05-22T09:00:35.707Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "d67e31c82b8a1516",
+        "rawTitle": "2024 Mr. & Ms. Korea",
+        "rawDateText": "2024. 9. 27.(금) ~ 9. 29.(일)",
+        "rawLocationText": "한국체육대학교 필승관 대강당 〔서울 송파구 양재대로 1239(오륜동)〕",
+        "rawRegistrationText": "2024-09-05 18:00:00"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: - 2024 Mr. & Ms. Korea 개최요강 .pdf787KB",
+      "createdAt": "2026-05-22T09:00:35.707Z",
+      "updatedAt": "2026-05-22T09:00:35.707Z",
+      "normalizedAt": "2026-05-22T09:00:35.707Z"
+    },
+    {
+      "id": "kbbf:149114865",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2025 SPOEX 대학·고교보디빌딩·미즈피트니스대회(2025 IFBB 아시아선수권대회 국가대표 선발전)",
+      "seasonYear": 2025,
+      "date": {
+        "startsOn": "2025-03-29",
+        "timezone": "Asia/Seoul",
+        "rawText": "2025-03-29 - 03-30",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "closed",
+        "closesAt": "2025-03-12T18:00:00+09:00",
+        "rawText": "2025.3.12.(수) 18:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "서울 코엑스 B홀 메인무대 〔서울 강남구 영동대로 513 소재〕",
+        "venue": "서울 코엑스 B홀 메인무대 〔서울 강남구 영동대로 513 소재〕",
+        "rawText": "서울 코엑스 B홀 메인무대 〔서울 강남구 영동대로 513 소재〕",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국내대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": true,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_kr",
+        "detailUrl": "https://bodybuilding.or.kr/contest_kr/?bmode=view&idx=149114865",
+        "sourceEventId": "149114865",
+        "sourceUpdatedAt": "2025-02-07 18:19",
+        "fetchedAt": "2026-05-22T09:00:31.837Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "0a4761b9ef2f7578",
+        "rawTitle": "2025 SPOEX 대학·고교보디빌딩·미즈피트니스대회(2025 IFBB 아시아선수권대회 국가대표 선발전)",
+        "rawDateText": "2025-03-29 - 03-30",
+        "rawLocationText": "서울 코엑스 B홀 메인무대 〔서울 강남구 영동대로 513 소재〕",
+        "rawRegistrationText": "2025.3.12.(수) 18:00"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: - 2025 SPOEX 대학 & 고교 & 미즈대회, 선발전 개최요강.pdf1307KB / [별첨 1] 학교장 확인서.hwp62KB / [별첨 2] 학교폭력 처분이력 부존재 서약서.hwp61KB / [별첨 3] 한국도핑방지위원회 온라인 도핑방지교육 이수증 발급 방법.pdf1421KB / [별첨 4] 2025년 기준 연나이표.pdf18KB",
+      "createdAt": "2026-05-22T09:00:31.837Z",
+      "updatedAt": "2026-05-22T09:00:31.837Z",
+      "normalizedAt": "2026-05-22T09:00:31.837Z"
+    },
+    {
+      "id": "kbbf:158554323",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2025 전국생활체육대축전 보디빌딩 경기",
+      "seasonYear": 2025,
+      "date": {
+        "startsOn": "2025-04-26",
+        "timezone": "Asia/Seoul",
+        "rawText": "2025-04-26",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "region": "전라남도 담양문화회관 〔전남 담양군 지침6길 29〕",
+        "venue": "전라남도 담양문화회관 〔전남 담양군 지침6길 29〕",
+        "rawText": "전라남도 담양문화회관 〔전남 담양군 지침6길 29〕",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "18세이하부",
+          "group": "unknown",
+          "rawText": "18세이하부, 일반부(여자일반부·남자일반부)"
+        },
+        {
+          "name": "일반부(여자일반부",
+          "group": "womens",
+          "rawText": "18세이하부, 일반부(여자일반부·남자일반부)"
+        },
+        {
+          "name": "남자일반부)",
+          "group": "mens",
+          "rawText": "18세이하부, 일반부(여자일반부·남자일반부)"
+        }
+      ],
+      "tags": [
+        "KBBF",
+        "국내대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_kr",
+        "detailUrl": "https://bodybuilding.or.kr/contest_kr/?bmode=view&idx=158554323",
+        "sourceEventId": "158554323",
+        "sourceUpdatedAt": "2025-03-18 18:57",
+        "fetchedAt": "2026-05-22T09:00:26.650Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "251d6ce08076000d",
+        "rawTitle": "2025 전국생활체육대축전 보디빌딩 경기",
+        "rawDateText": "2025-04-26",
+        "rawLocationText": "전라남도 담양문화회관 〔전남 담양군 지침6길 29〕"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: - 2025 전국생활체육대축전 개최요강.pdf398KB / [별첨 1] 학교장 확인서.hwp65KB / [별첨 2] 학교폭력 처분이력 부존재 서약서(2002년생이하).hwp64KB / [별첨 3] 2025년 기준 연나이표.pdf18KB",
+      "createdAt": "2026-05-22T09:00:26.650Z",
+      "updatedAt": "2026-05-22T09:00:26.650Z",
+      "normalizedAt": "2026-05-22T09:00:26.650Z"
+    },
+    {
+      "id": "kbbf:166519796",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2025 IFBB 세계보디빌딩선수권대회 제1차 국가대표 선발전 개최",
+      "seasonYear": 2025,
+      "date": {
+        "startsOn": "2025-08-08",
+        "endsOn": "2025-08-10",
+        "timezone": "Asia/Seoul",
+        "rawText": "2025. 8. 8.(금) ~ 10.(일)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "closed",
+        "closesAt": "2025-07-21T18:00:00+09:00",
+        "registrationUrl": "https://app.sports.or.kr/app_bd/app/main.do",
+        "rawText": "참가신청마감: 7. 21.(월) 18:00 까지신청하기신청하기",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "서울특별시교육청 잠실학생체육관 〔서울 송파구 올림픽로 25(잠실동 10)〕",
+        "venue": "서울특별시교육청 잠실학생체육관 〔서울 송파구 올림픽로 25(잠실동 10)〕",
+        "rawText": "서울특별시교육청 잠실학생체육관 〔서울 송파구 올림픽로 25(잠실동 10)〕",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국제대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": true,
+        "international": true
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_inti",
+        "detailUrl": "https://bodybuilding.or.kr/contest_inti/?bmode=view&idx=166519796",
+        "sourceEventId": "166519796",
+        "sourceUpdatedAt": "2025-07-04 17:34",
+        "fetchedAt": "2026-05-22T09:01:25.834Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "dcbf37c80a446320",
+        "rawTitle": "2025 IFBB 세계보디빌딩선수권대회 제1차 국가대표 선발전 개최",
+        "rawDateText": "2025. 8. 8.(금) ~ 10.(일)",
+        "rawLocationText": "서울특별시교육청 잠실학생체육관 〔서울 송파구 올림픽로 25(잠실동 10)〕",
+        "rawRegistrationText": "참가신청마감: 7. 21.(월) 18:00 까지신청하기신청하기"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "createdAt": "2026-05-22T09:01:25.834Z",
+      "updatedAt": "2026-05-22T09:01:25.834Z",
+      "normalizedAt": "2026-05-22T09:01:25.834Z"
+    },
+    {
+      "id": "kbbf:166520090",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2025 IFBB 세계피트니스선수권대회 제1차 국가대표 선발전 개최",
+      "seasonYear": 2025,
+      "date": {
+        "startsOn": "2025-08-08",
+        "endsOn": "2025-08-10",
+        "timezone": "Asia/Seoul",
+        "rawText": "2025. 8. 8.(금) ~ 10.(일)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "closed",
+        "closesAt": "2025-07-21T18:00:00+09:00",
+        "registrationUrl": "https://app.sports.or.kr/app_bd/app/main.do",
+        "rawText": "참가신청마감: 7. 21.(월) 18:00 까지신청하기신청하",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "서울특별시교육청 잠실학생체육관 〔서울 송파구 올림픽로 25(잠실동 10)〕",
+        "venue": "서울특별시교육청 잠실학생체육관 〔서울 송파구 올림픽로 25(잠실동 10)〕",
+        "rawText": "서울특별시교육청 잠실학생체육관 〔서울 송파구 올림픽로 25(잠실동 10)〕",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국제대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": true,
+        "international": true
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_inti",
+        "detailUrl": "https://bodybuilding.or.kr/contest_inti/?bmode=view&idx=166520090",
+        "sourceEventId": "166520090",
+        "sourceUpdatedAt": "2025-07-04 17:45",
+        "fetchedAt": "2026-05-22T09:01:22.462Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "6655cf100c638465",
+        "rawTitle": "2025 IFBB 세계피트니스선수권대회 제1차 국가대표 선발전 개최",
+        "rawDateText": "2025. 8. 8.(금) ~ 10.(일)",
+        "rawLocationText": "서울특별시교육청 잠실학생체육관 〔서울 송파구 올림픽로 25(잠실동 10)〕",
+        "rawRegistrationText": "참가신청마감: 7. 21.(월) 18:00 까지신청하기신청하"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "createdAt": "2026-05-22T09:01:22.462Z",
+      "updatedAt": "2026-05-22T09:01:22.462Z",
+      "normalizedAt": "2026-05-22T09:01:22.462Z"
+    },
+    {
+      "id": "kbbf:166518090",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2025 Mr. & Ms. Korea(2025 IFBB 세계선수권대회 제1차 국가대표 선발전)",
+      "seasonYear": 2025,
+      "date": {
+        "startsOn": "2025-08-08",
+        "endsOn": "2025-08-10",
+        "timezone": "Asia/Seoul",
+        "rawText": "2025. 8. 8.(금) ~ 10.(일)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "closed",
+        "closesAt": "2025-07-30T18:00:00+09:00",
+        "registrationUrl": "https://app.sports.or.kr/app_bd/app/main.do",
+        "rawText": "참가신청마감: 7. 30.(수) 18:00 신청하기",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "서울특별시교육청 잠실학생체육관 〔서울 송파구 올림픽로 25(잠실동 10)〕",
+        "venue": "서울특별시교육청 잠실학생체육관 〔서울 송파구 올림픽로 25(잠실동 10)〕",
+        "rawText": "서울특별시교육청 잠실학생체육관 〔서울 송파구 올림픽로 25(잠실동 10)〕",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국내대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": true,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_kr",
+        "detailUrl": "https://bodybuilding.or.kr/contest_kr/?bmode=view&idx=166518090",
+        "sourceEventId": "166518090",
+        "sourceUpdatedAt": "2025-07-04 16:34",
+        "fetchedAt": "2026-05-22T09:00:25.152Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "da3d19fd5389cc0c",
+        "rawTitle": "2025 Mr. & Ms. Korea(2025 IFBB 세계선수권대회 제1차 국가대표 선발전)",
+        "rawDateText": "2025. 8. 8.(금) ~ 10.(일)",
+        "rawLocationText": "서울특별시교육청 잠실학생체육관 〔서울 송파구 올림픽로 25(잠실동 10)〕",
+        "rawRegistrationText": "참가신청마감: 7. 30.(수) 18:00 신청하기"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "createdAt": "2026-05-22T09:00:25.152Z",
+      "updatedAt": "2026-05-22T09:00:25.152Z",
+      "normalizedAt": "2026-05-22T09:00:25.152Z"
+    },
+    {
+      "id": "kbbf:168179410",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "제28회 Mr. 울산 & 제5회 Ms. 울산 선발대회",
+      "seasonYear": 2025,
+      "date": {
+        "startsOn": "2025-10-26",
+        "timezone": "Asia/Seoul",
+        "rawText": "2025. 10. 26.(일) 09:00",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "region": "울산혁신도시 복합혁신센터 다목적체육관",
+        "venue": "울산혁신도시 복합혁신센터 다목적체육관",
+        "rawText": "울산혁신도시 복합혁신센터 다목적체육관",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "시도대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_city",
+        "detailUrl": "https://bodybuilding.or.kr/contest_city/?bmode=view&idx=168179410",
+        "sourceEventId": "168179410",
+        "sourceUpdatedAt": "2025-10-13 09:07",
+        "fetchedAt": "2026-05-22T09:03:38.639Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "5890f851357f2986",
+        "rawTitle": "제28회 Mr. 울산 & 제5회 Ms. 울산 선발대회",
+        "rawDateText": "2025. 10. 26.(일) 09:00",
+        "rawLocationText": "울산혁신도시 복합혁신센터 다목적체육관"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: 2025년 제28회Mr & 제5회Ms 울산선발대회 개최요강.hwp4226KB",
+      "createdAt": "2026-05-22T09:03:38.639Z",
+      "updatedAt": "2026-05-22T09:03:38.639Z",
+      "normalizedAt": "2026-05-22T09:03:38.639Z"
+    },
+    {
+      "id": "kbbf:167702458",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "제8회 광주광역시체육회장배대회",
+      "seasonYear": 2025,
+      "date": {
+        "startsOn": "2025-10-26",
+        "timezone": "Asia/Seoul",
+        "rawText": "2025. 10. 26.(일)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "region": "광주대학교 호심관 대강당",
+        "rawText": "광주대학교 호심관 대강당",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "시도대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_city",
+        "detailUrl": "https://bodybuilding.or.kr/contest_city/?bmode=view&idx=167702458",
+        "sourceEventId": "167702458",
+        "sourceUpdatedAt": "2025-09-12 09:37",
+        "fetchedAt": "2026-05-22T09:03:45.950Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "28f8fe352f01f8b7",
+        "rawTitle": "제8회 광주광역시체육회장배대회",
+        "rawDateText": "2025. 10. 26.(일)",
+        "rawLocationText": "광주대학교 호심관 대강당"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: 2025제8회 광주광역시체육회장배대회개최요강.hwp90KB",
+      "createdAt": "2026-05-22T09:03:45.950Z",
+      "updatedAt": "2026-05-22T09:03:45.950Z",
+      "normalizedAt": "2026-05-22T09:03:45.950Z"
+    },
+    {
+      "id": "kbbf:168156638",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2025년 제3회 충남도지사배 보디빌딩&피트니스 선발대회",
+      "seasonYear": 2025,
+      "date": {
+        "startsOn": "2025-11-01",
+        "timezone": "Asia/Seoul",
+        "rawText": "2025. 11. 1.(토)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "unknown",
+        "registrationUrl": "https://bodybuilding.or.kr/post_file_download.cm?c=YTo1OntzOjEwOiJib2FyZF9jb2RlIjtzOjIyOiJiMjAyMzA1MjljY2U5ZmM2ODg2MzdmIjtzOjk6InBvc3RfY29kZSI7czoyMjoicDIwMjUxMDEwYTc2OGQ1OTMyM2RjMSI7czo5OiJmaWxlX2NvZGUiO3M6MjI6InAyMDI1MTAxMGM0NWMwMDI1MmZmNzciO3M6MTk6InBvc3RfZG93bmxvYWRfdG9rZW4iO3M6MTM6IjZhMTAxYmVkMmUzYjkiO3M6MTE6Im1lbWJlcl9jb2RlIjtOO30=",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "venue": "공주대 백제교육문화관",
+        "rawText": "공주대 백제교육문화관",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "시도대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_city",
+        "detailUrl": "https://bodybuilding.or.kr/contest_city/?bmode=view&idx=168156638",
+        "sourceEventId": "168156638",
+        "sourceUpdatedAt": "2025-10-10 13:07",
+        "fetchedAt": "2026-05-22T09:03:41.400Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "db1f2a5c90aaedf9",
+        "rawTitle": "2025년 제3회 충남도지사배 보디빌딩&피트니스 선발대회",
+        "rawDateText": "2025. 11. 1.(토)",
+        "rawLocationText": "공주대 백제교육문화관"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: 2025 충남도지사배 개최요강.pdf384KB / 2025 충남도지사배 참가신청서 양식.hwp54KB",
+      "createdAt": "2026-05-22T09:03:41.400Z",
+      "updatedAt": "2026-05-22T09:03:41.400Z",
+      "normalizedAt": "2026-05-22T09:03:41.400Z"
+    },
+    {
+      "id": "kbbf:167571681",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2025년 제8회 전국 유니버시티 파이널 챔피언십 보디빌딩&피트니스 대회",
+      "seasonYear": 2025,
+      "date": {
+        "startsOn": "2025-11-08",
+        "timezone": "Asia/Seoul",
+        "rawText": "2025년 11월 8일(토) 09:00~18:00 *개회식 13:00",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "venue": "단국대학교 천안캠퍼스 학생회관 4층 학생극장",
+        "rawText": "단국대학교 천안캠퍼스 학생회관 4층 학생극장",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "시도대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_city",
+        "detailUrl": "https://bodybuilding.or.kr/contest_city/?bmode=view&idx=167571681",
+        "sourceEventId": "167571681",
+        "sourceUpdatedAt": "2025-09-04 11:24",
+        "fetchedAt": "2026-05-22T09:03:47.638Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "019ac422ec51cbf6",
+        "rawTitle": "2025년 제8회 전국 유니버시티 파이널 챔피언십 보디빌딩&피트니스 대회",
+        "rawDateText": "2025년 11월 8일(토) 09:00~18:00 *개회식 13:00",
+        "rawLocationText": "단국대학교 천안캠퍼스 학생회관 4층 학생극장"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "createdAt": "2026-05-22T09:03:47.638Z",
+      "updatedAt": "2026-05-22T09:03:47.638Z",
+      "normalizedAt": "2026-05-22T09:03:47.638Z"
+    },
+    {
+      "id": "kbbf:169590900",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2026 SPOEX 대학보디빌딩대회 겸 고교보디빌딩대회 및 미즈피트니스대회",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-03-28",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026-03-28 ~ 03-29",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "closed",
+        "closesAt": "2026-03-11T18:00:00+09:00",
+        "rawText": "2026.3.11.(수) 18:00",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "서울 코엑스 B홀 메인무대 〔서울 강남구 영동대로 513 소재〕",
+        "venue": "서울 코엑스 B홀 메인무대 〔서울 강남구 영동대로 513 소재〕",
+        "rawText": "서울 코엑스 B홀 메인무대 〔서울 강남구 영동대로 513 소재〕",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국내대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_kr",
+        "detailUrl": "https://bodybuilding.or.kr/contest_kr/?bmode=view&idx=169590900",
+        "sourceEventId": "169590900",
+        "sourceUpdatedAt": "2026-01-21 13:24",
+        "fetchedAt": "2026-05-22T08:59:56.757Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "0f54d7b1a0d830ae",
+        "rawTitle": "2026 SPOEX 대학보디빌딩대회 겸 고교보디빌딩대회 및 미즈피트니스대회",
+        "rawDateText": "2026-03-28 ~ 03-29",
+        "rawLocationText": "서울 코엑스 B홀 메인무대 〔서울 강남구 영동대로 513 소재〕",
+        "rawRegistrationText": "2026.3.11.(수) 18:00"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: - 2026 SPOEX 대학 & 고교 & 미즈대회 개최요강.pdf660KB / [별첨 1] 학교장 확인서.hwp.hwp65KB / [별첨 2] 학교폭력 처분이력 부존재 서약서.hwp.hwp64KB / [별첨 3] 한국도핑방지위원회 온라인 도핑방지교육 이수증 발급 방법.pdf2336KB / [별첨 4] 2026년 기준 연나이표.pdf52KB",
+      "createdAt": "2026-05-22T08:59:56.757Z",
+      "updatedAt": "2026-05-22T08:59:56.757Z",
+      "normalizedAt": "2026-05-22T08:59:56.757Z"
+    },
+    {
+      "id": "kbbf:169588130",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2026년도 제6회 Mr.&Ms. 세종선발대회 겸 피트니스 선수권대회 및 제107회 전국체육대회 대표선수 선발전",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-04-04",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 04월 04일 (토) 13:30",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "region": "세종시민회관 대강당",
+        "venue": "세종시민회관 대강당",
+        "rawText": "세종시민회관 대강당",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "시도대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": true,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_city",
+        "detailUrl": "https://bodybuilding.or.kr/contest_city/?bmode=view&idx=169588130",
+        "sourceEventId": "169588130",
+        "sourceUpdatedAt": "2026-01-21 11:04",
+        "fetchedAt": "2026-05-22T09:03:30.535Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "b3ae31f65cc59ce7",
+        "rawTitle": "2026년도 제6회 Mr.&Ms. 세종선발대회 겸 피트니스 선수권대회 및 제107회 전국체육대회 대표선수 선발전",
+        "rawDateText": "2026년 04월 04일 (토) 13:30",
+        "rawLocationText": "세종시민회관 대강당"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: 제6회 세종대회 개최요강.pdf589KB",
+      "createdAt": "2026-05-22T09:03:30.535Z",
+      "updatedAt": "2026-05-22T09:03:30.535Z",
+      "normalizedAt": "2026-05-22T09:03:30.535Z"
+    },
+    {
+      "id": "kbbf:169336689",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2026 MR.&MS. GYEONGNAM 선발대회 겸 협회장배대회",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-04-11",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 04월 11일 (토) 계측 08:00 / 개회식 및 본선 12:00",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "region": "경상남도 산청군 실내체육관",
+        "venue": "경상남도 산청군 실내체육관",
+        "rawText": "경상남도 산청군 실내체육관",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "시도대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_city",
+        "detailUrl": "https://bodybuilding.or.kr/contest_city/?bmode=view&idx=169336689",
+        "sourceEventId": "169336689",
+        "sourceUpdatedAt": "2026-01-06 13:43",
+        "fetchedAt": "2026-05-22T09:03:33.916Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "abb4f9b4cbc5891c",
+        "rawTitle": "2026 MR.&MS. GYEONGNAM 선발대회 겸 협회장배대회",
+        "rawDateText": "2026년 04월 11일 (토) 계측 08:00 / 개회식 및 본선 12:00",
+        "rawLocationText": "경상남도 산청군 실내체육관"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: 2026 Mr.&Ms. GYEONGNAM 선발대회 겸 협회장배대회 요강.hwp6237KB",
+      "createdAt": "2026-05-22T09:03:33.916Z",
+      "updatedAt": "2026-05-22T09:03:33.916Z",
+      "normalizedAt": "2026-05-22T09:03:33.916Z"
+    },
+    {
+      "id": "kbbf:170380402",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2026 전국생활체육대축전 보디빌딩 경기",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-04-25",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026-04-25",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "region": "경상남도 진영스포츠센터(경남 김해시 진영읍 김해대로 253)",
+        "venue": "경상남도 진영스포츠센터(경남 김해시 진영읍 김해대로 253)",
+        "rawText": "경상남도 진영스포츠센터(경남 김해시 진영읍 김해대로 253)",
+        "confidence": "high"
+      },
+      "divisions": [
+        {
+          "name": "18세이하부",
+          "group": "unknown",
+          "rawText": "18세이하부, 일반부(여자 일반부·남자 일반부)"
+        },
+        {
+          "name": "일반부(여자 일반부",
+          "group": "womens",
+          "rawText": "18세이하부, 일반부(여자 일반부·남자 일반부)"
+        },
+        {
+          "name": "남자 일반부)",
+          "group": "mens",
+          "rawText": "18세이하부, 일반부(여자 일반부·남자 일반부)"
+        }
+      ],
+      "tags": [
+        "KBBF",
+        "국내대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_kr",
+        "detailUrl": "https://bodybuilding.or.kr/contest_kr/?bmode=view&idx=170380402",
+        "sourceEventId": "170380402",
+        "sourceUpdatedAt": "2026-03-13 15:00",
+        "fetchedAt": "2026-05-22T08:59:53.312Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "347fe9c33b28d3e7",
+        "rawTitle": "2026 전국생활체육대축전 보디빌딩 경기",
+        "rawDateText": "2026-04-25",
+        "rawLocationText": "경상남도 진영스포츠센터(경남 김해시 진영읍 김해대로 253)"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: - 2026 전국생활체육대축전 개최요강.hwp405KB / [별첨 1] 2026년 기준 연나이 표.hwp631KB / [별첨 2] 학교장 확인서.hwp66KB / [별첨 3] 학교폭력 처분이력 부존재 서약서.hwp65KB / [별첨 4] 안전 서약서.hwp71KB",
+      "createdAt": "2026-05-22T08:59:53.312Z",
+      "updatedAt": "2026-05-22T08:59:53.312Z",
+      "normalizedAt": "2026-05-22T08:59:53.312Z"
+    },
+    {
+      "id": "kbbf:170668857",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2026 Mr. & Ms. 경북 선발대회",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-05-02",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026. 05. 02.(토) 13:00",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "rawText": "문경새재도립공원 야외공연장",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "시도대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_city",
+        "detailUrl": "https://bodybuilding.or.kr/contest_city/?bmode=view&idx=170668857",
+        "sourceEventId": "170668857",
+        "sourceUpdatedAt": "2026-04-02 15:50",
+        "fetchedAt": "2026-05-22T09:03:02.228Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "09fffd5a659e3556",
+        "rawTitle": "2026 Mr. & Ms. 경북 선발대회",
+        "rawDateText": "2026. 05. 02.(토) 13:00",
+        "rawLocationText": "문경새재도립공원 야외공연장"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: 2026 Mr. & Ms. 경북 선발대회 참가요강.pdf1036KB",
+      "createdAt": "2026-05-22T09:03:02.228Z",
+      "updatedAt": "2026-05-22T09:03:02.228Z",
+      "normalizedAt": "2026-05-22T09:03:02.228Z"
+    },
+    {
+      "id": "kbbf:170842099",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "제61회 Mr. & Ms. 경기 선발대회 겸 제107회 전국체육대회 1차 선발전",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-05-03",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026. 5. 3.(일) 13시",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "region": "파주 아이레벨 트라움벨트 경기장 [경기도 파주시 회동길 342]",
+        "venue": "파주 아이레벨 트라움벨트 경기장 [경기도 파주시 회동길 342]",
+        "rawText": "파주 아이레벨 트라움벨트 경기장 [경기도 파주시 회동길 342]",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "시도대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": true,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_city",
+        "detailUrl": "https://bodybuilding.or.kr/contest_city/?bmode=view&idx=170842099",
+        "sourceEventId": "170842099",
+        "sourceUpdatedAt": "2026-04-14 13:34",
+        "fetchedAt": "2026-05-22T09:02:45.551Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "6038b97e1cb6db7f",
+        "rawTitle": "제61회 Mr. & Ms. 경기 선발대회 겸 제107회 전국체육대회 1차 선발전",
+        "rawDateText": "2026. 5. 3.(일) 13시",
+        "rawLocationText": "파주 아이레벨 트라움벨트 경기장 [경기도 파주시 회동길 342]"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: 1.2026년 제61회 Mr.& Ms.경기선발대회 개최요강.hwp2358KB",
+      "createdAt": "2026-05-22T09:02:45.551Z",
+      "updatedAt": "2026-05-22T09:02:45.551Z",
+      "normalizedAt": "2026-05-22T09:02:45.551Z"
+    },
+    {
+      "id": "kbbf:170313057",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2026년 대전광역시장배 겸 제37회 Mr.& 제13회 Ms. 대전 & 피트니스 챔피온쉽",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-05-09",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 5월 9일(토)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "closed",
+        "closesAt": "2026-05-01T18:00:00+09:00",
+        "rawText": "2026년 5월 1일(금) 18:00까지",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "venue": "배재대학교 콘서트홀",
+        "rawText": "배재대학교 콘서트홀",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "시도대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_city",
+        "detailUrl": "https://bodybuilding.or.kr/contest_city/?bmode=view&idx=170313057",
+        "sourceEventId": "170313057",
+        "sourceUpdatedAt": "2026-03-09 13:17",
+        "fetchedAt": "2026-05-22T09:03:26.270Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "bc3e1eefe216e0a3",
+        "rawTitle": "2026년 대전광역시장배 겸 제37회 Mr.& 제13회 Ms. 대전 & 피트니스 챔피온쉽",
+        "rawDateText": "2026년 5월 9일(토)",
+        "rawLocationText": "배재대학교 콘서트홀",
+        "rawRegistrationText": "2026년 5월 1일(금) 18:00까지"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: 2026 미스터 대전개최 요강 (1).pdf279KB / 보디빌딩포스터.jpg2254KB",
+      "createdAt": "2026-05-22T09:03:26.270Z",
+      "updatedAt": "2026-05-22T09:03:26.270Z",
+      "normalizedAt": "2026-05-22T09:03:26.270Z"
+    },
+    {
+      "id": "kbbf:170432166",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2026년도 제8회 광주광역시체육회장배 보디빌딩 & 피트니스대회",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-05-09",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026. 5. 9.(토)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "closed",
+        "closesAt": "2026-04-18T18:59:00+09:00",
+        "rawText": "2026년 4월 18일(토) 18시",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "광주대학교 호심관 대강당",
+        "rawText": "광주대학교 호심관 대강당",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "시도대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_city",
+        "detailUrl": "https://bodybuilding.or.kr/contest_city/?bmode=view&idx=170432166",
+        "sourceEventId": "170432166",
+        "sourceUpdatedAt": "2026-03-17 17:46",
+        "fetchedAt": "2026-05-22T09:03:18.778Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "a6f7b22427da2dc9",
+        "rawTitle": "2026년도 제8회 광주광역시체육회장배 보디빌딩 & 피트니스대회",
+        "rawDateText": "2026. 5. 9.(토)",
+        "rawLocationText": "광주대학교 호심관 대강당",
+        "rawRegistrationText": "2026년 4월 18일(토) 18시"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: 2026제8회 광주광역시체육회장배대회개최요강.hwp92KB",
+      "createdAt": "2026-05-22T09:03:18.778Z",
+      "updatedAt": "2026-05-22T09:03:18.778Z",
+      "normalizedAt": "2026-05-22T09:03:18.778Z"
+    },
+    {
+      "id": "kbbf:170432216",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "제107회 전국체육대회 제1차 광주광역시예선대회 & 제40회 Mr. & 제11회 Ms. 광주 선발대회",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-05-10",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026. 5. 10.(일)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "closed",
+        "closesAt": "2026-04-18T18:59:00+09:00",
+        "rawText": "2026년 4월 18일(토) 18시",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "광주대학교 호심관 대강당",
+        "rawText": "광주대학교 호심관 대강당",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "시도대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": true,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_city",
+        "detailUrl": "https://bodybuilding.or.kr/contest_city/?bmode=view&idx=170432216",
+        "sourceEventId": "170432216",
+        "sourceUpdatedAt": "2026-03-17 17:49",
+        "fetchedAt": "2026-05-22T09:03:15.884Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "96e2c534da3b1701",
+        "rawTitle": "제107회 전국체육대회 제1차 광주광역시예선대회 & 제40회 Mr. & 제11회 Ms. 광주 선발대회",
+        "rawDateText": "2026. 5. 10.(일)",
+        "rawLocationText": "광주대학교 호심관 대강당",
+        "rawRegistrationText": "2026년 4월 18일(토) 18시"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: 2026년도 제40회Mr.&제11회Ms.광주선발대회 개최요강.hwp1839KB",
+      "createdAt": "2026-05-22T09:03:15.884Z",
+      "updatedAt": "2026-05-22T09:03:15.884Z",
+      "normalizedAt": "2026-05-22T09:03:15.884Z"
+    },
+    {
+      "id": "kbbf:170768936",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "제36회 Mr. 충북선발대회 겸 제6회 Ms. & Mr. 피트니스 대회",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-05-16",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026. 5. 16.(토)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "closed",
+        "closesAt": "2026-05-14T18:00:00+09:00",
+        "rawText": "2026. 5. 14.(목) 18:00까지",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "충청대학교 컨벤션센터",
+        "venue": "충청대학교 컨벤션센터",
+        "rawText": "충청대학교 컨벤션센터",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "시도대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_city",
+        "detailUrl": "https://bodybuilding.or.kr/contest_city/?bmode=view&idx=170768936",
+        "sourceEventId": "170768936",
+        "sourceUpdatedAt": "2026-04-09 13:36",
+        "fetchedAt": "2026-05-22T09:02:51.051Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "f103f6922a38d5d9",
+        "rawTitle": "제36회 Mr. 충북선발대회 겸 제6회 Ms. & Mr. 피트니스 대회",
+        "rawDateText": "2026. 5. 16.(토)",
+        "rawLocationText": "충청대학교 컨벤션센터",
+        "rawRegistrationText": "2026. 5. 14.(목) 18:00까지"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: 제36회 미스터 충북 선발대회 개최 요강.hwp2098KB",
+      "createdAt": "2026-05-22T09:02:51.051Z",
+      "updatedAt": "2026-05-22T09:02:51.051Z",
+      "normalizedAt": "2026-05-22T09:02:51.051Z"
+    },
+    {
+      "id": "kbbf:170677251",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "제65회 Mr&Ms 전남 선발전 & 피트니스 오픈 챔피언쉽대회 & 제107회 전국체전 1차 선발전",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-05-23",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 5월 23일(토) 13:00",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "venue": "전남 순천문화건강센터 다목적홀",
+        "rawText": "전남 순천문화건강센터 다목적홀",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "시도대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_city",
+        "detailUrl": "https://bodybuilding.or.kr/contest_city/?bmode=view&idx=170677251",
+        "sourceEventId": "170677251",
+        "sourceUpdatedAt": "2026-04-03 10:31",
+        "fetchedAt": "2026-05-22T09:02:59.031Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "17d303be933315cb",
+        "rawTitle": "제65회 Mr&Ms 전남 선발전 & 피트니스 오픈 챔피언쉽대회 & 제107회 전국체전 1차 선발전",
+        "rawDateText": "2026년 5월 23일(토) 13:00",
+        "rawLocationText": "전남 순천문화건강센터 다목적홀"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: 제65회 전남 선발전 개최 요강.hwp1858KB",
+      "createdAt": "2026-05-22T09:02:59.031Z",
+      "updatedAt": "2026-05-22T09:02:59.031Z",
+      "normalizedAt": "2026-05-22T09:02:59.031Z"
+    },
+    {
+      "id": "kbbf:171259821",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2026년도 제44회 Mr.& Ms. 인천선발대회 겸 피트니스 선수권 및 제107회 전국체육대회 대표선수 1차 선발전",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-05-30",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026. 5. 30.(토) - 11:00",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "region": "계양문화회관 공연장 [인천 계양구 계양산로 35번길 11]",
+        "venue": "계양문화회관 공연장 [인천 계양구 계양산로 35번길 11]",
+        "rawText": "계양문화회관 공연장 [인천 계양구 계양산로 35번길 11]",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "시도대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": true,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_city",
+        "detailUrl": "https://bodybuilding.or.kr/contest_city/?bmode=view&idx=171259821",
+        "sourceEventId": "171259821",
+        "sourceUpdatedAt": "2026-05-13 11:26",
+        "fetchedAt": "2026-05-22T09:02:36.277Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "0d265f0d18b529e2",
+        "rawTitle": "2026년도 제44회 Mr.& Ms. 인천선발대회 겸 피트니스 선수권 및 제107회 전국체육대회 대표선수 1차 선발전",
+        "rawDateText": "2026. 5. 30.(토) - 11:00",
+        "rawLocationText": "계양문화회관 공연장 [인천 계양구 계양산로 35번길 11]"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: 2026년 제44회 Mr.& Ms. 인천선발대회 개최요강.hwp1782KB",
+      "createdAt": "2026-05-22T09:02:36.277Z",
+      "updatedAt": "2026-05-22T09:02:36.277Z",
+      "normalizedAt": "2026-05-22T09:02:36.277Z"
+    },
+    {
+      "id": "kbbf:170271493",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "제45회 미스터서울 & 제31회 미즈 서울선발대회 및 협회장배대회",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-05-30",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 5월 30일(토) 계측 09:30 본선 12:30",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "unknown",
+        "closesAt": "2026-05-26T23:59:00+09:00",
+        "registrationUrl": "https://bodybuilding.or.kr/post_file_download.cm?c=YTo1OntzOjEwOiJib2FyZF9jb2RlIjtzOjIyOiJiMjAyMzA1MjljY2U5ZmM2ODg2MzdmIjtzOjk6InBvc3RfY29kZSI7czoyMjoicDIwMjYwMzA1ZTZlNTJkYjQxZDk0ZCI7czo5OiJmaWxlX2NvZGUiO3M6MjI6InAyMDI2MDMwNjNjZjllOGVhNjJjNmUiO3M6MTk6InBvc3RfZG93bmxvYWRfdG9rZW4iO3M6MTM6IjZhMTAxYmUwZGM5NTciO3M6MTE6Im1lbWJlcl9jb2RlIjtOO30=",
+        "rawText": "2026년 5월 26일(화)",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "세종대학교 컨벤션센터",
+        "venue": "세종대학교 컨벤션센터",
+        "rawText": "세종대학교 컨벤션센터",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "시도대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_city",
+        "detailUrl": "https://bodybuilding.or.kr/contest_city/?bmode=view&idx=170271493",
+        "sourceEventId": "170271493",
+        "sourceUpdatedAt": "2026-03-05 17:48",
+        "fetchedAt": "2026-05-22T09:03:29.081Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "33fbf76f0b274445",
+        "rawTitle": "제45회 미스터서울 & 제31회 미즈 서울선발대회 및 협회장배대회",
+        "rawDateText": "2026년 5월 30일(토) 계측 09:30 본선 12:30",
+        "rawLocationText": "세종대학교 컨벤션센터",
+        "rawRegistrationText": "2026년 5월 26일(화)"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: 개최요강.pdf7648KB / 참가신청서.hwp69KB / 서약서.hwp39KB / 학교장확인서.hwp62KB / 학교폭력처분이력부존재서약서.hwp66KB",
+      "createdAt": "2026-05-22T09:03:29.081Z",
+      "updatedAt": "2026-05-22T09:03:29.081Z",
+      "normalizedAt": "2026-05-22T09:03:29.081Z"
+    },
+    {
+      "id": "kbbf:170846514",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "제60회 Mr. 충남 보디빌딩 & 피트니스 선발대회(겸 제107회 전국체전 대표선발전)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-06-06",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026. 6. 6.(토)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "unknown",
+        "registrationUrl": "https://bodybuilding.or.kr/post_file_download.cm?c=YTo1OntzOjEwOiJib2FyZF9jb2RlIjtzOjIyOiJiMjAyMzA1MjljY2U5ZmM2ODg2MzdmIjtzOjk6InBvc3RfY29kZSI7czoyMjoicDIwMjYwNDE0MzMyZTA4YzgzZTE0YyI7czo5OiJmaWxlX2NvZGUiO3M6MjI6InAyMDI2MDQxNDU4ZmVlNjlkZDUwNTAiO3M6MTk6InBvc3RfZG93bmxvYWRfdG9rZW4iO3M6MTM6IjZhMTAxYmIzMzE3M2IiO3M6MTE6Im1lbWJlcl9jb2RlIjtOO30=",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "venue": "보령문화예술회관 [충남 보령시 성주산로 101]",
+        "rawText": "보령문화예술회관 [충남 보령시 성주산로 101]",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "시도대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": true,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_city",
+        "detailUrl": "https://bodybuilding.or.kr/contest_city/?bmode=view&idx=170846514",
+        "sourceEventId": "170846514",
+        "sourceUpdatedAt": "2026-04-14 16:45",
+        "fetchedAt": "2026-05-22T09:02:43.384Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "3ee4f20793e477c8",
+        "rawTitle": "제60회 Mr. 충남 보디빌딩 & 피트니스 선발대회(겸 제107회 전국체전 대표선발전)",
+        "rawDateText": "2026. 6. 6.(토)",
+        "rawLocationText": "보령문화예술회관 [충남 보령시 성주산로 101]"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: 2026년제60회Mr.충남참가신청서양식.hwp58KB / 타시도대회참가승인서양식.hwp28KB / 2026년제60회Mr.충남보디빌딩&피트니스선발대회개최요강.hwp1612KB",
+      "createdAt": "2026-05-22T09:02:43.384Z",
+      "updatedAt": "2026-05-22T09:02:43.384Z",
+      "normalizedAt": "2026-05-22T09:02:43.384Z"
+    },
+    {
+      "id": "kbbf:170570910",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "제41회 Mr. 전북 및 제11회 전북특별자치도지사배 보디빌딩대회",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-06-13",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 6월 13일(토)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "venue": "김제시문화예술회관 대공연장",
+        "rawText": "김제시문화예술회관 대공연장",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "시도대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_city",
+        "detailUrl": "https://bodybuilding.or.kr/contest_city/?bmode=view&idx=170570910",
+        "sourceEventId": "170570910",
+        "sourceUpdatedAt": "2026-03-27 09:07",
+        "fetchedAt": "2026-05-22T09:03:08.530Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "9697bb1a67397065",
+        "rawTitle": "제41회 Mr. 전북 및 제11회 전북특별자치도지사배 보디빌딩대회",
+        "rawDateText": "2026년 6월 13일(토)",
+        "rawLocationText": "김제시문화예술회관 대공연장"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: 개최요강(Mr,전북 및 도지사배)(2026년도).hwp111KB",
+      "createdAt": "2026-05-22T09:03:08.530Z",
+      "updatedAt": "2026-05-22T09:03:08.530Z",
+      "normalizedAt": "2026-05-22T09:03:08.530Z"
+    },
+    {
+      "id": "kbbf:170750275",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2026년 제29회 Mr. & 제6회 Ms. 울산선발대회",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-06-14",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026. 6. 14(일) 09시 (개회식 13:00~)",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "region": "울산혁신도시복합혁신센터 다목적체육관",
+        "venue": "울산혁신도시복합혁신센터 다목적체육관",
+        "rawText": "울산혁신도시복합혁신센터 다목적체육관",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "시도대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_city",
+        "detailUrl": "https://bodybuilding.or.kr/contest_city/?bmode=view&idx=170750275",
+        "sourceEventId": "170750275",
+        "sourceUpdatedAt": "2026-04-08 08:57",
+        "fetchedAt": "2026-05-22T09:02:54.397Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "03973ba9ad0a0e0b",
+        "rawTitle": "2026년 제29회 Mr. & 제6회 Ms. 울산선발대회",
+        "rawDateText": "2026. 6. 14(일) 09시 (개회식 13:00~)",
+        "rawLocationText": "울산혁신도시복합혁신센터 다목적체육관"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: 2026년 제29회Mr. & 제6회Ms. 울산선발대회 개최요강.hwp4226KB",
+      "createdAt": "2026-05-22T09:02:54.397Z",
+      "updatedAt": "2026-05-22T09:02:54.397Z",
+      "normalizedAt": "2026-05-22T09:02:54.397Z"
+    },
+    {
+      "id": "kbbf:170360210",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2026년 제9회 전국 유니버시티 퍼스트 챔피언십 (보디빌딩&피트니스)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-06-20",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026년 6월 20일(토) 09:00~18:00 *개회식 13:00",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "region": "인천 상상플렛폼",
+        "rawText": "인천 상상플렛폼",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "시도대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_city",
+        "detailUrl": "https://bodybuilding.or.kr/contest_city/?bmode=view&idx=170360210",
+        "sourceEventId": "170360210",
+        "sourceUpdatedAt": "2026-03-12 09:30",
+        "fetchedAt": "2026-05-22T09:03:22.892Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "0a53bf67d06016dc",
+        "rawTitle": "2026년 제9회 전국 유니버시티 퍼스트 챔피언십 (보디빌딩&피트니스)",
+        "rawDateText": "2026년 6월 20일(토) 09:00~18:00 *개회식 13:00",
+        "rawLocationText": "인천 상상플렛폼"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: 26.06.20 제9회 전국 유니버시티 퍼스트 챔피언십 대회개최요강.hwp2262KB",
+      "createdAt": "2026-05-22T09:03:22.892Z",
+      "updatedAt": "2026-05-22T09:03:22.892Z",
+      "normalizedAt": "2026-05-22T09:03:22.892Z"
+    },
+    {
+      "id": "kbbf:171158564",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2026년 제9회 전국 유니버시티 퍼스트 챔피언십(보디빌딩, 피트니스)",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-06-20",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026. 06. 20.(토) 09:00~",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "rawText": "상상플렛폼 (월미로 33)",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "시도대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_city",
+        "detailUrl": "https://bodybuilding.or.kr/contest_city/?bmode=view&idx=171158564",
+        "sourceEventId": "171158564",
+        "sourceUpdatedAt": "2026-05-06 16:06",
+        "fetchedAt": "2026-05-22T09:02:38.483Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "b62cdd63351fa556",
+        "rawTitle": "2026년 제9회 전국 유니버시티 퍼스트 챔피언십(보디빌딩, 피트니스)",
+        "rawDateText": "2026. 06. 20.(토) 09:00~",
+        "rawLocationText": "상상플렛폼 (월미로 33)"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "high",
+      "qualityIssues": [],
+      "notes": "첨부파일: 26.06.20 제9회 전국 유니버시티 퍼스트 챔피언십 대회개최요강.hwp2263KB",
+      "createdAt": "2026-05-22T09:02:38.483Z",
+      "updatedAt": "2026-05-22T09:02:38.483Z",
+      "normalizedAt": "2026-05-22T09:02:38.483Z"
+    },
+    {
+      "id": "kbbf:15400435",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2017 동아시아보디빌딩&피트니스선수권대회",
+      "seasonYear": 2017,
+      "date": {
+        "timezone": "Asia/Seoul",
+        "rawText": "2017 동아시아보디빌딩&피트니스선수권대회",
+        "confidence": "low"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "confidence": "low"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국제대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": true,
+        "international": true
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_inti",
+        "detailUrl": "https://bodybuilding.or.kr/contest_inti/?bmode=view&idx=15400435",
+        "sourceEventId": "15400435",
+        "sourceUpdatedAt": "2017-03-03 18:07",
+        "fetchedAt": "2026-05-22T09:02:35.338Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "209fcae43f46107b",
+        "rawTitle": "2017 동아시아보디빌딩&피트니스선수권대회",
+        "rawDateText": "2017 동아시아보디빌딩&피트니스선수권대회"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "low",
+      "qualityIssues": [
+        {
+          "field": "date",
+          "severity": "warning",
+          "message": "상세 본문에서 대회일을 안정적으로 파싱하지 못했습니다."
+        },
+        {
+          "field": "location",
+          "severity": "warning",
+          "message": "상세 본문에서 장소를 안정적으로 파싱하지 못했습니다."
+        }
+      ],
+      "createdAt": "2026-05-22T09:02:35.338Z",
+      "updatedAt": "2026-05-22T09:02:35.338Z",
+      "normalizedAt": "2026-05-22T09:02:35.338Z"
+    },
+    {
+      "id": "kbbf:15400436",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2017 올림피아 아마추어 인도",
+      "seasonYear": 2017,
+      "date": {
+        "timezone": "Asia/Seoul",
+        "rawText": "2017 올림피아 아마추어 인도",
+        "confidence": "low"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "confidence": "low"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국제대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": true
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_inti",
+        "detailUrl": "https://bodybuilding.or.kr/contest_inti/?bmode=view&idx=15400436",
+        "sourceEventId": "15400436",
+        "sourceUpdatedAt": "2017-08-01 18:00",
+        "fetchedAt": "2026-05-22T09:02:33.785Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "209fcae43f46107b",
+        "rawTitle": "2017 올림피아 아마추어 인도",
+        "rawDateText": "2017 올림피아 아마추어 인도"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "low",
+      "qualityIssues": [
+        {
+          "field": "date",
+          "severity": "warning",
+          "message": "상세 본문에서 대회일을 안정적으로 파싱하지 못했습니다."
+        },
+        {
+          "field": "location",
+          "severity": "warning",
+          "message": "상세 본문에서 장소를 안정적으로 파싱하지 못했습니다."
+        }
+      ],
+      "createdAt": "2026-05-22T09:02:33.785Z",
+      "updatedAt": "2026-05-22T09:02:33.785Z",
+      "normalizedAt": "2026-05-22T09:02:33.785Z"
+    },
+    {
+      "id": "kbbf:15400442",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2019 동아시아보디빌딩&피트니스선수권대회",
+      "seasonYear": 2019,
+      "date": {
+        "timezone": "Asia/Seoul",
+        "rawText": "2019 동아시아보디빌딩&피트니스선수권대회",
+        "confidence": "low"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "confidence": "low"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국제대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": true,
+        "international": true
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_inti",
+        "detailUrl": "https://bodybuilding.or.kr/contest_inti/?bmode=view&idx=15400442",
+        "sourceEventId": "15400442",
+        "sourceUpdatedAt": "2019-06-01 18:00",
+        "fetchedAt": "2026-05-22T09:02:07.247Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "209fcae43f46107b",
+        "rawTitle": "2019 동아시아보디빌딩&피트니스선수권대회",
+        "rawDateText": "2019 동아시아보디빌딩&피트니스선수권대회"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "low",
+      "qualityIssues": [
+        {
+          "field": "date",
+          "severity": "warning",
+          "message": "상세 본문에서 대회일을 안정적으로 파싱하지 못했습니다."
+        },
+        {
+          "field": "location",
+          "severity": "warning",
+          "message": "상세 본문에서 장소를 안정적으로 파싱하지 못했습니다."
+        }
+      ],
+      "createdAt": "2026-05-22T09:02:07.247Z",
+      "updatedAt": "2026-05-22T09:02:07.247Z",
+      "normalizedAt": "2026-05-22T09:02:07.247Z"
+    },
+    {
+      "id": "kbbf:15400443",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2019년 세계피트니스선수권대회",
+      "seasonYear": 2019,
+      "date": {
+        "timezone": "Asia/Seoul",
+        "rawText": "2019년 세계피트니스선수권대회",
+        "confidence": "low"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "confidence": "low"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국제대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": true,
+        "international": true
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_inti",
+        "detailUrl": "https://bodybuilding.or.kr/contest_inti/?bmode=view&idx=15400443",
+        "sourceEventId": "15400443",
+        "sourceUpdatedAt": "2019-09-01 18:00",
+        "fetchedAt": "2026-05-22T09:01:57.143Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "209fcae43f46107b",
+        "rawTitle": "2019년 세계피트니스선수권대회",
+        "rawDateText": "2019년 세계피트니스선수권대회"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "low",
+      "qualityIssues": [
+        {
+          "field": "date",
+          "severity": "warning",
+          "message": "상세 본문에서 대회일을 안정적으로 파싱하지 못했습니다."
+        },
+        {
+          "field": "location",
+          "severity": "warning",
+          "message": "상세 본문에서 장소를 안정적으로 파싱하지 못했습니다."
+        }
+      ],
+      "createdAt": "2026-05-22T09:01:57.143Z",
+      "updatedAt": "2026-05-22T09:01:57.143Z",
+      "normalizedAt": "2026-05-22T09:01:57.143Z"
+    },
+    {
+      "id": "kbbf:16277432",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2023년 동아시아 보디빌딩&피트니스 선수권대회",
+      "seasonYear": 2023,
+      "date": {
+        "timezone": "Asia/Seoul",
+        "rawText": "2023년 동아시아 보디빌딩&피트니스 선수권대회",
+        "confidence": "low"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "confidence": "low"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국제대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": true,
+        "international": true
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_inti",
+        "detailUrl": "https://bodybuilding.or.kr/contest_inti/?bmode=view&idx=16277432",
+        "sourceEventId": "16277432",
+        "sourceUpdatedAt": "2023-09-07 20:00",
+        "fetchedAt": "2026-05-22T09:01:53.969Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "9a0908b4ae19a76f",
+        "rawTitle": "2023년 동아시아 보디빌딩&피트니스 선수권대회",
+        "rawDateText": "2023년 동아시아 보디빌딩&피트니스 선수권대회"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "low",
+      "qualityIssues": [
+        {
+          "field": "date",
+          "severity": "warning",
+          "message": "상세 본문에서 대회일을 안정적으로 파싱하지 못했습니다."
+        },
+        {
+          "field": "location",
+          "severity": "warning",
+          "message": "상세 본문에서 장소를 안정적으로 파싱하지 못했습니다."
+        }
+      ],
+      "createdAt": "2026-05-22T09:01:53.969Z",
+      "updatedAt": "2026-05-22T09:01:53.969Z",
+      "normalizedAt": "2026-05-22T09:01:53.969Z"
+    },
+    {
+      "id": "kbbf:61463303",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2024 IFBB 동아시아 보디빌딩&피트니스 선수권대회",
+      "seasonYear": 2024,
+      "date": {
+        "timezone": "Asia/Seoul",
+        "rawText": "2024 IFBB 동아시아 보디빌딩&피트니스 선수권대회",
+        "confidence": "low"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "confidence": "low"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국제대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": true,
+        "international": true
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_inti",
+        "detailUrl": "https://bodybuilding.or.kr/contest_inti/?bmode=view&idx=61463303",
+        "sourceEventId": "61463303",
+        "sourceUpdatedAt": "2024-08-08 13:58",
+        "fetchedAt": "2026-05-22T09:01:47.006Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "1b1704a7569b3f52",
+        "rawTitle": "2024 IFBB 동아시아 보디빌딩&피트니스 선수권대회",
+        "rawDateText": "2024 IFBB 동아시아 보디빌딩&피트니스 선수권대회"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "low",
+      "qualityIssues": [
+        {
+          "field": "date",
+          "severity": "warning",
+          "message": "상세 본문에서 대회일을 안정적으로 파싱하지 못했습니다."
+        },
+        {
+          "field": "location",
+          "severity": "warning",
+          "message": "상세 본문에서 장소를 안정적으로 파싱하지 못했습니다."
+        }
+      ],
+      "createdAt": "2026-05-22T09:01:47.006Z",
+      "updatedAt": "2026-05-22T09:01:47.006Z",
+      "normalizedAt": "2026-05-22T09:01:47.006Z"
+    },
+    {
+      "id": "kbbf:131235681",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2024 IFBB 세계여자선수권대회",
+      "seasonYear": 2024,
+      "date": {
+        "timezone": "Asia/Seoul",
+        "rawText": "2024 IFBB 세계여자선수권대회",
+        "confidence": "low"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "confidence": "low"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국제대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": true,
+        "international": true
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_inti",
+        "detailUrl": "https://bodybuilding.or.kr/contest_inti/?bmode=view&idx=131235681",
+        "sourceEventId": "131235681",
+        "sourceUpdatedAt": "2024-12-06 10:40",
+        "fetchedAt": "2026-05-22T09:01:44.464Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "efa4b176f8ffd99a",
+        "rawTitle": "2024 IFBB 세계여자선수권대회",
+        "rawDateText": "2024 IFBB 세계여자선수권대회"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "low",
+      "qualityIssues": [
+        {
+          "field": "date",
+          "severity": "warning",
+          "message": "상세 본문에서 대회일을 안정적으로 파싱하지 못했습니다."
+        },
+        {
+          "field": "location",
+          "severity": "warning",
+          "message": "상세 본문에서 장소를 안정적으로 파싱하지 못했습니다."
+        }
+      ],
+      "createdAt": "2026-05-22T09:01:44.464Z",
+      "updatedAt": "2026-05-22T09:01:44.464Z",
+      "normalizedAt": "2026-05-22T09:01:44.464Z"
+    },
+    {
+      "id": "kbbf:61457050",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2024 IFBB 아시아선수권대회",
+      "seasonYear": 2024,
+      "date": {
+        "timezone": "Asia/Seoul",
+        "rawText": "2024 IFBB 아시아선수권대회",
+        "confidence": "low"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "confidence": "low"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국제대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": true,
+        "international": true
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_inti",
+        "detailUrl": "https://bodybuilding.or.kr/contest_inti/?bmode=view&idx=61457050",
+        "sourceEventId": "61457050",
+        "sourceUpdatedAt": "2024-08-08 13:54",
+        "fetchedAt": "2026-05-22T09:01:51.043Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "f979d72eea5fb284",
+        "rawTitle": "2024 IFBB 아시아선수권대회",
+        "rawDateText": "2024 IFBB 아시아선수권대회"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "low",
+      "qualityIssues": [
+        {
+          "field": "date",
+          "severity": "warning",
+          "message": "상세 본문에서 대회일을 안정적으로 파싱하지 못했습니다."
+        },
+        {
+          "field": "location",
+          "severity": "warning",
+          "message": "상세 본문에서 장소를 안정적으로 파싱하지 못했습니다."
+        }
+      ],
+      "createdAt": "2026-05-22T09:01:51.043Z",
+      "updatedAt": "2026-05-22T09:01:51.043Z",
+      "normalizedAt": "2026-05-22T09:01:51.043Z"
+    },
+    {
+      "id": "kbbf:53133134",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2024 Mr. & Ms. Korea 대회 일정 안내",
+      "seasonYear": 2024,
+      "date": {
+        "timezone": "Asia/Seoul",
+        "rawText": "2024 Mr. & Ms. Korea 대회 일정 안내",
+        "confidence": "low"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "confidence": "low"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국내대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_kr",
+        "detailUrl": "https://bodybuilding.or.kr/contest_kr/?bmode=view&idx=53133134",
+        "sourceEventId": "53133134",
+        "sourceUpdatedAt": "2024-07-29 16:43",
+        "fetchedAt": "2026-05-22T09:00:37.720Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "639e2af32ba6c476",
+        "rawTitle": "2024 Mr. & Ms. Korea 대회 일정 안내",
+        "rawDateText": "2024 Mr. & Ms. Korea 대회 일정 안내"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "low",
+      "qualityIssues": [
+        {
+          "field": "date",
+          "severity": "warning",
+          "message": "상세 본문에서 대회일을 안정적으로 파싱하지 못했습니다."
+        },
+        {
+          "field": "location",
+          "severity": "warning",
+          "message": "상세 본문에서 장소를 안정적으로 파싱하지 못했습니다."
+        }
+      ],
+      "createdAt": "2026-05-22T09:00:37.720Z",
+      "updatedAt": "2026-05-22T09:00:37.720Z",
+      "normalizedAt": "2026-05-22T09:00:37.720Z"
+    },
+    {
+      "id": "kbbf:163761657",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2025 IFBB MR. UNIVERSE 대만",
+      "seasonYear": 2025,
+      "date": {
+        "timezone": "Asia/Seoul",
+        "rawText": "2025 IFBB MR. UNIVERSE 대만",
+        "confidence": "low"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "confidence": "low"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국제대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": true
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_inti",
+        "detailUrl": "https://bodybuilding.or.kr/contest_inti/?bmode=view&idx=163761657",
+        "sourceEventId": "163761657",
+        "sourceUpdatedAt": "2025-05-13 17:37",
+        "fetchedAt": "2026-05-22T09:01:38.446Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "2a4898408c0c8940",
+        "rawTitle": "2025 IFBB MR. UNIVERSE 대만",
+        "rawDateText": "2025 IFBB MR. UNIVERSE 대만"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "low",
+      "qualityIssues": [
+        {
+          "field": "date",
+          "severity": "warning",
+          "message": "상세 본문에서 대회일을 안정적으로 파싱하지 못했습니다."
+        },
+        {
+          "field": "location",
+          "severity": "warning",
+          "message": "상세 본문에서 장소를 안정적으로 파싱하지 못했습니다."
+        }
+      ],
+      "createdAt": "2026-05-22T09:01:38.446Z",
+      "updatedAt": "2026-05-22T09:01:38.446Z",
+      "normalizedAt": "2026-05-22T09:01:38.446Z"
+    },
+    {
+      "id": "kbbf:163761774",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2025 IFBB 세계보디빌딩선수권대회",
+      "seasonYear": 2025,
+      "date": {
+        "timezone": "Asia/Seoul",
+        "rawText": "2025 IFBB 세계보디빌딩선수권대회",
+        "confidence": "low"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "confidence": "low"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국제대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": true,
+        "international": true
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_inti",
+        "detailUrl": "https://bodybuilding.or.kr/contest_inti/?bmode=view&idx=163761774",
+        "sourceEventId": "163761774",
+        "sourceUpdatedAt": "2025-05-13 17:39",
+        "fetchedAt": "2026-05-22T09:01:29.960Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "57850fe53af5ff63",
+        "rawTitle": "2025 IFBB 세계보디빌딩선수권대회",
+        "rawDateText": "2025 IFBB 세계보디빌딩선수권대회"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "low",
+      "qualityIssues": [
+        {
+          "field": "date",
+          "severity": "warning",
+          "message": "상세 본문에서 대회일을 안정적으로 파싱하지 못했습니다."
+        },
+        {
+          "field": "location",
+          "severity": "warning",
+          "message": "상세 본문에서 장소를 안정적으로 파싱하지 못했습니다."
+        }
+      ],
+      "createdAt": "2026-05-22T09:01:29.960Z",
+      "updatedAt": "2026-05-22T09:01:29.960Z",
+      "normalizedAt": "2026-05-22T09:01:29.960Z"
+    },
+    {
+      "id": "kbbf:167365492",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2025 IFBB 세계보디빌딩선수권대회 제2차 국가대표 선발전",
+      "seasonYear": 2025,
+      "date": {
+        "timezone": "Asia/Seoul",
+        "rawText": "2025 IFBB 세계보디빌딩선수권대회 제2차 국가대표 선발전",
+        "confidence": "low"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "region": "올림픽회관 지하 1층 KSPO 연수원 대강당 [서울 송파구 올림픽로 424(방이동) 올림픽회관 지하1층]",
+        "venue": "올림픽회관 지하 1층 KSPO 연수원 대강당 [서울 송파구 올림픽로 424(방이동) 올림픽회관 지하1층]",
+        "rawText": "올림픽회관 지하 1층 KSPO 연수원 대강당 [서울 송파구 올림픽로 424(방이동) 올림픽회관 지하1층]",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국내대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": true,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_kr",
+        "detailUrl": "https://bodybuilding.or.kr/contest_kr/?bmode=view&idx=167365492",
+        "sourceEventId": "167365492",
+        "sourceUpdatedAt": "2025-08-19 13:33",
+        "fetchedAt": "2026-05-22T09:00:17.933Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "a23eca923a2fd7c2",
+        "rawTitle": "2025 IFBB 세계보디빌딩선수권대회 제2차 국가대표 선발전",
+        "rawDateText": "2025 IFBB 세계보디빌딩선수권대회 제2차 국가대표 선발전",
+        "rawLocationText": "올림픽회관 지하 1층 KSPO 연수원 대강당 [서울 송파구 올림픽로 424(방이동) 올림픽회관 지하1층]"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "low",
+      "qualityIssues": [
+        {
+          "field": "date",
+          "severity": "warning",
+          "message": "상세 본문에서 대회일을 안정적으로 파싱하지 못했습니다."
+        }
+      ],
+      "notes": "첨부파일: 2025_IFBB_세계보디빌딩선수권대회_국가대표_2차_선발전_개최요강_v.2.pdf149KB",
+      "createdAt": "2026-05-22T09:00:17.933Z",
+      "updatedAt": "2026-05-22T09:00:17.933Z",
+      "normalizedAt": "2026-05-22T09:00:17.933Z"
+    },
+    {
+      "id": "kbbf:163761737",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2025 IFBB 세계피트니스선수권대회",
+      "seasonYear": 2025,
+      "date": {
+        "timezone": "Asia/Seoul",
+        "rawText": "2025 IFBB 세계피트니스선수권대회",
+        "confidence": "low"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "confidence": "low"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국제대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": true,
+        "international": true
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_inti",
+        "detailUrl": "https://bodybuilding.or.kr/contest_inti/?bmode=view&idx=163761737",
+        "sourceEventId": "163761737",
+        "sourceUpdatedAt": "2025-05-13 17:39",
+        "fetchedAt": "2026-05-22T09:01:33.593Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "f6395799d4517f20",
+        "rawTitle": "2025 IFBB 세계피트니스선수권대회",
+        "rawDateText": "2025 IFBB 세계피트니스선수권대회"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "low",
+      "qualityIssues": [
+        {
+          "field": "date",
+          "severity": "warning",
+          "message": "상세 본문에서 대회일을 안정적으로 파싱하지 못했습니다."
+        },
+        {
+          "field": "location",
+          "severity": "warning",
+          "message": "상세 본문에서 장소를 안정적으로 파싱하지 못했습니다."
+        }
+      ],
+      "createdAt": "2026-05-22T09:01:33.593Z",
+      "updatedAt": "2026-05-22T09:01:33.593Z",
+      "normalizedAt": "2026-05-22T09:01:33.593Z"
+    },
+    {
+      "id": "kbbf:167365472",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2025 IFBB 세계피트니스선수권대회 제2차 국가대표 선발전",
+      "seasonYear": 2025,
+      "date": {
+        "timezone": "Asia/Seoul",
+        "rawText": "2025 IFBB 세계피트니스선수권대회 제2차 국가대표 선발전",
+        "confidence": "low"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "region": "올림픽회관 지하 1층 KSPO 연수원 대강당 [서울 송파구 올림픽로 424(방이동) 올림픽회관 지하1층]",
+        "venue": "올림픽회관 지하 1층 KSPO 연수원 대강당 [서울 송파구 올림픽로 424(방이동) 올림픽회관 지하1층]",
+        "rawText": "올림픽회관 지하 1층 KSPO 연수원 대강당 [서울 송파구 올림픽로 424(방이동) 올림픽회관 지하1층]",
+        "confidence": "high"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국내대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": true,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_kr",
+        "detailUrl": "https://bodybuilding.or.kr/contest_kr/?bmode=view&idx=167365472",
+        "sourceEventId": "167365472",
+        "sourceUpdatedAt": "2025-08-19 13:32",
+        "fetchedAt": "2026-05-22T09:00:19.748Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "e98d348e09b46051",
+        "rawTitle": "2025 IFBB 세계피트니스선수권대회 제2차 국가대표 선발전",
+        "rawDateText": "2025 IFBB 세계피트니스선수권대회 제2차 국가대표 선발전",
+        "rawLocationText": "올림픽회관 지하 1층 KSPO 연수원 대강당 [서울 송파구 올림픽로 424(방이동) 올림픽회관 지하1층]"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "low",
+      "qualityIssues": [
+        {
+          "field": "date",
+          "severity": "warning",
+          "message": "상세 본문에서 대회일을 안정적으로 파싱하지 못했습니다."
+        }
+      ],
+      "notes": "첨부파일: 2025_IFBB_세계피트니스선수권대회_국가대표_2차_선발전_개최요강_v.2 (1).pdf132KB",
+      "createdAt": "2026-05-22T09:00:19.748Z",
+      "updatedAt": "2026-05-22T09:00:19.748Z",
+      "normalizedAt": "2026-05-22T09:00:19.748Z"
+    },
+    {
+      "id": "kbbf:163761516",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "2025 IFBB 아시아선수권대회",
+      "seasonYear": 2025,
+      "date": {
+        "timezone": "Asia/Seoul",
+        "rawText": "2025 IFBB 아시아선수권대회",
+        "confidence": "low"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "confidence": "low"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국제대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": true,
+        "international": true
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_inti",
+        "detailUrl": "https://bodybuilding.or.kr/contest_inti/?bmode=view&idx=163761516",
+        "sourceEventId": "163761516",
+        "sourceUpdatedAt": "2025-05-13 17:34",
+        "fetchedAt": "2026-05-22T09:01:41.813Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "224cf024ee8db237",
+        "rawTitle": "2025 IFBB 아시아선수권대회",
+        "rawDateText": "2025 IFBB 아시아선수권대회"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "low",
+      "qualityIssues": [
+        {
+          "field": "date",
+          "severity": "warning",
+          "message": "상세 본문에서 대회일을 안정적으로 파싱하지 못했습니다."
+        },
+        {
+          "field": "location",
+          "severity": "warning",
+          "message": "상세 본문에서 장소를 안정적으로 파싱하지 못했습니다."
+        }
+      ],
+      "createdAt": "2026-05-22T09:01:41.813Z",
+      "updatedAt": "2026-05-22T09:01:41.813Z",
+      "normalizedAt": "2026-05-22T09:01:41.813Z"
+    },
+    {
+      "id": "kbbf:15400437",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "제17회 한·중·일 친선보디빌딩&피트니스 경기대회",
+      "seasonYear": 2018,
+      "date": {
+        "timezone": "Asia/Seoul",
+        "rawText": "제17회 한·중·일 친선보디빌딩&피트니스 경기대회",
+        "confidence": "low"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "confidence": "low"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국제대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": true
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_inti",
+        "detailUrl": "https://bodybuilding.or.kr/contest_inti/?bmode=view&idx=15400437",
+        "sourceEventId": "15400437",
+        "sourceUpdatedAt": "2018-06-01 18:00",
+        "fetchedAt": "2026-05-22T09:02:26.006Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "209fcae43f46107b",
+        "rawTitle": "제17회 한·중·일 친선보디빌딩&피트니스 경기대회",
+        "rawDateText": "제17회 한·중·일 친선보디빌딩&피트니스 경기대회"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "low",
+      "qualityIssues": [
+        {
+          "field": "date",
+          "severity": "warning",
+          "message": "상세 본문에서 대회일을 안정적으로 파싱하지 못했습니다."
+        },
+        {
+          "field": "location",
+          "severity": "warning",
+          "message": "상세 본문에서 장소를 안정적으로 파싱하지 못했습니다."
+        }
+      ],
+      "createdAt": "2026-05-22T09:02:26.006Z",
+      "updatedAt": "2026-05-22T09:02:26.006Z",
+      "normalizedAt": "2026-05-22T09:02:26.006Z"
+    },
+    {
+      "id": "kbbf:15400439",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "제18회 한ㆍ중ㆍ일 친선보디빌딩&피트니스 경기대회",
+      "seasonYear": 2019,
+      "date": {
+        "timezone": "Asia/Seoul",
+        "rawText": "제18회 한ㆍ중ㆍ일 친선보디빌딩&피트니스 경기대회",
+        "confidence": "low"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "confidence": "low"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국제대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": true
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_inti",
+        "detailUrl": "https://bodybuilding.or.kr/contest_inti/?bmode=view&idx=15400439",
+        "sourceEventId": "15400439",
+        "sourceUpdatedAt": "2019-05-01 18:00",
+        "fetchedAt": "2026-05-22T09:02:19.477Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "209fcae43f46107b",
+        "rawTitle": "제18회 한ㆍ중ㆍ일 친선보디빌딩&피트니스 경기대회",
+        "rawDateText": "제18회 한ㆍ중ㆍ일 친선보디빌딩&피트니스 경기대회"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "low",
+      "qualityIssues": [
+        {
+          "field": "date",
+          "severity": "warning",
+          "message": "상세 본문에서 대회일을 안정적으로 파싱하지 못했습니다."
+        },
+        {
+          "field": "location",
+          "severity": "warning",
+          "message": "상세 본문에서 장소를 안정적으로 파싱하지 못했습니다."
+        }
+      ],
+      "createdAt": "2026-05-22T09:02:19.477Z",
+      "updatedAt": "2026-05-22T09:02:19.477Z",
+      "normalizedAt": "2026-05-22T09:02:19.477Z"
+    },
+    {
+      "id": "kbbf:15400432",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "제52회 아시아 보디빌딩ㆍ피트니스 선수권대회",
+      "seasonYear": 2018,
+      "date": {
+        "timezone": "Asia/Seoul",
+        "rawText": "제52회 아시아 보디빌딩ㆍ피트니스 선수권대회",
+        "confidence": "low"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "confidence": "low"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국제대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": true,
+        "international": true
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_inti",
+        "detailUrl": "https://bodybuilding.or.kr/contest_inti/?bmode=view&idx=15400432",
+        "sourceEventId": "15400432",
+        "sourceUpdatedAt": "2018-02-01 18:00",
+        "fetchedAt": "2026-05-22T09:02:30.242Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "209fcae43f46107b",
+        "rawTitle": "제52회 아시아 보디빌딩ㆍ피트니스 선수권대회",
+        "rawDateText": "제52회 아시아 보디빌딩ㆍ피트니스 선수권대회"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "low",
+      "qualityIssues": [
+        {
+          "field": "date",
+          "severity": "warning",
+          "message": "상세 본문에서 대회일을 안정적으로 파싱하지 못했습니다."
+        },
+        {
+          "field": "location",
+          "severity": "warning",
+          "message": "상세 본문에서 장소를 안정적으로 파싱하지 못했습니다."
+        }
+      ],
+      "createdAt": "2026-05-22T09:02:30.242Z",
+      "updatedAt": "2026-05-22T09:02:30.242Z",
+      "normalizedAt": "2026-05-22T09:02:30.242Z"
+    },
+    {
+      "id": "kbbf:15400440",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "제53회 아시아보디빌딩&피트니스선수권대회 및 총회",
+      "seasonYear": 2019,
+      "date": {
+        "timezone": "Asia/Seoul",
+        "rawText": "제53회 아시아보디빌딩&피트니스선수권대회 및 총회",
+        "confidence": "low"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "confidence": "low"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국제대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": true,
+        "international": true
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_inti",
+        "detailUrl": "https://bodybuilding.or.kr/contest_inti/?bmode=view&idx=15400440",
+        "sourceEventId": "15400440",
+        "sourceUpdatedAt": "2019-05-01 18:00",
+        "fetchedAt": "2026-05-22T09:02:15.643Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "209fcae43f46107b",
+        "rawTitle": "제53회 아시아보디빌딩&피트니스선수권대회 및 총회",
+        "rawDateText": "제53회 아시아보디빌딩&피트니스선수권대회 및 총회"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "low",
+      "qualityIssues": [
+        {
+          "field": "date",
+          "severity": "warning",
+          "message": "상세 본문에서 대회일을 안정적으로 파싱하지 못했습니다."
+        },
+        {
+          "field": "location",
+          "severity": "warning",
+          "message": "상세 본문에서 장소를 안정적으로 파싱하지 못했습니다."
+        }
+      ],
+      "createdAt": "2026-05-22T09:02:15.643Z",
+      "updatedAt": "2026-05-22T09:02:15.643Z",
+      "normalizedAt": "2026-05-22T09:02:15.643Z"
+    },
+    {
+      "id": "kbbf:167636726",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "제55회 Mr. YMCA 선발대회",
+      "seasonYear": 2025,
+      "date": {
+        "timezone": "Asia/Seoul",
+        "rawText": "제55회 Mr. YMCA 선발대회",
+        "confidence": "low"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "confidence": "low"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국내대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_kr",
+        "detailUrl": "https://bodybuilding.or.kr/contest_kr/?bmode=view&idx=167636726",
+        "sourceEventId": "167636726",
+        "sourceUpdatedAt": "2025-09-08 18:07",
+        "fetchedAt": "2026-05-22T08:59:58.267Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "63f9bd4c8299e650",
+        "rawTitle": "제55회 Mr. YMCA 선발대회",
+        "rawDateText": "제55회 Mr. YMCA 선발대회"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "low",
+      "qualityIssues": [
+        {
+          "field": "date",
+          "severity": "warning",
+          "message": "상세 본문에서 대회일을 안정적으로 파싱하지 못했습니다."
+        },
+        {
+          "field": "location",
+          "severity": "warning",
+          "message": "상세 본문에서 장소를 안정적으로 파싱하지 못했습니다."
+        }
+      ],
+      "createdAt": "2026-05-22T08:59:58.267Z",
+      "updatedAt": "2026-05-22T08:59:58.267Z",
+      "normalizedAt": "2026-05-22T08:59:58.267Z"
+    },
+    {
+      "id": "kbbf:15400438",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "제72회 세계남자보디빌딩선수권대회 및 총회 겸 제13회 세계남자클래식보디빌딩선수권대회",
+      "seasonYear": 2018,
+      "date": {
+        "timezone": "Asia/Seoul",
+        "rawText": "제72회 세계남자보디빌딩선수권대회 및 총회 겸 제13회 세계남자클래식보디빌딩선수권대회",
+        "confidence": "low"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "confidence": "low"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국제대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": true,
+        "international": true
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_inti",
+        "detailUrl": "https://bodybuilding.or.kr/contest_inti/?bmode=view&idx=15400438",
+        "sourceEventId": "15400438",
+        "sourceUpdatedAt": "2018-09-01 18:00",
+        "fetchedAt": "2026-05-22T09:02:21.578Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "209fcae43f46107b",
+        "rawTitle": "제72회 세계남자보디빌딩선수권대회 및 총회 겸 제13회 세계남자클래식보디빌딩선수권대회",
+        "rawDateText": "제72회 세계남자보디빌딩선수권대회 및 총회 겸 제13회 세계남자클래식보디빌딩선수권대회"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "low",
+      "qualityIssues": [
+        {
+          "field": "date",
+          "severity": "warning",
+          "message": "상세 본문에서 대회일을 안정적으로 파싱하지 못했습니다."
+        },
+        {
+          "field": "location",
+          "severity": "warning",
+          "message": "상세 본문에서 장소를 안정적으로 파싱하지 못했습니다."
+        }
+      ],
+      "createdAt": "2026-05-22T09:02:21.578Z",
+      "updatedAt": "2026-05-22T09:02:21.578Z",
+      "normalizedAt": "2026-05-22T09:02:21.578Z"
+    },
+    {
+      "id": "kbbf:15400441",
+      "organizationId": "kbbf",
+      "organizationName": "대한보디빌딩협회",
+      "organizationShortName": "KBBF",
+      "title": "제73회 세계남자보디빌딩대회 및 총회 겸 제14회 세계남자클래식보디빌딩선수권대회& 제2회 세계남자피지크선수권대회",
+      "seasonYear": 2019,
+      "date": {
+        "timezone": "Asia/Seoul",
+        "rawText": "제73회 세계남자보디빌딩대회 및 총회 겸 제14회 세계남자클래식보디빌딩선수권대회& 제2회 세계남자피지크선수권대회",
+        "confidence": "low"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "confidence": "low"
+      },
+      "divisions": [],
+      "tags": [
+        "KBBF",
+        "국제대회"
+      ],
+      "flags": {
+        "nationalTeamRoute": true,
+        "international": true
+      },
+      "source": {
+        "sourceType": "official-board",
+        "sourceUrl": "https://bodybuilding.or.kr/contest_inti",
+        "detailUrl": "https://bodybuilding.or.kr/contest_inti/?bmode=view&idx=15400441",
+        "sourceEventId": "15400441",
+        "sourceUpdatedAt": "2019-09-01 18:00",
+        "fetchedAt": "2026-05-22T09:02:00.434Z",
+        "parserName": "kbbf-board-detail-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "209fcae43f46107b",
+        "rawTitle": "제73회 세계남자보디빌딩대회 및 총회 겸 제14회 세계남자클래식보디빌딩선수권대회& 제2회 세계남자피지크선수권대회",
+        "rawDateText": "제73회 세계남자보디빌딩대회 및 총회 겸 제14회 세계남자클래식보디빌딩선수권대회& 제2회 세계남자피지크선수권대회"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "low",
+      "qualityIssues": [
+        {
+          "field": "date",
+          "severity": "warning",
+          "message": "상세 본문에서 대회일을 안정적으로 파싱하지 못했습니다."
+        },
+        {
+          "field": "location",
+          "severity": "warning",
+          "message": "상세 본문에서 장소를 안정적으로 파싱하지 못했습니다."
+        }
+      ],
+      "createdAt": "2026-05-22T09:02:00.434Z",
+      "updatedAt": "2026-05-22T09:02:00.434Z",
+      "normalizedAt": "2026-05-22T09:02:00.434Z"
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,234 @@
+{
+  "generatedAt": "2026-05-22T10:48:14.092Z",
+  "organizationId": "agonas",
+  "organizationName": "아고나스",
+  "sources": [
+    {
+      "organizationId": "agonas",
+      "organizationName": "아고나스",
+      "url": "https://www.fitschedule.co.kr/",
+      "ok": true,
+      "count": 3,
+      "warnings": [
+        "FitSchedule 보조 데이터에서 아고나스 후보 일정을 필터링했습니다.",
+        "공식 단체 홈페이지가 아닌 보조 집계 소스이므로 sourceType은 aggregator로 두고 reviewStatus는 needs-review로 유지합니다.",
+        "Naver Cafe 상세/접수 링크는 registration.registrationUrl 및 source.detailUrl에 보존합니다."
+      ],
+      "fetchedAt": "2026-05-22T10:48:14.224Z"
+    }
+  ],
+  "events": [
+    {
+      "id": "agonas:agonas:jambaikee_agonas::아고나스_수원::2026-07-04",
+      "organizationId": "agonas",
+      "organizationName": "아고나스",
+      "organizationShortName": "AGONAS",
+      "title": "아고나스 수원",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-07-04",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026-07-04",
+        "confidence": "medium"
+      },
+      "registration": {
+        "status": "unknown",
+        "registrationUrl": "https://cafe.naver.com/f-e/cafes/11100373/articles/1124356?menuid=962&referrerAllArticles=false",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "rawText": "경기대학교 씨름장",
+        "confidence": "medium"
+      },
+      "divisions": [],
+      "tags": [
+        "아고나스",
+        "FitSchedule",
+        "Naver Cafe",
+        "잠백이카페 - 아고나스 대회",
+        "jambaikee_agonas",
+        "national"
+      ],
+      "flags": {
+        "natural": false,
+        "proCard": false,
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "media": {
+        "imageSourceUrl": "https://cafe.naver.com/f-e/cafes/11100373/articles/1124356?menuid=962&referrerAllArticles=false"
+      },
+      "source": {
+        "sourceType": "aggregator",
+        "sourceUrl": "https://www.fitschedule.co.kr/",
+        "detailUrl": "https://cafe.naver.com/f-e/cafes/11100373/articles/1124356?menuid=962&referrerAllArticles=false",
+        "sourceEventId": "agonas:jambaikee_agonas::아고나스_수원::2026-07-04",
+        "sourceUpdatedAt": "2026-03-14T14:48:52.706Z",
+        "fetchedAt": "2026-05-22T10:48:14.224Z",
+        "parserName": "candidate-source-monitor",
+        "parserVersion": "0.1.0",
+        "rawHash": "e663a34033ca6b3b",
+        "rawTitle": "아고나스 수원",
+        "rawDateText": "2026-07-04",
+        "rawLocationText": "경기대학교 씨름장"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "low",
+      "qualityIssues": [
+        {
+          "field": "source",
+          "severity": "warning",
+          "message": "공식 홈페이지가 아닌 FitSchedule/Naver Cafe 기반 후보 데이터입니다."
+        }
+      ],
+      "notes": "아고나스 후보 일정입니다. FitSchedule 집계값과 Naver Cafe 링크를 보존했으며, 공식 원본 확인 후 승인해야 합니다.",
+      "createdAt": "2026-05-22T10:48:14.224Z",
+      "updatedAt": "2026-05-22T10:48:14.224Z",
+      "normalizedAt": "2026-05-22T10:48:14.224Z"
+    },
+    {
+      "id": "agonas:agonas:jambaikee_agonas::아고나스_광명::2026-07-18",
+      "organizationId": "agonas",
+      "organizationName": "아고나스",
+      "organizationShortName": "AGONAS",
+      "title": "아고나스 광명",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-07-18",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026-07-18",
+        "confidence": "medium"
+      },
+      "registration": {
+        "status": "unknown",
+        "registrationUrl": "https://cafe.naver.com/f-e/cafes/11100373/articles/1125653?menuid=962&referrerAllArticles=false",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "rawText": "안양대학교",
+        "confidence": "medium"
+      },
+      "divisions": [],
+      "tags": [
+        "아고나스",
+        "FitSchedule",
+        "Naver Cafe",
+        "잠백이카페 - 아고나스 대회",
+        "jambaikee_agonas",
+        "national"
+      ],
+      "flags": {
+        "natural": false,
+        "proCard": false,
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "media": {
+        "imageSourceUrl": "https://cafe.naver.com/f-e/cafes/11100373/articles/1125653?menuid=962&referrerAllArticles=false"
+      },
+      "source": {
+        "sourceType": "aggregator",
+        "sourceUrl": "https://www.fitschedule.co.kr/",
+        "detailUrl": "https://cafe.naver.com/f-e/cafes/11100373/articles/1125653?menuid=962&referrerAllArticles=false",
+        "sourceEventId": "agonas:jambaikee_agonas::아고나스_광명::2026-07-18",
+        "sourceUpdatedAt": "2026-03-14T14:48:52.706Z",
+        "fetchedAt": "2026-05-22T10:48:14.224Z",
+        "parserName": "candidate-source-monitor",
+        "parserVersion": "0.1.0",
+        "rawHash": "d72f24667e9ff63a",
+        "rawTitle": "아고나스 광명",
+        "rawDateText": "2026-07-18",
+        "rawLocationText": "안양대학교"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "low",
+      "qualityIssues": [
+        {
+          "field": "source",
+          "severity": "warning",
+          "message": "공식 홈페이지가 아닌 FitSchedule/Naver Cafe 기반 후보 데이터입니다."
+        }
+      ],
+      "notes": "아고나스 후보 일정입니다. FitSchedule 집계값과 Naver Cafe 링크를 보존했으며, 공식 원본 확인 후 승인해야 합니다.",
+      "createdAt": "2026-05-22T10:48:14.224Z",
+      "updatedAt": "2026-05-22T10:48:14.224Z",
+      "normalizedAt": "2026-05-22T10:48:14.224Z"
+    },
+    {
+      "id": "agonas:agonas:jambaikee_agonas::아고나스_서울::2026-08-09",
+      "organizationId": "agonas",
+      "organizationName": "아고나스",
+      "organizationShortName": "AGONAS",
+      "title": "아고나스 서울",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-08-09",
+        "timezone": "Asia/Seoul",
+        "rawText": "2026-08-09",
+        "confidence": "medium"
+      },
+      "registration": {
+        "status": "unknown",
+        "registrationUrl": "https://cafe.naver.com/f-e/cafes/11100373/articles/1119700?menuid=962&referrerAllArticles=false",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "venue": "밀리토피아 호텔 바이마린 (아트홀)",
+        "rawText": "밀리토피아 호텔 바이마린 (아트홀)",
+        "confidence": "medium"
+      },
+      "divisions": [],
+      "tags": [
+        "아고나스",
+        "FitSchedule",
+        "Naver Cafe",
+        "잠백이카페 - 아고나스 대회",
+        "jambaikee_agonas",
+        "national"
+      ],
+      "flags": {
+        "natural": false,
+        "proCard": false,
+        "nationalTeamRoute": false,
+        "international": false
+      },
+      "media": {
+        "imageSourceUrl": "https://cafe.naver.com/f-e/cafes/11100373/articles/1119700?menuid=962&referrerAllArticles=false"
+      },
+      "source": {
+        "sourceType": "aggregator",
+        "sourceUrl": "https://www.fitschedule.co.kr/",
+        "detailUrl": "https://cafe.naver.com/f-e/cafes/11100373/articles/1119700?menuid=962&referrerAllArticles=false",
+        "sourceEventId": "agonas:jambaikee_agonas::아고나스_서울::2026-08-09",
+        "sourceUpdatedAt": "2026-03-14T14:48:52.706Z",
+        "fetchedAt": "2026-05-22T10:48:14.224Z",
+        "parserName": "candidate-source-monitor",
+        "parserVersion": "0.1.0",
+        "rawHash": "63e55811d638192f",
+        "rawTitle": "아고나스 서울",
+        "rawDateText": "2026-08-09",
+        "rawLocationText": "밀리토피아 호텔 바이마린 (아트홀)"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "low",
+      "qualityIssues": [
+        {
+          "field": "source",
+          "severity": "warning",
+          "message": "공식 홈페이지가 아닌 FitSchedule/Naver Cafe 기반 후보 데이터입니다."
+        }
+      ],
+      "notes": "아고나스 후보 일정입니다. FitSchedule 집계값과 Naver Cafe 링크를 보존했으며, 공식 원본 확인 후 승인해야 합니다.",
+      "createdAt": "2026-05-22T10:48:14.224Z",
+      "updatedAt": "2026-05-22T10:48:14.224Z",
+      "normalizedAt": "2026-05-22T10:48:14.224Z"
+    }
+  ],
+  "errors": []
+}

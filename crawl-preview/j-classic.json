@@ -1,0 +1,22 @@
+{
+  "generatedAt": "2026-05-22T10:48:14.092Z",
+  "organizationId": "j-classic",
+  "organizationName": "J-Classic",
+  "sources": [
+    {
+      "organizationId": "j-classic",
+      "organizationName": "J-Classic",
+      "url": "https://kismos.co.kr/product/list.html?cate_no=822",
+      "ok": true,
+      "count": 0,
+      "warnings": [
+        "K-Classic/KISMOS 계열 소스로 감시 중이나 현재 공개 HTML에서 J-Classic 2026 일정 상품은 확인되지 않았습니다.",
+        "현재 키워드 감지 결과: J-Classic=false, SSA Korea=false, WFF Korea=false",
+        "KISMOS 2026 KCL 상품 카테고리는 K-Classic 수집에는 유효하지만 이 후보들의 일정 이벤트로 정규화할 상품은 아직 없습니다."
+      ],
+      "fetchedAt": "2026-05-22T10:48:14.358Z"
+    }
+  ],
+  "events": [],
+  "errors": []
+}
