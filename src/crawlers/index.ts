@@ -113,17 +113,21 @@ export async function runCrawlPreview(
   const allSources = results.flatMap((result) => result.sources);
   const errors = results.flatMap((result) => result.errors);
   const allEvents = dedupeEvents(results.flatMap((result) => result.events)).sort(compareEvents);
-  const events =
+  const selectedEvents =
     selectedIds.size > 0
       ? allEvents.filter((event) => selectedIds.has(event.organizationId as CrawlOrganizationId))
       : allEvents;
+  const events = options.seasonYear
+    ? selectedEvents.filter((event) => isEventInSeason(event, options.seasonYear as number))
+    : selectedEvents;
   const sources =
-    selectedIds.size > 0
+    selectedIds.size > 0 || options.seasonYear
       ? getSourcesForSelection(allSources, events, selectedIds)
       : allSources;
 
   return {
     generatedAt,
+    seasonYear: options.seasonYear,
     sources,
     events,
     errors,
@@ -196,9 +200,20 @@ function getSourcesForSelection(
   );
   const sourceOnlyMatches = sources.filter(
     (source) =>
-      selectedIds.has(source.organizationId as CrawlOrganizationId) &&
+      (selectedIds.size === 0 || selectedIds.has(source.organizationId as CrawlOrganizationId)) &&
       !eventSourceKeys.has(`${source.organizationId}:${source.url}`),
   );
 
   return [...eventSources, ...sourceOnlyMatches];
+}
+
+function isEventInSeason(event: CompetitionScheduleDraft, seasonYear: number): boolean {
+  if (event.seasonYear === seasonYear) {
+    return true;
+  }
+
+  const startsOnYear = event.date.startsOn ? Number(event.date.startsOn.slice(0, 4)) : undefined;
+  const endsOnYear = event.date.endsOn ? Number(event.date.endsOn.slice(0, 4)) : undefined;
+
+  return startsOnYear === seasonYear || endsOnYear === seasonYear;
 }

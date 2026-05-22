@@ -1,9 +1,11 @@
 import { runCrawlPreview } from "../src/crawlers";
-import { parseOrganizationArgs } from "./crawl-cli";
+import { parseOrganizationArgs, parseSeasonYearArg } from "./crawl-cli";
 
 async function main() {
-  const organizationIds = parseOrganizationArgs(process.argv.slice(2));
-  const result = await runCrawlPreview({ organizationIds });
+  const argv = process.argv.slice(2);
+  const organizationIds = parseOrganizationArgs(argv);
+  const seasonYear = parseSeasonYearArg(argv);
+  const result = await runCrawlPreview({ organizationIds, seasonYear });
 
   console.log(JSON.stringify(result, null, 2));
 

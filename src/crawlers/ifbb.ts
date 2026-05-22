@@ -141,15 +141,24 @@ export async function crawlIfbbNpcAgp(): Promise<CrawlerResult> {
       }
 
       events.push(...sourceEvents);
-      sources.push({
-        organizationId: "npc-ifbb-pro-korea",
-        organizationName: "NPC/IFBB Pro Korea/AGP",
-        url,
-        ok: true,
-        count: sourceEvents.length,
-        warnings,
-        fetchedAt,
-      });
+
+      const sourceOrganizationIds = Array.from(
+        new Set(sourceEvents.map((event) => event.organizationId)),
+      );
+      const sourceSummaries =
+        sourceOrganizationIds.length > 0 ? sourceOrganizationIds : ["npc-ifbb-pro-korea"];
+
+      for (const organizationId of sourceSummaries) {
+        sources.push({
+          organizationId,
+          organizationName: organizationId === "agp" ? "AGP" : "NPC/IFBB Pro Korea",
+          url,
+          ok: true,
+          count: sourceEvents.filter((event) => event.organizationId === organizationId).length,
+          warnings,
+          fetchedAt,
+        });
+      }
     } catch (error) {
       errors.push({ url, message: getErrorMessage(error) });
       sources.push({
@@ -203,7 +212,11 @@ function isEventTitle(title: string): boolean {
 }
 
 function isDateLike(text: string): boolean {
-  return /(\d{1,2}월\s*\d{1,2}일|20\d{2}[.\-/년]\s*\d{1,2})/.test(text) && !/마감/.test(text);
+  return (
+    /((?:20\d{2}[.\-/년]\s*)?\d{1,2}\s*월\s*\d{1,2}\s*(?:일|[~\-–]\s*(?:(?:\d{1,2}\s*월\s*)?\d{1,2})\s*일?)|20\d{2}[.\-/]\s*\d{1,2}[.\-/]\s*\d{1,2})/.test(
+      text,
+    ) && !/마감/.test(text)
+  );
 }
 
 function isLocationLike(text: string): boolean {

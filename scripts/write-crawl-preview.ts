@@ -3,10 +3,11 @@ import path from "node:path";
 import { runCrawlPreview } from "../src/crawlers";
 import type { CrawlPreviewError, CrawlSourceSummary } from "../src/crawlers/types";
 import type { CompetitionScheduleDraft } from "../src/types/competitionSchedule";
-import { parseOrganizationArgs } from "./crawl-cli";
+import { parseOrganizationArgs, parseSeasonYearArg } from "./crawl-cli";
 
 interface OrganizationPreviewFile {
   generatedAt: string;
+  seasonYear?: number;
   organizationId: string;
   organizationName: string;
   sources: CrawlSourceSummary[];
@@ -26,6 +27,7 @@ interface PreviewIndexEntry {
 
 interface PreviewIndexFile {
   generatedAt: string;
+  seasonYear?: number;
   outputDir: string;
   totalSources: number;
   totalEvents: number;
@@ -35,8 +37,10 @@ interface PreviewIndexFile {
 
 async function main() {
   const outputDir = path.resolve(process.cwd(), "crawl-preview");
-  const organizationIds = parseOrganizationArgs(process.argv.slice(2));
-  const result = await runCrawlPreview({ organizationIds });
+  const argv = process.argv.slice(2);
+  const organizationIds = parseOrganizationArgs(argv);
+  const seasonYear = parseSeasonYearArg(argv);
+  const result = await runCrawlPreview({ organizationIds, seasonYear });
   const organizations = groupEventsByOrganization(result.events);
   const writtenFileNames: string[] = [];
 
@@ -50,6 +54,7 @@ async function main() {
     const errors = getErrorsForOrganization(result.errors, sources, events);
     const payload: OrganizationPreviewFile = {
       generatedAt: result.generatedAt,
+      seasonYear: result.seasonYear,
       organizationId,
       organizationName,
       sources,
@@ -71,6 +76,7 @@ async function main() {
     );
     const payload: OrganizationPreviewFile = {
       generatedAt: result.generatedAt,
+      seasonYear: result.seasonYear,
       organizationId,
       organizationName,
       sources,
@@ -82,7 +88,11 @@ async function main() {
     writtenFileNames.push(fileName);
   }
 
-  const indexPayload = await buildIndexFromOrganizationFiles(outputDir, result.generatedAt);
+  const indexPayload = await buildIndexFromOrganizationFiles(
+    outputDir,
+    result.generatedAt,
+    result.seasonYear,
+  );
 
   await writeJson(path.join(outputDir, "index.json"), indexPayload);
 
@@ -92,6 +102,7 @@ async function main() {
         outputDir,
         files: ["index.json", ...writtenFileNames],
         writtenEvents: result.events.length,
+        seasonYear: result.seasonYear,
         writtenErrors: result.errors.length,
         totalEvents: indexPayload.totalEvents,
         totalErrors: indexPayload.totalErrors,
@@ -124,6 +135,7 @@ function groupSourceOnlyOrganizations(
 async function buildIndexFromOrganizationFiles(
   outputDir: string,
   generatedAt: string,
+  seasonYear?: number,
 ): Promise<PreviewIndexFile> {
   const files = (await readdir(outputDir))
     .filter((file) => file.endsWith(".json") && file !== "index.json")
@@ -160,6 +172,7 @@ async function buildIndexFromOrganizationFiles(
 
   return {
     generatedAt,
+    seasonYear,
     outputDir: "crawl-preview",
     totalSources: uniqueSourceUrls.size,
     totalEvents,

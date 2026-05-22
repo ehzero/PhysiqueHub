@@ -1,29 +1,18 @@
 {
-  "generatedAt": "2026-05-22T08:59:52.237Z",
+  "generatedAt": "2026-05-22T12:21:40.851Z",
   "organizationId": "agp",
   "organizationName": "AGP",
   "sources": [
     {
-      "organizationId": "npc-ifbb-pro-korea",
-      "organizationName": "NPC/IFBB Pro Korea/AGP",
+      "organizationId": "agp",
+      "organizationName": "AGP",
       "url": "https://ifbbprokorea.com/schedule/",
       "ok": true,
       "count": 8,
       "warnings": [
         "WordPress/Elementor HTML 기반 preview입니다. robots/약관 및 상세 신청 페이지는 별도 검수가 필요합니다."
       ],
-      "fetchedAt": "2026-05-22T08:59:52.353Z"
-    },
-    {
-      "organizationId": "npc-ifbb-pro-korea",
-      "organizationName": "NPC/IFBB Pro Korea/AGP",
-      "url": "https://ifbbprokorea.com/schedule/ifbb-pro/",
-      "ok": true,
-      "count": 1,
-      "warnings": [
-        "WordPress/Elementor HTML 기반 preview입니다. robots/약관 및 상세 신청 페이지는 별도 검수가 필요합니다."
-      ],
-      "fetchedAt": "2026-05-22T08:59:52.584Z"
+      "fetchedAt": "2026-05-22T12:21:40.943Z"
     }
   ],
   "events": [
@@ -109,7 +98,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/agp-pq/",
         "sourceEventId": "agp-프로-퀄리파이어-2026-05-23",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.943Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "cef5e9deef871771",
@@ -122,9 +111,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.943Z",
+      "updatedAt": "2026-05-22T12:21:40.943Z",
+      "normalizedAt": "2026-05-22T12:21:40.943Z"
     },
     {
       "id": "agp:agp-프로쇼-2026-05-23",
@@ -183,7 +172,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/",
         "sourceEventId": "agp-프로쇼-2026-05-23",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.943Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "36f5966c3991ac52",
@@ -195,9 +184,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.943Z",
+      "updatedAt": "2026-05-22T12:21:40.943Z",
+      "normalizedAt": "2026-05-22T12:21:40.943Z"
     },
     {
       "id": "agp:agp-내추럴-프로-퀄리파이어-1-2026-05-24",
@@ -282,7 +271,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/agp-natural-pq-1/",
         "sourceEventId": "agp-내추럴-프로-퀄리파이어-1-2026-05-24",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.943Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "5ac09f7b36e25452",
@@ -295,9 +284,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.943Z",
+      "updatedAt": "2026-05-22T12:21:40.943Z",
+      "normalizedAt": "2026-05-22T12:21:40.943Z"
     },
     {
       "id": "agp:agp-내추럴-프로쇼-2026-05-24",
@@ -357,7 +346,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/",
         "sourceEventId": "agp-내추럴-프로쇼-2026-05-24",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.943Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "0fcbb7fc61f8fbc8",
@@ -369,9 +358,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.943Z",
+      "updatedAt": "2026-05-22T12:21:40.943Z",
+      "normalizedAt": "2026-05-22T12:21:40.943Z"
     },
     {
       "id": "agp:agp-필리핀-프로-퀄리파이어-2026-09-06",
@@ -454,7 +443,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/agp-ph-pq/",
         "sourceEventId": "agp-필리핀-프로-퀄리파이어-2026-09-06",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.943Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "2bc14c3483237fa4",
@@ -467,9 +456,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.943Z",
+      "updatedAt": "2026-05-22T12:21:40.943Z",
+      "normalizedAt": "2026-05-22T12:21:40.943Z"
     },
     {
       "id": "agp:agp-내추럴-프로쇼-2026-09-26",
@@ -529,7 +518,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/",
         "sourceEventId": "agp-내추럴-프로쇼-2026-09-26",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.943Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "53f825eea2521164",
@@ -541,9 +530,103 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.943Z",
+      "updatedAt": "2026-05-22T12:21:40.943Z",
+      "normalizedAt": "2026-05-22T12:21:40.943Z"
+    },
+    {
+      "id": "agp:agp-프로-올스타즈-2026-09-26",
+      "organizationId": "agp",
+      "organizationName": "AGP",
+      "organizationShortName": "AGP",
+      "title": "AGP 프로 올스타즈",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-09-26",
+        "endsOn": "2026-09-27",
+        "timezone": "Asia/Seoul",
+        "rawText": "9월 26-27일",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "unknown",
+        "confidence": "low"
+      },
+      "location": {
+        "country": "KR",
+        "region": "서울 잠실",
+        "venue": "잠실 롯데호텔",
+        "rawText": "서울 잠실 잠실 롯데호텔",
+        "confidence": "medium"
+      },
+      "divisions": [
+        {
+          "name": "핏 모델",
+          "group": "unknown",
+          "rawText": "핏 모델, 비키니, 피겨, 웰니스, 멘즈 피지크, 클래식 피지크, 보디빌딩 212"
+        },
+        {
+          "name": "비키니",
+          "group": "womens",
+          "rawText": "핏 모델, 비키니, 피겨, 웰니스, 멘즈 피지크, 클래식 피지크, 보디빌딩 212"
+        },
+        {
+          "name": "피겨",
+          "group": "womens",
+          "rawText": "핏 모델, 비키니, 피겨, 웰니스, 멘즈 피지크, 클래식 피지크, 보디빌딩 212"
+        },
+        {
+          "name": "웰니스",
+          "group": "womens",
+          "rawText": "핏 모델, 비키니, 피겨, 웰니스, 멘즈 피지크, 클래식 피지크, 보디빌딩 212"
+        },
+        {
+          "name": "멘즈 피지크",
+          "group": "mens",
+          "rawText": "핏 모델, 비키니, 피겨, 웰니스, 멘즈 피지크, 클래식 피지크, 보디빌딩 212"
+        },
+        {
+          "name": "클래식 피지크",
+          "group": "mens",
+          "rawText": "핏 모델, 비키니, 피겨, 웰니스, 멘즈 피지크, 클래식 피지크, 보디빌딩 212"
+        },
+        {
+          "name": "보디빌딩 212",
+          "group": "mens",
+          "rawText": "핏 모델, 비키니, 피겨, 웰니스, 멘즈 피지크, 클래식 피지크, 보디빌딩 212"
+        }
+      ],
+      "tags": [
+        "NPC",
+        "IFBB",
+        "AGP"
+      ],
+      "flags": {
+        "natural": false,
+        "proQualifier": false,
+        "proCard": false,
+        "international": false
+      },
+      "source": {
+        "sourceType": "official-homepage",
+        "sourceUrl": "https://ifbbprokorea.com/schedule/",
+        "detailUrl": "https://ifbbprokorea.com/schedule/",
+        "sourceEventId": "agp-프로-올스타즈-2026-09-26",
+        "fetchedAt": "2026-05-22T12:21:40.943Z",
+        "parserName": "ifbb-npc-agp-elementor-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "d621b0a4196310a4",
+        "rawTitle": "AGP 프로 올스타즈",
+        "rawDateText": "9월 26-27일",
+        "rawLocationText": "서울 잠실 잠실 롯데호텔"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "medium",
+      "qualityIssues": [],
+      "createdAt": "2026-05-22T12:21:40.943Z",
+      "updatedAt": "2026-05-22T12:21:40.943Z",
+      "normalizedAt": "2026-05-22T12:21:40.943Z"
     },
     {
       "id": "agp:agp-내추럴-프로-퀄리파이어-2-2026-10-25",
@@ -628,7 +711,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/agp-natural-pq-2/",
         "sourceEventId": "agp-내추럴-프로-퀄리파이어-2-2026-10-25",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.943Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "4360666f5f54bbb2",
@@ -641,196 +724,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
-    },
-    {
-      "id": "agp:agp-프로-올스타즈-https-ifbbprokorea-com-schedule",
-      "organizationId": "agp",
-      "organizationName": "AGP",
-      "organizationShortName": "AGP",
-      "title": "AGP 프로 올스타즈",
-      "seasonYear": 2026,
-      "date": {
-        "timezone": "Asia/Seoul",
-        "confidence": "low"
-      },
-      "registration": {
-        "status": "unknown",
-        "confidence": "low"
-      },
-      "location": {
-        "country": "KR",
-        "region": "서울 잠실",
-        "venue": "잠실 롯데호텔",
-        "rawText": "서울 잠실 잠실 롯데호텔",
-        "confidence": "medium"
-      },
-      "divisions": [
-        {
-          "name": "핏 모델",
-          "group": "unknown",
-          "rawText": "핏 모델, 비키니, 피겨, 웰니스, 멘즈 피지크, 클래식 피지크, 보디빌딩 212"
-        },
-        {
-          "name": "비키니",
-          "group": "womens",
-          "rawText": "핏 모델, 비키니, 피겨, 웰니스, 멘즈 피지크, 클래식 피지크, 보디빌딩 212"
-        },
-        {
-          "name": "피겨",
-          "group": "womens",
-          "rawText": "핏 모델, 비키니, 피겨, 웰니스, 멘즈 피지크, 클래식 피지크, 보디빌딩 212"
-        },
-        {
-          "name": "웰니스",
-          "group": "womens",
-          "rawText": "핏 모델, 비키니, 피겨, 웰니스, 멘즈 피지크, 클래식 피지크, 보디빌딩 212"
-        },
-        {
-          "name": "멘즈 피지크",
-          "group": "mens",
-          "rawText": "핏 모델, 비키니, 피겨, 웰니스, 멘즈 피지크, 클래식 피지크, 보디빌딩 212"
-        },
-        {
-          "name": "클래식 피지크",
-          "group": "mens",
-          "rawText": "핏 모델, 비키니, 피겨, 웰니스, 멘즈 피지크, 클래식 피지크, 보디빌딩 212"
-        },
-        {
-          "name": "보디빌딩 212",
-          "group": "mens",
-          "rawText": "핏 모델, 비키니, 피겨, 웰니스, 멘즈 피지크, 클래식 피지크, 보디빌딩 212"
-        }
-      ],
-      "tags": [
-        "NPC",
-        "IFBB",
-        "AGP"
-      ],
-      "flags": {
-        "natural": false,
-        "proQualifier": false,
-        "proCard": false,
-        "international": false
-      },
-      "source": {
-        "sourceType": "official-homepage",
-        "sourceUrl": "https://ifbbprokorea.com/schedule/",
-        "detailUrl": "https://ifbbprokorea.com/schedule/",
-        "sourceEventId": "agp-프로-올스타즈-https-ifbbprokorea-com-schedule",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
-        "parserName": "ifbb-npc-agp-elementor-preview",
-        "parserVersion": "0.1.0",
-        "rawHash": "d621b0a4196310a4",
-        "rawTitle": "AGP 프로 올스타즈",
-        "rawLocationText": "서울 잠실 잠실 롯데호텔"
-      },
-      "crawlStatus": "sample-collected",
-      "reviewStatus": "needs-review",
-      "confidence": "low",
-      "qualityIssues": [
-        {
-          "field": "date",
-          "severity": "warning",
-          "message": "Elementor 카드에서 일부 일정 필드를 안정적으로 확인하지 못했습니다."
-        }
-      ],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
-    },
-    {
-      "id": "agp:agp-프로-올스타즈-https-ifbbprokorea-com-schedule-ifbb-pro",
-      "organizationId": "agp",
-      "organizationName": "AGP",
-      "organizationShortName": "AGP",
-      "title": "AGP 프로 올스타즈",
-      "seasonYear": 2026,
-      "date": {
-        "timezone": "Asia/Seoul",
-        "confidence": "low"
-      },
-      "registration": {
-        "status": "unknown",
-        "confidence": "low"
-      },
-      "location": {
-        "country": "KR",
-        "region": "서울 잠실",
-        "venue": "잠실 롯데호텔",
-        "rawText": "서울 잠실 잠실 롯데호텔",
-        "confidence": "medium"
-      },
-      "divisions": [
-        {
-          "name": "종목: 비키니",
-          "group": "womens",
-          "rawText": "종목: 비키니, 웰니스, 피겨, 멘즈 피지크, 클래식 피지크, 보디빌딩 212"
-        },
-        {
-          "name": "웰니스",
-          "group": "womens",
-          "rawText": "종목: 비키니, 웰니스, 피겨, 멘즈 피지크, 클래식 피지크, 보디빌딩 212"
-        },
-        {
-          "name": "피겨",
-          "group": "womens",
-          "rawText": "종목: 비키니, 웰니스, 피겨, 멘즈 피지크, 클래식 피지크, 보디빌딩 212"
-        },
-        {
-          "name": "멘즈 피지크",
-          "group": "mens",
-          "rawText": "종목: 비키니, 웰니스, 피겨, 멘즈 피지크, 클래식 피지크, 보디빌딩 212"
-        },
-        {
-          "name": "클래식 피지크",
-          "group": "mens",
-          "rawText": "종목: 비키니, 웰니스, 피겨, 멘즈 피지크, 클래식 피지크, 보디빌딩 212"
-        },
-        {
-          "name": "보디빌딩 212",
-          "group": "mens",
-          "rawText": "종목: 비키니, 웰니스, 피겨, 멘즈 피지크, 클래식 피지크, 보디빌딩 212"
-        }
-      ],
-      "tags": [
-        "NPC",
-        "IFBB",
-        "AGP"
-      ],
-      "flags": {
-        "natural": false,
-        "proQualifier": false,
-        "proCard": false,
-        "international": false
-      },
-      "source": {
-        "sourceType": "official-homepage",
-        "sourceUrl": "https://ifbbprokorea.com/schedule/ifbb-pro/",
-        "detailUrl": "https://ifbbprokorea.com/schedule/ifbb-pro/",
-        "sourceEventId": "agp-프로-올스타즈-https-ifbbprokorea-com-schedule-ifbb-pro",
-        "fetchedAt": "2026-05-22T08:59:52.584Z",
-        "parserName": "ifbb-npc-agp-elementor-preview",
-        "parserVersion": "0.1.0",
-        "rawHash": "79b648ae2d2d990b",
-        "rawTitle": "AGP 프로 올스타즈",
-        "rawLocationText": "서울 잠실 잠실 롯데호텔"
-      },
-      "crawlStatus": "sample-collected",
-      "reviewStatus": "needs-review",
-      "confidence": "low",
-      "qualityIssues": [
-        {
-          "field": "date",
-          "severity": "warning",
-          "message": "Elementor 카드에서 일부 일정 필드를 안정적으로 확인하지 못했습니다."
-        }
-      ],
-      "createdAt": "2026-05-22T08:59:52.584Z",
-      "updatedAt": "2026-05-22T08:59:52.584Z",
-      "normalizedAt": "2026-05-22T08:59:52.584Z"
+      "createdAt": "2026-05-22T12:21:40.943Z",
+      "updatedAt": "2026-05-22T12:21:40.943Z",
+      "normalizedAt": "2026-05-22T12:21:40.943Z"
     }
   ],
   "errors": []

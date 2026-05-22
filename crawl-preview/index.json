@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-05-22T10:48:14.092Z",
+  "generatedAt": "2026-05-22T12:21:40.856Z",
   "outputDir": "crawl-preview",
-  "totalSources": 20,
-  "totalEvents": 498,
+  "totalSources": 18,
+  "totalEvents": 496,
   "totalErrors": 0,
   "organizations": [
     {
@@ -18,10 +18,10 @@
       "organizationId": "agp",
       "organizationName": "AGP",
       "file": "crawl-preview/agp.json",
-      "sourceCount": 2,
-      "eventCount": 9,
+      "sourceCount": 1,
+      "eventCount": 8,
       "errorCount": 0,
-      "warningCount": 2
+      "warningCount": 1
     },
     {
       "organizationId": "anbc",
@@ -135,10 +135,10 @@
       "organizationId": "npc-ifbb-pro-korea",
       "organizationName": "NPC/IFBB Pro Korea",
       "file": "crawl-preview/npc-ifbb-pro-korea.json",
-      "sourceCount": 2,
-      "eventCount": 26,
+      "sourceCount": 1,
+      "eventCount": 25,
       "errorCount": 0,
-      "warningCount": 2
+      "warningCount": 1
     },
     {
       "organizationId": "npca-korea",

@@ -55,6 +55,8 @@
     "crawl:preview:write:wngp": "tsx scripts/write-crawl-preview.ts --org wngp",
     "crawl:preview:write:bob": "tsx scripts/write-crawl-preview.ts --org bob",
     "crawl:preview:write:anbc": "tsx scripts/write-crawl-preview.ts --org anbc",
+    "crawl:sync": "tsx scripts/crawl-sync.ts",
+    "sync:preview": "tsx scripts/sync-crawl-preview.ts",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio"

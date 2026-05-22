@@ -24,8 +24,10 @@ export interface CrawlerResult {
 
 export interface CrawlPreviewResult extends CrawlerResult {
   generatedAt: string;
+  seasonYear?: number;
 }
 
 export interface CrawlPreviewOptions {
   organizationIds?: CrawlOrganizationId[];
+  seasonYear?: number;
 }

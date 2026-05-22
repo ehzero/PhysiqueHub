@@ -1,29 +1,18 @@
 {
-  "generatedAt": "2026-05-22T08:59:52.237Z",
+  "generatedAt": "2026-05-22T12:21:40.856Z",
   "organizationId": "npc-ifbb-pro-korea",
   "organizationName": "NPC/IFBB Pro Korea",
   "sources": [
     {
       "organizationId": "npc-ifbb-pro-korea",
-      "organizationName": "NPC/IFBB Pro Korea/AGP",
+      "organizationName": "NPC/IFBB Pro Korea",
       "url": "https://ifbbprokorea.com/schedule/",
       "ok": true,
       "count": 25,
       "warnings": [
         "WordPress/Elementor HTML 기반 preview입니다. robots/약관 및 상세 신청 페이지는 별도 검수가 필요합니다."
       ],
-      "fetchedAt": "2026-05-22T08:59:52.353Z"
-    },
-    {
-      "organizationId": "npc-ifbb-pro-korea",
-      "organizationName": "NPC/IFBB Pro Korea/AGP",
-      "url": "https://ifbbprokorea.com/schedule/proqualifier/",
-      "ok": true,
-      "count": 1,
-      "warnings": [
-        "WordPress/Elementor HTML 기반 preview입니다. robots/약관 및 상세 신청 페이지는 별도 검수가 필요합니다."
-      ],
-      "fetchedAt": "2026-05-22T08:59:52.555Z"
+      "fetchedAt": "2026-05-22T12:21:40.945Z"
     }
   ],
   "events": [
@@ -107,7 +96,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/natural-regional-01/",
         "sourceEventId": "npc-내추럴-리저널-1-2026-03-22",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.945Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "e3c3df834ecc3a8f",
@@ -120,9 +109,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.945Z",
+      "updatedAt": "2026-05-22T12:21:40.945Z",
+      "normalizedAt": "2026-05-22T12:21:40.945Z"
     },
     {
       "id": "npc-ifbb-pro-korea:npc-오픈-리저널-1-2026-03-22",
@@ -203,7 +192,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/open-regional-01/",
         "sourceEventId": "npc-오픈-리저널-1-2026-03-22",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.945Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "08c5e39e20418f7c",
@@ -216,9 +205,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.945Z",
+      "updatedAt": "2026-05-22T12:21:40.945Z",
+      "normalizedAt": "2026-05-22T12:21:40.945Z"
     },
     {
       "id": "npc-ifbb-pro-korea:npc-내추럴-리저널-2-2026-04-05",
@@ -300,7 +289,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/natural-regional-02/",
         "sourceEventId": "npc-내추럴-리저널-2-2026-04-05",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.945Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "241aaa8091158b00",
@@ -313,9 +302,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.945Z",
+      "updatedAt": "2026-05-22T12:21:40.945Z",
+      "normalizedAt": "2026-05-22T12:21:40.945Z"
     },
     {
       "id": "npc-ifbb-pro-korea:npc-오픈-리저널-2-2026-04-05",
@@ -396,7 +385,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/open-regional-02/",
         "sourceEventId": "npc-오픈-리저널-2-2026-04-05",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.945Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "d9e607bcfb620b3b",
@@ -409,9 +398,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.945Z",
+      "updatedAt": "2026-05-22T12:21:40.945Z",
+      "normalizedAt": "2026-05-22T12:21:40.945Z"
     },
     {
       "id": "npc-ifbb-pro-korea:npc-내추럴-리저널-3-2026-04-26",
@@ -493,7 +482,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/natural-regional-03/",
         "sourceEventId": "npc-내추럴-리저널-3-2026-04-26",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.945Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "43941ae307902000",
@@ -506,9 +495,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.945Z",
+      "updatedAt": "2026-05-22T12:21:40.945Z",
+      "normalizedAt": "2026-05-22T12:21:40.945Z"
     },
     {
       "id": "npc-ifbb-pro-korea:npc-오픈-리저널-3-2026-04-26",
@@ -589,7 +578,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/open-regional-03/",
         "sourceEventId": "npc-오픈-리저널-3-2026-04-26",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.945Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "aee59cb1cc3c7713",
@@ -602,9 +591,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.945Z",
+      "updatedAt": "2026-05-22T12:21:40.945Z",
+      "normalizedAt": "2026-05-22T12:21:40.945Z"
     },
     {
       "id": "npc-ifbb-pro-korea:npc-내추럴-리저널-4-2026-05-17",
@@ -686,7 +675,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/natural-regional-04/",
         "sourceEventId": "npc-내추럴-리저널-4-2026-05-17",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.945Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "cfc98799996ba50f",
@@ -699,9 +688,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.945Z",
+      "updatedAt": "2026-05-22T12:21:40.945Z",
+      "normalizedAt": "2026-05-22T12:21:40.945Z"
     },
     {
       "id": "npc-ifbb-pro-korea:npc-오픈-리저널-4-2026-05-17",
@@ -782,7 +771,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/open-regional-04/",
         "sourceEventId": "npc-오픈-리저널-4-2026-05-17",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.945Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "6902054f60d43c92",
@@ -795,9 +784,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.945Z",
+      "updatedAt": "2026-05-22T12:21:40.945Z",
+      "normalizedAt": "2026-05-22T12:21:40.945Z"
     },
     {
       "id": "npc-ifbb-pro-korea:npc-오픈-리저널-5-2026-05-23",
@@ -878,7 +867,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/open-regional-05/",
         "sourceEventId": "npc-오픈-리저널-5-2026-05-23",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.945Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "438cc8e6f0e9653c",
@@ -891,9 +880,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.945Z",
+      "updatedAt": "2026-05-22T12:21:40.945Z",
+      "normalizedAt": "2026-05-22T12:21:40.945Z"
     },
     {
       "id": "npc-ifbb-pro-korea:npc-내추럴-리저널-5-2026-05-24",
@@ -975,7 +964,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/natural-regional-05/",
         "sourceEventId": "npc-내추럴-리저널-5-2026-05-24",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.945Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "a42626823f05c778",
@@ -988,9 +977,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.945Z",
+      "updatedAt": "2026-05-22T12:21:40.945Z",
+      "normalizedAt": "2026-05-22T12:21:40.945Z"
     },
     {
       "id": "npc-ifbb-pro-korea:npc-내추럴-리저널-6-2026-06-21",
@@ -1072,7 +1061,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/natural-regional-06/",
         "sourceEventId": "npc-내추럴-리저널-6-2026-06-21",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.945Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "6a4b70d415a2b6f7",
@@ -1085,9 +1074,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.945Z",
+      "updatedAt": "2026-05-22T12:21:40.945Z",
+      "normalizedAt": "2026-05-22T12:21:40.945Z"
     },
     {
       "id": "npc-ifbb-pro-korea:npc-오픈-리저널-6-2026-06-21",
@@ -1168,7 +1157,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/open-regional-06/",
         "sourceEventId": "npc-오픈-리저널-6-2026-06-21",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.945Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "5dcb44f4b599b4d4",
@@ -1181,9 +1170,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.945Z",
+      "updatedAt": "2026-05-22T12:21:40.945Z",
+      "normalizedAt": "2026-05-22T12:21:40.945Z"
     },
     {
       "id": "npc-ifbb-pro-korea:npc-내추럴-리저널-7-rbw-내추럴-워리어즈-2026-08-16",
@@ -1265,7 +1254,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/natural-regional-07/",
         "sourceEventId": "npc-내추럴-리저널-7-rbw-내추럴-워리어즈-2026-08-16",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.945Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "9048a79bcb6b82d6",
@@ -1278,9 +1267,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.945Z",
+      "updatedAt": "2026-05-22T12:21:40.945Z",
+      "normalizedAt": "2026-05-22T12:21:40.945Z"
     },
     {
       "id": "npc-ifbb-pro-korea:npc-오픈-리저널-7-2026-08-16",
@@ -1361,7 +1350,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/open-regional-07/",
         "sourceEventId": "npc-오픈-리저널-7-2026-08-16",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.945Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "7a6587b2521271f3",
@@ -1374,9 +1363,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.945Z",
+      "updatedAt": "2026-05-22T12:21:40.945Z",
+      "normalizedAt": "2026-05-22T12:21:40.945Z"
     },
     {
       "id": "npc-ifbb-pro-korea:npc-내추럴-리저널-8-2026-09-12",
@@ -1458,7 +1447,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/natural-regional-08/",
         "sourceEventId": "npc-내추럴-리저널-8-2026-09-12",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.945Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "b6f65be0584933b6",
@@ -1471,9 +1460,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.945Z",
+      "updatedAt": "2026-05-22T12:21:40.945Z",
+      "normalizedAt": "2026-05-22T12:21:40.945Z"
     },
     {
       "id": "npc-ifbb-pro-korea:npc-오픈-리저널-8-2026-09-12",
@@ -1554,7 +1543,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/open-regional-08/",
         "sourceEventId": "npc-오픈-리저널-8-2026-09-12",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.945Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "ddc45f84ba89aac7",
@@ -1567,9 +1556,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.945Z",
+      "updatedAt": "2026-05-22T12:21:40.945Z",
+      "normalizedAt": "2026-05-22T12:21:40.945Z"
     },
     {
       "id": "npc-ifbb-pro-korea:npc-내추럴-리저널-9-2026-09-20",
@@ -1651,7 +1640,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/natural-regional-09/",
         "sourceEventId": "npc-내추럴-리저널-9-2026-09-20",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.945Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "a45bb2d165e0e5aa",
@@ -1664,9 +1653,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.945Z",
+      "updatedAt": "2026-05-22T12:21:40.945Z",
+      "normalizedAt": "2026-05-22T12:21:40.945Z"
     },
     {
       "id": "npc-ifbb-pro-korea:npc-오픈-리저널-9-2026-09-20",
@@ -1747,7 +1736,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/open-regional-09/",
         "sourceEventId": "npc-오픈-리저널-9-2026-09-20",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.945Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "9c0d9a1f275c3de3",
@@ -1760,9 +1749,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.945Z",
+      "updatedAt": "2026-05-22T12:21:40.945Z",
+      "normalizedAt": "2026-05-22T12:21:40.945Z"
     },
     {
       "id": "npc-ifbb-pro-korea:npc-내추럴-리저널-10-2026-09-26",
@@ -1844,7 +1833,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/natural-regional-10/",
         "sourceEventId": "npc-내추럴-리저널-10-2026-09-26",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.945Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "6737fafa916ae994",
@@ -1857,9 +1846,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.945Z",
+      "updatedAt": "2026-05-22T12:21:40.945Z",
+      "normalizedAt": "2026-05-22T12:21:40.945Z"
     },
     {
       "id": "npc-ifbb-pro-korea:npc-오픈-리저널-10-2026-09-26",
@@ -1940,7 +1929,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/open-regional-10/",
         "sourceEventId": "npc-오픈-리저널-10-2026-09-26",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.945Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "1d9d31551d837d1b",
@@ -1953,9 +1942,107 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.945Z",
+      "updatedAt": "2026-05-22T12:21:40.945Z",
+      "normalizedAt": "2026-05-22T12:21:40.945Z"
+    },
+    {
+      "id": "npc-ifbb-pro-korea:아마추어-올림피아-2026-09-26",
+      "organizationId": "npc-ifbb-pro-korea",
+      "organizationName": "NPC/IFBB Pro Korea",
+      "organizationShortName": "NPC/IFBB",
+      "title": "아마추어 올림피아",
+      "seasonYear": 2026,
+      "date": {
+        "startsOn": "2026-09-26",
+        "endsOn": "2026-09-27",
+        "timezone": "Asia/Seoul",
+        "rawText": "9월 26-27일",
+        "confidence": "high"
+      },
+      "registration": {
+        "status": "unknown",
+        "closesAt": "2026-09-19T23:59:00+09:00",
+        "registrationUrl": "https://ifbbprokorea.com/schedule/aokorea/",
+        "rawText": "신청 마감: 9월 19일",
+        "confidence": "medium"
+      },
+      "location": {
+        "country": "KR",
+        "region": "서울 잠실",
+        "venue": "잠실 롯데호텔",
+        "rawText": "서울 잠실 잠실 롯데호텔",
+        "confidence": "medium"
+      },
+      "divisions": [
+        {
+          "name": "핏 모델",
+          "group": "unknown",
+          "rawText": "핏 모델, 비키니, 웰니스, 피겨, 멘즈 피지크, 클래식 피지크, 보디빌딩"
+        },
+        {
+          "name": "비키니",
+          "group": "womens",
+          "rawText": "핏 모델, 비키니, 웰니스, 피겨, 멘즈 피지크, 클래식 피지크, 보디빌딩"
+        },
+        {
+          "name": "웰니스",
+          "group": "womens",
+          "rawText": "핏 모델, 비키니, 웰니스, 피겨, 멘즈 피지크, 클래식 피지크, 보디빌딩"
+        },
+        {
+          "name": "피겨",
+          "group": "womens",
+          "rawText": "핏 모델, 비키니, 웰니스, 피겨, 멘즈 피지크, 클래식 피지크, 보디빌딩"
+        },
+        {
+          "name": "멘즈 피지크",
+          "group": "mens",
+          "rawText": "핏 모델, 비키니, 웰니스, 피겨, 멘즈 피지크, 클래식 피지크, 보디빌딩"
+        },
+        {
+          "name": "클래식 피지크",
+          "group": "mens",
+          "rawText": "핏 모델, 비키니, 웰니스, 피겨, 멘즈 피지크, 클래식 피지크, 보디빌딩"
+        },
+        {
+          "name": "보디빌딩",
+          "group": "mens",
+          "rawText": "핏 모델, 비키니, 웰니스, 피겨, 멘즈 피지크, 클래식 피지크, 보디빌딩"
+        }
+      ],
+      "tags": [
+        "NPC",
+        "IFBB",
+        "프로카드"
+      ],
+      "flags": {
+        "natural": false,
+        "proQualifier": false,
+        "proCard": true,
+        "international": true
+      },
+      "source": {
+        "sourceType": "official-homepage",
+        "sourceUrl": "https://ifbbprokorea.com/schedule/",
+        "detailUrl": "https://ifbbprokorea.com/schedule/aokorea/",
+        "sourceEventId": "아마추어-올림피아-2026-09-26",
+        "fetchedAt": "2026-05-22T12:21:40.945Z",
+        "parserName": "ifbb-npc-agp-elementor-preview",
+        "parserVersion": "0.1.0",
+        "rawHash": "0045358e22a72548",
+        "rawTitle": "아마추어 올림피아",
+        "rawDateText": "9월 26-27일",
+        "rawLocationText": "서울 잠실 잠실 롯데호텔",
+        "rawRegistrationText": "신청 마감: 9월 19일"
+      },
+      "crawlStatus": "sample-collected",
+      "reviewStatus": "needs-review",
+      "confidence": "medium",
+      "qualityIssues": [],
+      "createdAt": "2026-05-22T12:21:40.945Z",
+      "updatedAt": "2026-05-22T12:21:40.945Z",
+      "normalizedAt": "2026-05-22T12:21:40.945Z"
     },
     {
       "id": "npc-ifbb-pro-korea:npc-내추럴-리저널-11-2026-10-18",
@@ -2037,7 +2124,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/natural-regional-11/",
         "sourceEventId": "npc-내추럴-리저널-11-2026-10-18",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.945Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "ef34a6bd3ac3fb82",
@@ -2050,9 +2137,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.945Z",
+      "updatedAt": "2026-05-22T12:21:40.945Z",
+      "normalizedAt": "2026-05-22T12:21:40.945Z"
     },
     {
       "id": "npc-ifbb-pro-korea:npc-오픈-리저널-11-2026-10-18",
@@ -2133,7 +2220,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/open-regional-11/",
         "sourceEventId": "npc-오픈-리저널-11-2026-10-18",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.945Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "cb7545ebc5bd7159",
@@ -2146,9 +2233,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.945Z",
+      "updatedAt": "2026-05-22T12:21:40.945Z",
+      "normalizedAt": "2026-05-22T12:21:40.945Z"
     },
     {
       "id": "npc-ifbb-pro-korea:npc-내추럴-리저널-12-2026-10-25",
@@ -2230,7 +2317,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/natural-regional-12/",
         "sourceEventId": "npc-내추럴-리저널-12-2026-10-25",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.945Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "c090b819dfc41124",
@@ -2243,9 +2330,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
+      "createdAt": "2026-05-22T12:21:40.945Z",
+      "updatedAt": "2026-05-22T12:21:40.945Z",
+      "normalizedAt": "2026-05-22T12:21:40.945Z"
     },
     {
       "id": "npc-ifbb-pro-korea:npc-오픈-리저널-12-2026-10-25",
@@ -2326,7 +2413,7 @@
         "sourceUrl": "https://ifbbprokorea.com/schedule/",
         "detailUrl": "https://ifbbprokorea.com/schedule/open-regional-12/",
         "sourceEventId": "npc-오픈-리저널-12-2026-10-25",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
+        "fetchedAt": "2026-05-22T12:21:40.945Z",
         "parserName": "ifbb-npc-agp-elementor-preview",
         "parserVersion": "0.1.0",
         "rawHash": "1b9fd0d471a97860",
@@ -2339,210 +2426,9 @@
       "reviewStatus": "needs-review",
       "confidence": "medium",
       "qualityIssues": [],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
-    },
-    {
-      "id": "npc-ifbb-pro-korea:아마추어-올림피아-https-ifbbprokorea-com-schedule",
-      "organizationId": "npc-ifbb-pro-korea",
-      "organizationName": "NPC/IFBB Pro Korea",
-      "organizationShortName": "NPC/IFBB",
-      "title": "아마추어 올림피아",
-      "seasonYear": 2026,
-      "date": {
-        "timezone": "Asia/Seoul",
-        "confidence": "low"
-      },
-      "registration": {
-        "status": "unknown",
-        "closesAt": "2026-09-19T23:59:00+09:00",
-        "registrationUrl": "https://ifbbprokorea.com/schedule/aokorea/",
-        "rawText": "신청 마감: 9월 19일",
-        "confidence": "medium"
-      },
-      "location": {
-        "country": "KR",
-        "region": "서울 잠실",
-        "venue": "잠실 롯데호텔",
-        "rawText": "서울 잠실 잠실 롯데호텔",
-        "confidence": "medium"
-      },
-      "divisions": [
-        {
-          "name": "핏 모델",
-          "group": "unknown",
-          "rawText": "핏 모델, 비키니, 웰니스, 피겨, 멘즈 피지크, 클래식 피지크, 보디빌딩"
-        },
-        {
-          "name": "비키니",
-          "group": "womens",
-          "rawText": "핏 모델, 비키니, 웰니스, 피겨, 멘즈 피지크, 클래식 피지크, 보디빌딩"
-        },
-        {
-          "name": "웰니스",
-          "group": "womens",
-          "rawText": "핏 모델, 비키니, 웰니스, 피겨, 멘즈 피지크, 클래식 피지크, 보디빌딩"
-        },
-        {
-          "name": "피겨",
-          "group": "womens",
-          "rawText": "핏 모델, 비키니, 웰니스, 피겨, 멘즈 피지크, 클래식 피지크, 보디빌딩"
-        },
-        {
-          "name": "멘즈 피지크",
-          "group": "mens",
-          "rawText": "핏 모델, 비키니, 웰니스, 피겨, 멘즈 피지크, 클래식 피지크, 보디빌딩"
-        },
-        {
-          "name": "클래식 피지크",
-          "group": "mens",
-          "rawText": "핏 모델, 비키니, 웰니스, 피겨, 멘즈 피지크, 클래식 피지크, 보디빌딩"
-        },
-        {
-          "name": "보디빌딩",
-          "group": "mens",
-          "rawText": "핏 모델, 비키니, 웰니스, 피겨, 멘즈 피지크, 클래식 피지크, 보디빌딩"
-        }
-      ],
-      "tags": [
-        "NPC",
-        "IFBB",
-        "프로카드"
-      ],
-      "flags": {
-        "natural": false,
-        "proQualifier": false,
-        "proCard": true,
-        "international": true
-      },
-      "source": {
-        "sourceType": "official-homepage",
-        "sourceUrl": "https://ifbbprokorea.com/schedule/",
-        "detailUrl": "https://ifbbprokorea.com/schedule/aokorea/",
-        "sourceEventId": "아마추어-올림피아-https-ifbbprokorea-com-schedule",
-        "fetchedAt": "2026-05-22T08:59:52.353Z",
-        "parserName": "ifbb-npc-agp-elementor-preview",
-        "parserVersion": "0.1.0",
-        "rawHash": "0045358e22a72548",
-        "rawTitle": "아마추어 올림피아",
-        "rawLocationText": "서울 잠실 잠실 롯데호텔",
-        "rawRegistrationText": "신청 마감: 9월 19일"
-      },
-      "crawlStatus": "sample-collected",
-      "reviewStatus": "needs-review",
-      "confidence": "low",
-      "qualityIssues": [
-        {
-          "field": "date",
-          "severity": "warning",
-          "message": "Elementor 카드에서 일부 일정 필드를 안정적으로 확인하지 못했습니다."
-        }
-      ],
-      "createdAt": "2026-05-22T08:59:52.353Z",
-      "updatedAt": "2026-05-22T08:59:52.353Z",
-      "normalizedAt": "2026-05-22T08:59:52.353Z"
-    },
-    {
-      "id": "npc-ifbb-pro-korea:아마추어-올림피아-https-ifbbprokorea-com-schedule-proqualifier",
-      "organizationId": "npc-ifbb-pro-korea",
-      "organizationName": "NPC/IFBB Pro Korea",
-      "organizationShortName": "NPC/IFBB",
-      "title": "아마추어 올림피아",
-      "seasonYear": 2026,
-      "date": {
-        "timezone": "Asia/Seoul",
-        "confidence": "low"
-      },
-      "registration": {
-        "status": "unknown",
-        "closesAt": "2026-09-19T23:59:00+09:00",
-        "registrationUrl": "https://ifbbprokorea.com/schedule/aokorea/",
-        "rawText": "신청 마감: 9월 19일",
-        "confidence": "medium"
-      },
-      "location": {
-        "country": "KR",
-        "region": "서울 잠실",
-        "venue": "잠실 롯데호텔",
-        "rawText": "서울 잠실 잠실 롯데호텔",
-        "confidence": "medium"
-      },
-      "divisions": [
-        {
-          "name": "핏 모델",
-          "group": "unknown",
-          "rawText": "핏 모델, 비키니, 웰니스, 피겨, 멘즈 피지크, 클래식 피지크, 보디빌딩"
-        },
-        {
-          "name": "비키니",
-          "group": "womens",
-          "rawText": "핏 모델, 비키니, 웰니스, 피겨, 멘즈 피지크, 클래식 피지크, 보디빌딩"
-        },
-        {
-          "name": "웰니스",
-          "group": "womens",
-          "rawText": "핏 모델, 비키니, 웰니스, 피겨, 멘즈 피지크, 클래식 피지크, 보디빌딩"
-        },
-        {
-          "name": "피겨",
-          "group": "womens",
-          "rawText": "핏 모델, 비키니, 웰니스, 피겨, 멘즈 피지크, 클래식 피지크, 보디빌딩"
-        },
-        {
-          "name": "멘즈 피지크",
-          "group": "mens",
-          "rawText": "핏 모델, 비키니, 웰니스, 피겨, 멘즈 피지크, 클래식 피지크, 보디빌딩"
-        },
-        {
-          "name": "클래식 피지크",
-          "group": "mens",
-          "rawText": "핏 모델, 비키니, 웰니스, 피겨, 멘즈 피지크, 클래식 피지크, 보디빌딩"
-        },
-        {
-          "name": "보디빌딩",
-          "group": "mens",
-          "rawText": "핏 모델, 비키니, 웰니스, 피겨, 멘즈 피지크, 클래식 피지크, 보디빌딩"
-        }
-      ],
-      "tags": [
-        "NPC",
-        "IFBB",
-        "프로 퀄리파이어",
-        "프로카드"
-      ],
-      "flags": {
-        "natural": false,
-        "proQualifier": true,
-        "proCard": true,
-        "international": true
-      },
-      "source": {
-        "sourceType": "official-homepage",
-        "sourceUrl": "https://ifbbprokorea.com/schedule/proqualifier/",
-        "detailUrl": "https://ifbbprokorea.com/schedule/aokorea/",
-        "sourceEventId": "아마추어-올림피아-https-ifbbprokorea-com-schedule-proqualifier",
-        "fetchedAt": "2026-05-22T08:59:52.555Z",
-        "parserName": "ifbb-npc-agp-elementor-preview",
-        "parserVersion": "0.1.0",
-        "rawHash": "20820b9d97619ddc",
-        "rawTitle": "아마추어 올림피아",
-        "rawLocationText": "서울 잠실 잠실 롯데호텔",
-        "rawRegistrationText": "신청 마감: 9월 19일"
-      },
-      "crawlStatus": "sample-collected",
-      "reviewStatus": "needs-review",
-      "confidence": "low",
-      "qualityIssues": [
-        {
-          "field": "date",
-          "severity": "warning",
-          "message": "Elementor 카드에서 일부 일정 필드를 안정적으로 확인하지 못했습니다."
-        }
-      ],
-      "createdAt": "2026-05-22T08:59:52.555Z",
-      "updatedAt": "2026-05-22T08:59:52.555Z",
-      "normalizedAt": "2026-05-22T08:59:52.555Z"
+      "createdAt": "2026-05-22T12:21:40.945Z",
+      "updatedAt": "2026-05-22T12:21:40.945Z",
+      "normalizedAt": "2026-05-22T12:21:40.945Z"
     }
   ],
   "errors": []
