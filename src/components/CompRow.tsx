@@ -21,6 +21,7 @@ export function CompRow({ comp, onOpen, today }: CompRowProps) {
     <Link
       className="comp-row"
       href={href}
+      prefetch={false}
       onClick={(event) => {
         if (
           event.defaultPrevented ||
