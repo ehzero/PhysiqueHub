@@ -1102,6 +1102,10 @@ ol {
   grid-template-columns: repeat(3, 1fr);
   gap: 32px;
 }
+.feat-card-wrap {
+  position: relative;
+  height: 100%;
+}
 .feat-card {
   background: var(--bg-elev);
   border: 1px solid var(--line-soft);
@@ -1141,7 +1145,7 @@ ol {
   font-size: 12px;
   letter-spacing: 0.06em;
 }
-.feat-poster .bookmark-fab {
+.feat-card-wrap .bookmark-fab {
   position: absolute;
   top: 12px;
   right: 12px;
@@ -1153,16 +1157,16 @@ ol {
   place-items: center;
   transition: all 0.15s;
 }
-.feat-poster .bookmark-fab:hover {
+.feat-card-wrap .bookmark-fab:hover {
   background: var(--ink);
   color: var(--bg);
 }
-.feat-poster .bookmark-fab.on {
+.feat-card-wrap .bookmark-fab.on {
   background: var(--accent);
   border-color: var(--accent);
   color: var(--accent-ink);
 }
-.feat-poster .bookmark-fab svg {
+.feat-card-wrap .bookmark-fab svg {
   width: 14px;
   height: 14px;
 }
