@@ -194,6 +194,14 @@ export function HomeView({
           setFilterState({ ...filterState, activePreset: id });
           setVisibleCount(10);
         }}
+        onResetFilters={() => {
+          setFilterState({
+            ...filterState,
+            activeOrganizationId: null,
+            activePreset: "all",
+          });
+          setVisibleCount(10);
+        }}
       />
       <HomeFeed
         feed={feed}
@@ -262,6 +270,7 @@ function HomeFilterBars({
   activePreset,
   onSelectOrganization,
   onSelectPreset,
+  onResetFilters,
 }: {
   organizationFilters: HomeChip[];
   presets: HomeChip[];
@@ -269,11 +278,37 @@ function HomeFilterBars({
   activePreset: string;
   onSelectOrganization: (id: string | null) => void;
   onSelectPreset: (id: string) => void;
+  onResetFilters: () => void;
 }) {
+  const [mobilePanel, setMobilePanel] =
+    useState<"organization" | "preset" | null>(null);
+  const activeOrganization = organizationFilters.find(
+    (organization) => organization.id === activeOrganizationId,
+  ) ?? organizationFilters[0];
+  const activePresetChip =
+    presets.find((preset) => preset.id === activePreset) ?? presets[0];
+  const activeFilterCount =
+    (activeOrganizationId ? 1 : 0) + (activePreset !== "all" ? 1 : 0);
+
+  function selectOrganization(id: string | null) {
+    onSelectOrganization(id);
+    setMobilePanel(null);
+  }
+
+  function selectPreset(id: string | null) {
+    onSelectPreset(id ?? "all");
+    setMobilePanel(null);
+  }
+
+  function resetFilters() {
+    onResetFilters();
+    setMobilePanel(null);
+  }
+
   return (
     <section className="preset-bar">
       <div className="container">
-        <div className="preset-row">
+        <div className="preset-row desktop-filter-row">
           <div className="preset-chips" role="tablist">
             {organizationFilters.map((organization) => (
               <button
@@ -302,6 +337,93 @@ function HomeFilterBars({
           <Link className="organization-chip" href="/competitions">
             더보기
           </Link>
+        </div>
+
+        <div className="mobile-filter-shell">
+          <div className="mobile-filter-summary">
+            <button
+              type="button"
+              className="mobile-filter-select"
+              aria-expanded={mobilePanel === "organization"}
+              onClick={() =>
+                setMobilePanel((panel) =>
+                  panel === "organization" ? null : "organization",
+                )
+              }
+            >
+              <span className="mobile-filter-kicker">단체</span>
+              <span className="mobile-filter-value">
+                {activeOrganization?.title ?? "전체 단체"}
+              </span>
+              <span className="mobile-filter-icon">{Icons.chevronDown}</span>
+            </button>
+            <button
+              type="button"
+              className="mobile-filter-select compact"
+              aria-expanded={mobilePanel === "preset"}
+              onClick={() =>
+                setMobilePanel((panel) => (panel === "preset" ? null : "preset"))
+              }
+            >
+              <span className="mobile-filter-kicker">조건</span>
+              <span className="mobile-filter-value">
+                {activePresetChip?.label ?? "전체"}
+              </span>
+              <span className="mobile-filter-icon">{Icons.chevronDown}</span>
+            </button>
+          </div>
+
+          {mobilePanel && (
+            <div className="mobile-filter-panel">
+              <div className="mobile-filter-panel-head">
+                <span className="eyebrow">
+                  {mobilePanel === "organization" ? "ORGANIZATION" : "FILTER"}
+                </span>
+                <button type="button" onClick={() => setMobilePanel(null)}>
+                  {Icons.close}
+                </button>
+              </div>
+              <div className="mobile-filter-options">
+                {(mobilePanel === "organization" ? organizationFilters : presets).map(
+                  (item) => {
+                    const isOn =
+                      mobilePanel === "organization"
+                        ? activeOrganizationId === item.id
+                        : activePreset === item.id;
+
+                    return (
+                      <button
+                        key={item.id ?? "all"}
+                        type="button"
+                        className={`mobile-filter-option ${isOn ? "on" : ""}`}
+                        onClick={() =>
+                          mobilePanel === "organization"
+                            ? selectOrganization(item.id)
+                            : selectPreset(item.id)
+                        }
+                      >
+                        <span className="mobile-filter-option-label">
+                          {item.title ?? item.label}
+                        </span>
+                        <span className="mobile-filter-option-count mono">
+                          {item.n}
+                        </span>
+                      </button>
+                    );
+                  },
+                )}
+              </div>
+              {activeFilterCount > 0 && (
+                <button
+                  type="button"
+                  className="mobile-filter-reset"
+                  onClick={resetFilters}
+                >
+                  필터 초기화
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </section>

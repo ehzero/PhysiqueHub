@@ -11,6 +11,8 @@ interface NavProps {
 }
 
 export function Nav({ route, savedCount, onOpenContact }: NavProps) {
+  const savedLabel = savedCount > 0 ? `내 대회 ${savedCount}` : "내 대회";
+
   return (
     <header className="nav">
       <div className="container">
@@ -80,6 +82,42 @@ export function Nav({ route, savedCount, onOpenContact }: NavProps) {
           </div>
         </div>
       </div>
+      <nav className="mobile-tabbar" aria-label="주요 메뉴">
+        <Link
+          className={`mobile-tab ${route === "home" ? "active" : ""}`}
+          href="/"
+        >
+          {Icons.home}
+          <span>홈</span>
+        </Link>
+        <Link
+          className={`mobile-tab ${route === "list" ? "active" : ""}`}
+          href="/competitions"
+        >
+          {Icons.list}
+          <span>대회</span>
+        </Link>
+        <Link
+          className={`mobile-tab ${route === "guide" ? "active" : ""}`}
+          href="/guide"
+        >
+          {Icons.book}
+          <span>가이드</span>
+        </Link>
+        <Link
+          className={`mobile-tab ${route === "saved" ? "active" : ""}`}
+          href="/saved"
+          aria-label={savedLabel}
+        >
+          <span className="mobile-tab-icon-wrap">
+            {savedCount > 0 && (
+              <span className="mobile-tab-badge mono">{savedCount}</span>
+            )}
+            {Icons.bookmark}
+          </span>
+          <span>내 대회</span>
+        </Link>
+      </nav>
     </header>
   );
 }

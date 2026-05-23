@@ -3,12 +3,14 @@ import {
   ArrowLeft,
   ArrowRight,
   ArrowUpDown,
+  BookOpen,
   Bookmark,
   CalendarDays,
   Check,
   ChevronDown,
   ChevronUp,
   ExternalLink,
+  Home,
   Paperclip,
   List,
   MapPin,
@@ -27,9 +29,11 @@ const iconProps = {
 } as const;
 
 export const Icons = {
+  home: <Home {...iconProps} />,
   search: <Search {...iconProps} />,
   bookmark: <Bookmark {...iconProps} />,
   bookmarkFilled: <Bookmark {...iconProps} fill="currentColor" />,
+  book: <BookOpen {...iconProps} />,
   arrow: <ArrowRight {...iconProps} />,
   arrowDown: <ArrowDown {...iconProps} />,
   arrowLeft: <ArrowLeft {...iconProps} />,
