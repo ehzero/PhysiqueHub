@@ -44,7 +44,7 @@ export default function Image() {
             />
             <span style={{ fontWeight: 700 }}>{SITE_NAME}</span>
           </div>
-          <span style={{ color: "#6b665b" }}>SEASON 2026</span>
+          <span style={{ color: "#6b665b" }}>SCHEDULE HUB</span>
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>

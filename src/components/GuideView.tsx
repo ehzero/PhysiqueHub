@@ -1,62 +1,39 @@
-"use client";
-
+import Link from "next/link";
 import { CATEGORY_GUIDE } from "@/lib/data";
 import { Icons } from "./Icons";
+import { PageHeader, PageMain, PageSection } from "./PageLayout";
 
-interface GuideViewProps {
-  setRoute: (r: string) => void;
-}
-
-export function GuideView({ setRoute }: GuideViewProps) {
+export function GuideView() {
   return (
-    <main>
-      <section className="page-head">
-        <div className="container">
-          <h1 className="page-title" style={{ maxWidth: 560 }}>
-            종목 가이드
-          </h1>
-          <p className="page-subtitle">종목별 평가 기준과 준비 포인트를 확인하세요.</p>
+    <PageMain>
+      <PageHeader
+        title="종목 가이드"
+        subtitle="종목별 평가 기준과 준비 포인트를 확인하세요."
+        titleClassName="page-title-narrow"
+      />
+      <PageSection>
+        <ol className="guide-list">
+          {CATEGORY_GUIDE.map((g, i) => (
+            <li key={g.key} className="guide-item">
+              <span className="mono guide-num">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <div>
+                <h3 className="guide-title">{g.key}</h3>
+                <p className="guide-desc">{g.desc}</p>
+              </div>
+              <span className="pick-tag guide-level">
+                {g.level}
+              </span>
+            </li>
+          ))}
+        </ol>
+        <div className="guide-actions">
+          <Link className="cta-btn accent" href="/competitions">
+            내 종목 대회 찾아보기 {Icons.arrow}
+          </Link>
         </div>
-      </section>
-      <section className="section">
-        <div className="container">
-          <ol style={{ display: "grid", gap: 0 }}>
-            {CATEGORY_GUIDE.map((g, i) => (
-              <li
-                key={g.key}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "60px 1fr 160px",
-                  gap: 24,
-                  padding: "32px 0",
-                  borderBottom: "1px solid var(--line-soft)",
-                  alignItems: "start",
-                }}
-              >
-                <span className="mono" style={{ fontSize: 14, color: "var(--ink-3)", paddingTop: 8 }}>
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <div>
-                  <h3 style={{ fontSize: 28, fontWeight: 700, letterSpacing: "-0.02em", marginBottom: 8 }}>
-                    {g.key}
-                  </h3>
-                  <p style={{ fontSize: 15, color: "var(--ink-2)", lineHeight: 1.55, maxWidth: 640 }}>
-                    {g.desc}
-                  </p>
-                </div>
-                <span className="pick-tag" style={{ justifySelf: "end", whiteSpace: "nowrap" }}>
-                  {g.level}
-                </span>
-              </li>
-            ))}
-          </ol>
-          <div style={{ marginTop: 48, textAlign: "center" }}>
-            <button className="cta-btn accent" onClick={() => setRoute("list")}>
-              내 종목 대회 찾아보기 {Icons.arrow}
-            </button>
-          </div>
-        </div>
-      </section>
-    </main>
+      </PageSection>
+    </PageMain>
   );
 }

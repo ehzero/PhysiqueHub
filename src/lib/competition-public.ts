@@ -1,6 +1,6 @@
 import type { Competition } from "@/lib/data";
 
-interface ApiCompetitionListResponse {
+export interface ApiCompetitionListResponse {
   items: ApiCompetitionListItem[];
   total: number;
   page: number;
@@ -9,7 +9,7 @@ interface ApiCompetitionListResponse {
   hasNextPage: boolean;
 }
 
-interface ApiCompetitionFiltersResponse {
+export interface ApiCompetitionFiltersResponse {
   seasonYear: number;
   organizations: CompetitionFilterOrganization[];
   regions: CompetitionFilterCount[];
@@ -37,14 +37,14 @@ interface ApiCompetitionFiltersResponse {
   };
 }
 
-export interface CompetitionFilterOrganization {
+interface CompetitionFilterOrganization {
   id: string;
   name: string;
-  shortName?: string;
+  shortName?: string | null;
   count: number;
 }
 
-export interface CompetitionFilterCount {
+interface CompetitionFilterCount {
   name: string;
   count: number;
 }
@@ -60,7 +60,7 @@ export interface CompetitionListPage {
   hasNextPage: boolean;
 }
 
-export type CompetitionSortOption =
+type CompetitionSortOption =
   | "date-asc"
   | "date-desc"
   | "deadline-asc"
@@ -84,41 +84,42 @@ interface ApiCompetitionListItem {
   id: string;
   organizationId: string;
   organizationName: string;
-  organizationShortName?: string;
+  organizationShortName?: string | null;
   title: string;
-  seasonYear?: number;
+  seasonYear?: number | null;
   date: {
-    startsOn?: string;
-    endsOn?: string;
+    startsOn?: string | null;
+    endsOn?: string | null;
     timezone?: string;
   };
   registration: {
-    opensAt?: string;
-    closesAt?: string;
+    opensAt?: string | null;
+    closesAt?: string | null;
     status: string;
-    registrationUrl?: string;
+    registrationUrl?: string | null;
     fee?: {
       currency?: string;
-      minAmount?: number;
-      maxAmount?: number;
+      minAmount?: number | null;
+      maxAmount?: number | null;
     };
   };
   location: {
     country: string;
-    region?: string;
-    city?: string;
-    venue?: string;
+    region?: string | null;
+    city?: string | null;
+    venue?: string | null;
   };
   divisions: Array<{
     name?: string;
     group?: string;
   }>;
-  tags: string[];
+  tags: unknown[];
   flags: Record<string, unknown>;
   source: {
     sourceUrl: string;
-    detailUrl?: string;
+    detailUrl?: string | null;
   };
+  updatedAt?: string | null;
 }
 
 const POSTER_THEMES: Competition["poster"][] = [
@@ -130,96 +131,7 @@ const POSTER_THEMES: Competition["poster"][] = [
   "lime",
 ];
 
-export async function fetchCompetitionList(
-  seasonYear: number,
-  options: CompetitionPageOptions = {},
-): Promise<Competition[]> {
-  const page = await fetchCompetitionPage(seasonYear, {
-    ...options,
-    page: 1,
-    pageSize: 500,
-  });
-
-  return page.items;
-}
-
-export async function fetchCompetitionPage(
-  seasonYear: number,
-  options: CompetitionPageOptions = {},
-): Promise<CompetitionListPage> {
-  const params = new URLSearchParams({
-    seasonYear: String(seasonYear),
-    page: String(options.page ?? 1),
-    pageSize: String(options.pageSize ?? 10),
-    sort: options.sort ?? "date-asc",
-  });
-
-  if (options.startsFrom) {
-    params.set("startsFrom", options.startsFrom);
-  }
-  if (options.organizationId) {
-    params.set("organizationId", options.organizationId);
-  }
-  if (options.registrationStatus) {
-    params.set(
-      "registrationStatus",
-      Array.isArray(options.registrationStatus)
-        ? options.registrationStatus.join(",")
-        : options.registrationStatus,
-    );
-  }
-  if (options.beginnerAny !== undefined) {
-    params.set("beginnerAny", String(options.beginnerAny));
-  }
-  if (options.natural !== undefined) {
-    params.set("natural", String(options.natural));
-  }
-  if (options.regional !== undefined) {
-    params.set("regional", String(options.regional));
-  }
-  if (options.proPath !== undefined) {
-    params.set("proPath", String(options.proPath));
-  }
-  if (options.internationalRoute !== undefined) {
-    params.set("internationalRoute", String(options.internationalRoute));
-  }
-
-  const response = await fetch(`/api/competitions?${params.toString()}`);
-
-  if (!response.ok) {
-    throw new Error("대회 목록을 불러오지 못했습니다.");
-  }
-
-  const payload = (await response.json()) as ApiCompetitionListResponse;
-
-  return {
-    ...payload,
-    items: payload.items.map(toCompetition),
-  };
-}
-
-export async function fetchCompetitionFilters(
-  seasonYear: number,
-  options: { startsFrom?: string } = {},
-): Promise<CompetitionFilterOptions> {
-  const params = new URLSearchParams({
-    seasonYear: String(seasonYear),
-  });
-
-  if (options.startsFrom) {
-    params.set("startsFrom", options.startsFrom);
-  }
-
-  const response = await fetch(`/api/competition-filters?${params.toString()}`);
-
-  if (!response.ok) {
-    throw new Error("대회 필터를 불러오지 못했습니다.");
-  }
-
-  return (await response.json()) as ApiCompetitionFiltersResponse;
-}
-
-function toCompetition(item: ApiCompetitionListItem): Competition {
+export function toCompetition(item: ApiCompetitionListItem): Competition {
   const categories = getCategories(item);
   const startsOn = item.date.startsOn ?? `${item.seasonYear ?? new Date().getFullYear()}-12-31`;
   const closesOn = toDateOnly(item.registration.closesAt) ?? startsOn;
@@ -233,12 +145,13 @@ function toCompetition(item: ApiCompetitionListItem): Competition {
     org: item.organizationName,
     orgShort,
     date: startsOn,
-    dateEnd: item.date.endsOn,
+    dateEnd: item.date.endsOn ?? undefined,
     regOpen: opensOn,
     regClose: closesOn,
     registrationStatus: item.registration.status,
-    registrationUrl: item.registration.registrationUrl ?? item.source.detailUrl,
-    sourceUrl: item.source.detailUrl ?? item.source.sourceUrl,
+    registrationUrl: item.registration.registrationUrl ?? item.source.detailUrl ?? undefined,
+    sourceUrl: item.source.detailUrl ?? item.source.sourceUrl ?? undefined,
+    updatedAt: item.updatedAt ?? undefined,
     region: item.location.region ?? item.location.city ?? item.location.country,
     venue: item.location.venue ?? "장소 확인 필요",
     categories,
@@ -268,11 +181,13 @@ function getCategories(item: ApiCompetitionListItem): string[] {
     return Array.from(new Set(divisionNames));
   }
 
-  return item.tags.slice(0, 6);
+  return item.tags
+    .filter((tag): tag is string => typeof tag === "string")
+    .slice(0, 6);
 }
 
 function getTags(item: ApiCompetitionListItem): string[] {
-  const tags = [...item.tags];
+  const tags = item.tags.filter((tag): tag is string => typeof tag === "string");
 
   if (item.flags.natural === true) {
     tags.push("내추럴");
@@ -292,7 +207,11 @@ function isRegional(item: ApiCompetitionListItem): boolean {
     return true;
   }
 
-  return /리저널|regional/i.test([item.title, ...item.tags].join(" "));
+  const tags = item.tags
+    .filter((tag): tag is string => typeof tag === "string")
+    .join(" ");
+
+  return /리저널|regional/i.test(`${item.title} ${tags}`);
 }
 
 function getScale(item: ApiCompetitionListItem): Competition["scale"] {
@@ -307,7 +226,7 @@ function getScale(item: ApiCompetitionListItem): Competition["scale"] {
   return "소형";
 }
 
-function toDateOnly(value: string | undefined): string | undefined {
+function toDateOnly(value: string | null | undefined): string | undefined {
   return value?.slice(0, 10);
 }
 

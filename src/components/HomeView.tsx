@@ -1,19 +1,21 @@
 "use client";
 
-import { useState } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import Link from "next/link";
+import { useMemo, useState } from "react";
 import {
   Competition,
   fmtDate,
+  parseDate,
+  regStatusAt,
 } from "@/lib/data";
 import { FeatCard } from "./FeatCard";
 import { CompRow } from "./CompRow";
 import { Icons } from "./Icons";
+import { EmptyState, PageMain, PageSection } from "./PageLayout";
 import {
-  fetchCompetitionPage,
   type CompetitionFilterOptions,
-  type CompetitionPageOptions,
-} from "@/lib/competition-client";
+  type CompetitionListPage,
+} from "@/lib/competition-public";
 
 const DOWS = ["일", "월", "화", "수", "목", "금", "토"];
 
@@ -23,26 +25,29 @@ const SORT_OPTIONS = [
   { value: "updated", label: "최근 업데이트 순" },
 ];
 
+type HomeChip = {
+  id: string | null;
+  label: string;
+  n: number;
+  title?: string;
+};
+
 interface HomeViewProps {
   seasonYear: number;
-  startsFrom: string;
-  beginnerComps: Competition[];
+  initialCompetitionPage: CompetitionListPage;
   saved: string[];
   toggleSave: (id: string) => void;
   openComp: (c: Competition) => void;
-  setRoute: (r: string) => void;
   filterOptions?: CompetitionFilterOptions;
-  today: Date;
+  today: Date | null;
 }
 
 export function HomeView({
   seasonYear,
-  startsFrom,
-  beginnerComps,
+  initialCompetitionPage,
   saved,
   toggleSave,
   openComp,
-  setRoute,
   filterOptions,
   today,
 }: HomeViewProps) {
@@ -52,6 +57,7 @@ export function HomeView({
   );
   const [sortBy, setSortBy] = useState("date");
   const [sortOpen, setSortOpen] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(10);
 
   const counts = {
     all: filterOptions ? sumCounts(filterOptions.organizations) : 0,
@@ -64,34 +70,43 @@ export function HomeView({
       filterOptions?.flags.internationalRoute ?? 0,
   };
 
-  const queryOptions = getHomeQueryOptions({
-    activeOrganizationId,
-    activePreset,
-    sortBy,
-    startsFrom,
-  });
-  const {
-    data: homeCompetitionPages,
-    fetchNextPage,
-    hasNextPage,
-    isLoading: isLoadingPage,
-    isFetchingNextPage,
-  } = useInfiniteQuery({
-    queryKey: ["home-competitions", seasonYear, queryOptions],
-    queryFn: ({ pageParam }) =>
-      fetchCompetitionPage(seasonYear, {
-        ...queryOptions,
-        page: pageParam,
-        pageSize: 10,
-      }),
-    initialPageParam: 1,
-    getNextPageParam: (lastPage) =>
-      lastPage.hasNextPage ? lastPage.page + 1 : undefined,
-  });
+  const activeOrganizationName = filterOptions?.organizations.find(
+    (organization) => organization.id === activeOrganizationId,
+  )?.name;
+  const fullFeed = useMemo(
+    () =>
+      sortCompetitions(
+        initialCompetitionPage.items.filter((competition) =>
+          matchesHomeFilter({
+            competition,
+            activeOrganizationName,
+            activePreset,
+            today,
+          }),
+        ),
+        sortBy,
+      ),
+    [
+      activeOrganizationName,
+      activePreset,
+      initialCompetitionPage.items,
+      sortBy,
+      today,
+    ],
+  );
 
-  const feed = homeCompetitionPages?.pages.flatMap((page) => page.items) ?? [];
+  const feed = fullFeed.slice(0, visibleCount);
   const featured = feed.slice(0, 3);
   const restList = feed.slice(3);
+  const hasMore = visibleCount < fullFeed.length;
+  const beginnerComps = useMemo(
+    () =>
+      sortCompetitions(
+        initialCompetitionPage.items.filter((competition) => competition.beginner),
+        "date",
+      ).slice(0, 5),
+    [initialCompetitionPage.items],
+  );
 
   const organizationFilters = filterOptions
     ? [
@@ -110,7 +125,9 @@ export function HomeView({
       ]
     : [{ id: null, label: "전체 단체", n: 0, title: "전체 단체" }];
 
-  const dateLine = `${today.getFullYear()}.${String(today.getMonth() + 1).padStart(2, "0")}.${String(today.getDate()).padStart(2, "0")} (${DOWS[today.getDay()]})`;
+  const dateLine = today
+    ? `${today.getFullYear()}.${String(today.getMonth() + 1).padStart(2, "0")}.${String(today.getDate()).padStart(2, "0")} (${DOWS[today.getDay()]})`
+    : "";
 
   const presets = [
     { id: "all", label: "전체", n: counts.all },
@@ -142,7 +159,7 @@ export function HomeView({
     }[activePreset] || "전체";
   const isAllOrganization = !activeOrganizationId;
   const isAllCategory = activePreset === "all";
-  const activeOrganizationName = organizationFilters.find(
+  const displayOrganizationName = organizationFilters.find(
     (organization) => organization.id === activeOrganizationId,
   )?.title ?? activeOrganizationId ?? "전체 단체";
   const feedTitle = isAllOrganization
@@ -150,224 +167,275 @@ export function HomeView({
       ? "전체 대회"
       : feedLabel
     : isAllCategory
-      ? activeOrganizationName
-      : `${activeOrganizationName} · ${feedLabel}`;
+      ? displayOrganizationName
+      : `${displayOrganizationName} · ${feedLabel}`;
   const sortLabel = SORT_OPTIONS.find(
     (option) => option.value === sortBy,
   )?.label;
-  const feedCount = homeCompetitionPages?.pages[0]?.total ?? 0;
+  const feedCount = fullFeed.length;
 
   return (
-    <main className="home-main">
-      {/* Dashboard top bar */}
-      <section className="dash-bar">
-        <div className="container">
-          <div className="dash-row">
-            <div className="dash-meta">
-              <span className="eyebrow" style={{ color: "var(--ink)" }}>
-                SEASON {today.getFullYear()}
-              </span>
-              <span className="mono dash-date">{dateLine}</span>
-            </div>
+    <PageMain className="home-main">
+      <HomeDashboardBar seasonYear={seasonYear} dateLine={dateLine} />
+      <HomeFilterBars
+        organizationFilters={organizationFilters}
+        presets={presets}
+        activeOrganizationId={activeOrganizationId}
+        activePreset={activePreset}
+        onSelectOrganization={(id) => {
+          setActiveOrganizationId(activeOrganizationId === id ? null : id);
+          setVisibleCount(10);
+        }}
+        onSelectPreset={(id) => {
+          setActivePreset(id);
+          setVisibleCount(10);
+        }}
+      />
+      <HomeFeed
+        feed={feed}
+        featured={featured}
+        restList={restList}
+        feedTitle={feedTitle}
+        feedCount={feedCount}
+        sortBy={sortBy}
+        sortLabel={sortLabel}
+        sortOpen={sortOpen}
+        saved={saved}
+        hasMore={hasMore}
+        today={today}
+        openComp={openComp}
+        toggleSave={toggleSave}
+        setSortOpen={setSortOpen}
+        onSelectSort={(value) => {
+          setSortBy(value);
+          setVisibleCount(10);
+          setSortOpen(false);
+        }}
+        onShowMore={() => setVisibleCount((count) => count + 10)}
+        onResetFilters={() => {
+          setActivePreset("all");
+          setActiveOrganizationId(null);
+        }}
+      />
+      {activePreset !== "beginner" && (
+        <PageSection className="beginner-section">
+          <BeginnerPicks comps={beginnerComps} onOpen={openComp} />
+        </PageSection>
+      )}
+    </PageMain>
+  );
+}
+
+function HomeDashboardBar({
+  seasonYear,
+  dateLine,
+}: {
+  seasonYear: number;
+  dateLine: string;
+}) {
+  return (
+    <section className="dash-bar">
+      <div className="container">
+        <div className="dash-row">
+          <div className="dash-meta">
+            <span className="eyebrow dash-season">SEASON {seasonYear}</span>
+            <span className="mono dash-date">{dateLine}</span>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
+  );
+}
 
-      {/* Preset chip tabs */}
-      <section className="preset-bar">
-        <div className="container">
-          <div className="preset-row">
-            <div className="preset-chips" role="tablist">
-              {organizationFilters.map((organization) => (
-                <button
-                  key={organization.id ?? "all-organizations"}
-                  className={`preset-chip ${activeOrganizationId === organization.id ? "on" : ""}`}
-                  title={organization.title}
-                  onClick={() =>
-                    setActiveOrganizationId(
-                      activeOrganizationId === organization.id
-                        ? null
-                        : organization.id,
-                    )
-                  }
-                >
-                  <span>{organization.label}</span>
-                  <span className="preset-sep" aria-hidden="true">
-                    |
-                  </span>
-                  <span className="preset-cnt mono">{organization.n}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-          <div className="organization-chips">
-            {presets.map((p) => (
+function HomeFilterBars({
+  organizationFilters,
+  presets,
+  activeOrganizationId,
+  activePreset,
+  onSelectOrganization,
+  onSelectPreset,
+}: {
+  organizationFilters: HomeChip[];
+  presets: HomeChip[];
+  activeOrganizationId: string | null;
+  activePreset: string;
+  onSelectOrganization: (id: string | null) => void;
+  onSelectPreset: (id: string) => void;
+}) {
+  return (
+    <section className="preset-bar">
+      <div className="container">
+        <div className="preset-row">
+          <div className="preset-chips" role="tablist">
+            {organizationFilters.map((organization) => (
               <button
-                key={p.id}
-                className={`organization-chip ${activePreset === p.id ? "on" : ""}`}
-                onClick={() => setActivePreset(p.id)}
+                key={organization.id ?? "all-organizations"}
+                className={`preset-chip ${activeOrganizationId === organization.id ? "on" : ""}`}
+                title={organization.title}
+                onClick={() => onSelectOrganization(organization.id)}
               >
-                {p.label} <span className="mono">{p.n}</span>
+                <span>{organization.label}</span>
+                <span className="preset-sep" aria-hidden="true">|</span>
+                <span className="preset-cnt mono">{organization.n}</span>
               </button>
             ))}
+          </div>
+        </div>
+        <div className="organization-chips">
+          {presets.map((preset) => (
+            <button
+              key={preset.id}
+              className={`organization-chip ${activePreset === preset.id ? "on" : ""}`}
+              onClick={() => onSelectPreset(preset.id ?? "all")}
+            >
+              {preset.label} <span className="mono">{preset.n}</span>
+            </button>
+          ))}
+          <Link className="organization-chip" href="/competitions">
+            더보기
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function HomeFeed({
+  feed,
+  featured,
+  restList,
+  feedTitle,
+  feedCount,
+  sortBy,
+  sortLabel,
+  sortOpen,
+  saved,
+  hasMore,
+  today,
+  openComp,
+  toggleSave,
+  setSortOpen,
+  onSelectSort,
+  onShowMore,
+  onResetFilters,
+}: {
+  feed: Competition[];
+  featured: Competition[];
+  restList: Competition[];
+  feedTitle: string;
+  feedCount: number;
+  sortBy: string;
+  sortLabel?: string;
+  sortOpen: boolean;
+  saved: string[];
+  hasMore: boolean;
+  today: Date | null;
+  openComp: (c: Competition) => void;
+  toggleSave: (id: string) => void;
+  setSortOpen: (fn: (open: boolean) => boolean) => void;
+  onSelectSort: (value: string) => void;
+  onShowMore: () => void;
+  onResetFilters: () => void;
+}) {
+  return (
+    <PageSection className="home-feed">
+      <div className="feed-head">
+        <div>
+          <h2 className="page-title feed-h">{feedTitle}</h2>
+          <p className="page-subtitle feed-sub mono">{feedCount} EVENTS</p>
+        </div>
+        <div
+          className="sort-actions"
+          onBlur={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget)) {
+              setSortOpen(() => false);
+            }
+          }}
+        >
+          <div className="sort-menu">
             <button
               type="button"
-              className="organization-chip"
-              onClick={() => setRoute("list")}
+              className="sort-pick"
+              aria-haspopup="listbox"
+              aria-expanded={sortOpen}
+              onClick={() => setSortOpen((open) => !open)}
             >
-              더보기
+              <span className="sort-icon" aria-hidden="true">{Icons.sort}</span>
+              <span className="sort-label">{sortLabel}</span>
+              <span className="sort-chevron">{Icons.chevronDown}</span>
             </button>
+            {sortOpen && (
+              <div className="sort-menu-list" role="listbox">
+                {SORT_OPTIONS.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    className={`sort-option ${sortBy === option.value ? "on" : ""}`}
+                    role="option"
+                    aria-selected={sortBy === option.value}
+                    onClick={() => onSelectSort(option.value)}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* Feed */}
-      <section className="section home-feed">
-        <div className="container">
-          <div className="feed-head">
-            <div>
-              <h2 className="page-title feed-h">{feedTitle}</h2>
-              <p className="page-subtitle feed-sub mono">
-                {feedCount} EVENTS
-              </p>
+      {feed.length === 0 ? (
+        <EmptyState
+          eyebrow="NO RESULTS"
+          title="조건에 맞는 대회가 없습니다."
+          action={
+            <button className="cta-btn" onClick={onResetFilters}>
+              필터 초기화
+            </button>
+          }
+        />
+      ) : (
+        <>
+          {featured.length > 0 && (
+            <div className="feat-grid home-featured-grid">
+              {featured.map((competition) => (
+                <FeatCard
+                  key={competition.id}
+                  comp={competition}
+                  onOpen={openComp}
+                  isSaved={saved.includes(competition.id)}
+                  onToggleSave={toggleSave}
+                  today={today}
+                />
+              ))}
             </div>
-            <div
-              className="sort-actions"
-              onBlur={(event) => {
-                if (!event.currentTarget.contains(event.relatedTarget)) {
-                  setSortOpen(false);
-                }
-              }}
-            >
-              <div className="sort-menu">
-                <button
-                  type="button"
-                  className="sort-pick"
-                  aria-haspopup="listbox"
-                  aria-expanded={sortOpen}
-                  onClick={() => setSortOpen((open) => !open)}
-                >
-                  <span className="sort-icon" aria-hidden="true">
-                    {Icons.sort}
-                  </span>
-                  <span className="sort-label">{sortLabel}</span>
-                  <span className="sort-chevron">{Icons.chevronDown}</span>
-                </button>
-                {sortOpen && (
-                  <div className="sort-menu-list" role="listbox">
-                    {SORT_OPTIONS.map((option) => (
-                      <button
-                        key={option.value}
-                        type="button"
-                        className={`sort-option ${sortBy === option.value ? "on" : ""}`}
-                        role="option"
-                        aria-selected={sortBy === option.value}
-                        onClick={() => {
-                          setSortBy(option.value);
-                          setSortOpen(false);
-                        }}
-                      >
-                        {option.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {feed.length === 0 ? (
-            <div
-              style={{
-                padding: "80px 20px",
-                textAlign: "center",
-                border: "1px dashed var(--line-soft)",
-              }}
-            >
-              <div className="eyebrow" style={{ marginBottom: 12 }}>
-                NO RESULTS
-              </div>
-              <p style={{ fontSize: 18, marginBottom: 16 }}>
-                {isLoadingPage
-                  ? "대회 목록을 불러오는 중입니다."
-                  : "조건에 맞는 대회가 없습니다."}
-              </p>
-              {!isLoadingPage && (
-                <button
-                  className="cta-btn"
-                  onClick={() => {
-                    setActivePreset("all");
-                    setActiveOrganizationId(null);
-                  }}
-                >
-                  필터 초기화
-                </button>
-              )}
-            </div>
-          ) : (
-            <>
-              {featured.length > 0 && (
-                <div className="feat-grid" style={{ marginBottom: 12 }}>
-                  {featured.map((c) => (
-                    <FeatCard
-                      key={c.id}
-                      comp={c}
-                      onOpen={openComp}
-                      isSaved={saved.includes(c.id)}
-                      onToggleSave={toggleSave}
-                      today={today}
-                    />
-                  ))}
-                </div>
-              )}
-              {restList.length > 0 && (
-                <div className="comp-list" style={{ marginTop: 40 }}>
-                  {restList.map((c) => (
-                    <CompRow
-                      key={c.id}
-                      comp={c}
-                      onOpen={openComp}
-                      isSaved={saved.includes(c.id)}
-                      onToggleSave={toggleSave}
-                      today={today}
-                    />
-                  ))}
-                </div>
-              )}
-            </>
           )}
-
-          <div className="home-feed-actions">
-            <button
-              className="cta-btn"
-              disabled={!hasNextPage || isFetchingNextPage}
-              onClick={() => fetchNextPage()}
-            >
-              {isFetchingNextPage
-                ? "불러오는 중"
-                : hasNextPage
-                  ? "10개 더보기"
-                  : "더 불러올 대회 없음"}
-            </button>
-            <button className="cta-btn" onClick={() => setRoute("list")}>
-              전체 목록 보기 {Icons.arrow}
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* Beginner picks */}
-      {activePreset !== "beginner" && (
-        <section
-          className="section"
-          style={{ paddingTop: 64, background: "var(--bg-sub)" }}
-        >
-          <div className="container">
-            <BeginnerPicks comps={beginnerComps} onOpen={openComp} today={today} />
-          </div>
-        </section>
+          {restList.length > 0 && (
+            <div className="comp-list home-rest-list">
+              {restList.map((competition) => (
+                <CompRow
+                  key={competition.id}
+                  comp={competition}
+                  onOpen={openComp}
+                  isSaved={saved.includes(competition.id)}
+                  onToggleSave={toggleSave}
+                  today={today}
+                />
+              ))}
+            </div>
+          )}
+        </>
       )}
-    </main>
+
+      <div className="home-feed-actions">
+        <button className="cta-btn" disabled={!hasMore} onClick={onShowMore}>
+          {hasMore ? "10개 더보기" : "더 불러올 대회 없음"}
+        </button>
+        <Link className="cta-btn" href="/competitions">
+          전체 목록 보기 {Icons.arrow}
+        </Link>
+      </div>
+    </PageSection>
   );
 }
 
@@ -388,46 +456,55 @@ function sumStatusCounts(
     .reduce((total, status) => total + status.count, 0);
 }
 
-function getHomeQueryOptions({
-  activeOrganizationId,
+function matchesHomeFilter({
+  competition,
+  activeOrganizationName,
   activePreset,
-  sortBy,
-  startsFrom,
+  today,
 }: {
-  activeOrganizationId: string | null;
+  competition: Competition;
+  activeOrganizationName?: string;
   activePreset: string;
-  sortBy: string;
-  startsFrom: string;
-}): CompetitionPageOptions {
-  const options: CompetitionPageOptions = {
-    startsFrom,
-    sort:
-      sortBy === "deadline"
-        ? "deadline-asc"
-        : sortBy === "updated"
-          ? "updated-desc"
-          : "date-asc",
-  };
-
-  if (activeOrganizationId) {
-    options.organizationId = activeOrganizationId;
+  today: Date | null;
+}) {
+  if (activeOrganizationName && competition.org !== activeOrganizationName) {
+    return false;
   }
 
   if (activePreset === "open") {
-    options.registrationStatus = ["open", "urgent"];
-  } else if (activePreset === "beginner") {
-    options.beginnerAny = true;
-  } else if (activePreset === "natural") {
-    options.natural = true;
-  } else if (activePreset === "regional") {
-    options.regional = true;
-  } else if (activePreset === "proPath") {
-    options.proPath = true;
-  } else if (activePreset === "internationalRoute") {
-    options.internationalRoute = true;
+    return today
+      ? ["open", "urgent"].includes(regStatusAt(competition, today).kind)
+      : false;
   }
+  if (activePreset === "beginner") return competition.beginner;
+  if (activePreset === "natural") return competition.natural;
+  if (activePreset === "regional") return competition.regional;
+  if (activePreset === "proPath") return competition.proPath;
+  if (activePreset === "internationalRoute") return competition.internationalRoute;
 
-  return options;
+  return true;
+}
+
+function sortCompetitions(competitions: Competition[], sortBy: string) {
+  return [...competitions].sort((a, b) => {
+    if (sortBy === "deadline") {
+      return parseDate(a.regClose).getTime() - parseDate(b.regClose).getTime();
+    }
+    if (sortBy === "updated") {
+      return (
+        getTime(b.updatedAt ?? b.date) - getTime(a.updatedAt ?? a.date) ||
+        parseDate(a.date).getTime() - parseDate(b.date).getTime()
+      );
+    }
+
+    return parseDate(a.date).getTime() - parseDate(b.date).getTime();
+  });
+}
+
+function getTime(value: string) {
+  const parsed = new Date(value).getTime();
+
+  return Number.isNaN(parsed) ? parseDate(value).getTime() : parsed;
 }
 
 function BeginnerPicks({
@@ -436,7 +513,6 @@ function BeginnerPicks({
 }: {
   comps: Competition[];
   onOpen: (c: Competition) => void;
-  today: Date;
 }) {
   return (
     <div className="pick-row">

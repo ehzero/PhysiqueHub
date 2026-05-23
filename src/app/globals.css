@@ -131,6 +131,16 @@ ol {
   line-height: 1;
   margin: 0;
 }
+.page-title-narrow {
+  max-width: 560px;
+}
+.page-title-count {
+  color: var(--ink-4);
+  font-family: var(--mono);
+  font-size: 0.56em;
+  margin-left: 10px;
+  letter-spacing: 0;
+}
 .page-subtitle {
   font-size: 14px;
   color: var(--ink-3);
@@ -147,6 +157,44 @@ ol {
 .page-head {
   padding: 22px 0 18px;
   border-bottom: 1px solid var(--line);
+}
+.page-head-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.page-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.empty-state {
+  padding: 80px 20px;
+  text-align: center;
+  border: 1px dashed var(--line-soft);
+}
+.empty-state.spacious {
+  padding: 120px 20px;
+}
+.empty-state-eyebrow {
+  margin-bottom: 12px;
+}
+.empty-state-title {
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+.empty-state.spacious .empty-state-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.empty-state-description {
+  font-size: 14px;
+  color: var(--ink-3);
+  margin-bottom: 24px;
 }
 
 /* ── Layout primitives ── */
@@ -185,7 +233,7 @@ ol {
 .brand {
   font-weight: 900;
   font-size: 18px;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -193,18 +241,14 @@ ol {
 .brand-mark {
   width: 22px;
   height: 22px;
-  background: var(--ink);
-  position: relative;
+  object-fit: cover;
+  display: block;
   flex-shrink: 0;
 }
-.brand-mark::after {
-  content: "";
-  position: absolute;
-  inset: 4px;
-  background: var(--accent);
-}
-.brand-divider {
+.nav-divider {
+  display: inline-block;
   width: 1px;
+  min-width: 1px;
   height: 22px;
   background: var(--line-soft);
   flex-shrink: 0;
@@ -1089,6 +1133,12 @@ ol {
 .home-feed .feat-grid {
   gap: 20px;
 }
+.home-featured-grid {
+  margin-bottom: 12px;
+}
+.home-rest-list {
+  margin-top: 40px;
+}
 .home-feed .feat-poster {
   aspect-ratio: 16 / 9;
 }
@@ -1542,6 +1592,12 @@ ol {
   color: var(--ink-2);
   transition: color 0.15s;
 }
+.filter-reset {
+  justify-content: center;
+  padding: 12px;
+  border: 1px solid var(--line-soft);
+  color: var(--ink-3);
+}
 .filter-opt:hover {
   color: var(--ink);
 }
@@ -1577,6 +1633,49 @@ ol {
   color: var(--ink-4);
 }
 
+/* ── Guide ── */
+.guide-list {
+  display: grid;
+  gap: 0;
+}
+.guide-item {
+  display: grid;
+  grid-template-columns: 60px 1fr 160px;
+  gap: 24px;
+  padding: 32px 0;
+  border-bottom: 1px solid var(--line-soft);
+  align-items: start;
+}
+.guide-num {
+  font-size: 14px;
+  color: var(--ink-3);
+  padding-top: 8px;
+}
+.guide-title {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+.guide-desc {
+  font-size: 15px;
+  color: var(--ink-2);
+  line-height: 1.55;
+  max-width: 640px;
+}
+.guide-level {
+  justify-self: end;
+  white-space: nowrap;
+}
+.guide-actions {
+  margin-top: 48px;
+  text-align: center;
+}
+.beginner-section {
+  padding-top: 64px;
+  background: var(--bg-sub);
+}
+
 /* ── Dashboard bar ── */
 .dash-bar {
   border-bottom: 1px solid var(--line-soft);
@@ -1594,6 +1693,9 @@ ol {
   display: flex;
   align-items: center;
   gap: 16px;
+}
+.dash-season {
+  color: var(--ink);
 }
 .dash-date {
   font-size: 13px;
@@ -1840,6 +1942,16 @@ ol {
   gap: 8px;
   font-size: 13px;
 }
+.foot-contact {
+  min-width: 180px;
+}
+.foot-link-btn {
+  color: var(--ink-4);
+  transition: color 0.15s;
+}
+.foot-link-btn:hover {
+  color: var(--bg);
+}
 .foot-bottom {
   display: flex;
   justify-content: space-between;
@@ -2053,7 +2165,7 @@ ol {
   .static-nav .nav-menu {
     display: none;
   }
-  .brand-divider,
+  .nav-divider,
   .brand-tagline {
     display: none;
   }

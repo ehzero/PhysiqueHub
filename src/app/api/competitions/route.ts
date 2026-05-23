@@ -1,33 +1,17 @@
-import { prisma } from "@/lib/prisma";
 import {
-  buildCompetitionWhere,
-  getCompetitionOrderBy,
-  normalizePageMeta,
   parseCompetitionListQuery,
-  serializePublicCompetitionListItem,
 } from "@/lib/competition-api";
+import { getCompetitionListPayload } from "@/lib/competition-server";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const query = parseCompetitionListQuery(url.searchParams);
-  const where = buildCompetitionWhere(query);
-  const skip = (query.page - 1) * query.pageSize;
-
-  const [items, total] = await Promise.all([
-    prisma.competitionSchedule.findMany({
-      where,
-      orderBy: getCompetitionOrderBy(query.sort),
-      skip,
-      take: query.pageSize,
-    }),
-    prisma.competitionSchedule.count({ where }),
-  ]);
+  const payload = await getCompetitionListPayload(query);
 
   return Response.json({
-    items: items.map(serializePublicCompetitionListItem),
-    ...normalizePageMeta(query.page, query.pageSize, total),
+    ...payload,
     filters: {
       seasonYear: query.seasonYear,
       organizationIds: query.organizationIds,

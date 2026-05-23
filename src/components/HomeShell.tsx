@@ -1,0 +1,53 @@
+"use client";
+
+import { parseDate } from "@/lib/data";
+import { useCompetitionDrawer } from "@/hooks/use-competition-drawer";
+import { useClientToday } from "@/hooks/use-client-today";
+import { useSiteShell } from "@/components/SiteShell";
+import type {
+  CompetitionFilterOptions,
+  CompetitionListPage,
+} from "@/lib/competition-public";
+import { HomeView } from "@/components/HomeView";
+import { CompDrawer } from "@/components/CompDrawer";
+
+interface HomeShellProps {
+  seasonYear: number;
+  initialCompetitionPage: CompetitionListPage;
+  initialFilterOptions: CompetitionFilterOptions;
+}
+
+export function HomeShell({
+  seasonYear,
+  initialCompetitionPage,
+  initialFilterOptions,
+}: HomeShellProps) {
+  const today = useClientToday();
+  const { saved, toggleSave } = useSiteShell();
+  const { openedComp, drawerOpen, openComp, closeDrawer } =
+    useCompetitionDrawer({ closePath: "/" });
+  const drawerToday = today ?? parseDate(`${seasonYear}-01-01`);
+
+  return (
+    <>
+      <HomeView
+        seasonYear={seasonYear}
+        initialCompetitionPage={initialCompetitionPage}
+        saved={saved}
+        toggleSave={toggleSave}
+        openComp={openComp}
+        filterOptions={initialFilterOptions}
+        today={today}
+      />
+
+      <CompDrawer
+        comp={openedComp}
+        isOpen={drawerOpen}
+        onClose={closeDrawer}
+        isSaved={openedComp ? saved.includes(openedComp.id) : false}
+        onToggleSave={toggleSave}
+        today={drawerToday}
+      />
+    </>
+  );
+}

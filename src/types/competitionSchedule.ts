@@ -178,16 +178,3 @@ export type CompetitionScheduleDraft = Omit<
   createdAt?: string;
   updatedAt?: string;
 };
-
-export interface CompetitionSourceProgress {
-  organizationId: CompetitionOrganizationId;
-  organizationName: string;
-  status: CompetitionCrawlStatus;
-  sourceConfirmed: boolean;
-  parserImplemented: boolean;
-  sampleCollected: boolean;
-  reviewed: boolean;
-  sourceUrls: string[];
-  note?: string;
-  updatedAt?: string;
-}

@@ -3,9 +3,13 @@ import { SUPPORT_EMAIL } from "@/lib/site";
 
 interface FootProps {
   seasonYear?: number;
+  onOpenContact?: () => void;
 }
 
-export function Foot({ seasonYear = new Date().getFullYear() }: FootProps) {
+export function Foot({
+  seasonYear = new Date().getFullYear(),
+  onOpenContact,
+}: FootProps) {
   return (
     <footer className="foot">
       <div className="container">
@@ -47,13 +51,29 @@ export function Foot({ seasonYear = new Date().getFullYear() }: FootProps) {
                 </li>
               </ul>
             </div>
+            <div className="foot-col foot-contact">
+              <h5>CONTACT</h5>
+              <ul>
+                {onOpenContact && (
+                  <li>
+                    <button
+                      className="foot-link-btn"
+                      type="button"
+                      onClick={onOpenContact}
+                    >
+                      문의하기
+                    </button>
+                  </li>
+                )}
+                <li>
+                  <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
         <div className="foot-bottom">
-          <span>
-            © {seasonYear} PhysiqueHub ·{" "}
-            <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
-          </span>
+          <span>© {seasonYear} PhysiqueHub</span>
           <span>v{packageJson.version} BETA</span>
         </div>
       </div>

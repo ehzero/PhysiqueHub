@@ -1,11 +1,12 @@
-import type { Metadata } from "next";
 import { StaticPageShell } from "@/components/StaticPageShell";
-import { SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
+import { createPageMetadata } from "@/lib/metadata";
+import { SITE_DESCRIPTION } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: `서비스 소개 | ${SITE_NAME}`,
+export const metadata = createPageMetadata({
+  title: "서비스 소개",
   description: SITE_DESCRIPTION,
-};
+  path: "/about",
+});
 
 export default function AboutPage() {
   return (

@@ -1,0 +1,77 @@
+"use client";
+
+import { createContext, useContext, useMemo, useState } from "react";
+import { usePathname } from "next/navigation";
+import { useSavedCompetitions } from "@/hooks/use-saved-competitions";
+import { Nav } from "@/components/Nav";
+import { Foot } from "@/components/Foot";
+import { ContactDrawer } from "@/components/ContactDrawer";
+
+interface SiteShellContextValue {
+  saved: string[];
+  toggleSave: (id: string) => void;
+}
+
+const SiteShellContext = createContext<SiteShellContextValue | null>(null);
+
+interface SiteShellProps {
+  seasonYear: number;
+  children: React.ReactNode;
+}
+
+export function SiteShell({ seasonYear, children }: SiteShellProps) {
+  const pathname = usePathname();
+  const [contactOpen, setContactOpen] = useState(false);
+  const { saved, toggleSave } = useSavedCompetitions();
+
+  const value = useMemo<SiteShellContextValue>(
+    () => ({
+      saved,
+      toggleSave,
+    }),
+    [saved, toggleSave],
+  );
+
+  return (
+    <SiteShellContext.Provider value={value}>
+      <div className="shell">
+        <Nav
+          route={getActiveRoute(pathname)}
+          savedCount={saved.length}
+          onOpenContact={() => setContactOpen(true)}
+        />
+
+        {children}
+
+        <Foot
+          seasonYear={seasonYear}
+          onOpenContact={() => setContactOpen(true)}
+        />
+
+        <ContactDrawer
+          isOpen={contactOpen}
+          onClose={() => setContactOpen(false)}
+        />
+      </div>
+    </SiteShellContext.Provider>
+  );
+}
+
+export function useSiteShell() {
+  const value = useContext(SiteShellContext);
+
+  if (!value) {
+    throw new Error("useSiteShell must be used inside SiteShell.");
+  }
+
+  return value;
+}
+
+function getActiveRoute(pathname: string | null) {
+  if (pathname === "/") return "home";
+  if (pathname?.startsWith("/competitions")) return "list";
+  if (pathname === "/guide") return "guide";
+  if (pathname === "/saved") return "saved";
+
+  return "";
+}

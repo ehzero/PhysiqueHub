@@ -1,12 +1,13 @@
-import type { Metadata } from "next";
 import { StaticPageShell } from "@/components/StaticPageShell";
-import { SITE_NAME, SUPPORT_EMAIL } from "@/lib/site";
+import { createPageMetadata } from "@/lib/metadata";
+import { SUPPORT_EMAIL } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: `이용약관 | ${SITE_NAME}`,
+export const metadata = createPageMetadata({
+  title: "이용약관",
   description:
     "PhysiqueHub 서비스 이용 조건, 정보 제공 범위, 이용자 의무, 면책 사항을 안내합니다.",
-};
+  path: "/terms",
+});
 
 export default function TermsPage() {
   return (

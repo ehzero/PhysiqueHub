@@ -1,9 +1,9 @@
 import type { Prisma, CompetitionSchedule } from "@prisma/client";
 
-export const DEFAULT_COMPETITION_PAGE_SIZE = 20;
-export const MAX_COMPETITION_PAGE_SIZE = 500;
+const DEFAULT_COMPETITION_PAGE_SIZE = 20;
+const MAX_COMPETITION_PAGE_SIZE = 500;
 
-export type CompetitionSort =
+type CompetitionSort =
   | "date-asc"
   | "date-desc"
   | "deadline-asc"
@@ -188,112 +188,6 @@ export function getCompetitionOrderBy(
     default:
       return [{ dateStartsOn: "asc" }, { title: "asc" }];
   }
-}
-
-export function serializeCompetition(record: CompetitionSchedule) {
-  return {
-    id: record.id,
-    organizationId: record.organizationId,
-    organizationName: record.organizationName,
-    organizationShortName: record.organizationShortName,
-    title: record.title,
-    subtitle: record.subtitle,
-    aliases: parseJsonArray(record.aliasesJson),
-    seasonYear: record.seasonYear,
-    date: {
-      startsOn: toKoreaDateString(record.dateStartsOn),
-      endsOn: toKoreaDateString(record.dateEndsOn),
-      timezone: record.dateTimezone,
-      rawText: record.dateRawText,
-      confidence: record.dateConfidence,
-    },
-    registration: {
-      opensAt: toIsoString(record.registrationOpensAt),
-      closesAt: toIsoString(record.registrationClosesAt),
-      status: record.registrationStatus,
-      registrationUrl: record.registrationUrl,
-      rawText: record.registrationRawText,
-      confidence: record.registrationConfidence,
-      fee: {
-        currency: record.feeCurrency,
-        minAmount: record.feeMinAmount,
-        maxAmount: record.feeMaxAmount,
-        rawText: record.feeRawText,
-      },
-    },
-    location: {
-      country: record.country,
-      region: record.region,
-      city: record.city,
-      venue: record.venue,
-      address: record.address,
-      rawText: record.locationRawText,
-      confidence: record.locationConfidence,
-    },
-    divisions: parseJsonArray(record.divisionsJson),
-    tags: parseJsonArray(record.tagsJson),
-    flags: parseJsonObject(record.flagsJson),
-    media: {
-      posterImageUrl: record.posterImageUrl,
-      thumbnailUrl: record.thumbnailUrl,
-      imageSourceUrl: record.imageSourceUrl,
-    },
-    source: {
-      sourceType: record.sourceType,
-      sourceUrl: record.sourceUrl,
-      canonicalUrl: record.canonicalUrl,
-      detailUrl: record.detailUrl,
-      sourceEventId: record.sourceEventId,
-      sourceUpdatedAt: toIsoString(record.sourceUpdatedAt),
-      fetchedAt: toIsoString(record.fetchedAt),
-      parserName: record.parserName,
-      parserVersion: record.parserVersion,
-      rawHash: record.rawHash,
-      rawTitle: record.rawTitle,
-      rawDateText: record.rawDateText,
-      rawLocationText: record.rawLocationText,
-      rawRegistrationText: record.rawRegistrationText,
-    },
-    crawlStatus: record.crawlStatus,
-    reviewStatus: record.reviewStatus,
-    confidence: record.confidence,
-    qualityIssues: parseJsonArray(record.qualityIssuesJson),
-    notes: record.notes,
-    createdAt: toIsoString(record.createdAt),
-    updatedAt: toIsoString(record.updatedAt),
-    normalizedAt: toIsoString(record.normalizedAt),
-  };
-}
-
-export function serializeCompetitionListItem(record: CompetitionSchedule) {
-  const full = serializeCompetition(record);
-
-  return {
-    id: full.id,
-    organizationId: full.organizationId,
-    organizationName: full.organizationName,
-    organizationShortName: full.organizationShortName,
-    title: full.title,
-    seasonYear: full.seasonYear,
-    date: full.date,
-    registration: full.registration,
-    location: full.location,
-    divisions: full.divisions,
-    tags: full.tags,
-    flags: full.flags,
-    media: full.media,
-    crawlStatus: full.crawlStatus,
-    reviewStatus: full.reviewStatus,
-    confidence: full.confidence,
-    qualityIssues: full.qualityIssues,
-    source: {
-      sourceType: full.source.sourceType,
-      sourceUrl: full.source.sourceUrl,
-      detailUrl: full.source.detailUrl,
-      fetchedAt: full.source.fetchedAt,
-    },
-    updatedAt: full.updatedAt,
-  };
 }
 
 export function serializePublicCompetition(record: CompetitionSchedule) {

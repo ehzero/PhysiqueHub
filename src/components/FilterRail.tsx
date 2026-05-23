@@ -4,34 +4,14 @@ import {
   Competition,
   Filters,
 } from "@/lib/data";
-import type { CompetitionFilterOptions } from "@/lib/competition-client";
-import { Icons } from "./Icons";
+import type { CompetitionFilterOptions } from "@/lib/competition-public";
+import { FilterOption } from "./FilterOption";
 
 interface FilterRailProps {
   filters: Filters;
   setFilters: (fn: (f: Filters) => Filters) => void;
   allComps: Competition[];
   filterOptions?: CompetitionFilterOptions;
-}
-
-function FilterOption({
-  on,
-  onClick,
-  children,
-  count,
-}: {
-  on: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-  count?: number;
-}) {
-  return (
-    <button className={`filter-opt ${on ? "on" : ""}`} onClick={onClick}>
-      <span className="check">{Icons.check}</span>
-      <span>{children}</span>
-      {count !== undefined && <span className="cnt">{count}</span>}
-    </button>
-  );
 }
 
 export function FilterRail({
@@ -63,20 +43,6 @@ export function FilterRail({
 
   return (
     <aside className="filter-rail">
-      <div className="filter-group">
-        <h4>표시 범위</h4>
-        <div className="filter-options">
-          <FilterOption
-            on={!!filters.showPast}
-            onClick={() =>
-              setFilters((f) => ({ ...f, showPast: !f.showPast }))
-            }
-          >
-            지난 대회 표시
-          </FilterOption>
-        </div>
-      </div>
-
       <div className="filter-group">
         <h4>주최 단체 <span className="cnt">{orgs.length}</span></h4>
         <div className="filter-options">
@@ -155,9 +121,8 @@ export function FilterRail({
       </div>
 
       <button
-        className="filter-opt"
+        className="filter-opt filter-reset"
         onClick={() => setFilters(() => ({}))}
-        style={{ justifyContent: "center", padding: "12px", border: "1px solid var(--line-soft)", color: "var(--ink-3)" }}
       >
         필터 초기화
       </button>

@@ -1,12 +1,13 @@
-import type { Metadata } from "next";
 import { StaticPageShell } from "@/components/StaticPageShell";
-import { SITE_NAME, SUPPORT_EMAIL } from "@/lib/site";
+import { createPageMetadata } from "@/lib/metadata";
+import { SUPPORT_EMAIL } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: `개인정보 처리방침 | ${SITE_NAME}`,
+export const metadata = createPageMetadata({
+  title: "개인정보 처리방침",
   description:
     "PhysiqueHub가 처리하는 개인정보 항목, 이용 목적, 보관 기간, 이용자 권리를 안내합니다.",
-};
+  path: "/privacy",
+});
 
 export default function PrivacyPage() {
   return (

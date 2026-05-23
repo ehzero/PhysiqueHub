@@ -5,13 +5,13 @@ import type { CrawlPreviewResult, CrawlSourceSummary } from "./types";
 
 const NON_SYNCABLE_ORGANIZATION_IDS = new Set(["fitschedule"]);
 
-export interface CrawlSyncOptions {
+interface CrawlSyncOptions {
   dryRun?: boolean;
   requireStartsOn?: boolean;
   syncSourceProgress?: boolean;
 }
 
-export interface CrawlSyncSummary {
+interface CrawlSyncSummary {
   dryRun: boolean;
   receivedEvents: number;
   skippedEvents: number;

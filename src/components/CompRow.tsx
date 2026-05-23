@@ -8,17 +8,17 @@ interface CompRowProps {
   onOpen: (c: Competition) => void;
   isSaved: boolean;
   onToggleSave: (id: string) => void;
-  today: Date;
+  today: Date | null;
 }
 
 export function CompRow({ comp, onOpen, today }: CompRowProps) {
-  const status = regStatusAt(comp, today);
-  const dd = ddayAt(comp.date, today);
+  const status = today ? regStatusAt(comp, today) : null;
+  const dd = today ? ddayAt(comp.date, today) : null;
 
   return (
     <div className="comp-row" onClick={() => onOpen(comp)}>
       <div className="row-date">
-        <span className="day">{formatDday(dd)}</span>
+        <span className="day">{dd === null ? "일정" : formatDday(dd)}</span>
         <span className="mo">{fmtDate(comp.date, { style: "long" })}</span>
       </div>
       <div>
@@ -39,9 +39,9 @@ export function CompRow({ comp, onOpen, today }: CompRowProps) {
           <span style={{ color: "var(--ink-3)" }}>+{comp.categories.length - 3}</span>
         )}
       </div>
-      <div className={`row-status status-${status.kind}`}>
+      <div className={`row-status status-${status?.kind ?? "unknown"}`}>
         <span className="dot" />
-        <span>{status.label}</span>
+        <span>{status?.label ?? "접수 상태"}</span>
       </div>
       <div className="row-arrow">{Icons.arrow}</div>
     </div>

@@ -19,7 +19,7 @@ const USER_AGENT =
 
 const KOREA_TIMEZONE = "Asia/Seoul" as const;
 
-export interface FetchHtmlResult {
+interface FetchHtmlResult {
   html: string;
   fetchedAt: string;
 }
@@ -105,7 +105,7 @@ export function slugify(value: string): string {
   return normalized || rawHash(value);
 }
 
-export function makeDeterministicId(
+function makeDeterministicId(
   organizationId: CompetitionOrganizationId,
   sourceEventId: string | undefined,
   fallbackParts: string[],

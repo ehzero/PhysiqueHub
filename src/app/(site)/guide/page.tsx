@@ -1,4 +1,4 @@
-import { PhysiqueHubPage } from "@/app/PhysiqueHubPage";
+import { GuideView } from "@/components/GuideView";
 import { createPageMetadata } from "@/lib/metadata";
 
 export const metadata = createPageMetadata({
@@ -9,5 +9,5 @@ export const metadata = createPageMetadata({
 });
 
 export default function GuidePage() {
-  return <PhysiqueHubPage initialRoute="guide" />;
+  return <GuideView />;
 }
