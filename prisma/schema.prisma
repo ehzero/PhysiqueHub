@@ -98,3 +98,34 @@ model CompetitionSourceProgress {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 }
+
+model ContactInquiry {
+  id          String              @id @default(cuid())
+  category    String
+  name        String
+  email       String
+  message     String
+  status      String              @default("new")
+  attachments ContactAttachment[]
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model ContactAttachment {
+  id           String         @id @default(cuid())
+  inquiryId    String
+  inquiry      ContactInquiry @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
+  originalName String
+  pathname     String         @unique
+  url          String
+  downloadUrl  String?
+  contentType  String?
+  access       String         @default("private")
+  size         Int
+  createdAt    DateTime       @default(now())
+
+  @@index([inquiryId])
+}

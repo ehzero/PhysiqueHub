@@ -908,6 +908,84 @@ ol {
   color: var(--ink-3);
   padding: 48px 0;
 }
+.admin-contact-list {
+  border-top: 1px solid var(--line);
+}
+.admin-contact-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 320px);
+  gap: 28px;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+.admin-contact-main {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+.admin-contact-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.admin-contact-date,
+.admin-contact-empty {
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 11px;
+}
+.admin-contact-main h3 {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+.admin-contact-main a,
+.admin-contact-attachments a {
+  border-bottom: 1px solid currentColor;
+  color: var(--ink);
+  width: fit-content;
+}
+.admin-contact-main p {
+  color: var(--ink-2);
+  font-size: 14px;
+  line-height: 1.6;
+  margin-top: 6px;
+  white-space: pre-wrap;
+}
+.admin-contact-side {
+  align-content: start;
+  display: grid;
+  gap: 14px;
+  justify-items: start;
+}
+.admin-contact-attachments {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+}
+.admin-contact-attachments li {
+  align-items: center;
+  border: 1px solid var(--line-soft);
+  display: grid;
+  gap: 8px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding: 10px 12px;
+}
+.admin-contact-attachments a {
+  font-size: 13px;
+  font-weight: 800;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.admin-contact-attachments span {
+  color: var(--ink-3);
+  font-family: var(--mono);
+  font-size: 11px;
+}
 .admin-table {
   border-top: 1px solid var(--line);
 }
@@ -1539,6 +1617,14 @@ ol {
   display: grid;
   gap: 20px;
 }
+.contact-honeypot {
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
 .contact-fieldset {
   border: none;
   display: grid;
@@ -1685,9 +1771,23 @@ ol {
   background: var(--bg);
   color: var(--ink);
 }
+.contact-file-remove:disabled,
+.contact-category:disabled,
+.contact-file-input:disabled + .contact-file-button {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
 .contact-file-remove svg {
   width: 15px;
   height: 15px;
+}
+.contact-submit-message {
+  border: 1px solid var(--line-soft);
+  background: var(--bg-elev);
+  color: var(--ink-2);
+  font-size: 13px;
+  line-height: 1.5;
+  padding: 12px 14px;
 }
 
 /* ── Static policy pages ── */
@@ -2619,6 +2719,9 @@ ol {
     grid-column: auto;
   }
   .admin-raw-panel dl {
+    grid-template-columns: 1fr;
+  }
+  .admin-contact-item {
     grid-template-columns: 1fr;
   }
   .admin-table-row {

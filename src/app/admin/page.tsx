@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
-import type { CompetitionSchedule } from "@prisma/client";
+import type {
+  CompetitionSchedule,
+  ContactAttachment,
+  ContactInquiry,
+} from "@prisma/client";
 import Link from "next/link";
 import { hasAdminSession, isAdminPasswordConfigured } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
@@ -97,7 +101,17 @@ async function AdminDashboard({
     organizationFilter,
     issueFilter,
   );
-  const [totalCount, needsReviewCount, approvedCount, lowDateCount, missingCoreCount, organizationRows, queue] =
+  const [
+    totalCount,
+    needsReviewCount,
+    approvedCount,
+    lowDateCount,
+    missingCoreCount,
+    newContactCount,
+    organizationRows,
+    queue,
+    contactInquiries,
+  ] =
     await Promise.all([
       prisma.competitionSchedule.count({ where: { seasonYear } }),
       prisma.competitionSchedule.count({ where: { seasonYear, reviewStatus: "needs-review" } }),
@@ -116,6 +130,7 @@ async function AdminDashboard({
           ],
         },
       }),
+      prisma.contactInquiry.count({ where: { status: "new" } }),
       prisma.competitionSchedule.findMany({
         where: { seasonYear },
         select: {
@@ -128,6 +143,15 @@ async function AdminDashboard({
       prisma.competitionSchedule.findMany({
         where: queueWhere,
         orderBy: [{ reviewStatus: "desc" }, { confidence: "asc" }, { dateStartsOn: "asc" }, { title: "asc" }],
+      }),
+      prisma.contactInquiry.findMany({
+        include: {
+          attachments: {
+            orderBy: { createdAt: "asc" },
+          },
+        },
+        orderBy: { createdAt: "desc" },
+        take: 20,
       }),
     ]);
   const selectedCompetition =
@@ -199,6 +223,26 @@ async function AdminDashboard({
           <span className="admin-metric-value">{missingCoreCount}</span>
           <span className="admin-metric-label">핵심 누락</span>
         </div>
+      </section>
+
+      <section className="admin-section" aria-labelledby="admin-contact-title">
+        <div className="admin-section-head">
+          <div>
+            <p className="eyebrow">Contact</p>
+            <h2 id="admin-contact-title">문의 접수</h2>
+          </div>
+          <span className="admin-badge warn">신규 {newContactCount}</span>
+        </div>
+
+        {contactInquiries.length > 0 ? (
+          <div className="admin-contact-list">
+            {contactInquiries.map((inquiry) => (
+              <ContactInquiryCard inquiry={inquiry} key={inquiry.id} />
+            ))}
+          </div>
+        ) : (
+          <div className="admin-empty">접수된 문의가 없습니다.</div>
+        )}
       </section>
 
       <section className="admin-section" aria-labelledby="admin-review-title">
@@ -577,6 +621,52 @@ function AdminTab({
   );
 }
 
+type ContactInquiryWithAttachments = ContactInquiry & {
+  attachments: ContactAttachment[];
+};
+
+function ContactInquiryCard({
+  inquiry,
+}: {
+  inquiry: ContactInquiryWithAttachments;
+}) {
+  return (
+    <article className="admin-contact-item">
+      <div className="admin-contact-main">
+        <div className="admin-contact-head">
+          <span className="admin-badge subtle">{inquiry.category}</span>
+          <span className="admin-contact-date">
+            {formatKoreaDateTime(inquiry.createdAt)}
+          </span>
+        </div>
+        <h3>{inquiry.name}</h3>
+        <a href={`mailto:${inquiry.email}`}>{inquiry.email}</a>
+        <p>{inquiry.message}</p>
+      </div>
+
+      <div className="admin-contact-side">
+        <span className={`admin-badge review-${inquiry.status}`}>
+          {toContactStatusLabel(inquiry.status)}
+        </span>
+        {inquiry.attachments.length > 0 ? (
+          <ul className="admin-contact-attachments">
+            {inquiry.attachments.map((attachment) => (
+              <li key={attachment.id}>
+                <a href={`/api/contact/attachments/${attachment.id}`}>
+                  {attachment.originalName}
+                </a>
+                <span>{formatFileSize(attachment.size)}</span>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <span className="admin-contact-empty">첨부 없음</span>
+        )}
+      </div>
+    </article>
+  );
+}
+
 function ReviewBadge({ value }: { value: string }) {
   return <span className={`admin-badge review-${value}`}>{toReviewLabel(value)}</span>;
 }
@@ -904,6 +994,12 @@ function toIssueFilterLabel(value: string) {
   return "전체";
 }
 
+function toContactStatusLabel(value: string) {
+  if (value === "done") return "처리 완료";
+  if (value === "archived") return "보관";
+  return "신규";
+}
+
 function formatKoreaDate(value: Date) {
   return new Intl.DateTimeFormat("en-CA", {
     timeZone: "Asia/Seoul",
@@ -913,8 +1009,26 @@ function formatKoreaDate(value: Date) {
   }).format(value);
 }
 
+function formatKoreaDateTime(value: Date) {
+  return new Intl.DateTimeFormat("ko-KR", {
+    timeZone: "Asia/Seoul",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(value);
+}
+
 function formatInputDate(value: Date | null) {
   return value ? formatKoreaDate(value) : "";
+}
+
+function formatFileSize(bytes: number) {
+  if (bytes < 1024) return `${bytes}B`;
+  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)}KB`;
+
+  return `${(bytes / 1024 / 1024).toFixed(1)}MB`;
 }
 
 function parseJsonArray<T>(value: string): T[] {
