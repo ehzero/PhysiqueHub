@@ -4,8 +4,8 @@
   "organizationName": "MUSA",
   "sources": [
     {
-      "organizationId": "unmo",
-      "organizationName": "운동의모든것(MUSA/WNGP/BOB/ANBC)",
+      "organizationId": "musa",
+      "organizationName": "MUSA",
       "url": "https://unmo.kr/shop/tournament.php",
       "ok": true,
       "count": 13,
@@ -15,8 +15,8 @@
       "fetchedAt": "2026-05-22T09:17:37.816Z"
     },
     {
-      "organizationId": "unmo",
-      "organizationName": "운동의모든것(MUSA/WNGP/BOB/ANBC)",
+      "organizationId": "musa",
+      "organizationName": "MUSA",
       "url": "https://unmo.kr/shop/tournament.php?page_rows=&sort=&sortodr=&page=2",
       "ok": true,
       "count": 13,
@@ -26,8 +26,8 @@
       "fetchedAt": "2026-05-22T09:17:38.089Z"
     },
     {
-      "organizationId": "unmo",
-      "organizationName": "운동의모든것(MUSA/WNGP/BOB/ANBC)",
+      "organizationId": "musa",
+      "organizationName": "MUSA",
       "url": "https://unmo.kr/shop/tournament.php?page_rows=&sort=&sortodr=&page=3",
       "ok": true,
       "count": 12,
@@ -290,8 +290,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -305,7 +304,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=528",
         "sourceEventId": "0e54b6f7e0e99022",
         "fetchedAt": "2026-05-22T09:20:55.206Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "0c5e439e67772dfc",
         "rawTitle": "MUSA 충남 [대회종료]",
@@ -572,8 +571,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -587,7 +585,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=530",
         "sourceEventId": "dcd2a47a5324c7a9",
         "fetchedAt": "2026-05-22T09:20:59.439Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "e082921bd9737c70",
         "rawTitle": "MUSA 수원 [대회종료]",
@@ -854,8 +852,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -869,7 +866,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=532",
         "sourceEventId": "9f4b121bf9d71b16",
         "fetchedAt": "2026-05-22T09:21:11.487Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "b1ef944ec56263a9",
         "rawTitle": "MUSA 당진 [대회종료]",
@@ -1137,8 +1134,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -1152,7 +1148,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=534",
         "sourceEventId": "86245f45c74a6ead",
         "fetchedAt": "2026-05-22T09:21:18.485Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "64950a7012b57d25",
         "rawTitle": "MUSA 구미 [대회종료]",
@@ -1420,8 +1416,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -1435,7 +1430,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=536",
         "sourceEventId": "dce8148621680600",
         "fetchedAt": "2026-05-22T09:21:25.580Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "49cf346e9dac2ead",
         "rawTitle": "MUSA 전라광주 [대회종료]",
@@ -1704,8 +1699,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -1719,7 +1713,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=538",
         "sourceEventId": "521fc902cade9506",
         "fetchedAt": "2026-05-22T09:21:31.417Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "ba48bb7d0330fa2a",
         "rawTitle": "MUSA 서울 [대회종료]",
@@ -1988,8 +1982,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -2003,7 +1996,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=540",
         "sourceEventId": "b5bf709faf6dbade",
         "fetchedAt": "2026-05-22T09:21:37.590Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "3e100c40b1895e3b",
         "rawTitle": "MUSA 울산 [대회종료]",
@@ -2271,8 +2264,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -2286,7 +2278,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=542",
         "sourceEventId": "852fd0cd51bad9d9",
         "fetchedAt": "2026-05-22T09:21:41.474Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "064bea44a9250b79",
         "rawTitle": "MUSA 강북 [대회종료]",
@@ -2555,8 +2547,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -2570,7 +2561,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=544",
         "sourceEventId": "c3c38dd893ec14b0",
         "fetchedAt": "2026-05-22T09:21:47.812Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "481cbc24618436d7",
         "rawTitle": "MUSA 강남 [대회종료]",
@@ -2837,8 +2828,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -2852,7 +2842,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=546",
         "sourceEventId": "b1b73f89c3e87819",
         "fetchedAt": "2026-05-22T09:21:54.805Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "923b0350d43ac888",
         "rawTitle": "MUSA 오산",
@@ -3122,8 +3112,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -3137,7 +3126,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=548",
         "sourceEventId": "6f3ea1e7d85aff93",
         "fetchedAt": "2026-05-22T09:17:40.658Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "47be21dcc597f6fb",
         "rawTitle": "MUSA 부천",
@@ -3408,8 +3397,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -3423,7 +3411,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=550",
         "sourceEventId": "eb1f8b8d2c4d4a12",
         "fetchedAt": "2026-05-22T09:17:49.938Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "3911091f4dd902a9",
         "rawTitle": "MUSA 창원",
@@ -3694,8 +3682,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -3709,7 +3696,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=552",
         "sourceEventId": "5e49c3ee7d4144f3",
         "fetchedAt": "2026-05-22T09:18:00.015Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "6ae2a362ba65198f",
         "rawTitle": "MUSA 의정부",
@@ -3980,8 +3967,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -3995,7 +3981,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=554",
         "sourceEventId": "9498156e7fcd7d95",
         "fetchedAt": "2026-05-22T09:18:04.224Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "25960aded8e6357e",
         "rawTitle": "MUSA 안산",
@@ -4066,8 +4052,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -4081,7 +4066,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=572",
         "sourceEventId": "7eafe0a10a1f5385",
         "fetchedAt": "2026-05-22T09:18:19.001Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "f41195deff5040b7",
         "rawTitle": "MUSA 일본",
@@ -4352,8 +4337,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -4367,7 +4351,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=556",
         "sourceEventId": "c36f2a88eec069db",
         "fetchedAt": "2026-05-22T09:18:17.323Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "c900c5d32d875173",
         "rawTitle": "MUSA 파주",
@@ -4638,8 +4622,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -4653,7 +4636,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=558",
         "sourceEventId": "9a7f18444992aad7",
         "fetchedAt": "2026-05-22T09:18:26.365Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "95978df32cf00ca7",
         "rawTitle": "MUSA 평택",
@@ -4924,8 +4907,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -4939,7 +4921,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=560",
         "sourceEventId": "ea85e1470a4ca3ef",
         "fetchedAt": "2026-05-22T09:18:33.828Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "d6b2dee4486ed595",
         "rawTitle": "MUSA 김포",
@@ -5210,8 +5192,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -5225,7 +5206,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=562",
         "sourceEventId": "3f4d72195bf7fd29",
         "fetchedAt": "2026-05-22T09:18:50.491Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "7bb0441e59b9a983",
         "rawTitle": "MUSA 경기",
@@ -5311,8 +5292,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -5326,7 +5306,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=575",
         "sourceEventId": "09c6f21df7f4763a",
         "fetchedAt": "2026-05-22T09:18:47.475Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "2034b38181cf62bd",
         "rawTitle": "MUSA파이널 (상반기 프로카드)",
@@ -5597,8 +5577,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -5612,7 +5591,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=579",
         "sourceEventId": "5b8a2a7fec5f57d6",
         "fetchedAt": "2026-05-22T09:18:55.586Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "77e47315f243a27d",
         "rawTitle": "MUSA 성남",
@@ -5883,8 +5862,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -5898,7 +5876,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=581",
         "sourceEventId": "85132ec6d9ca4df4",
         "fetchedAt": "2026-05-22T09:19:02.089Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "7d91c3f651c1589f",
         "rawTitle": "MUSA 천안",
@@ -6169,8 +6147,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -6184,7 +6161,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=583",
         "sourceEventId": "35e0e4e60298e48a",
         "fetchedAt": "2026-05-22T09:19:07.521Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "51f5be1fec5874a9",
         "rawTitle": "MUSA 안양",
@@ -6455,8 +6432,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -6470,7 +6446,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=585",
         "sourceEventId": "23923aad1961ecf9",
         "fetchedAt": "2026-05-22T09:19:11.988Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "56607bac6ae0a790",
         "rawTitle": "MUSA 의왕",
@@ -6741,8 +6717,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -6756,7 +6731,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=587",
         "sourceEventId": "dd07bf5022f2a236",
         "fetchedAt": "2026-05-22T09:19:22.538Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "b477384f47e37ee2",
         "rawTitle": "MUSA 제주",
@@ -7027,8 +7002,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -7042,7 +7016,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=589",
         "sourceEventId": "55afdfb22c243779",
         "fetchedAt": "2026-05-22T09:19:28.934Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "12a7e4c6bf9a56e8",
         "rawTitle": "MUSA 대구",
@@ -7313,8 +7287,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -7328,7 +7301,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=591",
         "sourceEventId": "df145b0433f5f70f",
         "fetchedAt": "2026-05-22T09:19:35.216Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "6c771f0b95b81c83",
         "rawTitle": "MUSA 인천",
@@ -7599,8 +7572,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -7614,7 +7586,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=593",
         "sourceEventId": "13712498395569e9",
         "fetchedAt": "2026-05-22T09:19:44.500Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "7b47d56ccefe96e9",
         "rawTitle": "MUSA 남양주",
@@ -7885,8 +7857,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -7900,7 +7871,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=595",
         "sourceEventId": "76ea6e67c907330e",
         "fetchedAt": "2026-05-22T09:19:53.559Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "e9c6a4fb0ed64e98",
         "rawTitle": "MUSA 군포",
@@ -8171,8 +8142,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -8186,7 +8156,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=597",
         "sourceEventId": "e1918f521274c243",
         "fetchedAt": "2026-05-22T09:20:00.553Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "0be4ab56dd255384",
         "rawTitle": "MUSA 시흥",
@@ -8457,8 +8427,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -8472,7 +8441,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=599",
         "sourceEventId": "c5bd2c14a0bb6829",
         "fetchedAt": "2026-05-22T09:20:07.268Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "e4b8eae733af12af",
         "rawTitle": "MUSA 일산",
@@ -8743,8 +8712,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -8758,7 +8726,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=601",
         "sourceEventId": "e4fd96edf6835d8b",
         "fetchedAt": "2026-05-22T09:20:12.422Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "e22bcc59be29ba2d",
         "rawTitle": "MUSA 양주",
@@ -9029,8 +8997,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -9044,7 +9011,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=603",
         "sourceEventId": "4d7c12eae2fd8c0d",
         "fetchedAt": "2026-05-22T09:20:18.201Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "bc56b09a2f1e84e2",
         "rawTitle": "MUSA 용인",
@@ -9315,8 +9282,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -9330,7 +9296,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=605",
         "sourceEventId": "dbb5e508565ab46f",
         "fetchedAt": "2026-05-22T09:20:24.388Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "2feda43019dab9b2",
         "rawTitle": "MUSA 광명",
@@ -9601,8 +9567,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -9616,7 +9581,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=607",
         "sourceEventId": "27e2fd01143068b4",
         "fetchedAt": "2026-05-22T09:20:28.665Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "8c965c384a3b9c86",
         "rawTitle": "MUSA 대전",
@@ -9887,8 +9852,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -9902,7 +9866,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=609",
         "sourceEventId": "d6a41a65922b4e96",
         "fetchedAt": "2026-05-22T09:20:31.852Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "ce5c210d4433ae18",
         "rawTitle": "MUSA 부산",
@@ -10173,8 +10137,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -10188,7 +10151,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=611",
         "sourceEventId": "df0c4db8331c68ae",
         "fetchedAt": "2026-05-22T09:20:41.850Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "a69fea76e7d69336",
         "rawTitle": "MUSA 고양",
@@ -10459,8 +10422,7 @@
         }
       ],
       "tags": [
-        "MUSA",
-        "운동의모든것"
+        "MUSA"
       ],
       "flags": {
         "natural": false,
@@ -10474,7 +10436,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=613",
         "sourceEventId": "aed7d7162d3d9dfe",
         "fetchedAt": "2026-05-22T09:20:50.489Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "b9d940b52a652939",
         "rawTitle": "MUSA 화성",

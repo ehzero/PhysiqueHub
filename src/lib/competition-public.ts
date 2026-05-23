@@ -131,6 +131,8 @@ const POSTER_THEMES: Competition["poster"][] = [
   "lime",
 ];
 
+const HIDDEN_CRAWL_TAG_PATTERN = /운동의모든것|unmo/i;
+
 export function toCompetition(item: ApiCompetitionListItem): Competition {
   const categories = getCategories(item);
   const startsOn = item.date.startsOn ?? `${item.seasonYear ?? new Date().getFullYear()}-12-31`;
@@ -183,11 +185,14 @@ function getCategories(item: ApiCompetitionListItem): string[] {
 
   return item.tags
     .filter((tag): tag is string => typeof tag === "string")
+    .filter((tag) => !isHiddenCrawlTag(tag))
     .slice(0, 6);
 }
 
 function getTags(item: ApiCompetitionListItem): string[] {
-  const tags = item.tags.filter((tag): tag is string => typeof tag === "string");
+  const tags = item.tags
+    .filter((tag): tag is string => typeof tag === "string")
+    .filter((tag) => !isHiddenCrawlTag(tag));
 
   if (item.flags.natural === true) {
     tags.push("내추럴");
@@ -200,6 +205,10 @@ function getTags(item: ApiCompetitionListItem): string[] {
   }
 
   return Array.from(new Set(tags)).slice(0, 6);
+}
+
+function isHiddenCrawlTag(tag: string): boolean {
+  return HIDDEN_CRAWL_TAG_PATTERN.test(tag);
 }
 
 function isRegional(item: ApiCompetitionListItem): boolean {

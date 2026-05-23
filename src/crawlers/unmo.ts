@@ -22,7 +22,7 @@ import {
 } from "./utils";
 
 const UNMO_BASE_URL = "https://unmo.kr/shop/tournament.php";
-const PARSER_NAME = "unmo-tournament-preview";
+const PARSER_NAME = "musa-wngp-bob-anbc-registration-preview";
 const UNMO_ORGANIZATION_IDS = ["musa", "wngp", "bob", "anbc"] as const;
 
 interface UnmoListItem {
@@ -73,25 +73,19 @@ export async function crawlUnmo(
       );
 
       listItems.push(...pageItems);
-      sources.push({
-        organizationId: "unmo",
-        organizationName: "운동의모든것(MUSA/WNGP/BOB/ANBC)",
-        url: listUrl,
-        ok: true,
-        count: pageItems.length,
-        warnings: sourceWarnings,
-        fetchedAt,
-      });
+      sources.push(...createSourceSummaries(listUrl, pageItems, sourceWarnings, fetchedAt));
     } catch (error) {
       errors.push({ url: listUrl, message: getErrorMessage(error) });
-      sources.push({
-        organizationId: "unmo",
-        organizationName: "운동의모든것(MUSA/WNGP/BOB/ANBC)",
-        url: listUrl,
-        ok: false,
-        count: 0,
-        warnings: ["목록 fetch 또는 파싱에 실패했습니다."],
-      });
+      for (const organizationId of targetIds) {
+        sources.push({
+          organizationId,
+          organizationName: getOrganizationName(organizationId),
+          url: listUrl,
+          ok: false,
+          count: 0,
+          warnings: ["목록 fetch 또는 파싱에 실패했습니다."],
+        });
+      }
     }
   }
 
@@ -243,7 +237,6 @@ function createUnmoEvent(
     divisions: detail?.divisions ?? [],
     tags: uniqueTexts([
       item.organizationId.toUpperCase(),
-      "운동의모든것",
       ...(item.organizationId === "wngp" ? ["내추럴"] : []),
     ]),
     flags: {
@@ -270,6 +263,32 @@ function createUnmoEvent(
     notes:
       "운동의모든것 공개 접수 상세 기반 preview입니다. 운영 반영 전 수집 허가/약관 검토가 필요합니다.",
   });
+}
+
+function createSourceSummaries(
+  listUrl: string,
+  pageItems: UnmoListItem[],
+  warnings: string[],
+  fetchedAt: string,
+): CrawlerResult["sources"] {
+  const countsByOrganization = new Map<UnmoListItem["organizationId"], number>();
+
+  for (const item of pageItems) {
+    countsByOrganization.set(
+      item.organizationId,
+      (countsByOrganization.get(item.organizationId) ?? 0) + 1,
+    );
+  }
+
+  return Array.from(countsByOrganization.entries()).map(([organizationId, count]) => ({
+    organizationId,
+    organizationName: getOrganizationName(organizationId),
+    url: listUrl,
+    ok: true,
+    count,
+    warnings,
+    fetchedAt,
+  }));
 }
 
 function extractDetailFieldMap($: cheerio.CheerioAPI): Map<string, string> {

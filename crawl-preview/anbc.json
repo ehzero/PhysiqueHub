@@ -4,8 +4,8 @@
   "organizationName": "ANBC",
   "sources": [
     {
-      "organizationId": "unmo",
-      "organizationName": "운동의모든것(MUSA/WNGP/BOB/ANBC)",
+      "organizationId": "anbc",
+      "organizationName": "ANBC",
       "url": "https://unmo.kr/shop/tournament.php",
       "ok": true,
       "count": 3,
@@ -15,8 +15,8 @@
       "fetchedAt": "2026-05-22T09:17:37.816Z"
     },
     {
-      "organizationId": "unmo",
-      "organizationName": "운동의모든것(MUSA/WNGP/BOB/ANBC)",
+      "organizationId": "anbc",
+      "organizationName": "ANBC",
       "url": "https://unmo.kr/shop/tournament.php?page_rows=&sort=&sortodr=&page=2",
       "ok": true,
       "count": 4,
@@ -26,8 +26,8 @@
       "fetchedAt": "2026-05-22T09:17:38.089Z"
     },
     {
-      "organizationId": "unmo",
-      "organizationName": "운동의모든것(MUSA/WNGP/BOB/ANBC)",
+      "organizationId": "anbc",
+      "organizationName": "ANBC",
       "url": "https://unmo.kr/shop/tournament.php?page_rows=&sort=&sortodr=&page=3",
       "ok": true,
       "count": 3,
@@ -309,8 +309,7 @@
         }
       ],
       "tags": [
-        "ANBC",
-        "운동의모든것"
+        "ANBC"
       ],
       "flags": {
         "natural": false,
@@ -324,7 +323,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=524",
         "sourceEventId": "ffbee5ad58117587",
         "fetchedAt": "2026-05-22T09:21:04.067Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "7d5e970d31be4e62",
         "rawTitle": "ANBC 수원 [대회종료]",
@@ -613,8 +612,7 @@
         }
       ],
       "tags": [
-        "ANBC",
-        "운동의모든것"
+        "ANBC"
       ],
       "flags": {
         "natural": false,
@@ -628,7 +626,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=563",
         "sourceEventId": "373a385011164673",
         "fetchedAt": "2026-05-22T09:21:32.842Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "ff1542cf1fdd890b",
         "rawTitle": "ANBC 서울 [대회종료]",
@@ -918,8 +916,7 @@
         }
       ],
       "tags": [
-        "ANBC",
-        "운동의모든것"
+        "ANBC"
       ],
       "flags": {
         "natural": false,
@@ -933,7 +930,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=564",
         "sourceEventId": "ee4431b1a08e519c",
         "fetchedAt": "2026-05-22T09:17:44.121Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "fce66822e4ffbed4",
         "rawTitle": "ANBC 부천",
@@ -1224,8 +1221,7 @@
         }
       ],
       "tags": [
-        "ANBC",
-        "운동의모든것"
+        "ANBC"
       ],
       "flags": {
         "natural": false,
@@ -1239,7 +1235,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=565",
         "sourceEventId": "a80064c4570240d2",
         "fetchedAt": "2026-05-22T09:18:06.000Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "5a4eaa4d5f730f51",
         "rawTitle": "ANBC 안산",
@@ -1530,8 +1526,7 @@
         }
       ],
       "tags": [
-        "ANBC",
-        "운동의모든것"
+        "ANBC"
       ],
       "flags": {
         "natural": false,
@@ -1545,7 +1540,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=566",
         "sourceEventId": "b7983eb92b7fcd96",
         "fetchedAt": "2026-05-22T09:18:35.532Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "5c40b3752eb7063f",
         "rawTitle": "ANBC 김포",
@@ -1836,8 +1831,7 @@
         }
       ],
       "tags": [
-        "ANBC",
-        "운동의모든것"
+        "ANBC"
       ],
       "flags": {
         "natural": false,
@@ -1851,7 +1845,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=614",
         "sourceEventId": "6d266de391d987d0",
         "fetchedAt": "2026-05-22T09:19:16.153Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "9c2a3d20932e0612",
         "rawTitle": "ANBC 의왕",
@@ -2142,8 +2136,7 @@
         }
       ],
       "tags": [
-        "ANBC",
-        "운동의모든것"
+        "ANBC"
       ],
       "flags": {
         "natural": false,
@@ -2157,7 +2150,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=615",
         "sourceEventId": "2e7c775468c6a956",
         "fetchedAt": "2026-05-22T09:19:37.740Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "0c6d58775a04a29e",
         "rawTitle": "ANBC 인천",
@@ -2448,8 +2441,7 @@
         }
       ],
       "tags": [
-        "ANBC",
-        "운동의모든것"
+        "ANBC"
       ],
       "flags": {
         "natural": false,
@@ -2463,7 +2455,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=616",
         "sourceEventId": "1a504ff0df82d764",
         "fetchedAt": "2026-05-22T09:20:08.901Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "af76fedda3c5fcec",
         "rawTitle": "ANBC 일산",
@@ -2754,8 +2746,7 @@
         }
       ],
       "tags": [
-        "ANBC",
-        "운동의모든것"
+        "ANBC"
       ],
       "flags": {
         "natural": false,
@@ -2769,7 +2760,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=617",
         "sourceEventId": "4f8ebe2dd4fe091d",
         "fetchedAt": "2026-05-22T09:20:37.093Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "ded5a9996ddc04bc",
         "rawTitle": "ANBC 부산",
@@ -3060,8 +3051,7 @@
         }
       ],
       "tags": [
-        "ANBC",
-        "운동의모든것"
+        "ANBC"
       ],
       "flags": {
         "natural": false,
@@ -3075,7 +3065,7 @@
         "detailUrl": "https://unmo.kr/shop/tournament_view.php?index_no=618",
         "sourceEventId": "49411e2c1808db86",
         "fetchedAt": "2026-05-22T09:20:43.179Z",
-        "parserName": "unmo-tournament-preview",
+        "parserName": "musa-wngp-bob-anbc-registration-preview",
         "parserVersion": "0.1.0",
         "rawHash": "ff574c8da29924fe",
         "rawTitle": "ANBC 고양",
