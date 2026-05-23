@@ -70,7 +70,7 @@ export function Foot({
         </div>
         <div className="foot-bottom">
           <span>© {seasonYear} PhysiqueHub. All rights reserved.</span>
-          <span>v{packageJson.version} BETA</span>
+          <span>v{packageJson.version}</span>
         </div>
       </div>
     </footer>
