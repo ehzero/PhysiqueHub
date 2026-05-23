@@ -20,7 +20,7 @@ interface CompDrawerProps {
   onClose: () => void;
   isSaved: boolean;
   onToggleSave: (id: string) => void;
-  today: Date;
+  today: Date | null;
 }
 
 export function CompDrawer({
@@ -48,18 +48,21 @@ export function CompDrawer({
     );
   }
 
-  const status = regStatusAt(comp, today);
+  const status = today ? regStatusAt(comp, today) : null;
   const compDate = parseDate(comp.date);
-  const ddComp = Math.round((compDate.getTime() - today.getTime()) / 86400000);
-  const ddClose = daysBetween(today, comp.regClose);
+  const ddComp = today
+    ? Math.round((compDate.getTime() - today.getTime()) / 86400000)
+    : null;
+  const ddClose = today ? daysBetween(today, comp.regClose) : null;
   const variant = comp.id.charCodeAt(Math.min(2, comp.id.length - 1)) % 6;
   const dateLabel = comp.dateEnd
     ? `${fmtDate(comp.date, { style: "long" })} → ${fmtDate(comp.dateEnd, { style: "long" })}`
     : fmtDate(comp.date, { style: "long" });
+  const officialUrl = comp.sourceUrl || comp.registrationUrl;
   const registrationLabel =
     comp.registrationStatus === "unknown"
       ? comp.regClose === comp.date
-        ? status.kind === "closed"
+        ? status?.kind === "closed"
           ? "접수 마감"
           : "공식 접수 정보 확인 필요"
         : `마감 ${fmtDate(comp.regClose, { style: "long" })}`
@@ -98,11 +101,13 @@ export function CompDrawer({
           <div className="drawer-status-bar">
             <div className="cell">
               <div className="lbl">대회일</div>
-              <div className="val">{formatDday(ddComp)}</div>
+              <div className="val">{ddComp === null ? "-" : formatDday(ddComp)}</div>
             </div>
-            <div className={`cell ${status.kind === "urgent" ? "urgent" : ""}`}>
+            <div className={`cell ${status?.kind === "urgent" ? "urgent" : ""}`}>
               <div className="lbl">접수 마감</div>
-              <div className="val">{ddClose >= 0 ? formatDday(ddClose) : "마감"}</div>
+              <div className="val">
+                {ddClose === null ? "-" : ddClose >= 0 ? formatDday(ddClose) : "마감"}
+              </div>
             </div>
             <div className="cell">
               <div className="lbl">참가비</div>
@@ -174,18 +179,16 @@ export function CompDrawer({
             <dt>공식 채널</dt>
             <dd>
               <a
-                href={comp.sourceUrl || comp.registrationUrl || "#"}
-                target="_blank"
-                rel="noreferrer"
+                href={officialUrl || "#"}
+                target={officialUrl ? "_blank" : undefined}
+                rel={officialUrl ? "noreferrer" : undefined}
                 style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 4,
+                  overflowWrap: "anywhere",
                   borderBottom: "1px solid currentColor",
                   paddingBottom: 1,
                 }}
               >
-                공식 소스 {Icons.ext}
+                {officialUrl || "-"}
               </a>
             </dd>
           </dl>
@@ -198,9 +201,9 @@ export function CompDrawer({
             target={comp.registrationUrl || comp.sourceUrl ? "_blank" : undefined}
             rel={comp.registrationUrl || comp.sourceUrl ? "noreferrer" : undefined}
           >
-            {status.kind === "closed"
+            {status?.kind === "closed"
               ? "접수 마감"
-              : status.kind === "soon"
+              : status?.kind === "soon"
               ? "접수 예정"
               : "접수 페이지로 →"}
           </a>

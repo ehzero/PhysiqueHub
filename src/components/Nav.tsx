@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { Icons } from "./Icons";
 
 interface NavProps {
@@ -16,15 +15,6 @@ export function Nav({ route, savedCount, onOpenContact }: NavProps) {
       <div className="container">
         <div className="nav-row">
           <Link className="brand" href="/">
-            <Image
-              className="brand-mark"
-              src="/brand-logo.png"
-              alt=""
-              width={22}
-              height={22}
-              priority
-              aria-hidden="true"
-            />
             <span>피지크 허브</span>
           </Link>
           <span className="nav-divider" aria-hidden="true" />

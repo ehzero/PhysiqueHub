@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { Filters } from "@/lib/data";
-import { parseDate, regStatusAt } from "@/lib/data";
+import { regStatusAt } from "@/lib/data";
 import { useCompetitionDrawer } from "@/hooks/use-competition-drawer";
 import type {
   CompetitionFilterOptions,
@@ -14,14 +14,12 @@ import { ListView } from "@/components/ListView";
 import { CompDrawer } from "@/components/CompDrawer";
 
 interface ListShellProps {
-  seasonYear: number;
   initialCompetitionPage: CompetitionListPage;
   initialFilterOptions: CompetitionFilterOptions;
   initialOpenedCompetitionId?: string;
 }
 
 export function ListShell({
-  seasonYear,
   initialCompetitionPage,
   initialFilterOptions,
   initialOpenedCompetitionId,
@@ -41,7 +39,6 @@ export function ListShell({
     });
   const [filters, setFilters] = useState<Filters>({});
   const [search, setSearch] = useState("");
-  const drawerToday = today ?? parseDate(`${seasonYear}-01-01`);
 
   const competitions = initialCompetitionPage.items;
   const filtered = useMemo(
@@ -117,7 +114,7 @@ export function ListShell({
         onClose={closeDrawer}
         isSaved={openedComp ? saved.includes(openedComp.id) : false}
         onToggleSave={toggleSave}
-        today={drawerToday}
+        today={today}
       />
     </>
   );

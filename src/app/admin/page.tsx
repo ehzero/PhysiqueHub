@@ -50,9 +50,6 @@ function AdminLogin({ error }: { error?: string }) {
         <div>
           <p className="eyebrow">Restricted</p>
           <h1 id="admin-login-title">PhysiqueHub Admin</h1>
-          <p>
-            관리자 비밀번호를 입력하면 운영 전용 대시보드에 접근할 수 있습니다.
-          </p>
         </div>
 
         <form action={loginAdmin} className="admin-login-form">

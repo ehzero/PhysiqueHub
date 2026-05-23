@@ -1,6 +1,5 @@
 "use client";
 
-import { parseDate } from "@/lib/data";
 import { useCompetitionDrawer } from "@/hooks/use-competition-drawer";
 import { useClientToday } from "@/hooks/use-client-today";
 import { useSiteShell } from "@/components/SiteShell";
@@ -26,7 +25,6 @@ export function HomeShell({
   const { saved, toggleSave } = useSiteShell();
   const { openedComp, drawerOpen, openComp, closeDrawer } =
     useCompetitionDrawer({ closePath: "/" });
-  const drawerToday = today ?? parseDate(`${seasonYear}-01-01`);
 
   return (
     <>
@@ -46,7 +44,7 @@ export function HomeShell({
         onClose={closeDrawer}
         isSaved={openedComp ? saved.includes(openedComp.id) : false}
         onToggleSave={toggleSave}
-        today={drawerToday}
+        today={today}
       />
     </>
   );

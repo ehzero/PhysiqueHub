@@ -12,12 +12,11 @@ export const metadata = createPageMetadata({
 });
 
 export default async function CompetitionsPage() {
-  const { seasonYear, competitionPage, filterOptions } =
+  const { competitionPage, filterOptions } =
     await getUpcomingCompetitionContext({ includeFilters: true });
 
   return (
     <ListShell
-      seasonYear={seasonYear}
       initialCompetitionPage={competitionPage}
       initialFilterOptions={filterOptions!}
     />

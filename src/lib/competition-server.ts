@@ -81,6 +81,18 @@ export async function getCompetitionSeasonPage(
   };
 }
 
+export const getCompetitionById = cache(async (id: string) => {
+  const record = await prisma.competitionSchedule.findUnique({
+    where: { id },
+  });
+
+  if (!record) {
+    return null;
+  }
+
+  return toCompetition(serializePublicCompetitionListItem(record));
+});
+
 export async function getUpcomingCompetitionContext(
   options: UpcomingCompetitionContextOptions = {},
 ): Promise<UpcomingCompetitionContext> {

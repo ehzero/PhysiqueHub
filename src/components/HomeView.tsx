@@ -127,7 +127,7 @@ export function HomeView({
 
   const dateLine = today
     ? `${today.getFullYear()}.${String(today.getMonth() + 1).padStart(2, "0")}.${String(today.getDate()).padStart(2, "0")} (${DOWS[today.getDay()]})`
-    : "";
+    : "-";
 
   const presets = [
     { id: "all", label: "전체", n: counts.all },
@@ -396,34 +396,48 @@ function HomeFeed({
         />
       ) : (
         <>
-          {featured.length > 0 && (
-            <div className="feat-grid home-featured-grid">
-              {featured.map((competition) => (
-                <FeatCard
-                  key={competition.id}
-                  comp={competition}
-                  onOpen={openComp}
-                  isSaved={saved.includes(competition.id)}
-                  onToggleSave={toggleSave}
-                  today={today}
-                />
-              ))}
-            </div>
-          )}
-          {restList.length > 0 && (
-            <div className="comp-list home-rest-list">
-              {restList.map((competition) => (
-                <CompRow
-                  key={competition.id}
-                  comp={competition}
-                  onOpen={openComp}
-                  isSaved={saved.includes(competition.id)}
-                  onToggleSave={toggleSave}
-                  today={today}
-                />
-              ))}
-            </div>
-          )}
+          <div className="home-desktop-feed">
+            {featured.length > 0 && (
+              <div className="feat-grid home-featured-grid">
+                {featured.map((competition) => (
+                  <FeatCard
+                    key={competition.id}
+                    comp={competition}
+                    onOpen={openComp}
+                    isSaved={saved.includes(competition.id)}
+                    onToggleSave={toggleSave}
+                    today={today}
+                  />
+                ))}
+              </div>
+            )}
+            {restList.length > 0 && (
+              <div className="comp-list home-rest-list">
+                {restList.map((competition) => (
+                  <CompRow
+                    key={competition.id}
+                    comp={competition}
+                    onOpen={openComp}
+                    isSaved={saved.includes(competition.id)}
+                    onToggleSave={toggleSave}
+                    today={today}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="comp-list home-mobile-feed">
+            {feed.map((competition) => (
+              <CompRow
+                key={competition.id}
+                comp={competition}
+                onOpen={openComp}
+                isSaved={saved.includes(competition.id)}
+                onToggleSave={toggleSave}
+                today={today}
+              />
+            ))}
+          </div>
         </>
       )}
 
@@ -455,7 +469,6 @@ function sumStatusCounts(
     .filter((status) => activeStatuses.includes(status.status))
     .reduce((total, status) => total + status.count, 0);
 }
-
 function matchesHomeFilter({
   competition,
   activeOrganizationName,

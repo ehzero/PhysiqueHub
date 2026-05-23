@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Competition, regStatusAt, ddayAt, fmtDate, formatDday } from "@/lib/data";
 import { Icons } from "./Icons";
 
@@ -14,11 +15,30 @@ interface CompRowProps {
 export function CompRow({ comp, onOpen, today }: CompRowProps) {
   const status = today ? regStatusAt(comp, today) : null;
   const dd = today ? ddayAt(comp.date, today) : null;
+  const href = `/competitions/${encodeURIComponent(comp.id)}`;
 
   return (
-    <div className="comp-row" onClick={() => onOpen(comp)}>
+    <Link
+      className="comp-row"
+      href={href}
+      onClick={(event) => {
+        if (
+          event.defaultPrevented ||
+          event.button !== 0 ||
+          event.metaKey ||
+          event.ctrlKey ||
+          event.shiftKey ||
+          event.altKey
+        ) {
+          return;
+        }
+
+        event.preventDefault();
+        onOpen(comp);
+      }}
+    >
       <div className="row-date">
-        <span className="day">{dd === null ? "일정" : formatDday(dd)}</span>
+        <span className="day">{dd === null ? "-" : formatDday(dd)}</span>
         <span className="mo">{fmtDate(comp.date, { style: "long" })}</span>
       </div>
       <div>
@@ -39,11 +59,11 @@ export function CompRow({ comp, onOpen, today }: CompRowProps) {
           <span style={{ color: "var(--ink-3)" }}>+{comp.categories.length - 3}</span>
         )}
       </div>
-      <div className={`row-status status-${status?.kind ?? "unknown"}`}>
-        <span className="dot" />
-        <span>{status?.label ?? "접수 상태"}</span>
+      <div className={`row-status ${status ? `status-${status.kind}` : "status-loading"}`}>
+        {status && <span className="dot" />}
+        <span>{status?.label ?? "-"}</span>
       </div>
       <div className="row-arrow">{Icons.arrow}</div>
-    </div>
+    </Link>
   );
 }

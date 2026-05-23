@@ -1,6 +1,6 @@
 import { SavedShell } from "@/components/SavedShell";
 import { getCompetitionSeasonPage } from "@/lib/competition-server";
-import { getKoreaYear } from "@/lib/date";
+import { getKoreaDateParam, getKoreaYear } from "@/lib/date";
 import { createPageMetadata } from "@/lib/metadata";
 
 export const revalidate = 86_400;
@@ -19,14 +19,15 @@ export const metadata = {
 };
 
 export default async function SavedPage() {
+  const today = getKoreaDateParam();
   const seasonYear = getKoreaYear();
   const competitionPage = await getCompetitionSeasonPage(seasonYear, {
+    startsFrom: today,
     sort: "date-asc",
   });
 
   return (
     <SavedShell
-      seasonYear={seasonYear}
       competitions={competitionPage.items}
     />
   );
