@@ -209,7 +209,6 @@ function createNacEvent(
       rawLocationText: location.rawText,
       rawRegistrationText: `products=${pageData.products.length}; first=${registrationUrl}`,
     }),
-    confidence: "low",
     qualityIssues,
     notes:
       "NAC Korea 공식 대회접수 상품 목록을 기준으로 수집했습니다. 날짜/장소는 공식 HTML에 직접 노출되지 않아 보조 후보와 교차 보강한 preview 데이터입니다.",

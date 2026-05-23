@@ -1,13 +1,14 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import type { Filters } from "@/lib/data";
+import { useMemo } from "react";
 import { regStatusAt } from "@/lib/data";
 import { useCompetitionDrawer } from "@/hooks/use-competition-drawer";
+import { useListFilterQueryState } from "@/hooks/use-filter-query-state";
 import type {
   CompetitionFilterOptions,
   CompetitionListPage,
 } from "@/lib/competition-public";
+import type { ListFilterQueryState } from "@/lib/filter-query";
 import { useClientToday } from "@/hooks/use-client-today";
 import { useSiteShell } from "@/components/SiteShell";
 import { ListView } from "@/components/ListView";
@@ -16,16 +17,20 @@ import { CompDrawer } from "@/components/CompDrawer";
 interface ListShellProps {
   initialCompetitionPage: CompetitionListPage;
   initialFilterOptions: CompetitionFilterOptions;
+  initialFilterState: ListFilterQueryState;
   initialOpenedCompetitionId?: string;
 }
 
 export function ListShell({
   initialCompetitionPage,
   initialFilterOptions,
+  initialFilterState,
   initialOpenedCompetitionId,
 }: ListShellProps) {
   const today = useClientToday();
   const { saved, toggleSave } = useSiteShell();
+  const { filters, setFilters, search, setSearch, currentPath } =
+    useListFilterQueryState(initialFilterState);
   const initialOpenedCompetition =
     initialOpenedCompetitionId
       ? initialCompetitionPage.items.find(
@@ -34,11 +39,9 @@ export function ListShell({
       : null;
   const { openedComp, drawerOpen, openComp, closeDrawer } =
     useCompetitionDrawer({
-      closePath: "/competitions",
+      closePath: currentPath,
       initialCompetition: initialOpenedCompetition,
     });
-  const [filters, setFilters] = useState<Filters>({});
-  const [search, setSearch] = useState("");
 
   const competitions = initialCompetitionPage.items;
   const filtered = useMemo(
@@ -75,7 +78,13 @@ export function ListShell({
         if (filters.natural && !competition.natural) {
           return false;
         }
-        if (filters.savedOnly && !saved.includes(competition.id)) {
+        if (filters.regional && !competition.regional) {
+          return false;
+        }
+        if (filters.proPath && !competition.proPath) {
+          return false;
+        }
+        if (filters.internationalRoute && !competition.internationalRoute) {
           return false;
         }
         if (
@@ -89,7 +98,7 @@ export function ListShell({
 
         return true;
       }),
-    [competitions, filters, saved, search, today],
+    [competitions, filters, search, today],
   );
 
   return (

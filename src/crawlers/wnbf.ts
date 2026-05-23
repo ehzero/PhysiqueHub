@@ -179,7 +179,6 @@ function createWnbfEvent(section: WnbfSection, fetchedAt: string): CompetitionSc
       rawLocationText: location.rawText,
       rawRegistrationText: registration.rawText,
     }),
-    confidence: date.startsOn && location.rawText ? "medium" : "low",
     qualityIssues,
     notes:
       "WNBF Korea 공식 Imweb 대회참가 신청 페이지의 텍스트 위젯에서 수집한 preview 데이터입니다.",
@@ -302,7 +301,8 @@ function inferWnbfLocation(
   if (/정선|하이원리조트/i.test(title)) {
     return {
       country: "KR",
-      region: "정선",
+      region: "강원특별자치도",
+      city: "정선군",
       venue: "하이원리조트",
       rawText: "정선 하이원리조트",
       confidence: "high",
@@ -321,7 +321,8 @@ function inferWnbfLocation(
   if (/정선|하이원리조트/i.test(text)) {
     return {
       country: "KR",
-      region: "정선",
+      region: "강원특별자치도",
+      city: "정선군",
       venue: "하이원리조트",
       rawText: "정선 하이원리조트",
       confidence: "high",

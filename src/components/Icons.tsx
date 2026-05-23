@@ -9,12 +9,14 @@ import {
   ChevronDown,
   ChevronUp,
   ExternalLink,
+  Paperclip,
   List,
   MapPin,
   MessageCircle,
   Search,
   Share2,
   Tag,
+  Trash2,
   X,
 } from "lucide-react";
 
@@ -43,4 +45,6 @@ export const Icons = {
   check: <Check {...iconProps} strokeWidth={3} />,
   share: <Share2 {...iconProps} />,
   ext: <ExternalLink {...iconProps} />,
+  paperclip: <Paperclip {...iconProps} />,
+  trash: <Trash2 {...iconProps} />,
 };

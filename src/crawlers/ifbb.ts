@@ -121,7 +121,6 @@ export async function crawlIfbbNpcAgp(): Promise<CrawlerResult> {
               rawLocationText: location.rawText,
               rawRegistrationText: registrationText,
             }),
-            confidence: date.startsOn && location.rawText ? "medium" : "low",
             qualityIssues:
               date.startsOn && location.rawText
                 ? []

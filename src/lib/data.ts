@@ -200,7 +200,9 @@ export interface Filters {
   status?: string[];
   beginner?: boolean;
   natural?: boolean;
-  savedOnly?: boolean;
+  regional?: boolean;
+  proPath?: boolean;
+  internationalRoute?: boolean;
 }
 
 export function parseDate(s: string): Date {

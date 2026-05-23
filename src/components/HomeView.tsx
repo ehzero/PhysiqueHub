@@ -16,6 +16,7 @@ import {
   type CompetitionFilterOptions,
   type CompetitionListPage,
 } from "@/lib/competition-public";
+import type { HomeFilterQueryState } from "@/lib/filter-query";
 
 const DOWS = ["일", "월", "화", "수", "목", "금", "토"];
 
@@ -39,6 +40,8 @@ interface HomeViewProps {
   toggleSave: (id: string) => void;
   openComp: (c: Competition) => void;
   filterOptions?: CompetitionFilterOptions;
+  filterState: HomeFilterQueryState;
+  setFilterState: (state: HomeFilterQueryState) => void;
   today: Date | null;
 }
 
@@ -49,15 +52,13 @@ export function HomeView({
   toggleSave,
   openComp,
   filterOptions,
+  filterState,
+  setFilterState,
   today,
 }: HomeViewProps) {
-  const [activePreset, setActivePreset] = useState("all");
-  const [activeOrganizationId, setActiveOrganizationId] = useState<string | null>(
-    null,
-  );
-  const [sortBy, setSortBy] = useState("date");
   const [sortOpen, setSortOpen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(10);
+  const { activeOrganizationId, activePreset, sortBy } = filterState;
 
   const counts = {
     all: filterOptions ? sumCounts(filterOptions.organizations) : 0,
@@ -183,11 +184,14 @@ export function HomeView({
         activeOrganizationId={activeOrganizationId}
         activePreset={activePreset}
         onSelectOrganization={(id) => {
-          setActiveOrganizationId(activeOrganizationId === id ? null : id);
+          setFilterState({
+            ...filterState,
+            activeOrganizationId: activeOrganizationId === id ? null : id,
+          });
           setVisibleCount(10);
         }}
         onSelectPreset={(id) => {
-          setActivePreset(id);
+          setFilterState({ ...filterState, activePreset: id });
           setVisibleCount(10);
         }}
       />
@@ -207,14 +211,18 @@ export function HomeView({
         toggleSave={toggleSave}
         setSortOpen={setSortOpen}
         onSelectSort={(value) => {
-          setSortBy(value);
+          setFilterState({ ...filterState, sortBy: value });
           setVisibleCount(10);
           setSortOpen(false);
         }}
         onShowMore={() => setVisibleCount((count) => count + 10)}
         onResetFilters={() => {
-          setActivePreset("all");
-          setActiveOrganizationId(null);
+          setFilterState({
+            ...filterState,
+            activeOrganizationId: null,
+            activePreset: "all",
+          });
+          setVisibleCount(10);
         }}
       />
       {activePreset !== "beginner" && (

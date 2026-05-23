@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageHeader, PageMain, PageSection } from "@/components/PageLayout";
+import { ShareButton } from "@/components/ShareButton";
 import { fmtDate } from "@/lib/data";
 import type { Competition } from "@/lib/data";
 import { getCompetitionById } from "@/lib/competition-server";
@@ -70,6 +71,7 @@ export default async function CompetitionDetailPage({
   const officialUrl = competition.sourceUrl || competition.registrationUrl;
   const eventJsonLd = getEventJsonLd(competition);
   const breadcrumbJsonLd = getBreadcrumbJsonLd(competition);
+  const shareText = `${competition.org} · ${getDateLabel(competition)} · ${competition.venue}, ${competition.region}`;
 
   return (
     <PageMain>
@@ -80,9 +82,17 @@ export default async function CompetitionDetailPage({
         title={competition.title}
         subtitle={`${competition.org} · ${getDateLabel(competition)} · ${competition.venue}`}
         actions={
-          <Link className="cta-btn" href="/competitions">
-            대회 목록으로
-          </Link>
+          <>
+            <ShareButton
+              className="cta-btn"
+              path={getCompetitionPath(competition.id)}
+              text={shareText}
+              title={competition.title}
+            />
+            <Link className="cta-btn" href="/competitions">
+              대회 목록으로
+            </Link>
+          </>
         }
       />
 

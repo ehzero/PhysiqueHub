@@ -24,16 +24,16 @@ export function Foot({
               <h5>ORGS</h5>
               <ul>
                 <li>
-                  <a href="#">IFBB Korea</a>
+                  <span className="foot-text">IFBB Korea</span>
                 </li>
                 <li>
-                  <a href="#">NABBA Korea</a>
+                  <span className="foot-text">NABBA Korea</span>
                 </li>
                 <li>
-                  <a href="#">WNBF Korea</a>
+                  <span className="foot-text">WNBF Korea</span>
                 </li>
                 <li>
-                  <a href="#">대한보디빌딩협회</a>
+                  <span className="foot-text">대한보디빌딩협회</span>
                 </li>
               </ul>
             </div>
@@ -73,7 +73,7 @@ export function Foot({
           </div>
         </div>
         <div className="foot-bottom">
-          <span>© {seasonYear} PhysiqueHub</span>
+          <span>© {seasonYear} PhysiqueHub. All rights reserved.</span>
           <span>v{packageJson.version} BETA</span>
         </div>
       </div>

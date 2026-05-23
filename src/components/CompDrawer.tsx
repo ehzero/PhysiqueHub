@@ -11,6 +11,7 @@ import {
 } from "@/lib/data";
 import { Icons } from "./Icons";
 import { PosterFigure, posterFigureColor } from "./PosterFigure";
+import { ShareButton } from "./ShareButton";
 
 const DAYS_KO = ["일", "월", "화", "수", "목", "금", "토"];
 
@@ -82,7 +83,12 @@ export function CompDrawer({
             >
               {isSaved ? Icons.bookmarkFilled : Icons.bookmark}
             </button>
-            <button className="icon-btn" aria-label="share">{Icons.share}</button>
+            <ShareButton
+              iconOnly
+              path={getCompetitionPath(comp.id)}
+              text={`${comp.org} · ${dateLabel} · ${comp.venue}, ${comp.region}`}
+              title={comp.title}
+            />
             <button className="icon-btn" onClick={onClose} aria-label="close">{Icons.close}</button>
           </div>
         </div>
@@ -211,4 +217,8 @@ export function CompDrawer({
       </aside>
     </>
   );
+}
+
+function getCompetitionPath(id: string) {
+  return `/competitions/${encodeURIComponent(id)}`;
 }

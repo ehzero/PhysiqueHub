@@ -190,7 +190,6 @@ function createOneClassicEvent(
       rawLocationText: data.locationText,
       rawRegistrationText: data.registrationRawText,
     }),
-    confidence: data.locationText && data.registrationClosesAt ? "high" : "medium",
     qualityIssues,
     notes:
       "ONE CLASSIC 공식 대회일정 페이지의 서버 렌더링 텍스트에서 수집한 preview 데이터입니다.",
@@ -262,7 +261,7 @@ function inferOneClassicLocation(rawText: string) {
   return {
     ...inferred,
     region: "대전광역시",
-    city: "대전",
+    city: "대전광역시",
     venue: "한밭대학교",
     rawText,
     confidence: "high" as const,

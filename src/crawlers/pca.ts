@@ -211,7 +211,6 @@ function createCoachnEvent(
     ? {
         ...inferLocation([detail.locationText]),
         rawText: detail.locationText,
-        confidence: "high" as const,
       }
     : { country: "KR", confidence: "low" as const };
   const qualityIssues = [];
@@ -273,7 +272,6 @@ function createCoachnEvent(
       rawLocationText: detail?.locationText,
       rawRegistrationText: closesAt ? `data-deadline=${item.deadlineUnixSeconds}` : undefined,
     }),
-    confidence: detail && date.startsOn && detail.locationText ? "high" : "low",
     qualityIssues,
     notes:
       "CoachN 대회신청 앱의 PCA/NPCA 접수 목록과 상세 페이지에서 수집한 preview 데이터입니다.",

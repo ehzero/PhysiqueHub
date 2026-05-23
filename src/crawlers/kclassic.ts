@@ -240,7 +240,6 @@ function createKclassicEvent(
       rawLocationText: location.rawText,
       rawRegistrationText: registration.rawText,
     }),
-    confidence: "low",
     qualityIssues,
     notes:
       "K-Classic 공식 신청 앱 KISMOS의 2026 KCL 카테고리와 상품 상세 옵션에서 수집한 preview 데이터입니다.",
@@ -327,8 +326,8 @@ function inferKclassicLocation(title: string): Partial<CompetitionLocation> {
   if (/대구/.test(title)) {
     return {
       country: "KR",
-      region: "대구",
-      city: "대구",
+      region: "대구광역시",
+      city: "대구광역시",
       rawText: "대구",
       confidence: "medium",
     };
@@ -337,8 +336,8 @@ function inferKclassicLocation(title: string): Partial<CompetitionLocation> {
   if (/서울/.test(title)) {
     return {
       country: "KR",
-      region: "서울",
-      city: "서울",
+      region: "서울특별시",
+      city: "서울특별시",
       rawText: "서울",
       confidence: "medium",
     };

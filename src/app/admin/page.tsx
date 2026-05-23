@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { CompetitionSchedule } from "@prisma/client";
 import Link from "next/link";
 import { hasAdminSession, isAdminPasswordConfigured } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
@@ -19,12 +20,15 @@ type AdminPageProps = {
     id?: string;
     status?: string;
     confidence?: string;
+    org?: string;
+    issue?: string;
   }>;
 };
 
 const REVIEW_STATUSES = ["needs-review", "approved", "rejected", "pending"] as const;
 const CONFIDENCE_LEVELS = ["high", "medium", "low"] as const;
 const REGISTRATION_STATUSES = ["unknown", "scheduled", "open", "closing-soon", "closed", "cancelled"] as const;
+const ISSUE_FILTERS = ["date", "location", "registration", "low-confidence"] as const;
 
 function getErrorMessage(error?: string) {
   if (error === "missing-config") {
@@ -76,14 +80,24 @@ async function AdminDashboard({
   selectedId,
   statusFilter,
   confidenceFilter,
+  organizationFilter,
+  issueFilter,
 }: {
   selectedId?: string;
   statusFilter?: string;
   confidenceFilter?: string;
+  organizationFilter?: string;
+  issueFilter?: string;
 }) {
   const seasonYear = new Date().getFullYear();
-  const queueWhere = getQueueWhere(seasonYear, statusFilter, confidenceFilter);
-  const [totalCount, needsReviewCount, approvedCount, lowDateCount, missingCoreCount, queue] =
+  const queueWhere = getQueueWhere(
+    seasonYear,
+    statusFilter,
+    confidenceFilter,
+    organizationFilter,
+    issueFilter,
+  );
+  const [totalCount, needsReviewCount, approvedCount, lowDateCount, missingCoreCount, organizationRows, queue] =
     await Promise.all([
       prisma.competitionSchedule.count({ where: { seasonYear } }),
       prisma.competitionSchedule.count({ where: { seasonYear, reviewStatus: "needs-review" } }),
@@ -103,9 +117,17 @@ async function AdminDashboard({
         },
       }),
       prisma.competitionSchedule.findMany({
+        where: { seasonYear },
+        select: {
+          organizationId: true,
+          organizationName: true,
+          reviewStatus: true,
+        },
+        orderBy: [{ organizationName: "asc" }],
+      }),
+      prisma.competitionSchedule.findMany({
         where: queueWhere,
         orderBy: [{ reviewStatus: "desc" }, { confidence: "asc" }, { dateStartsOn: "asc" }, { title: "asc" }],
-        take: 80,
       }),
     ]);
   const selectedCompetition =
@@ -121,6 +143,23 @@ async function AdminDashboard({
     ? parseJsonArray<{ name?: string; group?: string }>(selectedCompetition.divisionsJson)
     : [];
   const missingFields = selectedCompetition ? getMissingFields(selectedCompetition) : [];
+  const organizationSummaries = getOrganizationSummaries(organizationRows);
+  const queueGroups = groupCompetitionsByOrganization(queue);
+  const selectedQueueIndex = selectedCompetition
+    ? queue.findIndex((competition) => competition.id === selectedCompetition.id)
+    : -1;
+  const nextCompetition =
+    selectedQueueIndex >= 0 ? queue[selectedQueueIndex + 1] ?? null : queue[0] ?? null;
+  const nextCompetitionHref = nextCompetition
+    ? getAdminHref({
+        statusFilter,
+        confidenceFilter,
+        organizationFilter,
+        issueFilter,
+        id: nextCompetition.id,
+      })
+    : getAdminHref({ statusFilter, confidenceFilter, organizationFilter, issueFilter });
+  const selectedHealth = selectedCompetition ? getReviewHealth(selectedCompetition) : null;
 
   return (
     <main className="admin-shell">
@@ -170,19 +209,24 @@ async function AdminDashboard({
           </div>
           <div className="admin-tabs">
             <AdminTab
-              href={getAdminHref({ confidenceFilter })}
+              href={getAdminHref({ confidenceFilter, organizationFilter, issueFilter })}
               active={!statusFilter || statusFilter === "open"}
             >
               검수 필요
             </AdminTab>
             <AdminTab
-              href={getAdminHref({ statusFilter: "all", confidenceFilter })}
+              href={getAdminHref({ statusFilter: "all", confidenceFilter, organizationFilter, issueFilter })}
               active={statusFilter === "all"}
             >
               전체
             </AdminTab>
             <AdminTab
-              href={getAdminHref({ statusFilter: "approved", confidenceFilter })}
+              href={getAdminHref({
+                statusFilter: "approved",
+                confidenceFilter,
+                organizationFilter,
+                issueFilter,
+              })}
               active={statusFilter === "approved"}
             >
               승인됨
@@ -194,7 +238,7 @@ async function AdminDashboard({
           <span className="admin-filter-label">신뢰도</span>
           <div className="admin-tabs">
             <AdminTab
-              href={getAdminHref({ statusFilter })}
+              href={getAdminHref({ statusFilter, organizationFilter, issueFilter })}
               active={!isConfidenceFilter(confidenceFilter)}
             >
               전체
@@ -202,7 +246,12 @@ async function AdminDashboard({
             {CONFIDENCE_LEVELS.map((value) => (
               <AdminTab
                 active={confidenceFilter === value}
-                href={getAdminHref({ statusFilter, confidenceFilter: value })}
+                href={getAdminHref({
+                  statusFilter,
+                  confidenceFilter: value,
+                  organizationFilter,
+                  issueFilter,
+                })}
                 key={value}
               >
                 {toConfidenceLabel(value)}
@@ -211,36 +260,118 @@ async function AdminDashboard({
           </div>
         </div>
 
+        <div className="admin-filter-row" aria-label="문제 유형 필터">
+          <span className="admin-filter-label">이슈</span>
+          <div className="admin-tabs">
+            <AdminTab
+              href={getAdminHref({ statusFilter, confidenceFilter, organizationFilter })}
+              active={!isIssueFilter(issueFilter)}
+            >
+              전체
+            </AdminTab>
+            {ISSUE_FILTERS.map((value) => (
+              <AdminTab
+                active={issueFilter === value}
+                href={getAdminHref({
+                  statusFilter,
+                  confidenceFilter,
+                  organizationFilter,
+                  issueFilter: value,
+                })}
+                key={value}
+              >
+                {toIssueFilterLabel(value)}
+              </AdminTab>
+            ))}
+          </div>
+        </div>
+
+        <div className="admin-filter-row admin-org-filter-row" aria-label="단체 필터">
+          <span className="admin-filter-label">단체</span>
+          <div className="admin-org-tabs">
+            <AdminTab
+              href={getAdminHref({ statusFilter, confidenceFilter, issueFilter })}
+              active={!organizationFilter}
+            >
+              전체 단체
+            </AdminTab>
+            {organizationSummaries.map((summary) => (
+              <AdminTab
+                active={organizationFilter === summary.organizationId}
+                href={getAdminHref({
+                  statusFilter,
+                  confidenceFilter,
+                  issueFilter,
+                  organizationFilter: summary.organizationId,
+                })}
+                key={summary.organizationId}
+              >
+                {summary.organizationName} {summary.needsReviewCount}/{summary.totalCount}
+              </AdminTab>
+            ))}
+          </div>
+        </div>
+
         <div className="admin-review-layout">
           <div className="admin-queue">
-            {queue.map((competition) => {
-              const fieldProblems = getMissingFields(competition);
-              const isSelected = selectedCompetition?.id === competition.id;
+            {queueGroups.map((group) => (
+              <section className="admin-org-group" key={group.organizationId}>
+                <div className="admin-org-head">
+                  <div>
+                    <strong>{group.organizationName}</strong>
+                    <span>
+                      {group.items.length}개 · 검수 {group.needsReviewCount} · 승인 {group.approvedCount}
+                    </span>
+                  </div>
+                  <ProgressBar
+                    current={group.approvedCount}
+                    total={group.items.length}
+                  />
+                </div>
+                {group.items.map((competition) => {
+                  const fieldProblems = getMissingFields(competition);
+                  const isSelected = selectedCompetition?.id === competition.id;
 
-              return (
-                <Link
-                  className={`admin-queue-item ${isSelected ? "is-active" : ""}`}
-                  href={getAdminHref({ statusFilter, confidenceFilter, id: competition.id })}
-                  key={competition.id}
-                >
-                  <span className="admin-queue-title">{competition.title}</span>
-                  <span className="admin-queue-meta">
-                    {competition.organizationName} · {competition.dateStartsOn ? formatKoreaDate(competition.dateStartsOn) : "날짜 없음"}
-                  </span>
-                  <span className="admin-queue-badges">
-                    <ReviewBadge value={competition.reviewStatus} />
-                    <ConfidenceBadge value={competition.confidence} />
-                    {fieldProblems.length > 0 && <span className="admin-badge warn">{fieldProblems.length}개 확인</span>}
-                  </span>
-                </Link>
-              );
-            })}
+                  return (
+                    <Link
+                      className={`admin-queue-item ${isSelected ? "is-active" : ""}`}
+                      href={getAdminHref({
+                        statusFilter,
+                        confidenceFilter,
+                        organizationFilter,
+                        issueFilter,
+                        id: competition.id,
+                      })}
+                      key={competition.id}
+                    >
+                      <span className="admin-queue-title">{competition.title}</span>
+                      <span className="admin-queue-meta">
+                        {competition.dateStartsOn ? formatKoreaDate(competition.dateStartsOn) : "날짜 없음"} · {competition.venue ?? competition.locationRawText ?? "장소 없음"}
+                      </span>
+                      <span className="admin-queue-badges">
+                        <ReviewBadge value={competition.reviewStatus} />
+                        <ConfidenceBadge value={competition.confidence} />
+                        {fieldProblems.length > 0 && <span className="admin-badge warn">{fieldProblems.length}개 확인</span>}
+                      </span>
+                    </Link>
+                  );
+                })}
+              </section>
+            ))}
           </div>
 
           <div className="admin-editor">
             {selectedCompetition ? (
               <form action={updateCompetitionReview} className="admin-review-form">
                 <input name="id" type="hidden" value={selectedCompetition.id} />
+                <input name="redirectTo" type="hidden" value={getAdminHref({
+                  statusFilter,
+                  confidenceFilter,
+                  organizationFilter,
+                  issueFilter,
+                  id: selectedCompetition.id,
+                })} />
+                <input name="nextRedirectTo" type="hidden" value={nextCompetitionHref} />
 
                 <div className="admin-editor-head">
                   <div>
@@ -250,6 +381,9 @@ async function AdminDashboard({
                   <div className="admin-editor-actions">
                     <button className="cta-btn" name="intent" type="submit" value="save">
                       저장
+                    </button>
+                    <button className="cta-btn" name="intent" type="submit" value="approve-next">
+                      승인 후 다음
                     </button>
                     <button className="cta-btn accent" name="intent" type="submit" value="approve">
                       승인
@@ -284,6 +418,30 @@ async function AdminDashboard({
                       </span>
                     ))}
                   </div>
+                )}
+
+                {selectedHealth && (
+                  <section className="admin-check-panel" aria-label="검수 체크리스트">
+                    <div className="admin-check-head">
+                      <div>
+                        <p className="eyebrow">Checklist</p>
+                        <strong>{selectedHealth.readyCount}/{selectedHealth.items.length} 핵심 항목 확인</strong>
+                      </div>
+                      <ProgressBar
+                        current={selectedHealth.readyCount}
+                        total={selectedHealth.items.length}
+                      />
+                    </div>
+                    <div className="admin-check-grid">
+                      {selectedHealth.items.map((item) => (
+                        <div className={`admin-check-card ${item.ok ? "is-ok" : "needs-work"}`} key={item.label}>
+                          <span>{item.label}</span>
+                          <strong>{item.value}</strong>
+                          <small>{item.ok ? "확인됨" : item.reason}</small>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
                 )}
 
                 <div className="admin-form-grid">
@@ -427,6 +585,16 @@ function ConfidenceBadge({ value }: { value: string }) {
   return <span className={`admin-badge confidence-${value}`}>{toConfidenceLabel(value)}</span>;
 }
 
+function ProgressBar({ current, total }: { current: number; total: number }) {
+  const percent = total > 0 ? Math.round((current / total) * 100) : 0;
+
+  return (
+    <span className="admin-progress" aria-label={`${percent}% 완료`}>
+      <span style={{ width: `${percent}%` }} />
+    </span>
+  );
+}
+
 type QualityIssue = {
   field?: string;
   message?: string;
@@ -437,22 +605,30 @@ function getQueueWhere(
   seasonYear: number,
   statusFilter: string | undefined,
   confidenceFilter: string | undefined,
+  organizationFilter: string | undefined,
+  issueFilter: string | undefined,
 ) {
   const confidenceWhere = isConfidenceFilter(confidenceFilter)
     ? { confidence: confidenceFilter }
     : {};
+  const organizationWhere = organizationFilter ? { organizationId: organizationFilter } : {};
+  const issueWhere = getIssueWhere(issueFilter);
 
   if (statusFilter === "approved") {
-    return { seasonYear, reviewStatus: "approved", ...confidenceWhere };
+    return {
+      seasonYear,
+      reviewStatus: "approved",
+      ...confidenceWhere,
+      ...organizationWhere,
+      ...issueWhere,
+    };
   }
 
   if (statusFilter === "all") {
-    return { seasonYear, ...confidenceWhere };
+    return { seasonYear, ...confidenceWhere, ...organizationWhere, ...issueWhere };
   }
 
-  return {
-    seasonYear,
-    ...confidenceWhere,
+  const openWhere = {
     OR: [
       { reviewStatus: { not: "approved" } },
       { confidence: "low" },
@@ -463,6 +639,132 @@ function getQueueWhere(
       { locationRawText: null, venue: null },
     ],
   };
+
+  return isIssueFilter(issueFilter)
+    ? {
+        seasonYear,
+        ...confidenceWhere,
+        ...organizationWhere,
+        AND: [openWhere, issueWhere],
+      }
+    : {
+        seasonYear,
+        ...confidenceWhere,
+        ...organizationWhere,
+        ...openWhere,
+      };
+}
+
+function getIssueWhere(issueFilter: string | undefined) {
+  if (issueFilter === "date") {
+    return {
+      OR: [{ dateStartsOn: null }, { dateConfidence: "low" }],
+    };
+  }
+
+  if (issueFilter === "location") {
+    return {
+      OR: [{ locationRawText: null, venue: null }, { locationConfidence: "low" }],
+    };
+  }
+
+  if (issueFilter === "registration") {
+    return {
+      OR: [{ registrationUrl: null }, { registrationConfidence: "low" }],
+    };
+  }
+
+  if (issueFilter === "low-confidence") {
+    return {
+      OR: [
+        { confidence: "low" },
+        { dateConfidence: "low" },
+        { locationConfidence: "low" },
+        { registrationConfidence: "low" },
+      ],
+    };
+  }
+
+  return {};
+}
+
+type OrganizationSummaryRow = Pick<
+  CompetitionSchedule,
+  "organizationId" | "organizationName" | "reviewStatus"
+>;
+
+function getOrganizationSummaries(rows: OrganizationSummaryRow[]) {
+  const summaries = new Map<
+    string,
+    {
+      organizationId: string;
+      organizationName: string;
+      totalCount: number;
+      needsReviewCount: number;
+      approvedCount: number;
+    }
+  >();
+
+  for (const row of rows) {
+    const summary =
+      summaries.get(row.organizationId) ??
+      {
+        organizationId: row.organizationId,
+        organizationName: row.organizationName,
+        totalCount: 0,
+        needsReviewCount: 0,
+        approvedCount: 0,
+      };
+
+    summary.totalCount += 1;
+    if (row.reviewStatus === "approved") {
+      summary.approvedCount += 1;
+    } else {
+      summary.needsReviewCount += 1;
+    }
+    summaries.set(row.organizationId, summary);
+  }
+
+  return Array.from(summaries.values()).sort((a, b) =>
+    a.organizationName.localeCompare(b.organizationName),
+  );
+}
+
+function groupCompetitionsByOrganization<T extends CompetitionSchedule>(competitions: T[]) {
+  const groups = new Map<
+    string,
+    {
+      organizationId: string;
+      organizationName: string;
+      needsReviewCount: number;
+      approvedCount: number;
+      items: T[];
+    }
+  >();
+
+  for (const competition of competitions) {
+    const group =
+      groups.get(competition.organizationId) ??
+      {
+        organizationId: competition.organizationId,
+        organizationName: competition.organizationName,
+        needsReviewCount: 0,
+        approvedCount: 0,
+        items: [],
+      };
+
+    group.items.push(competition);
+    if (competition.reviewStatus === "approved") {
+      group.approvedCount += 1;
+    } else {
+      group.needsReviewCount += 1;
+    }
+    groups.set(competition.organizationId, group);
+  }
+
+  return Array.from(groups.values()).sort((a, b) =>
+    a.organizationName.localeCompare(b.organizationName),
+  );
 }
 
 function getMissingFields(competition: {
@@ -488,13 +790,58 @@ function getMissingFields(competition: {
   return fields;
 }
 
+function getReviewHealth(competition: CompetitionSchedule) {
+  const items = [
+    {
+      label: "날짜",
+      ok: Boolean(competition.dateStartsOn) && competition.dateConfidence !== "low",
+      reason: !competition.dateStartsOn ? "날짜 누락" : "신뢰도 낮음",
+      value: competition.dateStartsOn ? formatKoreaDate(competition.dateStartsOn) : "없음",
+    },
+    {
+      label: "장소",
+      ok:
+        Boolean(competition.venue || competition.locationRawText) &&
+        competition.locationConfidence !== "low",
+      reason: !competition.venue && !competition.locationRawText ? "장소 누락" : "신뢰도 낮음",
+      value:
+        [competition.region, competition.city, competition.venue]
+          .filter(Boolean)
+          .join(" ") ||
+        competition.locationRawText ||
+        "없음",
+    },
+    {
+      label: "접수",
+      ok: Boolean(competition.registrationUrl) && competition.registrationConfidence !== "low",
+      reason: !competition.registrationUrl ? "URL 누락" : "신뢰도 낮음",
+      value: toRegistrationLabel(competition.registrationStatus),
+    },
+    {
+      label: "전체",
+      ok: competition.confidence !== "low" && competition.reviewStatus === "approved",
+      reason: competition.reviewStatus === "approved" ? "신뢰도 낮음" : "미승인",
+      value: `${toReviewLabel(competition.reviewStatus)} · ${toConfidenceLabel(competition.confidence)}`,
+    },
+  ];
+
+  return {
+    items,
+    readyCount: items.filter((item) => item.ok).length,
+  };
+}
+
 function getAdminHref({
   statusFilter,
   confidenceFilter,
+  organizationFilter,
+  issueFilter,
   id,
 }: {
   statusFilter?: string;
   confidenceFilter?: string;
+  organizationFilter?: string;
+  issueFilter?: string;
   id?: string;
 }) {
   const params = new URLSearchParams();
@@ -504,6 +851,12 @@ function getAdminHref({
   }
   if (isConfidenceFilter(confidenceFilter)) {
     params.set("confidence", confidenceFilter);
+  }
+  if (organizationFilter) {
+    params.set("org", organizationFilter);
+  }
+  if (isIssueFilter(issueFilter)) {
+    params.set("issue", issueFilter);
   }
   if (id) {
     params.set("id", id);
@@ -515,6 +868,10 @@ function getAdminHref({
 
 function isConfidenceFilter(value: string | undefined): value is (typeof CONFIDENCE_LEVELS)[number] {
   return CONFIDENCE_LEVELS.some((level) => level === value);
+}
+
+function isIssueFilter(value: string | undefined): value is (typeof ISSUE_FILTERS)[number] {
+  return ISSUE_FILTERS.some((issue) => issue === value);
 }
 
 function toReviewLabel(value: string) {
@@ -537,6 +894,14 @@ function toRegistrationLabel(value: string) {
   if (value === "closed") return "마감";
   if (value === "cancelled") return "취소";
   return "확인 필요";
+}
+
+function toIssueFilterLabel(value: string) {
+  if (value === "date") return "날짜";
+  if (value === "location") return "장소";
+  if (value === "registration") return "접수";
+  if (value === "low-confidence") return "낮은 신뢰도";
+  return "전체";
 }
 
 function formatKoreaDate(value: Date) {
@@ -565,7 +930,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
   const paramsPromise: NonNullable<AdminPageProps["searchParams"]> =
     searchParams ?? Promise.resolve({});
 
-  const [{ error, id, status, confidence }, isAuthed] = await Promise.all([
+  const [{ error, id, status, confidence, org, issue }, isAuthed] = await Promise.all([
     paramsPromise,
     hasAdminSession(),
   ]);
@@ -577,6 +942,8 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
   return (
     <AdminDashboard
       confidenceFilter={confidence}
+      issueFilter={issue}
+      organizationFilter={org}
       selectedId={id}
       statusFilter={status}
     />

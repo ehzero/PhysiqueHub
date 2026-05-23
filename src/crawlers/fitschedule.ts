@@ -205,7 +205,6 @@ function createFitScheduleEvent(
       rawLocationText: cleanText(competition.venue) || undefined,
       rawRegistrationText: deadline || undefined,
     }),
-    confidence: "medium",
     qualityIssues,
     notes:
       "FitSchedule 집계 데이터를 공식 원본 누락 탐지용으로 수집한 preview 데이터입니다. 운영 노출/저장 시 공식 URL과 교차 검수해야 합니다.",

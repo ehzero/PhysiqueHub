@@ -150,7 +150,6 @@ function createMonsterzymEvent(
     ? {
         ...inferLocation([card.locationText]),
         rawText: card.locationText,
-        confidence: "medium" as const,
       }
     : {
         country: "KR",
@@ -215,7 +214,6 @@ function createMonsterzymEvent(
       rawDateText: card.dateText,
       rawLocationText: card.locationText,
     }),
-    confidence: date.startsOn ? "medium" : "low",
     qualityIssues,
     notes:
       "Monsterzym 이벤트 메인 페이지의 일정 카드에서 수집한 preview 데이터입니다. robots.txt 차단으로 운영 자동 수집 전 허가 검토가 필요합니다.",

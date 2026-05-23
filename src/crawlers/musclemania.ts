@@ -239,7 +239,6 @@ function createMusclemaniaEvent(
       rawDateText: item.dateText,
       rawLocationText: item.cityText,
     }),
-    confidence: date.startsOn ? "medium" : "low",
     qualityIssues,
     notes:
       "Musclemania 공식 Event Schedule 표에서 수집한 preview 데이터입니다. 지역/국가 분류는 show/city 텍스트 기반 추정입니다.",

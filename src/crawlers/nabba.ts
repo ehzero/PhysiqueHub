@@ -87,7 +87,6 @@ export async function crawlNabba(): Promise<CrawlerResult> {
             rawLocationText: placeText,
             rawRegistrationText: link.attr("data-end-date"),
           }),
-          confidence: date.startsOn && placeText ? "high" : "medium",
         }),
       );
     }

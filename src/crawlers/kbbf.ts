@@ -223,7 +223,6 @@ function createKbbfEvent(input: {
     ? {
         ...inferLocation([input.detail.locationText]),
         rawText: input.detail.locationText,
-        confidence: "high" as const,
       }
     : { country: "KR", confidence: "low" as const };
   const qualityIssues = [];
@@ -287,7 +286,6 @@ function createKbbfEvent(input: {
       rawLocationText: input.detail?.locationText,
       rawRegistrationText: registrationText,
     }),
-    confidence: input.detail?.confidence === "high" && date.startsOn && input.detail.locationText ? "high" : "low",
     qualityIssues,
     notes: input.detail?.notes,
   });

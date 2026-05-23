@@ -4,6 +4,7 @@ import { cache } from "react";
 import type { CompetitionSchedule } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { getKoreaDateParam } from "@/lib/date";
+import { compareRegionNames, normalizeCompetitionRegion } from "@/lib/location";
 import {
   buildCompetitionWhere,
   getCompetitionOrderBy,
@@ -212,7 +213,7 @@ export async function getCompetitionFiltersPayload(
     if (isInternationalRoute) flagCounts.internationalRoute += 1;
     if (isRegional) flagCounts.regional += 1;
 
-    const region = item.region ?? item.city ?? item.country;
+    const region = normalizeCompetitionRegion(item);
     if (region) {
       regionCounts.set(region, (regionCounts.get(region) ?? 0) + 1);
     }
@@ -234,7 +235,7 @@ export async function getCompetitionFiltersPayload(
       b.count - a.count ||
       a.name.localeCompare(b.name),
     ),
-    regions: mapCounts(regionCounts),
+    regions: mapCounts(regionCounts, compareRegionNames),
     categories: mapCounts(categoryCounts).slice(0, 24),
     registrationStatuses: registrationStatuses.map((status) => ({
       status: status.registrationStatus,
@@ -336,10 +337,17 @@ function isRegionalRecord(
   return /리저널|regional/i.test(`${title} ${tags}`);
 }
 
-function mapCounts(counts: Map<string, number>) {
+function mapCounts(
+  counts: Map<string, number>,
+  compareNames?: (a: string, b: string) => number,
+) {
   return Array.from(counts.entries())
     .map(([name, count]) => ({ name, count }))
-    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+    .sort((a, b) =>
+      compareNames
+        ? compareNames(a.name, b.name)
+        : b.count - a.count || a.name.localeCompare(b.name),
+    );
 }
 
 function toKoreaMonthString(value: CompetitionSchedule["dateStartsOn"]): string | undefined {

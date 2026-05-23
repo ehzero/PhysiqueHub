@@ -1,4 +1,5 @@
 import type { Prisma, CompetitionSchedule } from "@prisma/client";
+import { normalizeCompetitionRegion } from "@/lib/location";
 
 const DEFAULT_COMPETITION_PAGE_SIZE = 20;
 const MAX_COMPETITION_PAGE_SIZE = 500;
@@ -219,7 +220,7 @@ export function serializePublicCompetition(record: CompetitionSchedule) {
       country: record.country,
       region: record.region,
       city: record.city,
-      venue: record.venue ?? toPublicLocationText(record.locationRawText),
+      venue: record.venue ?? toPublicVenueText(record),
       address: record.address,
     },
     divisions: parseJsonArray(record.divisionsJson).map(toPublicDivision),
@@ -290,17 +291,56 @@ function toPublicDivision(value: unknown) {
   };
 }
 
-function toPublicLocationText(value: string | null): string | null {
-  if (!value) {
+function toPublicVenueText(record: CompetitionSchedule): string | null {
+  if (!record.locationRawText) {
     return null;
   }
 
-  const cleaned = value
+  const cleaned = record.locationRawText
     .replace(/\s*\((?:보조 후보|보조)\)\s*$/g, "")
     .replace(/\s+/g, " ")
     .trim();
 
+  if (isAdministrativeLocationText(cleaned, record)) {
+    return null;
+  }
+
   return cleaned || null;
+}
+
+function isAdministrativeLocationText(
+  value: string,
+  record: CompetitionSchedule,
+): boolean {
+  const normalizedRegion = normalizeCompetitionRegion(record);
+  const normalizedParts = value
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
+  const administrativeNames = new Set(
+    [
+      normalizedRegion,
+      record.region,
+      record.city,
+      record.country,
+      record.country === "KR" ? "대한민국" : undefined,
+      record.country === "KR" ? "Korea" : undefined,
+      record.country === "KR" ? "South Korea" : undefined,
+    ].filter((part): part is string => Boolean(part)),
+  );
+
+  return (
+    normalizedParts.length > 0 &&
+    normalizedParts.every((part) => {
+      const normalizedPart = normalizeCompetitionRegion({
+        country: record.country,
+        region: part,
+        city: part,
+      });
+
+      return administrativeNames.has(part) || Boolean(normalizedPart && administrativeNames.has(normalizedPart));
+    })
+  );
 }
 
 function parseStringList(value: string | null): string[] {

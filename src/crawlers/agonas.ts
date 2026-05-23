@@ -276,7 +276,6 @@ function createAgonasEvent(
       rawLocationText: location.rawText,
       rawRegistrationText: fee?.rawText,
     }),
-    confidence: detail && date.startsOn && location.rawText ? "medium" : "low",
     qualityIssues,
     notes:
       "잠백이 AGONAS 대회 공식 상품 카테고리와 상세 상품에서 수집한 preview 데이터입니다. 날짜/장소는 공식 상품 HTML에 직접 노출되지 않아 보조 후보값으로 낮은 신뢰도로 보강했습니다.",

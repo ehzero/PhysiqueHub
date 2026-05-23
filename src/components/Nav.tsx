@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Icons } from "./Icons";
+import { ShareButton } from "./ShareButton";
 
 interface NavProps {
   route: string;
@@ -57,6 +58,11 @@ export function Nav({ route, savedCount, onOpenContact }: NavProps) {
           </nav>
           <span className="nav-divider" aria-hidden="true" />
           <div className="nav-actions">
+            <ShareButton
+              iconOnly
+              text="보디빌딩·피트니스 대회 일정을 한눈에 확인하세요."
+              title="PhysiqueHub"
+            />
             <button
               className="icon-btn"
               aria-label="문의"

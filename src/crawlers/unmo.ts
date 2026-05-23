@@ -183,7 +183,6 @@ function createUnmoEvent(
     ? {
         ...inferLocation([detail.locationText]),
         rawText: detail.locationText,
-        confidence: "high" as const,
       }
     : { country: "KR", confidence: "low" as const };
   const fee = detail?.fee ?? item.fee;
@@ -258,7 +257,6 @@ function createUnmoEvent(
       rawLocationText: detail?.locationText,
       rawRegistrationText: detail?.registrationClosesAt,
     }),
-    confidence: detail && date.startsOn && detail.locationText ? "high" : "low",
     qualityIssues,
     notes:
       "운동의모든것 공개 접수 상세 기반 preview입니다. 운영 반영 전 수집 허가/약관 검토가 필요합니다.",

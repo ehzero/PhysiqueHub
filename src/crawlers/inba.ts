@@ -188,7 +188,6 @@ function createInbaEvent(row: InbaScheduleRow, fetchedAt: string): CompetitionSc
       rawDateText: row.dateText,
       rawLocationText: row.locationText,
     }),
-    confidence: date.startsOn && location.rawText ? "medium" : "low",
     qualityIssues,
     notes:
       "NaturalBodybuilding.com 공식 Events Schedule 테이블에서 수집한 INBA/PNBA preview 데이터입니다.",
@@ -226,17 +225,30 @@ function parseGlobalLocation(rawText: string): Partial<CompetitionLocation> {
   }
 
   const parts = raw.split(",").map(cleanText).filter(Boolean);
-  const city = parts[0];
+  const rawCity = parts[0];
   const regionOrCountry = parts[1];
   const country = inferCountry(raw, regionOrCountry);
+  const koreanRegion = country === "KR" ? normalizeKoreanGlobalCity(rawCity) : undefined;
 
   return {
     country,
-    region: regionOrCountry && isUsStateCode(regionOrCountry) ? regionOrCountry : undefined,
-    city,
+    region: koreanRegion ?? (regionOrCountry && isUsStateCode(regionOrCountry) ? regionOrCountry : undefined),
+    city: koreanRegion ?? rawCity,
     rawText: raw,
     confidence: country === "unknown" ? "low" : "medium",
   };
+}
+
+function normalizeKoreanGlobalCity(value: string): string | undefined {
+  if (/^(Seoul|서울)$/i.test(value)) return "서울특별시";
+  if (/^(Busan|부산)$/i.test(value)) return "부산광역시";
+  if (/^(Daegu|대구)$/i.test(value)) return "대구광역시";
+  if (/^(Incheon|인천)$/i.test(value)) return "인천광역시";
+  if (/^(Daejeon|대전)$/i.test(value)) return "대전광역시";
+  if (/^(Gwangju|광주)$/i.test(value)) return "광주광역시";
+  if (/^(Ulsan|울산)$/i.test(value)) return "울산광역시";
+  if (/^(Jeju|제주)$/i.test(value)) return "제주특별자치도";
+  return undefined;
 }
 
 function inferCountry(rawText: string, regionOrCountry: string | undefined): string {

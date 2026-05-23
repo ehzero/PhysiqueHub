@@ -163,65 +163,65 @@ function toCompetitionScheduleWritableInput(
   return {
     organizationId: event.organizationId,
     organizationName: event.organizationName,
-    organizationShortName: event.organizationShortName,
+    organizationShortName: event.organizationShortName ?? null,
     title: event.title,
-    subtitle: event.subtitle,
+    subtitle: event.subtitle ?? null,
     aliasesJson: stringifyJson(event.aliases ?? []),
-    seasonYear: event.seasonYear,
+    seasonYear: event.seasonYear ?? null,
 
     dateStartsOn: parseDateOnly(event.date.startsOn),
     dateEndsOn: parseDateOnly(event.date.endsOn),
     dateTimezone: event.date.timezone,
-    dateRawText: event.date.rawText,
+    dateRawText: event.date.rawText ?? null,
     dateConfidence: event.date.confidence,
 
     registrationOpensAt: parseDateTime(event.registration.opensAt),
     registrationClosesAt: parseDateTime(event.registration.closesAt),
     registrationStatus: event.registration.status,
-    registrationUrl: event.registration.registrationUrl,
-    registrationRawText: event.registration.rawText,
+    registrationUrl: event.registration.registrationUrl ?? null,
+    registrationRawText: event.registration.rawText ?? null,
     registrationConfidence: event.registration.confidence,
     feeCurrency: event.registration.fee?.currency ?? "UNKNOWN",
-    feeMinAmount: event.registration.fee?.minAmount,
-    feeMaxAmount: event.registration.fee?.maxAmount,
-    feeRawText: event.registration.fee?.rawText,
+    feeMinAmount: event.registration.fee?.minAmount ?? null,
+    feeMaxAmount: event.registration.fee?.maxAmount ?? null,
+    feeRawText: event.registration.fee?.rawText ?? null,
 
     country: event.location.country,
-    region: event.location.region,
-    city: event.location.city,
-    venue: event.location.venue,
-    address: event.location.address,
-    locationRawText: event.location.rawText,
+    region: event.location.region ?? null,
+    city: event.location.city ?? null,
+    venue: event.location.venue ?? null,
+    address: event.location.address ?? null,
+    locationRawText: event.location.rawText ?? null,
     locationConfidence: event.location.confidence,
 
     divisionsJson: stringifyJson(event.divisions),
     tagsJson: stringifyJson(event.tags),
     flagsJson: stringifyJson(event.flags),
 
-    posterImageUrl: event.media?.posterImageUrl,
-    thumbnailUrl: event.media?.thumbnailUrl,
-    imageSourceUrl: event.media?.imageSourceUrl,
+    posterImageUrl: event.media?.posterImageUrl ?? null,
+    thumbnailUrl: event.media?.thumbnailUrl ?? null,
+    imageSourceUrl: event.media?.imageSourceUrl ?? null,
 
     sourceType: event.source.sourceType,
     sourceUrl: event.source.sourceUrl,
-    canonicalUrl: event.source.canonicalUrl,
-    detailUrl: event.source.detailUrl,
-    sourceEventId: event.source.sourceEventId,
+    canonicalUrl: event.source.canonicalUrl ?? null,
+    detailUrl: event.source.detailUrl ?? null,
+    sourceEventId: event.source.sourceEventId ?? null,
     sourceUpdatedAt: parseDateTime(event.source.sourceUpdatedAt),
     fetchedAt: parseRequiredDateTime(event.source.fetchedAt, "source.fetchedAt"),
-    parserName: event.source.parserName,
-    parserVersion: event.source.parserVersion,
-    rawHash: event.source.rawHash,
-    rawTitle: event.source.rawTitle,
-    rawDateText: event.source.rawDateText,
-    rawLocationText: event.source.rawLocationText,
-    rawRegistrationText: event.source.rawRegistrationText,
+    parserName: event.source.parserName ?? null,
+    parserVersion: event.source.parserVersion ?? null,
+    rawHash: event.source.rawHash ?? null,
+    rawTitle: event.source.rawTitle ?? null,
+    rawDateText: event.source.rawDateText ?? null,
+    rawLocationText: event.source.rawLocationText ?? null,
+    rawRegistrationText: event.source.rawRegistrationText ?? null,
 
     crawlStatus: event.crawlStatus,
     reviewStatus: event.reviewStatus,
     confidence: event.confidence,
     qualityIssuesJson: stringifyJson(event.qualityIssues),
-    notes: event.notes,
+    notes: event.notes ?? null,
     normalizedAt: parseDateTime(event.normalizedAt),
   };
 }
@@ -291,17 +291,17 @@ function getSourceProgressRows(
   });
 }
 
-function parseDateOnly(value: string | undefined): Date | undefined {
+function parseDateOnly(value: string | undefined): Date | null {
   if (!value) {
-    return undefined;
+    return null;
   }
 
   return parseRequiredDateTime(`${value}T00:00:00+09:00`, "date");
 }
 
-function parseDateTime(value: string | undefined): Date | undefined {
+function parseDateTime(value: string | undefined): Date | null {
   if (!value) {
-    return undefined;
+    return null;
   }
 
   const normalized = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}(?::\d{2})?$/.test(value)
@@ -309,7 +309,7 @@ function parseDateTime(value: string | undefined): Date | undefined {
     : value;
   const parsed = new Date(normalized);
 
-  return Number.isNaN(parsed.getTime()) ? undefined : parsed;
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
 }
 
 function parseRequiredDateTime(value: string, fieldName: string): Date {

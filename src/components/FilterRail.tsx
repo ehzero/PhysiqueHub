@@ -28,6 +28,7 @@ export function FilterRail({
       count: organization.count,
     })) ?? [];
   const categories = filterOptions?.categories ?? [];
+  const flags = filterOptions?.flags;
 
   function toggle(group: "regions" | "orgs" | "cats" | "status", val: string) {
     setFilters((f) => {
@@ -106,16 +107,42 @@ export function FilterRail({
       </div>
 
       <div className="filter-group">
-        <h4>기타</h4>
+        <h4>대회 유형</h4>
         <div className="filter-options">
-          <FilterOption on={!!filters.beginner} onClick={() => setFilters((f) => ({ ...f, beginner: !f.beginner }))}>
-            입문자 환영 대회
+          <FilterOption
+            count={flags?.natural}
+            on={!!filters.natural}
+            onClick={() => setFilters((f) => ({ ...f, natural: !f.natural }))}
+          >
+            내추럴
           </FilterOption>
-          <FilterOption on={!!filters.natural} onClick={() => setFilters((f) => ({ ...f, natural: !f.natural }))}>
-            내추럴 대회만
+          <FilterOption
+            count={flags?.beginnerAny}
+            on={!!filters.beginner}
+            onClick={() => setFilters((f) => ({ ...f, beginner: !f.beginner }))}
+          >
+            루키·입문
           </FilterOption>
-          <FilterOption on={!!filters.savedOnly} onClick={() => setFilters((f) => ({ ...f, savedOnly: !f.savedOnly }))}>
-            관심 저장 대회만
+          <FilterOption
+            count={flags?.regional}
+            on={!!filters.regional}
+            onClick={() => setFilters((f) => ({ ...f, regional: !f.regional }))}
+          >
+            리저널
+          </FilterOption>
+          <FilterOption
+            count={flags?.proPath}
+            on={!!filters.proPath}
+            onClick={() => setFilters((f) => ({ ...f, proPath: !f.proPath }))}
+          >
+            프로카드·퀄리파이어
+          </FilterOption>
+          <FilterOption
+            count={flags?.internationalRoute}
+            on={!!filters.internationalRoute}
+            onClick={() => setFilters((f) => ({ ...f, internationalRoute: !f.internationalRoute }))}
+          >
+            국제·대표 루트
           </FilterOption>
         </div>
       </div>

@@ -44,7 +44,9 @@ export async function updateCompetitionReview(formData: FormData) {
   }
 
   const reviewStatus =
-    intent === "approve" ? "approved" : getString(formData, "reviewStatus") || "needs-review";
+    intent === "approve" || intent === "approve-next"
+      ? "approved"
+      : getString(formData, "reviewStatus") || "needs-review";
   const dateStartsOn = getNullableDate(formData, "dateStartsOn");
   const dateEndsOn = getNullableDate(formData, "dateEndsOn");
   const feeMinAmount = getNullableNumber(formData, "feeMinAmount");
@@ -77,6 +79,7 @@ export async function updateCompetitionReview(formData: FormData) {
   });
 
   revalidatePath("/admin");
+  redirect(getSafeAdminRedirect(formData, intent === "approve-next" ? "nextRedirectTo" : "redirectTo"));
 }
 
 function getString(formData: FormData, key: string): string {
@@ -118,4 +121,10 @@ function getNullableDateTimeEndOfDay(formData: FormData, key: string): Date | nu
 
   const parsed = new Date(`${value}T23:59:00+09:00`);
   return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function getSafeAdminRedirect(formData: FormData, key: string): string {
+  const value = getString(formData, key);
+
+  return value.startsWith("/admin") ? value : "/admin";
 }
