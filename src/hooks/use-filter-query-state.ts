@@ -24,12 +24,14 @@ export function useListFilterQueryState(
   }, [state]);
 
   useEffect(() => {
-    function onPopState() {
+    function syncCurrentLocation() {
       if (window.location.pathname !== basePath) {
         return;
       }
 
-      const next = parseListFilterQuery(new URLSearchParams(window.location.search));
+      const next = parseListFilterQuery(
+        new URLSearchParams(window.location.search),
+      );
       const nextPath = buildListFilterPath(basePath, next);
 
       if (nextPath !== lastPathRef.current) {
@@ -39,8 +41,9 @@ export function useListFilterQueryState(
       }
     }
 
-    window.addEventListener("popstate", onPopState);
-    return () => window.removeEventListener("popstate", onPopState);
+    syncCurrentLocation();
+    window.addEventListener("popstate", syncCurrentLocation);
+    return () => window.removeEventListener("popstate", syncCurrentLocation);
   }, [basePath]);
 
   const updateState = useCallback(
@@ -98,12 +101,14 @@ export function useHomeFilterQueryState(
   }, [state]);
 
   useEffect(() => {
-    function onPopState() {
+    function syncCurrentLocation() {
       if (window.location.pathname !== basePath) {
         return;
       }
 
-      const next = parseHomeFilterQuery(new URLSearchParams(window.location.search));
+      const next = parseHomeFilterQuery(
+        new URLSearchParams(window.location.search),
+      );
       const nextPath = buildHomeFilterPath(basePath, next);
 
       if (nextPath !== lastPathRef.current) {
@@ -113,8 +118,9 @@ export function useHomeFilterQueryState(
       }
     }
 
-    window.addEventListener("popstate", onPopState);
-    return () => window.removeEventListener("popstate", onPopState);
+    syncCurrentLocation();
+    window.addEventListener("popstate", syncCurrentLocation);
+    return () => window.removeEventListener("popstate", syncCurrentLocation);
   }, [basePath]);
 
   const updateState = useCallback(

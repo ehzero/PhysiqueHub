@@ -1,10 +1,6 @@
 import { ListShell } from "@/components/ListShell";
 import { getUpcomingCompetitionContext } from "@/lib/competition-server";
-import {
-  parseListFilterQuery,
-  toURLSearchParams,
-  type PageSearchParams,
-} from "@/lib/filter-query";
+import { parseListFilterQuery } from "@/lib/filter-query";
 import { createPageMetadata } from "@/lib/metadata";
 
 export const revalidate = 86_400;
@@ -16,18 +12,10 @@ export const metadata = createPageMetadata({
   path: "/competitions",
 });
 
-interface CompetitionsPageProps {
-  searchParams?: Promise<PageSearchParams>;
-}
-
-export default async function CompetitionsPage({
-  searchParams,
-}: CompetitionsPageProps) {
+export default async function CompetitionsPage() {
   const { competitionPage, filterOptions } =
     await getUpcomingCompetitionContext({ includeFilters: true });
-  const initialFilterState = parseListFilterQuery(
-    toURLSearchParams(await searchParams),
-  );
+  const initialFilterState = parseListFilterQuery(new URLSearchParams());
 
   return (
     <ListShell
