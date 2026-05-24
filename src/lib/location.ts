@@ -36,7 +36,7 @@ const REGION_COLLATOR = new Intl.Collator("ko-KR", {
   sensitivity: "base",
 });
 
-const KOREAN_REGION_ORDER = [
+export const KOREAN_REGION_ORDER = [
   "서울",
   "부산",
   "대구",

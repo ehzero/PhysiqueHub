@@ -1,20 +1,9 @@
 import { HomeShell } from "@/components/HomeShell";
-import { getUpcomingCompetitionContext } from "@/lib/competition-server";
-import { parseHomeFilterQuery } from "@/lib/filter-query";
+import { getHomeHubData } from "@/lib/home-hub";
 
-export const revalidate = 86_400;
+export const revalidate = 21_600;
 
 export default async function Home() {
-  const { seasonYear, competitionPage, filterOptions } =
-    await getUpcomingCompetitionContext({ includeFilters: true });
-  const initialFilterState = parseHomeFilterQuery(new URLSearchParams());
-
-  return (
-    <HomeShell
-      seasonYear={seasonYear}
-      initialCompetitionPage={competitionPage}
-      initialFilterOptions={filterOptions!}
-      initialFilterState={initialFilterState}
-    />
-  );
+  const data = await getHomeHubData();
+  return <HomeShell data={data} />;
 }

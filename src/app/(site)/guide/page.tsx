@@ -2,9 +2,9 @@ import { GuideView } from "@/components/GuideView";
 import { createPageMetadata } from "@/lib/metadata";
 
 export const metadata = createPageMetadata({
-  title: "종목 가이드",
+  title: "출전 가이드",
   description:
-    "보디빌딩, 클래식 피지크, 피지크, 비키니, 웰니스, 스포츠모델 등 피트니스 대회 종목의 심사 기준과 단체별 차이를 비교해보세요.",
+    "첫 출전 준비, 종목별 심사 기준, 단체별 출전 루트를 한 페이지에서 비교하고 URL 앵커로 바로 이동하세요.",
   path: "/guide",
 });
 

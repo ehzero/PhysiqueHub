@@ -6,11 +6,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = getSiteUrl();
   const { competitionPage } = await getUpcomingCompetitionContext();
 
-  const staticRoutes = ["", "/competitions", "/guide", "/about", "/terms", "/privacy"].map(
-    (path) => ({
-      url: `${siteUrl}${path}`,
-    }),
-  );
+  const staticRoutes = [
+    "",
+    "/competitions",
+    "/guide",
+    "/about",
+    "/terms",
+    "/privacy",
+  ].map((path) => ({
+    url: `${siteUrl}${path}`,
+  }));
   const competitionRoutes = competitionPage.items.map((competition) => ({
     url: `${siteUrl}/competitions/${encodeURIComponent(competition.id)}`,
     ...(competition.updatedAt

@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 import { Icons } from "./Icons";
-import { ShareButton } from "./ShareButton";
+
+const INK = "#0E0E0C";
+const MUTE = "#86827C";
+
+const NAV_LINKS = [
+  { label: "홈", href: "/", key: "home" },
+  { label: "대회 목록", href: "/competitions", key: "list" },
+];
 
 interface NavProps {
   route: string;
@@ -11,103 +18,87 @@ interface NavProps {
 }
 
 export function Nav({ route, savedCount, onOpenContact }: NavProps) {
-  const savedLabel = savedCount > 0 ? `내 대회 ${savedCount}` : "내 대회";
+  const savedLabel = savedCount > 0 ? `내 대회 (${savedCount})` : "내 대회";
 
   return (
     <header className="nav">
-      <div className="container">
-        <div className="nav-row">
-          <Link className="brand" href="/">
-            <span>피지크 허브</span>
-          </Link>
-          <span className="nav-divider" aria-hidden="true" />
-          <span className="brand-tagline">
-            보디빌딩·피트니스 대회 일정을 한눈에
-          </span>
-          <nav className="nav-menu">
-            <Link
-              className={`nav-link ${route === "home" ? "active" : ""}`}
-              href="/"
-            >
-              홈
+      {/* Desktop nav */}
+      <div className="container nav-container">
+        <div className="nav-desktop">
+          <div className="nav-left">
+            <Link href="/" className="nav-brand" prefetch={false}>
+              <span className="nav-brand-logo">P</span>
+              <span className="nav-brand-name">PhysiqueHub</span>
             </Link>
-            <Link
-              className={`nav-link ${route === "list" ? "active" : ""}`}
-              href="/competitions"
-            >
-              대회 목록
-            </Link>
-            <Link
-              className={`nav-link ${route === "guide" ? "active" : ""}`}
-              href="/guide"
-            >
-              종목 가이드
-            </Link>
-            <Link
-              className={`nav-link ${route === "saved" ? "active" : ""}`}
-              href="/saved"
-            >
-              내 대회{" "}
-              {savedCount > 0 && (
-                <span
-                  className="mono"
-                  style={{ marginLeft: 4, color: "var(--accent)" }}
+            <nav className="nav-links">
+              {NAV_LINKS.map(({ label, href, key }) => (
+                <Link
+                  key={key}
+                  href={href}
+                  className="nav-link-item"
+                  prefetch
+                  style={{
+                    fontWeight: route === key ? 600 : 500,
+                    color: route === key ? INK : MUTE,
+                  }}
                 >
-                  ({savedCount})
-                </span>
-              )}
-            </Link>
-          </nav>
-          <span className="nav-divider" aria-hidden="true" />
-          <div className="nav-actions">
-            <ShareButton
-              iconOnly
-              text="보디빌딩·피트니스 대회 일정을 한눈에 확인하세요."
-              title="PhysiqueHub"
-            />
+                  {label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+          <div className="nav-right">
             <button
-              className="icon-btn"
-              aria-label="문의"
+              className="nav-contact-btn"
+              type="button"
               onClick={onOpenContact}
             >
               {Icons.contact}
+              <span>문의</span>
             </button>
             <Link
-              className={`icon-btn ${route === "list" ? "active" : ""}`}
-              aria-label="대회 검색"
               href="/competitions"
+              className="nav-contact-btn"
+              prefetch={false}
             >
               {Icons.search}
+              <span>대회 검색</span>
+            </Link>
+            <Link
+              href="/saved"
+              className="nav-cta-btn"
+              aria-label={savedLabel}
+              prefetch
+            >
+              {savedLabel}
             </Link>
           </div>
         </div>
       </div>
+
+      {/* Mobile tabbar */}
       <nav className="mobile-tabbar" aria-label="주요 메뉴">
         <Link
           className={`mobile-tab ${route === "home" ? "active" : ""}`}
           href="/"
+          prefetch
         >
           {Icons.home}
           <span>홈</span>
         </Link>
         <Link
-          className={`mobile-tab ${route === "list" ? "active" : ""}`}
+          className={`mobile-tab ${["list", "categories", "types", "regions", "organizations"].includes(route) ? "active" : ""}`}
           href="/competitions"
+          prefetch
         >
           {Icons.list}
-          <span>대회</span>
-        </Link>
-        <Link
-          className={`mobile-tab ${route === "guide" ? "active" : ""}`}
-          href="/guide"
-        >
-          {Icons.book}
-          <span>가이드</span>
+          <span>대회 목록</span>
         </Link>
         <Link
           className={`mobile-tab ${route === "saved" ? "active" : ""}`}
           href="/saved"
           aria-label={savedLabel}
+          prefetch
         >
           <span className="mobile-tab-icon-wrap">
             {savedCount > 0 && (

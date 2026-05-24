@@ -69,8 +69,12 @@ export function useSiteShell() {
 
 function getActiveRoute(pathname: string | null) {
   if (pathname === "/") return "home";
+  if (pathname?.startsWith("/competitions/categories")) return "categories";
+  if (pathname?.startsWith("/competitions/types")) return "types";
+  if (pathname?.startsWith("/competitions/regions")) return "regions";
+  if (pathname?.startsWith("/competitions/organizations")) return "organizations";
   if (pathname?.startsWith("/competitions")) return "list";
-  if (pathname === "/guide") return "guide";
+  if (pathname === "/guide" || pathname?.startsWith("/guides")) return "guide";
   if (pathname === "/saved") return "saved";
 
   return "";

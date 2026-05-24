@@ -236,7 +236,7 @@ export async function getCompetitionFiltersPayload(
       a.name.localeCompare(b.name),
     ),
     regions: mapCounts(regionCounts, compareRegionNames),
-    categories: mapCounts(categoryCounts).slice(0, 24),
+    categories: mapCounts(categoryCounts),
     registrationStatuses: registrationStatuses.map((status) => ({
       status: status.registrationStatus,
       count: status._count._all,

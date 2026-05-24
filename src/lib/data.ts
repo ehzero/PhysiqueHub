@@ -64,6 +64,23 @@ export const CATEGORY_GUIDE: CategoryGuide[] = [
     caution: "Novice, Junior, Masters는 보통 종목이 아니라 경력·연령 클래스입니다.",
   },
   {
+    key: "212 보디빌딩",
+    scope: "Men's 212 Bodybuilding",
+    desc: "남자 보디빌딩의 체중 제한 디비전으로, 오픈 보디빌딩보다 작은 체급 안에서 근육량과 완성도를 겨룹니다.",
+    organizations: "IFBB Pro League, NPC/NPC Worldwide, 일부 국내 리저널·프로 퀄리파이어 등",
+    judgingPoints: [
+      "체중 제한 안에서의 근육량, 밀도, 분리도",
+      "보디빌딩 기준의 컨디셔닝과 필수 포즈 수행력",
+      "상하체 균형, 대칭성, 전체 프레임 대비 완성도",
+    ],
+    checkpoints: [
+      "212lb 또는 대회별 환산 체중 기준과 계측 시점",
+      "해당 대회가 212를 별도 디비전으로 운영하는지 확인",
+      "오픈 보디빌딩, 클래식 피지크와 중복 출전 가능 여부",
+    ],
+    caution: "212는 보통 남자 보디빌딩의 하위 디비전으로 운영되며, 모든 단체와 국내 대회가 별도 종목으로 제공하지는 않습니다.",
+  },
+  {
     key: "클래식 피지크",
     scope: "Classic Physique",
     desc: "보디빌딩보다 고전적 비율과 라인을 강조하며, 신장 대비 체중 제한을 두는 경우가 많습니다.",

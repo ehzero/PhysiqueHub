@@ -5,7 +5,7 @@ import type { CompetitionFilterOptions } from "@/lib/competition-public";
 import { Icons } from "./Icons";
 import { CompRow } from "./CompRow";
 import { FilterRail } from "./FilterRail";
-import { EmptyState, PageHeader, PageMain } from "./PageLayout";
+import { EmptyState, PageMain } from "./PageLayout";
 
 interface ListViewProps {
   comps: Competition[];
@@ -34,61 +34,81 @@ export function ListView({
   setSearch,
   today,
 }: ListViewProps) {
-  return (
-    <PageMain>
-      <PageHeader
-        title="대회 목록"
-        subtitle="필터와 검색으로 출전할 무대를 빠르게 찾아보세요."
-        count={comps.length}
-        actions={
-          <div className="search-box">
-            {Icons.search}
-            <input
-              placeholder="대회명, 단체, 지역 검색…"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            {search && <button onClick={() => setSearch("")}>{Icons.close}</button>}
-          </div>
-        }
-      />
+  const resultCountLabel = comps.length.toLocaleString("ko-KR");
+  void allComps;
 
-      <div className="container">
-        <div className="list-layout">
-          <FilterRail
-            filters={filters}
-            setFilters={setFilters}
-            allComps={allComps}
-            filterOptions={filterOptions}
-          />
-          <div>
-            {comps.length === 0 ? (
-              <EmptyState
-                eyebrow="NO RESULTS"
-                title="조건에 맞는 대회가 없습니다."
-                action={
-                  <button className="cta-btn" onClick={() => setFilters(() => ({ }))}>
-                    필터 초기화
-                  </button>
-                }
-              />
-            ) : (
-              <div className="comp-list">
-                {comps.map((c) => (
-                  <CompRow
-                    key={c.id}
-                    comp={c}
-                    onOpen={openComp}
-                    isSaved={saved.includes(c.id)}
-                    onToggleSave={toggleSave}
-                    today={today}
-                  />
-                ))}
+  return (
+    <PageMain className="competition-index">
+      <section className="competition-list-section">
+        <div className="container">
+          <div className="competition-section-head">
+            <div>
+              <div className="competition-eyebrow">대회 목록</div>
+              <h2 className="competition-section-title">
+                대회 일정을 조건별로 찾아보세요.
+              </h2>
+              <p className="competition-section-copy">
+                필터 상태를 조정해 원하는 피트니스·보디빌딩 대회를 찾아보세요.
+              </p>
+            </div>
+            <div className="competition-head-side">
+              <div className="competition-result-count">
+                <small>검색 결과</small>
+                <span>{resultCountLabel}</span>
               </div>
-            )}
+              <div className="nav-search-pill competition-search-input">
+                {Icons.search}
+                <input
+                  placeholder="대회명, 단체, 지역 검색…"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+                {search && (
+                  <button onClick={() => setSearch("")}>{Icons.close}</button>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="list-layout">
+            <FilterRail
+              filters={filters}
+              setFilters={setFilters}
+              allComps={allComps}
+              filterOptions={filterOptions}
+            />
+            <div>
+              {comps.length === 0 ? (
+                <EmptyState
+                  eyebrow="NO RESULTS"
+                  title="조건에 맞는 대회가 없습니다."
+                  action={
+                    <button
+                      className="cta-btn"
+                      onClick={() => setFilters(() => ({}))}
+                    >
+                      필터 초기화
+                    </button>
+                  }
+                />
+              ) : (
+                <div className="comp-list">
+                  {comps.map((c) => (
+                    <CompRow
+                      key={c.id}
+                      comp={c}
+                      onOpen={openComp}
+                      isSaved={saved.includes(c.id)}
+                      onToggleSave={toggleSave}
+                      today={today}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      </section>
     </PageMain>
   );
 }
