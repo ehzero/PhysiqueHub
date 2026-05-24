@@ -103,6 +103,14 @@ export function Nav({ route, savedCount, onOpenContact }: NavProps) {
           {Icons.book}
           <span>가이드</span>
         </Link>
+        <button
+          className="mobile-tab mobile-tab-button"
+          type="button"
+          onClick={onOpenContact}
+        >
+          {Icons.contact}
+          <span>문의</span>
+        </button>
         <Link
           className={`mobile-tab ${route === "saved" ? "active" : ""}`}
           href="/saved"

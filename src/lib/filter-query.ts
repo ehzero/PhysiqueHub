@@ -1,4 +1,8 @@
 import type { Filters } from "@/lib/data";
+import {
+  COMPETITION_TIERS,
+  type CompetitionTier,
+} from "@/lib/competition-classification";
 
 export interface ListFilterQueryState {
   filters: Filters;
@@ -24,8 +28,14 @@ const LIST_KEYS = [
   "org",
   "cat",
   "status",
+  "tier",
+  "tiers",
   "beginner",
   "natural",
+  "global",
+  "major",
+  "national",
+  "nationalSelection",
   "regional",
   "pro",
   "intl",
@@ -50,11 +60,14 @@ export function parseListFilterQuery(
       orgs: getListParam(params, "org"),
       cats: getListParam(params, "cat"),
       status: getListParam(params, "status"),
+      tiers: getTierParams(params),
       beginner: getBooleanParam(params, "beginner"),
       natural: getBooleanParam(params, "natural"),
-      regional: getBooleanParam(params, "regional"),
-      proPath: getBooleanParam(params, "pro"),
-      internationalRoute: getBooleanParam(params, "intl"),
+      global: getBooleanParam(params, "global") ?? getBooleanParam(params, "intl"),
+      major: getBooleanParam(params, "major"),
+      nationalSelection:
+        getBooleanParam(params, "nationalSelection") ??
+        getBooleanParam(params, "national"),
     },
     search: params.get("q")?.trim() ?? "",
   };
@@ -71,11 +84,12 @@ export function buildListFilterPath(
   appendListParam(params, "org", state.filters.orgs);
   appendListParam(params, "cat", state.filters.cats);
   appendListParam(params, "status", state.filters.status);
+  appendListParam(params, "tier", state.filters.tiers);
   appendBooleanParam(params, "beginner", state.filters.beginner);
   appendBooleanParam(params, "natural", state.filters.natural);
-  appendBooleanParam(params, "regional", state.filters.regional);
-  appendBooleanParam(params, "pro", state.filters.proPath);
-  appendBooleanParam(params, "intl", state.filters.internationalRoute);
+  appendBooleanParam(params, "global", state.filters.global);
+  appendBooleanParam(params, "major", state.filters.major);
+  appendBooleanParam(params, "national", state.filters.nationalSelection);
 
   return withSearch(pathname, params);
 }
@@ -139,6 +153,30 @@ function getListParam(params: QueryParamsLike, key: string) {
     .filter(Boolean);
 
   return values.length > 0 ? Array.from(new Set(values)) : undefined;
+}
+
+function getTierParams(params: QueryParamsLike): CompetitionTier[] | undefined {
+  const values = [
+    ...(getListParam(params, "tier") ?? []),
+    ...(getListParam(params, "tiers") ?? []),
+  ];
+
+  if (getBooleanParam(params, "regional")) {
+    values.push("regional");
+  }
+  if (getBooleanParam(params, "pro")) {
+    values.push("pro_qualifier");
+  }
+
+  const tiers = Array.from(
+    new Set(
+      values.filter((value): value is CompetitionTier =>
+        COMPETITION_TIERS.includes(value as CompetitionTier),
+      ),
+    ),
+  );
+
+  return tiers.length > 0 ? tiers : undefined;
 }
 
 function getBooleanParam(params: QueryParamsLike, key: string) {

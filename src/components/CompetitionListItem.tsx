@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { MouseEventHandler } from "react";
 import { regStatusAt, type Competition } from "@/lib/data";
+import { COMPETITION_TIER_LABELS } from "@/lib/competition-classification";
 
 const A = "#B85C3C";
 const INK = "#0E0E0C";
@@ -49,6 +50,7 @@ export function CompetitionListItem({
   const date = parseDateParts(competition.date);
   const days = today ? daysUntil(competition.date, today) : null;
   const registrationStatus = today ? regStatusAt(competition, today) : null;
+  const tierLabel = COMPETITION_TIER_LABELS[competition.tier];
   const isOpen =
     registrationStatus?.kind === "open" ||
     registrationStatus?.kind === "urgent";
@@ -98,20 +100,42 @@ export function CompetitionListItem({
           <span className="hub-tag" style={{ background: INK, color: "#fff" }}>
             {competition.orgShort}
           </span>
-          {competition.proPath && (
+          <span
+            className="hub-tag-outline"
+            style={{ color: INK, borderColor: INK }}
+          >
+            {tierLabel}
+          </span>
+          {competition.attributes.major && (
             <span
               className="hub-tag-outline"
               style={{ color: A, borderColor: A }}
             >
-              PRO
+              메이저
             </span>
           )}
-          {competition.internationalRoute && (
+          {competition.attributes.global && (
             <span
               className="hub-tag-outline"
               style={{ color: "#2D5A8F", borderColor: "#2D5A8F" }}
             >
-              국가대표
+              글로벌
+            </span>
+          )}
+          {competition.attributes.nationalSelection && (
+            <span
+              className="hub-tag-outline"
+              style={{ color: "#6D4B99", borderColor: "#6D4B99" }}
+            >
+              대표선발
+            </span>
+          )}
+          {competition.attributes.beginner && (
+            <span
+              className="hub-tag-outline"
+              style={{ color: "#6B6A32", borderColor: "#6B6A32" }}
+            >
+              입문·루키
             </span>
           )}
           {competition.natural && (

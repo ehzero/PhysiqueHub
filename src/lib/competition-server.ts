@@ -16,6 +16,12 @@ import {
 } from "@/lib/competition-api";
 import { getOrganizationPriority } from "@/lib/organization-priority";
 import {
+  COMPETITION_TIERS,
+  classifyCompetition,
+  type CompetitionAttributes,
+  type CompetitionTier,
+} from "@/lib/competition-classification";
+import {
   competitionMatchesTaxon,
   getAllCompetitionLandingTaxons,
   getCompetitionLandingPath,
@@ -59,11 +65,29 @@ export async function getCompetitionListPayload(
 ): Promise<ApiCompetitionListResponse> {
   const where = buildCompetitionWhere(query);
   const skip = (query.page - 1) * query.pageSize;
+  const orderBy = getCompetitionOrderBy(query.sort);
+
+  if (hasClassificationFilters(query)) {
+    const records = await prisma.competitionSchedule.findMany({
+      where,
+      orderBy,
+    });
+    const filtered = records.filter((record) =>
+      competitionMatchesClassificationQuery(record, query),
+    );
+
+    return {
+      items: filtered
+        .slice(skip, skip + query.pageSize)
+        .map(serializePublicCompetitionListItem),
+      ...normalizePageMeta(query.page, query.pageSize, filtered.length),
+    };
+  }
 
   const [items, total] = await Promise.all([
     prisma.competitionSchedule.findMany({
       where,
-      orderBy: getCompetitionOrderBy(query.sort),
+      orderBy,
       skip,
       take: query.pageSize,
     }),
@@ -74,6 +98,53 @@ export async function getCompetitionListPayload(
     items: items.map(serializePublicCompetitionListItem),
     ...normalizePageMeta(query.page, query.pageSize, total),
   };
+}
+
+function hasClassificationFilters(query: CompetitionListQuery) {
+  return (
+    query.tiers.length > 0 ||
+    query.global !== undefined ||
+    query.major !== undefined ||
+    query.nationalSelection !== undefined
+  );
+}
+
+function competitionMatchesClassificationQuery(
+  record: CompetitionSchedule,
+  query: CompetitionListQuery,
+) {
+  const classification = classifyCompetition({
+    title: record.title,
+    organizationId: record.organizationId,
+    organizationName: record.organizationName,
+    country: record.country,
+    tags: parseJsonArray(record.tagsJson),
+    flags: parseJsonObject(record.flagsJson),
+  });
+
+  if (query.tiers.length > 0 && !query.tiers.includes(classification.tier)) {
+    return false;
+  }
+  if (
+    query.global !== undefined &&
+    classification.attributes.global !== query.global
+  ) {
+    return false;
+  }
+  if (
+    query.major !== undefined &&
+    classification.attributes.major !== query.major
+  ) {
+    return false;
+  }
+  if (
+    query.nationalSelection !== undefined &&
+    classification.attributes.nationalSelection !== query.nationalSelection
+  ) {
+    return false;
+  }
+
+  return true;
 }
 
 export async function getCompetitionSeasonPage(
@@ -222,6 +293,8 @@ export async function getCompetitionFiltersPayload(
         select: {
           dateStartsOn: true,
           title: true,
+          organizationId: true,
+          organizationName: true,
           region: true,
           city: true,
           country: true,
@@ -246,6 +319,15 @@ export async function getCompetitionFiltersPayload(
     internationalRoute: 0,
     regional: 0,
   };
+  const tierCounts = Object.fromEntries(
+    COMPETITION_TIERS.map((tier) => [tier, 0]),
+  ) as Record<CompetitionTier, number>;
+  const attributeCounts: Record<keyof CompetitionAttributes, number> = {
+    global: 0,
+    major: 0,
+    nationalSelection: 0,
+    beginner: 0,
+  };
   const regionCounts = new Map<string, number>();
   const categoryCounts = new Map<string, number>();
 
@@ -256,11 +338,20 @@ export async function getCompetitionFiltersPayload(
     }
 
     const flags = parseJsonObject(item.flagsJson);
-    const isRegional = isRegionalRecord(item.title, item.tagsJson, flags);
-    const isBeginner = flags.beginnerFriendly === true || flags.rookieClass === true;
-    const isProPath = flags.proQualifier === true || flags.proCard === true;
+    const tags = parseJsonArray(item.tagsJson);
+    const classification = classifyCompetition({
+      title: item.title,
+      organizationId: item.organizationId,
+      organizationName: item.organizationName,
+      country: item.country,
+      tags,
+      flags,
+    });
+    const isRegional = classification.tier === "regional";
+    const isBeginner = classification.attributes.beginner;
+    const isProPath = classification.tier === "pro_qualifier";
     const isInternationalRoute =
-      flags.international === true || flags.nationalTeamRoute === true;
+      classification.attributes.global || classification.attributes.nationalSelection;
 
     for (const key of ["natural", "beginnerFriendly", "rookieClass", "proQualifier", "proCard", "international", "nationalTeamRoute"] as const) {
       if (flags[key] === true) flagCounts[key] += 1;
@@ -269,6 +360,10 @@ export async function getCompetitionFiltersPayload(
     if (isProPath) flagCounts.proPath += 1;
     if (isInternationalRoute) flagCounts.internationalRoute += 1;
     if (isRegional) flagCounts.regional += 1;
+    tierCounts[classification.tier] += 1;
+    for (const key of ["global", "major", "nationalSelection", "beginner"] as const) {
+      if (classification.attributes[key]) attributeCounts[key] += 1;
+    }
 
     const region = normalizeCompetitionRegion(item);
     if (region) {
@@ -303,6 +398,8 @@ export async function getCompetitionFiltersPayload(
       count,
     })),
     flags: flagCounts,
+    tiers: tierCounts,
+    attributes: attributeCounts,
   };
 }
 
@@ -325,9 +422,10 @@ function toCompetitionListQuery(
     beginnerFriendly: undefined,
     rookieClass: undefined,
     proQualifier: undefined,
-    regional: options.regional,
-    proPath: options.proPath,
-    internationalRoute: options.internationalRoute,
+    tiers: options.tiers ?? [],
+    global: options.global,
+    major: options.major,
+    nationalSelection: options.nationalSelection,
     sort: options.sort ?? "date-asc",
   };
 }
@@ -376,22 +474,6 @@ function getDivisionName(value: unknown): string | undefined {
   const name = (value as { name?: unknown }).name;
 
   return typeof name === "string" ? name.trim() || undefined : undefined;
-}
-
-function isRegionalRecord(
-  title: string,
-  tagsJson: string,
-  flags: Record<string, unknown>,
-): boolean {
-  if (flags.regional === true) {
-    return true;
-  }
-
-  const tags = parseJsonArray(tagsJson)
-    .filter((tag): tag is string => typeof tag === "string")
-    .join(" ");
-
-  return /리저널|regional/i.test(`${title} ${tags}`);
 }
 
 function mapCounts(

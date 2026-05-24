@@ -78,13 +78,22 @@ export function ListShell({
         if (filters.natural && !competition.natural) {
           return false;
         }
-        if (filters.regional && !competition.regional) {
+        if (
+          filters.tiers?.length &&
+          !filters.tiers.includes(competition.tier)
+        ) {
           return false;
         }
-        if (filters.proPath && !competition.proPath) {
+        if (filters.global && !competition.attributes.global) {
           return false;
         }
-        if (filters.internationalRoute && !competition.internationalRoute) {
+        if (filters.major && !competition.attributes.major) {
+          return false;
+        }
+        if (
+          filters.nationalSelection &&
+          !competition.attributes.nationalSelection
+        ) {
           return false;
         }
         if (

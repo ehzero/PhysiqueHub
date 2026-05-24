@@ -1,4 +1,9 @@
 import type { Competition } from "@/lib/data";
+import {
+  classifyCompetition,
+  type CompetitionAttributes,
+  type CompetitionTier,
+} from "@/lib/competition-classification";
 import { normalizeCompetitionRegion } from "@/lib/location";
 
 export interface ApiCompetitionListResponse {
@@ -36,6 +41,8 @@ export interface ApiCompetitionFiltersResponse {
     internationalRoute: number;
     regional: number;
   };
+  tiers: Record<CompetitionTier, number>;
+  attributes: Record<keyof CompetitionAttributes, number>;
 }
 
 interface CompetitionFilterOrganization {
@@ -71,9 +78,10 @@ export interface CompetitionPageOptions {
   startsFrom?: string;
   beginnerAny?: boolean;
   natural?: boolean;
-  regional?: boolean;
-  proPath?: boolean;
-  internationalRoute?: boolean;
+  tiers?: CompetitionTier[];
+  global?: boolean;
+  major?: boolean;
+  nationalSelection?: boolean;
   organizationId?: string;
   registrationStatus?: string | string[];
   sort?: CompetitionSortOption;
@@ -141,6 +149,14 @@ export function toCompetition(item: ApiCompetitionListItem): Competition {
   const opensOn = toDateOnly(item.registration.opensAt) ?? startsOn;
   const flags = item.flags ?? {};
   const orgShort = item.organizationShortName || makeShortName(item.organizationName);
+  const classification = classifyCompetition({
+    title: item.title,
+    organizationId: item.organizationId,
+    organizationName: item.organizationName,
+    country: item.location.country,
+    tags: item.tags,
+    flags,
+  });
 
   return {
     id: item.id,
@@ -162,11 +178,10 @@ export function toCompetition(item: ApiCompetitionListItem): Competition {
     classes: categories.length > 0 ? `${categories.length}개 종목` : "종목 확인 필요",
     fee: item.registration.fee?.minAmount ?? item.registration.fee?.maxAmount ?? 0,
     natural: flags.natural === true,
-    beginner: flags.beginnerFriendly === true || flags.rookieClass === true,
+    beginner: classification.attributes.beginner,
     rookie: flags.rookieClass === true,
-    regional: isRegional(item),
-    proPath: flags.proQualifier === true || flags.proCard === true,
-    internationalRoute: flags.international === true || flags.nationalTeamRoute === true,
+    tier: classification.tier,
+    attributes: classification.attributes,
     scale: getScale(item),
     poster: POSTER_THEMES[Math.abs(hashCode(item.organizationId)) % POSTER_THEMES.length],
     tags: getTags(item),
@@ -211,18 +226,6 @@ function getTags(item: ApiCompetitionListItem): string[] {
 
 function isHiddenCrawlTag(tag: string): boolean {
   return HIDDEN_CRAWL_TAG_PATTERN.test(tag);
-}
-
-function isRegional(item: ApiCompetitionListItem): boolean {
-  if (item.flags.regional === true) {
-    return true;
-  }
-
-  const tags = item.tags
-    .filter((tag): tag is string => typeof tag === "string")
-    .join(" ");
-
-  return /리저널|regional/i.test(`${item.title} ${tags}`);
 }
 
 function getScale(item: ApiCompetitionListItem): Competition["scale"] {

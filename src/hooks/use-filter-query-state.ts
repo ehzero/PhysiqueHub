@@ -148,11 +148,12 @@ function cleanFilters(filters: Filters): Filters {
     orgs: cleanList(filters.orgs),
     cats: cleanList(filters.cats),
     status: cleanList(filters.status),
+    tiers: filters.tiers && filters.tiers.length > 0 ? filters.tiers : undefined,
     beginner: filters.beginner || undefined,
     natural: filters.natural || undefined,
-    regional: filters.regional || undefined,
-    proPath: filters.proPath || undefined,
-    internationalRoute: filters.internationalRoute || undefined,
+    global: filters.global || undefined,
+    major: filters.major || undefined,
+    nationalSelection: filters.nationalSelection || undefined,
   };
 }
 

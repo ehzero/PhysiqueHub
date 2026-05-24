@@ -322,34 +322,73 @@ const TYPE_TAXONS: CompetitionLandingTaxon[] = [
     h1: "리저널 대회 일정",
     intro:
       "리저널 성격의 예정 대회를 모았습니다. 상위 대회와의 관계, 출전 조건, 중복 출전 가능 여부는 공식 안내에서 확인하세요.",
-    filterHref: "/competitions?regional=1",
+    filterHref: "/competitions?tier=regional",
     keywords: ["리저널 대회", "regional"],
   },
   {
     axis: "type",
     slug: "pro-path",
-    label: "프로카드·퀄리파이어",
-    title: "프로카드·퀄리파이어 대회 일정",
+    label: "프로 퀄리파이어",
+    title: "프로 퀄리파이어 대회 일정",
     description:
-      "프로카드 또는 퀄리파이어 성격의 대회 일정을 모아 비교하세요.",
-    h1: "프로카드·퀄리파이어 대회 일정",
+      "프로카드 또는 프로 자격으로 이어지는 퀄리파이어 일정을 모아 비교하세요.",
+    h1: "프로 퀄리파이어 대회 일정",
     intro:
       "프로카드 또는 퀄리파이어 성격의 예정 대회를 모았습니다. 실제 자격 부여 방식과 조건은 대회별 공식 요강에서 확인하세요.",
-    filterHref: "/competitions?pro=1",
+    filterHref: "/competitions?tier=pro_qualifier",
     keywords: ["프로카드 대회", "프로 퀄리파이어"],
   },
   {
     axis: "type",
-    slug: "international-route",
-    label: "국제·대표 루트",
-    title: "국제·대표 루트 대회 일정",
+    slug: "pro-show",
+    label: "프로쇼",
+    title: "프로쇼 대회 일정",
     description:
-      "국제대회 또는 국가대표 루트와 관련된 성격의 대회 일정을 확인하세요.",
-    h1: "국제·대표 루트 대회 일정",
+      "프로 자격 보유 선수가 출전하는 프로쇼 일정을 확인하세요.",
+    h1: "프로쇼 대회 일정",
     intro:
-      "국제대회 또는 국가대표 루트와 관련된 예정 대회를 모았습니다. 선발 기준과 참가 자격은 공식 공지에서 확인하세요.",
-    filterHref: "/competitions?intl=1",
-    keywords: ["국제 대회", "국가대표 선발전"],
+      "프로쇼 성격의 예정 대회를 모았습니다. 출전 자격과 디비전 운영 방식은 대회별 공식 요강에서 확인하세요.",
+    filterHref: "/competitions?tier=pro_show",
+    keywords: ["프로쇼", "프로 대회"],
+  },
+  {
+    axis: "type",
+    slug: "championship",
+    label: "챔피언십",
+    title: "챔피언십 대회 일정",
+    description:
+      "월드, 유니버스, 올림피아, 파이널 등 대표급 챔피언십 일정을 확인하세요.",
+    h1: "챔피언십 대회 일정",
+    intro:
+      "단체 대표급 챔피언십 성격의 예정 대회를 모았습니다. 같은 챔피언십 명칭이라도 실제 권위와 출전 조건은 단체별 공식 안내 기준으로 확인하세요.",
+    filterHref: "/competitions?tier=championship",
+    keywords: ["챔피언십 대회", "월드 대회", "유니버스 대회"],
+  },
+  {
+    axis: "type",
+    slug: "global",
+    label: "글로벌",
+    title: "글로벌 대회 일정",
+    description:
+      "해외 개최 또는 세계 단위 브랜드와 연결된 글로벌 대회 일정을 확인하세요.",
+    h1: "글로벌 대회 일정",
+    intro:
+      "글로벌 성격의 예정 대회를 모았습니다. 국가대표 선발 루트와는 별개로 해외 개최, 세계 단위 브랜드, 글로벌 단체 일정을 함께 보여줍니다.",
+    filterHref: "/competitions?global=1",
+    keywords: ["글로벌 대회", "해외 대회"],
+  },
+  {
+    axis: "type",
+    slug: "national-selection",
+    label: "대표선발",
+    title: "대표선발·전국체전 대회 일정",
+    description:
+      "국가대표 선발, 전국체전, 협회 대표 선발 루트와 관련된 대회 일정을 확인하세요.",
+    h1: "대표선발·전국체전 대회 일정",
+    intro:
+      "국가대표 선발, 전국체전, 협회 대표 선발 루트와 관련된 예정 대회를 모았습니다. 선발 기준과 참가 자격은 공식 공지에서 확인하세요.",
+    filterHref: "/competitions?national=1",
+    keywords: ["국가대표 선발전", "전국체전", "대표 선발"],
   },
 ];
 
@@ -509,11 +548,17 @@ function competitionMatchesType(competition: Competition, slug: string) {
     case "rookie":
       return competition.beginner === true || competition.rookie === true;
     case "regional":
-      return competition.regional === true;
+      return competition.tier === "regional";
     case "pro-path":
-      return competition.proPath === true;
-    case "international-route":
-      return competition.internationalRoute === true;
+      return competition.tier === "pro_qualifier";
+    case "pro-show":
+      return competition.tier === "pro_show";
+    case "championship":
+      return competition.tier === "championship";
+    case "global":
+      return competition.attributes.global === true;
+    case "national-selection":
+      return competition.attributes.nationalSelection === true;
     default:
       return false;
   }

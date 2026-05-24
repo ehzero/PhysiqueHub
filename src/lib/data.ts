@@ -1,3 +1,8 @@
+import type {
+  CompetitionAttributes,
+  CompetitionTier,
+} from "@/lib/competition-classification";
+
 export interface Competition {
   id: string;
   organizationId?: string;
@@ -20,9 +25,8 @@ export interface Competition {
   natural: boolean;
   beginner: boolean;
   rookie: boolean;
-  regional?: boolean;
-  proPath?: boolean;
-  internationalRoute?: boolean;
+  tier: CompetitionTier;
+  attributes: CompetitionAttributes;
   scale: "대형" | "중형" | "소형";
   poster: "amber" | "deep" | "sage" | "navy" | "rose" | "lime";
   tags: string[];
@@ -216,11 +220,12 @@ export interface Filters {
   orgs?: string[];
   cats?: string[];
   status?: string[];
+  tiers?: CompetitionTier[];
   beginner?: boolean;
   natural?: boolean;
-  regional?: boolean;
-  proPath?: boolean;
-  internationalRoute?: boolean;
+  global?: boolean;
+  major?: boolean;
+  nationalSelection?: boolean;
 }
 
 export function parseDate(s: string): Date {

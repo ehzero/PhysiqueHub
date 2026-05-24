@@ -9,6 +9,7 @@ import {
   fmtDate,
   formatDday,
 } from "@/lib/data";
+import { COMPETITION_TIER_LABELS } from "@/lib/competition-classification";
 import { Icons } from "./Icons";
 import { PosterFigure, posterFigureColor } from "./PosterFigure";
 import { ShareButton } from "./ShareButton";
@@ -68,6 +69,13 @@ export function CompDrawer({
           : "공식 접수 정보 확인 필요"
         : `마감 ${fmtDate(comp.regClose, { style: "long" })}`
       : `${fmtDate(comp.regOpen, { style: "long" })} → ${fmtDate(comp.regClose, { style: "long" })}`;
+  const classificationTags = [
+    COMPETITION_TIER_LABELS[comp.tier],
+    comp.attributes.major ? "메이저" : "",
+    comp.attributes.global ? "글로벌" : "",
+    comp.attributes.nationalSelection ? "대표선발" : "",
+    comp.attributes.beginner ? "입문·루키" : "",
+  ].filter(Boolean);
 
   return (
     <>
@@ -157,6 +165,17 @@ export function CompDrawer({
 
             <dt>체급 구분</dt>
             <dd>{comp.classes}</dd>
+
+            <dt>분류</dt>
+            <dd>
+              <div className="cat-pill-row">
+                {classificationTags.map((tag) => (
+                  <span key={tag} className="cat-pill">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </dd>
 
             <dt>참가비</dt>
             <dd className="mono">{comp.fee > 0 ? `₩ ${comp.fee.toLocaleString()}` : "확인 필요"}</dd>

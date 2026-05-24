@@ -128,6 +128,7 @@ export const getHomeHubData = cache(async (): Promise<HomeHubData> => {
       pageSize: 1,
       organizationIds: [],
       registrationStatuses: [],
+      tiers: [],
       sort: "date-asc",
     }),
 
@@ -147,9 +148,12 @@ export const getHomeHubData = cache(async (): Promise<HomeHubData> => {
   const rookieTaxon = getCompetitionLandingTaxon("type", "rookie");
   const regionalTaxon = getCompetitionLandingTaxon("type", "regional");
   const proPathTaxon = getCompetitionLandingTaxon("type", "pro-path");
-  const internationalTaxon = getCompetitionLandingTaxon(
+  const proShowTaxon = getCompetitionLandingTaxon("type", "pro-show");
+  const championshipTaxon = getCompetitionLandingTaxon("type", "championship");
+  const globalTaxon = getCompetitionLandingTaxon("type", "global");
+  const nationalSelectionTaxon = getCompetitionLandingTaxon(
     "type",
-    "international-route",
+    "national-selection",
   );
   const ifbbTaxon = getCompetitionLandingTaxon("organization", "ifbb");
 
@@ -177,7 +181,7 @@ export const getHomeHubData = cache(async (): Promise<HomeHubData> => {
         en: "Regional",
         hint: "지역·리저널 대회",
         href: regionalTaxon ? getCompetitionLandingPath(regionalTaxon) : "/competitions",
-        count: flags.regional,
+        count: filterOptions.tiers.regional,
       },
       {
         key: "qualifier",
@@ -185,15 +189,39 @@ export const getHomeHubData = cache(async (): Promise<HomeHubData> => {
         en: "Pro Qualifier",
         hint: "프로카드 진입 대회",
         href: proPathTaxon ? getCompetitionLandingPath(proPathTaxon) : "/competitions",
-        count: flags.proQualifier,
+        count: filterOptions.tiers.pro_qualifier,
       },
       {
-        key: "international",
-        kr: "국제대회·국가대표",
-        en: "International / National",
-        hint: "국제대회·대표 루트",
-        href: internationalTaxon ? getCompetitionLandingPath(internationalTaxon) : "/competitions",
-        count: flags.internationalRoute,
+        key: "proShow",
+        kr: "프로쇼",
+        en: "Pro Show",
+        hint: "프로 선수전",
+        href: proShowTaxon ? getCompetitionLandingPath(proShowTaxon) : "/competitions",
+        count: filterOptions.tiers.pro_show,
+      },
+      {
+        key: "championship",
+        kr: "챔피언십",
+        en: "Championship",
+        hint: "대표급 타이틀 대회",
+        href: championshipTaxon ? getCompetitionLandingPath(championshipTaxon) : "/competitions",
+        count: filterOptions.tiers.championship,
+      },
+      {
+        key: "global",
+        kr: "글로벌",
+        en: "Global",
+        hint: "해외·세계 단위",
+        href: globalTaxon ? getCompetitionLandingPath(globalTaxon) : "/competitions",
+        count: filterOptions.attributes.global,
+      },
+      {
+        key: "nationalSelection",
+        kr: "대표선발",
+        en: "National Selection",
+        hint: "국가대표·전국체전",
+        href: nationalSelectionTaxon ? getCompetitionLandingPath(nationalSelectionTaxon) : "/competitions",
+        count: filterOptions.attributes.nationalSelection,
       },
       {
         key: "globalPro",

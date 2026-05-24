@@ -25,9 +25,10 @@ export async function GET(request: Request) {
       beginnerFriendly: query.beginnerFriendly,
       rookieClass: query.rookieClass,
       proQualifier: query.proQualifier,
-      regional: query.regional,
-      proPath: query.proPath,
-      internationalRoute: query.internationalRoute,
+      tiers: query.tiers,
+      global: query.global,
+      major: query.major,
+      nationalSelection: query.nationalSelection,
       sort: query.sort,
     },
   });

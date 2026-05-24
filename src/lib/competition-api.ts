@@ -1,4 +1,8 @@
 import type { Prisma, CompetitionSchedule } from "@prisma/client";
+import {
+  COMPETITION_TIERS,
+  type CompetitionTier,
+} from "@/lib/competition-classification";
 import { normalizeCompetitionRegion } from "@/lib/location";
 
 const DEFAULT_COMPETITION_PAGE_SIZE = 20;
@@ -25,9 +29,10 @@ export interface CompetitionListQuery {
   beginnerFriendly?: boolean;
   rookieClass?: boolean;
   proQualifier?: boolean;
-  regional?: boolean;
-  proPath?: boolean;
-  internationalRoute?: boolean;
+  tiers: CompetitionTier[];
+  global?: boolean;
+  major?: boolean;
+  nationalSelection?: boolean;
   sort: CompetitionSort;
 }
 
@@ -57,9 +62,15 @@ export function parseCompetitionListQuery(searchParams: URLSearchParams): Compet
     beginnerFriendly: parseBooleanParam(searchParams.get("beginnerFriendly")),
     rookieClass: parseBooleanParam(searchParams.get("rookieClass")),
     proQualifier: parseBooleanParam(searchParams.get("proQualifier")),
-    regional: parseBooleanParam(searchParams.get("regional")),
-    proPath: parseBooleanParam(searchParams.get("proPath")),
-    internationalRoute: parseBooleanParam(searchParams.get("internationalRoute")),
+    tiers: parseTierList(searchParams),
+    global:
+      parseBooleanParam(searchParams.get("global")) ??
+      parseBooleanParam(searchParams.get("internationalRoute")) ??
+      parseBooleanParam(searchParams.get("intl")),
+    major: parseBooleanParam(searchParams.get("major")),
+    nationalSelection: parseBooleanParam(
+      searchParams.get("nationalSelection") ?? searchParams.get("national"),
+    ),
     sort: parseSort(searchParams.get("sort")),
   };
 }
@@ -106,22 +117,6 @@ export function buildCompetitionWhere(
     addFlagAnyFilter(where, ["beginnerFriendly", "rookieClass"], query.beginnerAny);
   }
 
-  if (query.proPath !== undefined) {
-    addFlagAnyFilter(where, ["proQualifier", "proCard"], query.proPath);
-  }
-
-  if (query.internationalRoute !== undefined) {
-    addFlagAnyFilter(
-      where,
-      ["international", "nationalTeamRoute"],
-      query.internationalRoute,
-    );
-  }
-
-  if (query.regional !== undefined) {
-    addRegionalFilter(where, query.regional);
-  }
-
   const flagFilters = [
     ["natural", query.natural],
     ["beginnerFriendly", query.beginnerFriendly],
@@ -140,24 +135,6 @@ export function buildCompetitionWhere(
   }
 
   return where;
-}
-
-function addRegionalFilter(
-  where: Prisma.CompetitionScheduleWhereInput,
-  value: boolean,
-) {
-  const conditions: Prisma.CompetitionScheduleWhereInput[] = [
-    { flagsJson: { contains: `"regional":${value}` } },
-    { title: { contains: "리저널", mode: "insensitive" } },
-    { title: { contains: "regional", mode: "insensitive" } },
-    { tagsJson: { contains: "리저널", mode: "insensitive" } },
-    { tagsJson: { contains: "regional", mode: "insensitive" } },
-  ];
-
-  where.AND = [
-    ...(Array.isArray(where.AND) ? where.AND : []),
-    value ? { OR: conditions } : { NOT: { OR: conditions } },
-  ];
 }
 
 function addFlagAnyFilter(
@@ -348,6 +325,35 @@ function parseStringList(value: string | null): string[] {
     .split(",")
     .map((item) => item.trim())
     .filter(Boolean);
+}
+
+function parseTierList(searchParams: URLSearchParams): CompetitionTier[] {
+  const values = [
+    ...searchParams.getAll("tier"),
+    ...parseStringList(searchParams.get("tiers")),
+  ]
+    .flatMap((value) => value.split(","))
+    .map((value) => value.trim())
+    .filter(Boolean);
+  const legacyTiers: CompetitionTier[] = [];
+
+  if (parseBooleanParam(searchParams.get("regional")) === true) {
+    legacyTiers.push("regional");
+  }
+  if (
+    parseBooleanParam(searchParams.get("proPath")) === true ||
+    parseBooleanParam(searchParams.get("pro")) === true
+  ) {
+    legacyTiers.push("pro_qualifier");
+  }
+
+  return Array.from(
+    new Set(
+      [...values, ...legacyTiers].filter((value): value is CompetitionTier =>
+        COMPETITION_TIERS.includes(value as CompetitionTier),
+      ),
+    ),
+  );
 }
 
 function parseInteger(
