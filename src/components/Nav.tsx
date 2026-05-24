@@ -9,6 +9,7 @@ const MUTE = "#86827C";
 const NAV_LINKS = [
   { label: "홈", href: "/", key: "home" },
   { label: "대회 목록", href: "/competitions", key: "list" },
+  { label: "가이드", href: "/guide", key: "guide" },
 ];
 
 interface NavProps {
@@ -93,6 +94,14 @@ export function Nav({ route, savedCount, onOpenContact }: NavProps) {
         >
           {Icons.list}
           <span>대회 목록</span>
+        </Link>
+        <Link
+          className={`mobile-tab ${route === "guide" ? "active" : ""}`}
+          href="/guide"
+          prefetch
+        >
+          {Icons.book}
+          <span>가이드</span>
         </Link>
         <Link
           className={`mobile-tab ${route === "saved" ? "active" : ""}`}

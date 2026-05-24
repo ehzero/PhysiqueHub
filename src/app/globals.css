@@ -2838,28 +2838,11 @@ ol {
   max-width: 420px;
 }
 .foot-brand-mark {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-.foot-brand-logo {
-  width: 24px;
-  height: 24px;
-  border-radius: 5px;
-  background: #fff;
-  color: #0a0a0a;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  flex-shrink: 0;
-}
-.foot-brand-mark > span {
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  display: block;
+  font-size: clamp(42px, 6vw, 64px);
+  font-weight: 900;
+  letter-spacing: -0.045em;
+  line-height: 0.9;
   color: #fff;
 }
 .foot-brand-desc {

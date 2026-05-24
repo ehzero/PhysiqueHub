@@ -15,9 +15,10 @@ export function Foot({
       <div className="container">
         <div className="foot-row">
           <div className="foot-brand">
-            <div className="foot-brand-mark">
-              <div className="foot-brand-logo">P</div>
-              <span>PhysiqueHub</span>
+            <div className="foot-brand-mark" aria-label="PhysiqueHub">
+              PHYSIQUE
+              <br />
+              HUB.
             </div>
             <p className="foot-brand-desc">
               국내 보디빌딩·피트니스 대회 일정을 공식 단체 소스 우선으로 모읍니다.
