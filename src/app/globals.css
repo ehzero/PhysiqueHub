@@ -3853,18 +3853,26 @@ ol {
 }
 .hub-stat-next {
   padding-top: 18px;
+  display: grid;
+  gap: 4px;
+}
+.hub-stat-next-stack {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
 }
 .hub-stat-next-title {
   font-size: 15px;
   font-weight: 600;
+  line-height: 1.35;
+  min-width: 0;
 }
 .hub-stat-countdown {
   font-size: 22px;
   font-weight: 700;
   letter-spacing: -0.04em;
+  line-height: 1;
   font-variant-numeric: tabular-nums;
 }
 
@@ -4077,7 +4085,7 @@ ol {
   gap: 40px;
 }
 .hub-major-countdown {
-  font-size: clamp(48px, 6vw, 88px);
+  font-size: clamp(32px, 6vw, 88px);
   font-weight: 700;
   letter-spacing: -0.04em;
   line-height: 0.85;

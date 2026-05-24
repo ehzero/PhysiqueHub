@@ -232,19 +232,19 @@ function HeroSection({
                 className="hub-stat-next"
                 style={{ borderTop: `1px solid ${FAINT}` }}
               >
-                <div>
-                  <div
-                    className="hub-stat-cell-label"
-                    style={{ marginBottom: 4 }}
-                  >
-                    다음 대회
-                  </div>
+                <div
+                  className="hub-stat-cell-label"
+                  style={{ marginBottom: 4 }}
+                >
+                  다음 대회
+                </div>
+                <div className="hub-stat-next-stack">
                   <div className="hub-stat-next-title" style={{ color: INK }}>
                     {stats.nextShow?.title} · {nd.monthKo} {nd.day}일
                   </div>
-                </div>
-                <div className="hub-stat-countdown mono" style={{ color: A }}>
-                  D−{days}
+                  <div className="hub-stat-countdown mono" style={{ color: A }}>
+                    D−{days}
+                  </div>
                 </div>
               </div>
             )}
