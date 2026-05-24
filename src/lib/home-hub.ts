@@ -1,6 +1,7 @@
 import "server-only";
 
 import { cache } from "react";
+import type { CompetitionSchedule } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { getKoreaDateParam } from "@/lib/date";
 import { serializePublicCompetitionListItem } from "@/lib/competition-api";
@@ -16,6 +17,8 @@ import {
 } from "@/lib/competition-taxonomy";
 import { KOREAN_REGION_ORDER } from "@/lib/location";
 import type { Competition } from "@/lib/data";
+
+const GLOBAL_MAJOR_LIMIT = 3;
 
 export interface HomeHubStats {
   totalShows: number;
@@ -66,9 +69,8 @@ export const getHomeHubData = cache(async (): Promise<HomeHubData> => {
     totalShows,
     upcomingShows,
     domesticShows,
-    globalMajorRecords,
+    upcomingCandidateRecords,
     upcomingRecords,
-    rookieCandidateRecords,
     filterOptions,
     categoryGroupRecords,
   ] = await Promise.all([
@@ -86,24 +88,14 @@ export const getHomeHubData = cache(async (): Promise<HomeHubData> => {
       where: {
         seasonYear,
         dateStartsOn: { gte: todayDate },
-        OR: [
-          { title: { contains: "Olympia", mode: "insensitive" } },
-          { title: { contains: "Arnold", mode: "insensitive" } },
-        ],
       },
-      orderBy: [{ dateStartsOn: "asc" }],
-      take: 3,
+      orderBy: [{ dateStartsOn: "asc" }, { title: "asc" }],
     }),
 
     prisma.competitionSchedule.findMany({
       where: { seasonYear, dateStartsOn: { gte: todayDate } },
       orderBy: [{ dateStartsOn: "asc" }, { title: "asc" }],
       take: 5,
-    }),
-
-    prisma.competitionSchedule.findMany({
-      where: { seasonYear, dateStartsOn: { gte: todayDate } },
-      orderBy: [{ dateStartsOn: "asc" }, { title: "asc" }],
     }),
 
     getCompetitionFiltersPayload({
@@ -127,8 +119,9 @@ export const getHomeHubData = cache(async (): Promise<HomeHubData> => {
     }),
   ]);
 
+  const globalMajors = getGlobalMajorCompetitions(upcomingCandidateRecords);
   const { flags } = filterOptions;
-  const rookieFriendly = rookieCandidateRecords
+  const rookieFriendly = upcomingCandidateRecords
     .map((record) => toCompetition(serializePublicCompetitionListItem(record)))
     .filter((competition) => competition.attributes.beginner)
     .slice(0, 3);
@@ -247,7 +240,7 @@ export const getHomeHubData = cache(async (): Promise<HomeHubData> => {
       totalShows,
       upcomingShows,
       domesticShows,
-      majorShows: globalMajorRecords.length,
+      majorShows: globalMajors.length,
       nextShow: upcomingRecords[0]
         ? {
             title: upcomingRecords[0].title,
@@ -255,9 +248,7 @@ export const getHomeHubData = cache(async (): Promise<HomeHubData> => {
           }
         : null,
     },
-    globalMajors: globalMajorRecords.map((r) =>
-      toCompetition(serializePublicCompetitionListItem(r)),
-    ),
+    globalMajors,
     upcoming: upcomingRecords.map((r) =>
       toCompetition(serializePublicCompetitionListItem(r)),
     ),
@@ -319,6 +310,43 @@ function getHomeCategoryGroups(
       .filter((item) => item.count > 0),
     (item) => item.name,
   );
+}
+
+function getGlobalMajorCompetitions(records: CompetitionSchedule[]) {
+  return records
+    .map((record) => toCompetition(serializePublicCompetitionListItem(record)))
+    .filter(isGlobalMajorCompetition)
+    .sort(compareGlobalMajorCompetitions)
+    .slice(0, GLOBAL_MAJOR_LIMIT);
+}
+
+function isGlobalMajorCompetition(competition: Competition) {
+  return (
+    competition.attributes.global &&
+    (competition.attributes.major || competition.tier === "championship")
+  );
+}
+
+function compareGlobalMajorCompetitions(a: Competition, b: Competition) {
+  return (
+    getGlobalMajorPriority(a.title) - getGlobalMajorPriority(b.title) ||
+    a.date.localeCompare(b.date) ||
+    a.title.localeCompare(b.title, "ko-KR")
+  );
+}
+
+function getGlobalMajorPriority(title: string) {
+  const normalized = title.toLowerCase();
+
+  if (/olympia|올림피아/.test(normalized)) {
+    return 0;
+  }
+
+  if (/arnold|아놀드/.test(normalized)) {
+    return 1;
+  }
+
+  return 2;
 }
 
 function getHomeOrganizationGroups(
