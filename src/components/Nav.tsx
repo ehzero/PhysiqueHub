@@ -37,7 +37,7 @@ export function Nav({ route, savedCount, onOpenContact }: NavProps) {
                   key={key}
                   href={href}
                   className="nav-link-item"
-                  prefetch
+                  prefetch={href === "/competitions"}
                   style={{
                     fontWeight: route === key ? 600 : 500,
                     color: route === key ? INK : MUTE,
@@ -60,7 +60,7 @@ export function Nav({ route, savedCount, onOpenContact }: NavProps) {
             <Link
               href="/competitions"
               className="nav-contact-btn"
-              prefetch={false}
+              prefetch
             >
               {Icons.search}
               <span>대회 검색</span>
@@ -69,7 +69,7 @@ export function Nav({ route, savedCount, onOpenContact }: NavProps) {
               href="/saved"
               className="nav-cta-btn"
               aria-label={savedLabel}
-              prefetch
+              prefetch={false}
             >
               {savedLabel}
             </Link>
@@ -98,7 +98,7 @@ export function Nav({ route, savedCount, onOpenContact }: NavProps) {
         <Link
           className={`mobile-tab ${route === "guide" ? "active" : ""}`}
           href="/guide"
-          prefetch
+          prefetch={false}
         >
           {Icons.book}
           <span>가이드</span>
@@ -115,7 +115,7 @@ export function Nav({ route, savedCount, onOpenContact }: NavProps) {
           className={`mobile-tab ${route === "saved" ? "active" : ""}`}
           href="/saved"
           aria-label={savedLabel}
-          prefetch
+          prefetch={false}
         >
           <span className="mobile-tab-icon-wrap">
             {savedCount > 0 && (

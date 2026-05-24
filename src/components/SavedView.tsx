@@ -33,7 +33,7 @@ export function SavedView({
             description="대회 카드의 북마크 아이콘을 눌러 저장하세요."
             spacious
             action={
-              <Link className="cta-btn" href="/competitions">
+              <Link className="cta-btn" href="/competitions" prefetch>
                 대회 찾아보기 {Icons.arrow}
               </Link>
             }

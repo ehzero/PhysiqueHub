@@ -89,7 +89,7 @@ export default async function CompetitionDetailPage({
               text={shareText}
               title={competition.title}
             />
-            <Link className="cta-btn" href="/competitions">
+            <Link className="cta-btn" href="/competitions" prefetch>
               대회 목록으로
             </Link>
           </>
