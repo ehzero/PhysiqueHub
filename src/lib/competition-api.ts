@@ -33,6 +33,8 @@ export interface CompetitionListQuery {
   global?: boolean;
   major?: boolean;
   nationalSelection?: boolean;
+  nationalTeamEvent?: boolean;
+  nationalSportsFestival?: boolean;
   sort: CompetitionSort;
 }
 
@@ -58,7 +60,9 @@ export function parseCompetitionListQuery(searchParams: URLSearchParams): Compet
     keyword: normalizeKeyword(searchParams.get("keyword") ?? searchParams.get("q")),
     hasDate: parseBooleanParam(searchParams.get("hasDate")),
     natural: parseBooleanParam(searchParams.get("natural")),
-    beginnerAny: parseBooleanParam(searchParams.get("beginnerAny")),
+    beginnerAny: parseBooleanParam(
+      searchParams.get("beginnerAny") ?? searchParams.get("beginner"),
+    ),
     beginnerFriendly: parseBooleanParam(searchParams.get("beginnerFriendly")),
     rookieClass: parseBooleanParam(searchParams.get("rookieClass")),
     proQualifier: parseBooleanParam(searchParams.get("proQualifier")),
@@ -70,6 +74,13 @@ export function parseCompetitionListQuery(searchParams: URLSearchParams): Compet
     major: parseBooleanParam(searchParams.get("major")),
     nationalSelection: parseBooleanParam(
       searchParams.get("nationalSelection") ?? searchParams.get("national"),
+    ),
+    nationalTeamEvent: parseBooleanParam(
+      searchParams.get("nationalTeamEvent") ?? searchParams.get("nationalEvent"),
+    ),
+    nationalSportsFestival: parseBooleanParam(
+      searchParams.get("nationalSportsFestival") ??
+        searchParams.get("sportsFestival"),
     ),
     sort: parseSort(searchParams.get("sort")),
   };
@@ -113,10 +124,6 @@ export function buildCompetitionWhere(
     ];
   }
 
-  if (query.beginnerAny !== undefined) {
-    addFlagAnyFilter(where, ["beginnerFriendly", "rookieClass"], query.beginnerAny);
-  }
-
   const flagFilters = [
     ["natural", query.natural],
     ["beginnerFriendly", query.beginnerFriendly],
@@ -135,21 +142,6 @@ export function buildCompetitionWhere(
   }
 
   return where;
-}
-
-function addFlagAnyFilter(
-  where: Prisma.CompetitionScheduleWhereInput,
-  flags: string[],
-  value: boolean,
-) {
-  const conditions: Prisma.CompetitionScheduleWhereInput[] = flags.map((flag) => ({
-    flagsJson: { contains: `"${flag}":${value}` },
-  }));
-
-  where.AND = [
-    ...(Array.isArray(where.AND) ? where.AND : []),
-    value ? { OR: conditions } : { NOT: { OR: conditions } },
-  ];
 }
 
 export function getCompetitionOrderBy(

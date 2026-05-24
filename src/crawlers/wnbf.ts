@@ -133,6 +133,7 @@ function createWnbfEvent(section: WnbfSection, fetchedAt: string): CompetitionSc
   const location = inferWnbfLocation(section.title, section.description);
   const divisions = extractWnbfDivisions(section.description);
   const qualityIssues = [];
+  const isWorlds = isWorldsEvent(section.title);
 
   if (!date.startsOn) {
     qualityIssues.push({
@@ -164,7 +165,10 @@ function createWnbfEvent(section: WnbfSection, fetchedAt: string): CompetitionSc
     flags: {
       natural: true,
       beginnerFriendly: /아마추어/i.test(section.title),
-      international: isWorldsEvent(section.title),
+      proShow: /프로\s*쇼|프로쇼|pro\s*show/i.test(section.title),
+      championship: isWorlds,
+      major: isWorlds,
+      international: isWorlds,
     },
     source: createSourceSnapshot({
       sourceType: "official-homepage",

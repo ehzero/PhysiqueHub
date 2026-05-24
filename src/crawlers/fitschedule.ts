@@ -138,6 +138,9 @@ function createFitScheduleEvent(
       };
   const detailUrl = cleanText(competition.supplementUrl) || cleanText(competition.sourceUrl);
   const qualityIssues = [];
+  const eventText = `${title} ${competition.sourceTier ?? ""} ${competition.proCards ?? ""}`;
+  const isProQualifier = /프로\s*퀄리파이어|pro\s*qualifier/i.test(eventText);
+  const hasProCard = /프로\s*카드|프로카드|pro\s*card/i.test(eventText);
 
   if (!date.startsOn) {
     qualityIssues.push({
@@ -181,11 +184,18 @@ function createFitScheduleEvent(
       natural: /natural|내추럴|wnbf|npca|wngp/i.test(
         `${title} ${competition.sourceId ?? ""}`,
       ),
-      proCard: /프로카드|pro card/i.test(`${title} ${competition.proCards ?? ""}`),
-      nationalTeamRoute: /대표|전국체육|전국체전/i.test(title),
-      international: /international|asia|asian|world|olympia|국제/i.test(
-        `${title} ${competition.sourceTier ?? ""}`,
+      proQualifier: isProQualifier || hasProCard,
+      proCard: hasProCard,
+      proShow: /프로\s*쇼|프로쇼|pro\s*show/i.test(eventText),
+      regional: /리저널|regional/i.test(eventText),
+      championship: /championship|챔피언십|챔피언쉽|worlds?|월드|세계|olympia|올림피아|arnold|아놀드/i.test(
+        title,
       ),
+      nationalTeamRoute:
+        /국가대표.*선발/i.test(title) &&
+        !/전국\s*체육|전국\s*체전/i.test(title),
+      nationalSportsFestival: /전국\s*체육|전국\s*체전/i.test(title),
+      international: /international|asia|asian|worlds?|olympia|국제/i.test(eventText),
     },
     media: {
       posterImageUrl: cleanText(competition.posterUrl) || undefined,

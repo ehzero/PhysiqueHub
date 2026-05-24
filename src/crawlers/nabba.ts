@@ -72,7 +72,11 @@ export async function crawlNabba(): Promise<CrawlerResult> {
           tags: ["NABBA", "NABBA Korea"],
           flags: {
             rookieClass: /novice/i.test(title),
-            proCard: /pro/i.test(title),
+            proQualifier: /pro\s*qualifier|qualifier|프로\s*퀄리파이어/i.test(title),
+            proCard: /pro\s*card|프로\s*카드/i.test(title),
+            proShow: /pro\s*show|프로\s*쇼|프로쇼/i.test(title),
+            championship: /championship|챔피언십|챔피언쉽/i.test(title),
+            major: /grand\s*prix|그랑프리|championship|챔피언십|챔피언쉽/i.test(title),
           },
           source: createSourceSnapshot({
             sourceType: "official-homepage",

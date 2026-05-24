@@ -97,6 +97,18 @@ export function ListShell({
           return false;
         }
         if (
+          filters.nationalTeamEvent &&
+          !competition.attributes.nationalTeamEvent
+        ) {
+          return false;
+        }
+        if (
+          filters.nationalSportsFestival &&
+          !competition.attributes.nationalSportsFestival
+        ) {
+          return false;
+        }
+        if (
           search &&
           !competition.title.includes(search) &&
           !competition.org.includes(search) &&

@@ -36,6 +36,10 @@ const LIST_KEYS = [
   "major",
   "national",
   "nationalSelection",
+  "nationalTeamEvent",
+  "nationalEvent",
+  "nationalSportsFestival",
+  "sportsFestival",
   "regional",
   "pro",
   "intl",
@@ -68,6 +72,12 @@ export function parseListFilterQuery(
       nationalSelection:
         getBooleanParam(params, "nationalSelection") ??
         getBooleanParam(params, "national"),
+      nationalTeamEvent:
+        getBooleanParam(params, "nationalTeamEvent") ??
+        getBooleanParam(params, "nationalEvent"),
+      nationalSportsFestival:
+        getBooleanParam(params, "nationalSportsFestival") ??
+        getBooleanParam(params, "sportsFestival"),
     },
     search: params.get("q")?.trim() ?? "",
   };
@@ -90,6 +100,12 @@ export function buildListFilterPath(
   appendBooleanParam(params, "global", state.filters.global);
   appendBooleanParam(params, "major", state.filters.major);
   appendBooleanParam(params, "national", state.filters.nationalSelection);
+  appendBooleanParam(params, "nationalTeamEvent", state.filters.nationalTeamEvent);
+  appendBooleanParam(
+    params,
+    "nationalSportsFestival",
+    state.filters.nationalSportsFestival,
+  );
 
   return withSearch(pathname, params);
 }

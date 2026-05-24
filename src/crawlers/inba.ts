@@ -133,6 +133,13 @@ function createInbaEvent(row: InbaScheduleRow, fetchedAt: string): CompetitionSc
   const date = parseUsDate(row.dateText);
   const location = parseGlobalLocation(row.locationText);
   const qualityIssues = [];
+  const titleText = row.title;
+  const isChampionship = /championship|natural\s*olympia|universe|world/i.test(row.title);
+  const isNaturalOlympia = /natural\s*olympia/i.test(titleText);
+  const isMajor = /natural\s*olympia|universe|world/i.test(titleText);
+  const hasProQualificationText = /pro\s*qualifier|pro\s*card/i.test(titleText);
+  const isProCardAwardingChampionship =
+    !isNaturalOlympia && /pro\/am|championship|universe|world/i.test(titleText);
 
   if (!date.startsOn) {
     qualityIssues.push({
@@ -173,7 +180,11 @@ function createInbaEvent(row: InbaScheduleRow, fetchedAt: string): CompetitionSc
     ]),
     flags: {
       natural: true,
-      proQualifier: /pro\/am|championship|natural olympia|universe|world/i.test(row.title),
+      proQualifier: hasProQualificationText || isProCardAwardingChampionship,
+      proCard: hasProQualificationText || isProCardAwardingChampionship,
+      proShow: /\bpro\s*(?:show|elite)\b/i.test(titleText),
+      championship: isChampionship,
+      major: isMajor,
       international: true,
     },
     source: createSourceSnapshot({

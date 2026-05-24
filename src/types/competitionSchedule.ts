@@ -19,6 +19,7 @@ export type CompetitionOrganizationId =
   | "ssa-korea"
   | "wff-korea"
   | "inba-pnba"
+  | "ifbb-pro-league"
   | "monsterzym"
   | "one-classic"
   | "fitschedule"
@@ -150,7 +151,13 @@ export interface CompetitionSchedule {
     rookieClass?: boolean;
     proQualifier?: boolean;
     proCard?: boolean;
+    proShow?: boolean;
+    regional?: boolean;
+    championship?: boolean;
+    major?: boolean;
     nationalTeamRoute?: boolean;
+    nationalTeamEvent?: boolean;
+    nationalSportsFestival?: boolean;
     international?: boolean;
     cancelled?: boolean;
   };

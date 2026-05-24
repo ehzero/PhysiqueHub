@@ -12,7 +12,12 @@ import {
 import type { CompetitionFilterOptions } from "@/lib/competition-public";
 import { FilterOption } from "./FilterOption";
 
-type AttributeFlagKey = "global" | "major" | "nationalSelection";
+type AttributeFlagKey =
+  | "global"
+  | "major"
+  | "nationalSelection"
+  | "nationalTeamEvent"
+  | "nationalSportsFestival";
 type TypeFlagKey = AttributeFlagKey | "beginner" | "natural";
 
 interface FilterRailProps {
@@ -68,8 +73,18 @@ export function FilterRail({
     { key: "major", label: "메이저", count: attributes.major },
     {
       key: "nationalSelection",
-      label: "대표선발",
+      label: "국가대표 선발",
       count: attributes.nationalSelection,
+    },
+    {
+      key: "nationalTeamEvent",
+      label: "국가대표전",
+      count: attributes.nationalTeamEvent,
+    },
+    {
+      key: "nationalSportsFestival",
+      label: "전국체전",
+      count: attributes.nationalSportsFestival,
     },
     { key: "beginner", label: "입문·루키", count: attributes.beginner },
     { key: "natural", label: "내추럴", count: flags?.natural },
@@ -394,6 +409,12 @@ function getAttributeCounts(comps: Competition[]) {
     major: comps.filter((competition) => competition.attributes.major).length,
     nationalSelection: comps.filter(
       (competition) => competition.attributes.nationalSelection,
+    ).length,
+    nationalTeamEvent: comps.filter(
+      (competition) => competition.attributes.nationalTeamEvent,
+    ).length,
+    nationalSportsFestival: comps.filter(
+      (competition) => competition.attributes.nationalSportsFestival,
     ).length,
     beginner: comps.filter((competition) => competition.attributes.beginner).length,
   };

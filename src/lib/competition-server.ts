@@ -103,9 +103,12 @@ export async function getCompetitionListPayload(
 function hasClassificationFilters(query: CompetitionListQuery) {
   return (
     query.tiers.length > 0 ||
+    query.beginnerAny !== undefined ||
     query.global !== undefined ||
     query.major !== undefined ||
-    query.nationalSelection !== undefined
+    query.nationalSelection !== undefined ||
+    query.nationalTeamEvent !== undefined ||
+    query.nationalSportsFestival !== undefined
   );
 }
 
@@ -117,12 +120,19 @@ function competitionMatchesClassificationQuery(
     title: record.title,
     organizationId: record.organizationId,
     organizationName: record.organizationName,
+    organizationShortName: record.organizationShortName,
     country: record.country,
     tags: parseJsonArray(record.tagsJson),
     flags: parseJsonObject(record.flagsJson),
   });
 
   if (query.tiers.length > 0 && !query.tiers.includes(classification.tier)) {
+    return false;
+  }
+  if (
+    query.beginnerAny !== undefined &&
+    classification.attributes.beginner !== query.beginnerAny
+  ) {
     return false;
   }
   if (
@@ -140,6 +150,18 @@ function competitionMatchesClassificationQuery(
   if (
     query.nationalSelection !== undefined &&
     classification.attributes.nationalSelection !== query.nationalSelection
+  ) {
+    return false;
+  }
+  if (
+    query.nationalTeamEvent !== undefined &&
+    classification.attributes.nationalTeamEvent !== query.nationalTeamEvent
+  ) {
+    return false;
+  }
+  if (
+    query.nationalSportsFestival !== undefined &&
+    classification.attributes.nationalSportsFestival !== query.nationalSportsFestival
   ) {
     return false;
   }
@@ -295,6 +317,7 @@ export async function getCompetitionFiltersPayload(
           title: true,
           organizationId: true,
           organizationName: true,
+          organizationShortName: true,
           region: true,
           city: true,
           country: true,
@@ -316,6 +339,8 @@ export async function getCompetitionFiltersPayload(
     proPath: 0,
     international: 0,
     nationalTeamRoute: 0,
+    nationalTeamEvent: 0,
+    nationalSportsFestival: 0,
     internationalRoute: 0,
     regional: 0,
   };
@@ -326,6 +351,8 @@ export async function getCompetitionFiltersPayload(
     global: 0,
     major: 0,
     nationalSelection: 0,
+    nationalTeamEvent: 0,
+    nationalSportsFestival: 0,
     beginner: 0,
   };
   const regionCounts = new Map<string, number>();
@@ -343,6 +370,7 @@ export async function getCompetitionFiltersPayload(
       title: item.title,
       organizationId: item.organizationId,
       organizationName: item.organizationName,
+      organizationShortName: item.organizationShortName,
       country: item.country,
       tags,
       flags,
@@ -351,9 +379,12 @@ export async function getCompetitionFiltersPayload(
     const isBeginner = classification.attributes.beginner;
     const isProPath = classification.tier === "pro_qualifier";
     const isInternationalRoute =
-      classification.attributes.global || classification.attributes.nationalSelection;
+      classification.attributes.global ||
+      classification.attributes.nationalSelection ||
+      classification.attributes.nationalTeamEvent ||
+      classification.attributes.nationalSportsFestival;
 
-    for (const key of ["natural", "beginnerFriendly", "rookieClass", "proQualifier", "proCard", "international", "nationalTeamRoute"] as const) {
+    for (const key of ["natural", "beginnerFriendly", "rookieClass", "proQualifier", "proCard", "international", "nationalTeamRoute", "nationalTeamEvent", "nationalSportsFestival"] as const) {
       if (flags[key] === true) flagCounts[key] += 1;
     }
     if (isBeginner) flagCounts.beginnerAny += 1;
@@ -361,7 +392,7 @@ export async function getCompetitionFiltersPayload(
     if (isInternationalRoute) flagCounts.internationalRoute += 1;
     if (isRegional) flagCounts.regional += 1;
     tierCounts[classification.tier] += 1;
-    for (const key of ["global", "major", "nationalSelection", "beginner"] as const) {
+    for (const key of ["global", "major", "nationalSelection", "nationalTeamEvent", "nationalSportsFestival", "beginner"] as const) {
       if (classification.attributes[key]) attributeCounts[key] += 1;
     }
 
@@ -426,6 +457,8 @@ function toCompetitionListQuery(
     global: options.global,
     major: options.major,
     nationalSelection: options.nationalSelection,
+    nationalTeamEvent: options.nationalTeamEvent,
+    nationalSportsFestival: options.nationalSportsFestival,
     sort: options.sort ?? "date-asc",
   };
 }

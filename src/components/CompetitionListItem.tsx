@@ -127,7 +127,23 @@ export function CompetitionListItem({
               className="hub-tag-outline"
               style={{ color: "#6D4B99", borderColor: "#6D4B99" }}
             >
-              대표선발
+              국가대표 선발
+            </span>
+          )}
+          {competition.attributes.nationalTeamEvent && (
+            <span
+              className="hub-tag-outline"
+              style={{ color: "#8A4F2C", borderColor: "#8A4F2C" }}
+            >
+              국가대표전
+            </span>
+          )}
+          {competition.attributes.nationalSportsFestival && (
+            <span
+              className="hub-tag-outline"
+              style={{ color: "#7A5A1D", borderColor: "#7A5A1D" }}
+            >
+              전국체전
             </span>
           )}
           {competition.attributes.beginner && (

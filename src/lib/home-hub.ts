@@ -68,8 +68,7 @@ export const getHomeHubData = cache(async (): Promise<HomeHubData> => {
     domesticShows,
     globalMajorRecords,
     upcomingRecords,
-    rookieRecords,
-    globalProShowCount,
+    rookieCandidateRecords,
     filterOptions,
     categoryGroupRecords,
   ] = await Promise.all([
@@ -103,23 +102,8 @@ export const getHomeHubData = cache(async (): Promise<HomeHubData> => {
     }),
 
     prisma.competitionSchedule.findMany({
-      where: {
-        seasonYear,
-        dateStartsOn: { gte: todayDate },
-        OR: [
-          { flagsJson: { contains: '"beginnerFriendly":true' } },
-          { flagsJson: { contains: '"rookieClass":true' } },
-        ],
-      },
-      orderBy: [{ dateStartsOn: "asc" }],
-      take: 3,
-    }),
-
-    prisma.competitionSchedule.count({
-      where: {
-        seasonYear,
-        organizationId: "ifbb-pro-league",
-      },
+      where: { seasonYear, dateStartsOn: { gte: todayDate } },
+      orderBy: [{ dateStartsOn: "asc" }, { title: "asc" }],
     }),
 
     getCompetitionFiltersPayload({
@@ -128,12 +112,13 @@ export const getHomeHubData = cache(async (): Promise<HomeHubData> => {
       pageSize: 1,
       organizationIds: [],
       registrationStatuses: [],
+      startsFrom: todayDate,
       tiers: [],
       sort: "date-asc",
     }),
 
     prisma.competitionSchedule.findMany({
-      where: { seasonYear },
+      where: { seasonYear, dateStartsOn: { gte: todayDate } },
       select: {
         title: true,
         divisionsJson: true,
@@ -143,6 +128,10 @@ export const getHomeHubData = cache(async (): Promise<HomeHubData> => {
   ]);
 
   const { flags } = filterOptions;
+  const rookieFriendly = rookieCandidateRecords
+    .map((record) => toCompetition(serializePublicCompetitionListItem(record)))
+    .filter((competition) => competition.attributes.beginner)
+    .slice(0, 3);
   const koreaRegionNames = new Set<string>(KOREAN_REGION_ORDER);
   const naturalTaxon = getCompetitionLandingTaxon("type", "natural");
   const rookieTaxon = getCompetitionLandingTaxon("type", "rookie");
@@ -155,7 +144,14 @@ export const getHomeHubData = cache(async (): Promise<HomeHubData> => {
     "type",
     "national-selection",
   );
-  const ifbbTaxon = getCompetitionLandingTaxon("organization", "ifbb");
+  const nationalTeamEventTaxon = getCompetitionLandingTaxon(
+    "type",
+    "national-team-event",
+  );
+  const nationalSportsFestivalTaxon = getCompetitionLandingTaxon(
+    "type",
+    "national-sports-festival",
+  );
 
   const exploreTypes: HomeExploreType[] = sortByCountThenName(
     [
@@ -173,7 +169,7 @@ export const getHomeHubData = cache(async (): Promise<HomeHubData> => {
         en: "Rookie / Beginner",
         hint: "입문 성격의 부문",
         href: rookieTaxon ? getCompetitionLandingPath(rookieTaxon) : "/competitions",
-        count: flags.beginnerAny,
+        count: filterOptions.attributes.beginner,
       },
       {
         key: "regional",
@@ -195,7 +191,7 @@ export const getHomeHubData = cache(async (): Promise<HomeHubData> => {
         key: "proShow",
         kr: "프로쇼",
         en: "Pro Show",
-        hint: "프로 선수전",
+        hint: "프로 선수전 · IFBB Pro Show 등 프로 전용 무대",
         href: proShowTaxon ? getCompetitionLandingPath(proShowTaxon) : "/competitions",
         count: filterOptions.tiers.pro_show,
       },
@@ -203,7 +199,7 @@ export const getHomeHubData = cache(async (): Promise<HomeHubData> => {
         key: "championship",
         kr: "챔피언십",
         en: "Championship",
-        hint: "대표급 타이틀 대회",
+        hint: "최상위 타이틀전 · 올림피아, 아놀드 클래식 등 메이저 무대",
         href: championshipTaxon ? getCompetitionLandingPath(championshipTaxon) : "/competitions",
         count: filterOptions.tiers.championship,
       },
@@ -217,19 +213,27 @@ export const getHomeHubData = cache(async (): Promise<HomeHubData> => {
       },
       {
         key: "nationalSelection",
-        kr: "대표선발",
+        kr: "국가대표 선발",
         en: "National Selection",
-        hint: "국가대표·전국체전",
+        hint: "국가대표 선발전",
         href: nationalSelectionTaxon ? getCompetitionLandingPath(nationalSelectionTaxon) : "/competitions",
         count: filterOptions.attributes.nationalSelection,
       },
       {
-        key: "globalPro",
-        kr: "글로벌 프로 무대",
-        en: "Global Pro",
-        hint: "IFBB Pro League",
-        href: ifbbTaxon ? getCompetitionLandingPath(ifbbTaxon) : "/competitions",
-        count: globalProShowCount,
+        key: "nationalTeamEvent",
+        kr: "국가대표전",
+        en: "National Team Event",
+        hint: "대표팀 국제전",
+        href: nationalTeamEventTaxon ? getCompetitionLandingPath(nationalTeamEventTaxon) : "/competitions",
+        count: filterOptions.attributes.nationalTeamEvent,
+      },
+      {
+        key: "nationalSportsFestival",
+        kr: "전국체전",
+        en: "National Sports Festival",
+        hint: "시도 대표전",
+        href: nationalSportsFestivalTaxon ? getCompetitionLandingPath(nationalSportsFestivalTaxon) : "/competitions",
+        count: filterOptions.attributes.nationalSportsFestival,
       },
     ],
     (item) => item.kr,
@@ -257,9 +261,7 @@ export const getHomeHubData = cache(async (): Promise<HomeHubData> => {
     upcoming: upcomingRecords.map((r) =>
       toCompetition(serializePublicCompetitionListItem(r)),
     ),
-    rookieFriendly: rookieRecords.map((r) =>
-      toCompetition(serializePublicCompetitionListItem(r)),
-    ),
+    rookieFriendly,
     exploreCategories,
     exploreTypes,
     exploreRegions: sortByCountThenName(

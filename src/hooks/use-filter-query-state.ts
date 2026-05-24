@@ -154,6 +154,8 @@ function cleanFilters(filters: Filters): Filters {
     global: filters.global || undefined,
     major: filters.major || undefined,
     nationalSelection: filters.nationalSelection || undefined,
+    nationalTeamEvent: filters.nationalTeamEvent || undefined,
+    nationalSportsFestival: filters.nationalSportsFestival || undefined,
   };
 }
 

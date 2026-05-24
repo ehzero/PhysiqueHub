@@ -380,15 +380,41 @@ const TYPE_TAXONS: CompetitionLandingTaxon[] = [
   {
     axis: "type",
     slug: "national-selection",
-    label: "대표선발",
-    title: "대표선발·전국체전 대회 일정",
+    label: "국가대표 선발",
+    title: "국가대표 선발 대회 일정",
     description:
-      "국가대표 선발, 전국체전, 협회 대표 선발 루트와 관련된 대회 일정을 확인하세요.",
-    h1: "대표선발·전국체전 대회 일정",
+      "국가대표 선발 루트와 관련된 대회 일정을 확인하세요.",
+    h1: "국가대표 선발 대회 일정",
     intro:
-      "국가대표 선발, 전국체전, 협회 대표 선발 루트와 관련된 예정 대회를 모았습니다. 선발 기준과 참가 자격은 공식 공지에서 확인하세요.",
+      "국가대표 선발 루트와 관련된 예정 대회를 모았습니다. 선발 기준과 참가 자격은 공식 공지에서 확인하세요.",
     filterHref: "/competitions?national=1",
     keywords: ["국가대표 선발전", "전국체전", "대표 선발"],
+  },
+  {
+    axis: "type",
+    slug: "national-team-event",
+    label: "국가대표전",
+    title: "국가대표전 대회 일정",
+    description:
+      "국가대표 또는 협회 대표단이 출전하는 국제·권역 대회 일정을 확인하세요.",
+    h1: "국가대표전 대회 일정",
+    intro:
+      "국가대표 또는 협회 대표단 출전 맥락이 있는 예정 대회를 모았습니다. 실제 파견·선발·참가 자격은 협회 공식 공지에서 확인하세요.",
+    filterHref: "/competitions?nationalTeamEvent=1",
+    keywords: ["국가대표전", "국가대표 국제대회", "대표팀 대회"],
+  },
+  {
+    axis: "type",
+    slug: "national-sports-festival",
+    label: "전국체전",
+    title: "전국체전 대회 일정",
+    description:
+      "전국체육대회 본대회와 시도 대표 선발·예선 성격의 일정을 확인하세요.",
+    h1: "전국체전 대회 일정",
+    intro:
+      "전국체육대회 본대회와 시도 대표 선발·예선 맥락의 예정 대회를 모았습니다. 실제 대표 선발 방식과 참가 자격은 시도 협회 및 공식 공지 기준으로 확인하세요.",
+    filterHref: "/competitions?nationalSportsFestival=1",
+    keywords: ["전국체전", "전국체육대회", "시도 대표 선발"],
   },
 ];
 
@@ -559,6 +585,10 @@ function competitionMatchesType(competition: Competition, slug: string) {
       return competition.attributes.global === true;
     case "national-selection":
       return competition.attributes.nationalSelection === true;
+    case "national-team-event":
+      return competition.attributes.nationalTeamEvent === true;
+    case "national-sports-festival":
+      return competition.attributes.nationalSportsFestival === true;
     default:
       return false;
   }

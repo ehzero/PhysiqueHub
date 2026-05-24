@@ -73,7 +73,9 @@ export function CompDrawer({
     COMPETITION_TIER_LABELS[comp.tier],
     comp.attributes.major ? "메이저" : "",
     comp.attributes.global ? "글로벌" : "",
-    comp.attributes.nationalSelection ? "대표선발" : "",
+    comp.attributes.nationalSelection ? "국가대표 선발" : "",
+    comp.attributes.nationalTeamEvent ? "국가대표전" : "",
+    comp.attributes.nationalSportsFestival ? "전국체전" : "",
     comp.attributes.beginner ? "입문·루키" : "",
   ].filter(Boolean);
 

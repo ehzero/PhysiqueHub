@@ -240,7 +240,8 @@ function createUnmoEvent(
     ]),
     flags: {
       natural: item.organizationId === "wngp",
-      proCard: /프로카드|파이널/i.test(title),
+      proQualifier: /프로\s*퀄리파이어|프로카드/i.test(title),
+      proCard: /프로카드/i.test(title),
       rookieClass: /비기너|노비스/i.test(detail?.divisions.map((division) => division.name).join(" ") ?? ""),
       international: /일본|홍콩|Japan|Hong Kong/i.test(title),
     },

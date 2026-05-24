@@ -269,7 +269,15 @@ function createKbbfEvent(input: {
     divisions: extractDivisions(input.detail?.divisionText),
     tags: uniqueTexts(input.sourceTags),
     flags: {
-      nationalTeamRoute: /국가대표|대표선발|전국체육대회|세계|아시아/i.test(title),
+      nationalTeamRoute:
+        /국가대표.*선발/i.test(title) &&
+        !/전국\s*체육대회|전국\s*체전/i.test(title),
+      nationalSportsFestival: /전국\s*체육대회|전국\s*체전/i.test(title),
+      nationalTeamEvent:
+        input.sourceLabel === "국제대회" &&
+        !/국가대표.*선발|전국\s*체육대회|전국\s*체전/i.test(title),
+      championship: /선수권|챔피언십|챔피언쉽|전국\s*체육대회|전국\s*체전/i.test(title),
+      major: /세계\s*선수권|아시아\s*선수권|전국\s*체육대회|전국\s*체전/i.test(title),
       international: input.sourceLabel === "국제대회",
     },
     source: createSourceSnapshot({

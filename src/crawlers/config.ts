@@ -26,6 +26,7 @@ export const CRAWL_ORGANIZATION_IDS = [
   "ssa-korea",
   "wff-korea",
   "inba-pnba",
+  "ifbb-pro-league",
   "fitschedule",
   "monsterzym",
   "one-classic",

@@ -226,6 +226,8 @@ export interface Filters {
   global?: boolean;
   major?: boolean;
   nationalSelection?: boolean;
+  nationalTeamEvent?: boolean;
+  nationalSportsFestival?: boolean;
 }
 
 export function parseDate(s: string): Date {

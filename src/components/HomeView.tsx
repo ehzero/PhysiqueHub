@@ -482,7 +482,7 @@ function MajorsSection({
             </p>
           </div>
           <Link
-            href="/competitions/types/international-route"
+            href="/competitions/types/global"
             className="hub-link-more"
             style={{ color: INK }}
             prefetch={false}

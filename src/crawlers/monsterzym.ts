@@ -173,6 +173,12 @@ function createMonsterzymEvent(
     });
   }
 
+  const eventText = `${card.section} ${card.badge} ${card.subtitle} ${card.title}`;
+  const isProQualifier = /프로\s*퀄리파이어|pro\s*qualifier/i.test(eventText);
+  const isProShow =
+    !isProQualifier &&
+    /프로\s*쇼|프로쇼|오픈\s*프로|내추럴\s*프로|pro\s*show|ifbb\s*pro/i.test(eventText);
+
   return createScheduleDraft({
     organizationId: MONSTERZYM_SOURCE.organizationId,
     organizationName: MONSTERZYM_SOURCE.organizationName,
@@ -195,12 +201,11 @@ function createMonsterzymEvent(
       /IFBB|프로쇼/.test(card.subtitle) ? "IFBB Pro Show" : "",
     ]),
     flags: {
-      natural: /내추럴/.test(`${card.badge} ${card.subtitle} ${card.title}`),
-      proQualifier: /프로 퀄리파이어/.test(card.subtitle),
-      proCard: /프로 퀄리파이어/.test(card.subtitle),
-      international: /프로|아시안|IFBB|오픈 프로|내추럴 프로/.test(
-        `${card.section} ${card.badge} ${card.subtitle} ${card.title}`,
-      ),
+      natural: /내추럴/i.test(eventText),
+      proQualifier: isProQualifier,
+      proCard: isProQualifier,
+      proShow: isProShow,
+      international: /아시안|asian|asia|IFBB/i.test(eventText),
     },
     source: createSourceSnapshot({
       sourceType: "official-homepage",

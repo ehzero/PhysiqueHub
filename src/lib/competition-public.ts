@@ -38,6 +38,8 @@ export interface ApiCompetitionFiltersResponse {
     proPath: number;
     international: number;
     nationalTeamRoute: number;
+    nationalTeamEvent: number;
+    nationalSportsFestival: number;
     internationalRoute: number;
     regional: number;
   };
@@ -82,6 +84,8 @@ export interface CompetitionPageOptions {
   global?: boolean;
   major?: boolean;
   nationalSelection?: boolean;
+  nationalTeamEvent?: boolean;
+  nationalSportsFestival?: boolean;
   organizationId?: string;
   registrationStatus?: string | string[];
   sort?: CompetitionSortOption;
@@ -153,6 +157,7 @@ export function toCompetition(item: ApiCompetitionListItem): Competition {
     title: item.title,
     organizationId: item.organizationId,
     organizationName: item.organizationName,
+    organizationShortName: item.organizationShortName,
     country: item.location.country,
     tags: item.tags,
     flags,

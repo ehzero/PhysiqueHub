@@ -29,6 +29,8 @@ export async function GET(request: Request) {
       global: query.global,
       major: query.major,
       nationalSelection: query.nationalSelection,
+      nationalTeamEvent: query.nationalTeamEvent,
+      nationalSportsFestival: query.nationalSportsFestival,
       sort: query.sort,
     },
   });

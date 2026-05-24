@@ -9,6 +9,8 @@ export interface CompetitionAttributes {
   global: boolean;
   major: boolean;
   nationalSelection: boolean;
+  nationalTeamEvent: boolean;
+  nationalSportsFestival: boolean;
   beginner: boolean;
 }
 
@@ -21,6 +23,7 @@ export interface CompetitionClassificationInput {
   title: string;
   organizationId?: string | null;
   organizationName?: string | null;
+  organizationShortName?: string | null;
   country?: string | null;
   tags?: unknown[];
   flags?: Record<string, unknown>;
@@ -42,15 +45,28 @@ export function classifyCompetition(
   input: CompetitionClassificationInput,
 ): CompetitionClassification {
   const flags = input.flags ?? {};
+  const title = normalizeText(input.title);
   const normalized = normalizeText(getEventText(input));
+  const isAmateurOlympia = /amateur\s*olympia|아마추어\s*올림피아/.test(title);
   const isProQualifier = isProQualifierText(normalized, flags);
   const isProShow = isProShowText(input, normalized, flags, isProQualifier);
   const isRegional = isRegionalText(normalized, flags);
-  const isChampionship = isChampionshipText(normalized);
+  const nationalSportsFestival = isNationalSportsFestivalText(normalized, flags);
+  const isChampionship = isChampionshipText(title, flags, nationalSportsFestival);
   const global = isGlobalText(input, normalized, flags);
-  const nationalSelection = isNationalSelectionText(normalized, flags);
+  const nationalSelection = isNationalSelectionText(
+    normalized,
+    flags,
+    nationalSportsFestival,
+  );
+  const nationalTeamEvent = isNationalTeamEventText(
+    input,
+    normalized,
+    flags,
+    nationalSelection,
+  );
   const beginner = isBeginnerText(normalized, flags);
-  const major = isMajorText(input, normalized);
+  const major = isMajorText(input, title, flags);
 
   return {
     tier: getTier({
@@ -58,11 +74,15 @@ export function classifyCompetition(
       isProQualifier,
       isRegional,
       isChampionship,
+      isMajor: major,
+      isAmateurOlympia,
     }),
     attributes: {
       global,
       major,
       nationalSelection,
+      nationalTeamEvent,
+      nationalSportsFestival,
       beginner,
     },
   };
@@ -73,11 +93,28 @@ function getTier(options: {
   isProQualifier: boolean;
   isRegional: boolean;
   isChampionship: boolean;
+  isMajor: boolean;
+  isAmateurOlympia: boolean;
 }): CompetitionTier {
+  if (
+    options.isChampionship &&
+    options.isMajor &&
+    !options.isRegional &&
+    !options.isAmateurOlympia
+  ) {
+    return "championship";
+  }
+
+  if (
+    options.isChampionship &&
+    !options.isProQualifier &&
+    !options.isRegional
+  ) {
+    return "championship";
+  }
   if (options.isProShow) return "pro_show";
   if (options.isProQualifier) return "pro_qualifier";
   if (options.isRegional) return "regional";
-  if (options.isChampionship) return "championship";
   return "general";
 }
 
@@ -100,21 +137,20 @@ function isProShowText(
   flags: Record<string, unknown>,
   isProQualifier: boolean,
 ): boolean {
-  if (isProQualifier) {
-    return false;
-  }
-
   if (input.organizationId === "ifbb-pro-league") {
     return true;
   }
 
-  return (
+  if (
     flags.proShow === true ||
-    /프로\s*쇼|프로쇼|pro\s*show|pro\s*championships?|pro\s*world\s*championships?/.test(
+    /프로\s*쇼|프로쇼|프로\s*올스타|pro\s*show|pro\s*all\s*stars|pro\s*championships?|pro\s*world\s*championships?/.test(
       normalized,
-    ) ||
-    /\bpro\b/.test(normalized)
-  );
+    )
+  ) {
+    return true;
+  }
+
+  return !isProQualifier && /\bpro\b/.test(normalized);
 }
 
 function isRegionalText(
@@ -124,12 +160,24 @@ function isRegionalText(
   return flags.regional === true || /리저널|regional/.test(normalized);
 }
 
-function isChampionshipText(normalized: string): boolean {
+function isChampionshipText(
+  normalized: string,
+  flags: Record<string, unknown>,
+  nationalSportsFestival: boolean,
+): boolean {
+  if (nationalSportsFestival) {
+    return false;
+  }
+
+  if (flags.championship === true) {
+    return true;
+  }
+
   if (/유니버시티/.test(normalized)) {
     return false;
   }
 
-  return /championships?|챔피언십|챔피언쉽|선수권|worlds?|월드|세계|universe|유니버스|olympia|올림피아|arnold|아놀드|final|파이널/.test(
+  return /championships?|챔피언십|챔피언쉽|선수권|world\s*championships?|worlds\b|월드|세계|universe|유니버스|olympia|올림피아|arnold|아놀드|final|파이널/.test(
     normalized,
   );
 }
@@ -151,12 +199,72 @@ function isGlobalText(
 function isNationalSelectionText(
   normalized: string,
   flags: Record<string, unknown>,
+  nationalSportsFestival: boolean,
+): boolean {
+  if (nationalSportsFestival) {
+    return false;
+  }
+
+  if (/국가대표.*선발/.test(normalized)) {
+    return true;
+  }
+
+  return flags.nationalTeamRoute === true && !isRepresentativeEventTitle(normalized);
+}
+
+function isNationalSportsFestivalText(
+  normalized: string,
+  flags: Record<string, unknown>,
 ): boolean {
   return (
-    flags.nationalTeamRoute === true ||
-    /국가대표|대표\s*선발|전국\s*체전|전국\s*체육|국제\s*대회\s*선발전/.test(
-      normalized,
+    flags.nationalSportsFestival === true ||
+    /전국\s*체전|전국\s*체육|전국\s*체육대회/.test(normalized)
+  );
+}
+
+function isNationalTeamEventText(
+  input: CompetitionClassificationInput,
+  normalized: string,
+  flags: Record<string, unknown>,
+  nationalSelection: boolean,
+): boolean {
+  if (nationalSelection) {
+    return false;
+  }
+
+  if (flags.nationalTeamEvent === true) {
+    return true;
+  }
+
+  if (!isKbbfContext(input, normalized)) {
+    return false;
+  }
+
+  return (
+    (flags.international === true || /국제\s*대회/.test(normalized)) &&
+    isRepresentativeEventTitle(normalized)
+  );
+}
+
+function isKbbfContext(
+  input: CompetitionClassificationInput,
+  normalized: string,
+): boolean {
+  return (
+    input.organizationId === "kbbf" ||
+    /대한\s*보디\s*빌딩\s*협회|kbbf/.test(
+      normalizeText(
+        [input.organizationName, input.organizationShortName, normalized]
+          .filter(Boolean)
+          .join(" "),
+      ),
     )
+  );
+}
+
+function isRepresentativeEventTitle(normalized: string): boolean {
+  return /ifbb|세계|아시아|동아시아|한\s*중\s*일|친선|선수권|olympia|올림피아|universe|유니버스|mr\.?\s*universe/.test(
+    normalized,
   );
 }
 
@@ -176,7 +284,12 @@ function isBeginnerText(
 function isMajorText(
   input: CompetitionClassificationInput,
   normalized: string,
+  flags: Record<string, unknown>,
 ): boolean {
+  if (flags.major === true) {
+    return true;
+  }
+
   if (
     /mr\.?\s*olympia|미스터\s*올림피아|olympia|올림피아|arnold|아놀드|natural\s*olympia/.test(
       normalized,
@@ -185,7 +298,7 @@ function isMajorText(
     return true;
   }
 
-  if (/worlds?|세계.*선수권|world\s*championships?/.test(normalized)) {
+  if (/worlds\b|세계.*선수권|world\s*championships?/.test(normalized)) {
     return true;
   }
 

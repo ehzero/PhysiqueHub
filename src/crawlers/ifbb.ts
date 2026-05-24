@@ -83,6 +83,12 @@ export async function crawlIfbbNpcAgp(): Promise<CrawlerResult> {
 
         const location = inferLocation(locationTexts);
         const tags = inferTags(title, detailTexts, url);
+        const eventText = `${title} ${detailTexts.join(" ")} ${url}`;
+        const isRegional = /리저널|regional/i.test(eventText);
+        const isProQualifier = /프로\s*퀄리파이어|pro\s*qualifier|super\s*pro\s*qualifier/i.test(
+          eventText,
+        );
+        const isProShow = /ifbb-pro\/|프로\s*쇼|프로쇼|pro\s*show/i.test(eventText);
 
         sourceEvents.push(
           createScheduleDraft({
@@ -103,10 +109,14 @@ export async function crawlIfbbNpcAgp(): Promise<CrawlerResult> {
             divisions: extractDivisions(divisionText),
             tags,
             flags: {
-              natural: /내추럴|natural/i.test(`${title} ${detailTexts.join(" ")}`),
-              proQualifier: /프로\s*퀄리파이어|qualifier/i.test(`${title} ${url}`),
-              proCard: /프로\s*카드/i.test(detailTexts.join(" ")),
-              international: /필리핀|마닐라|olympia|올림피아/i.test(`${title} ${detailTexts.join(" ")}`),
+              natural: /내추럴|natural/i.test(eventText),
+              regional: isRegional,
+              proQualifier: isProQualifier,
+              proCard: /프로\s*카드|pro\s*card/i.test(eventText),
+              proShow: isProShow,
+              international: /필리핀|마닐라|asia|asian|world|olympia|올림피아|arnold|아놀드/i.test(
+                eventText,
+              ),
             },
             source: createSourceSnapshot({
               sourceType: "official-homepage",
@@ -242,8 +252,14 @@ function inferTags(title: string, details: string[], sourceUrl: string): string[
   if (/내추럴|natural/i.test(text)) {
     tags.push("내추럴");
   }
+  if (/리저널|regional/i.test(text)) {
+    tags.push("리저널");
+  }
   if (/프로\s*퀄리파이어|qualifier/i.test(text)) {
     tags.push("프로 퀄리파이어");
+  }
+  if (/프로\s*쇼|프로쇼|pro\s*show|ifbb-pro\//i.test(text)) {
+    tags.push("프로쇼");
   }
   if (/프로\s*카드/i.test(text)) {
     tags.push("프로카드");

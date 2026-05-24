@@ -3,6 +3,7 @@ import type { CrawlOrganizationId } from "./config";
 import { crawlAgonas } from "./agonas";
 import { crawlKclassicRelatedCandidates } from "./candidates";
 import { crawlIfbbNpcAgp } from "./ifbb";
+import { crawlIfbbProLeague } from "./ifbb-pro-league";
 import { crawlInbaPnba } from "./inba";
 import { crawlKclassic } from "./kclassic";
 import { crawlKbbf } from "./kbbf";
@@ -23,6 +24,10 @@ const CRAWLER_GROUPS: Array<{
   {
     organizationIds: ["npc-ifbb-pro-korea", "agp"],
     crawler: crawlIfbbNpcAgp,
+  },
+  {
+    organizationIds: ["ifbb-pro-league"],
+    crawler: crawlIfbbProLeague,
   },
   {
     organizationIds: ["kbbf"],
