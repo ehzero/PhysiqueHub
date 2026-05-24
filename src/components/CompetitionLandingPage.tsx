@@ -101,7 +101,7 @@ function CompetitionLandingView({
 
           <div className="competition-landing-hero-grid">
             <div>
-              <div className="competition-eyebrow">
+              <div className="hub-eyebrow" style={{ color: "#B85C3C" }}>
                 {seasonYear} 시즌
               </div>
               <h1 className="competition-landing-title">{taxon.h1}</h1>
@@ -130,9 +130,11 @@ function CompetitionLandingView({
         <div className="container">
           <div className="competition-section-head">
             <div>
-              <div className="competition-eyebrow">Upcoming</div>
-              <h2 className="competition-section-title">예정 대회 목록</h2>
-              <p className="competition-section-copy">
+              <div className="hub-eyebrow" style={{ color: "#B85C3C" }}>
+                Upcoming
+              </div>
+              <h2 className="hub-h2">예정 대회 목록</h2>
+              <p className="hub-section-body" style={{ color: "#86827C" }}>
                 {getListIntro(context)}
               </p>
             </div>
@@ -164,8 +166,10 @@ function CompetitionLandingView({
         <div className="container">
           <div className="competition-section-head">
             <div>
-              <div className="competition-eyebrow">Related</div>
-              <h2 className="competition-section-title">함께 보면 좋은 일정</h2>
+              <div className="hub-eyebrow" style={{ color: "#B85C3C" }}>
+                Related
+              </div>
+              <h2 className="hub-h2">함께 보면 좋은 일정</h2>
             </div>
           </div>
           <div className="competition-landing-link-grid">

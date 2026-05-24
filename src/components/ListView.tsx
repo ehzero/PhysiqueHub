@@ -43,11 +43,13 @@ export function ListView({
         <div className="container">
           <div className="competition-section-head">
             <div>
-              <div className="competition-eyebrow">대회 목록</div>
-              <h2 className="competition-section-title">
+              <div className="hub-eyebrow" style={{ color: "#B85C3C" }}>
+                대회 목록
+              </div>
+              <h1 className="hub-h2">
                 대회 일정을 조건별로 찾아보세요.
-              </h2>
-              <p className="competition-section-copy">
+              </h1>
+              <p className="hub-section-body" style={{ color: "#86827C" }}>
                 필터 상태를 조정해 원하는 피트니스·보디빌딩 대회를 찾아보세요.
               </p>
             </div>
