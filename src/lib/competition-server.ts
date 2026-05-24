@@ -16,6 +16,15 @@ import {
 } from "@/lib/competition-api";
 import { getOrganizationPriority } from "@/lib/organization-priority";
 import {
+  competitionMatchesTaxon,
+  getAllCompetitionLandingTaxons,
+  getCompetitionLandingPath,
+  getCompetitionLandingTaxon,
+  getRelatedCompetitionTaxons,
+  type CompetitionLandingAxis,
+  type CompetitionLandingTaxon,
+} from "@/lib/competition-taxonomy";
+import {
   toCompetition,
   type ApiCompetitionFiltersResponse,
   type ApiCompetitionListResponse,
@@ -32,6 +41,17 @@ interface UpcomingCompetitionContext {
   seasonYear: number;
   competitionPage: CompetitionListPage;
   filterOptions?: ApiCompetitionFiltersResponse;
+}
+
+export interface CompetitionLandingContext {
+  today: string;
+  seasonYear: number;
+  taxon: CompetitionLandingTaxon;
+  path: string;
+  competitions: CompetitionListPage["items"];
+  total: number;
+  relatedTaxons: CompetitionLandingTaxon[];
+  isIndexable: boolean;
 }
 
 export async function getCompetitionListPayload(
@@ -113,6 +133,43 @@ export async function getUpcomingCompetitionContext(
     ...base,
     filterOptions,
   };
+}
+
+export async function getCompetitionLandingContext(
+  axis: CompetitionLandingAxis,
+  slug: string,
+): Promise<CompetitionLandingContext | null> {
+  const taxon = getCompetitionLandingTaxon(axis, slug);
+
+  if (!taxon) {
+    return null;
+  }
+
+  const base = await getUpcomingCompetitionBase();
+  const competitions = base.competitionPage.items.filter((competition) =>
+    competitionMatchesTaxon(competition, taxon),
+  );
+
+  return {
+    today: base.today,
+    seasonYear: base.seasonYear,
+    taxon,
+    path: getCompetitionLandingPath(taxon),
+    competitions,
+    total: competitions.length,
+    relatedTaxons: getRelatedCompetitionTaxons(taxon),
+    isIndexable: competitions.length > 0,
+  };
+}
+
+export async function getIndexableCompetitionLandingTaxons() {
+  const base = await getUpcomingCompetitionBase();
+
+  return getAllCompetitionLandingTaxons().filter((taxon) =>
+    base.competitionPage.items.some((competition) =>
+      competitionMatchesTaxon(competition, taxon),
+    ),
+  );
 }
 
 const getUpcomingCompetitionBase = cache(async () => {

@@ -1,5 +1,6 @@
 export interface Competition {
   id: string;
+  organizationId?: string;
   title: string;
   org: string;
   orgShort: string;

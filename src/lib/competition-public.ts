@@ -144,6 +144,7 @@ export function toCompetition(item: ApiCompetitionListItem): Competition {
 
   return {
     id: item.id,
+    organizationId: item.organizationId,
     title: item.title,
     org: item.organizationName,
     orgShort,

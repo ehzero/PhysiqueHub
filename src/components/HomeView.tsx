@@ -257,14 +257,15 @@ function HeroSection({
 
 // ── Explore ────────────────────────────────────────────────────────
 interface ExploreSectionProps {
-  categories: Array<{ name: string; count: number }>;
+  categories: Array<{ name: string; href: string; count: number }>;
   types: HomeExploreType[];
-  regions: Array<{ name: string; count: number }>;
+  regions: Array<{ name: string; count: number; href: string }>;
   organizations: Array<{
     id: string;
     name: string;
     shortName?: string | null;
     count: number;
+    href: string;
   }>;
 }
 
@@ -303,7 +304,7 @@ function ExploreSection({
             {categories.map((c) => (
               <Link
                 key={c.name}
-                href={`/competitions?category=${encodeURIComponent(c.name)}`}
+                href={c.href}
                 className="hub-explore-row"
                 style={{ borderTop: `1px solid ${FAINT}` }}
                 prefetch={false}
@@ -351,7 +352,7 @@ function ExploreSection({
             {regions.map((r) => (
               <Link
                 key={r.name}
-                href={`/competitions?region=${encodeURIComponent(r.name)}`}
+                href={r.href}
                 className="hub-explore-row"
                 style={{ borderTop: `1px solid ${FAINT}` }}
                 prefetch={false}
@@ -371,7 +372,7 @@ function ExploreSection({
             {organizations.map((o) => (
               <Link
                 key={o.id}
-                href={`/competitions?organizationId=${encodeURIComponent(o.id)}`}
+                href={o.href}
                 className="hub-explore-row hub-explore-row-org"
                 style={{ borderTop: `1px solid ${FAINT}` }}
                 prefetch={false}
@@ -481,7 +482,7 @@ function MajorsSection({
             </p>
           </div>
           <Link
-            href="/competitions?internationalRoute=true"
+            href="/competitions/types/international-route"
             className="hub-link-more"
             style={{ color: INK }}
             prefetch={false}
@@ -751,7 +752,7 @@ function RookieSection({
             </p>
           </div>
           <Link
-            href="/competitions?beginnerAny=true"
+            href="/competitions/types/rookie"
             className="hub-link-more"
             style={{ color: INK }}
             prefetch={false}
