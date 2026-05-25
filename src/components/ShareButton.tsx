@@ -31,12 +31,30 @@ export function ShareButton({
     const url = path
       ? new URL(path, window.location.origin).toString()
       : window.location.href;
+    const shareData: ShareData = { url };
 
+    if (!navigator.share || navigator.canShare?.(shareData) === false) {
+      await copyShareUrl(url);
+      return;
+    }
+
+    try {
+      await navigator.share(shareData);
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") {
+        return;
+      }
+
+      await copyShareUrl(url);
+    }
+  }
+
+  async function copyShareUrl(url: string) {
     try {
       await copyToClipboard(url);
       showNotice("링크를 복사했어요");
     } catch {
-      showNotice("복사에 실패했어요");
+      showNotice("공유와 복사에 실패했어요");
     }
   }
 
