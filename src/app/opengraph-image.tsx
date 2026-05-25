@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { SITE_NAME } from "@/lib/site";
+import { SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
 
 export const alt = `${SITE_NAME} 공유 이미지`;
 export const size = {
@@ -8,7 +8,29 @@ export const size = {
 };
 export const contentType = "image/png";
 
+const ACCENT = "#B85C3C";
+const INK = "#0E0E0C";
+const PAPER = "#F7F5F0";
+const ORGANIZATIONS = [
+  "IFBB Pro League",
+  "NPC/IFBB",
+  "KBBF",
+  "NABBA",
+  "PCA",
+  "NPCA",
+  "WNBF",
+  "Musclemania",
+] as const;
+const OTHER_ORGANIZATION_COUNT = 9;
+
 export default function Image() {
+  const seasonYear = new Intl.DateTimeFormat("ko-KR", {
+    timeZone: "Asia/Seoul",
+    year: "numeric",
+  })
+    .format(new Date())
+    .replace(/\D/g, "");
+
   return new ImageResponse(
     <div
       style={{
@@ -16,82 +38,92 @@ export default function Image() {
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        justifyContent: "space-between",
-        background: "#f7f3ea",
-        color: "#111111",
-        padding: "72px",
+        background: PAPER,
+        color: INK,
         fontFamily: "Arial, sans-serif",
+        padding: 64,
       }}
     >
       <div
         style={{
           display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          fontSize: 26,
-          letterSpacing: 0,
+          width: "100%",
+          flex: 1,
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
-          <div
-            style={{
-              width: 34,
-              height: 34,
-              borderRadius: 17,
-              background: "#111111",
-            }}
-          />
-          <span style={{ fontWeight: 700 }}>{SITE_NAME}</span>
-        </div>
-        <span style={{ color: "#6b665b" }}>COMPETITION CALENDAR</span>
-      </div>
-
-      <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
         <div
           style={{
             display: "flex",
-            width: 92,
-            height: 6,
-            background: "#111111",
-          }}
-        />
-        <h1
-          style={{
-            margin: 0,
-            maxWidth: 920,
-            fontSize: 86,
-            lineHeight: 1.5,
-            letterSpacing: 0,
-            fontWeight: 800,
+            flex: 1,
+            flexDirection: "column",
+            justifyContent: "center",
           }}
         >
-          대회 일정과 접수 마감을 한곳에서
-        </h1>
-        <p
-          style={{
-            margin: 0,
-            maxWidth: 820,
-            fontSize: 30,
-            lineHeight: 1.5,
-            color: "#3f3a33",
-          }}
-        >
-          단체, 지역, 종목, 접수 상태를 빠르게 비교하고 다음 무대를
-          준비하세요.
-        </p>
+          <div
+            style={{
+              color: ACCENT,
+              display: "flex",
+              fontSize: 28,
+              fontWeight: 800,
+              letterSpacing: 0,
+              marginBottom: 22,
+            }}
+          >
+            ● {seasonYear} 시즌 · Asia/Seoul
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              fontSize: 72,
+              lineHeight: 1.18,
+              letterSpacing: 0,
+              fontWeight: 900,
+              width: 960,
+            }}
+          >
+            <div style={{ display: "flex", whiteSpace: "nowrap" }}>
+              국내 보디빌딩·피트니스
+            </div>
+            <div style={{ display: "flex", gap: 18 }}>
+              <span>대회 일정을</span>
+              <span style={{ color: ACCENT }}>한눈에.</span>
+            </div>
+          </div>
+          <p
+            style={{
+              margin: "28px 0 0",
+              maxWidth: 880,
+              fontSize: 26,
+              lineHeight: 1.55,
+              color: "#3A3833",
+            }}
+          >
+            {SITE_DESCRIPTION}
+          </p>
+        </div>
       </div>
 
       <div
         style={{
           display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          fontSize: 24,
-          color: "#6b665b",
+          flexDirection: "column",
+          gap: 14,
+          color: "#2D2925",
+          fontSize: 20,
+          fontWeight: 700,
+          letterSpacing: 0,
         }}
       >
-        <span>Schedules · Registration · Divisions</span>
-        <span>IFBB · NABBA · KBBF · WNBF · PCA</span>
+        <div style={{ display: "flex", color: ACCENT, fontSize: 18 }}>
+          주요 단체
+        </div>
+        <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+          {ORGANIZATIONS.map((organization) => (
+            <span key={organization}>{organization}</span>
+          ))}
+          <span>외 {OTHER_ORGANIZATION_COUNT}개</span>
+        </div>
       </div>
     </div>,
     size,
