@@ -11,7 +11,13 @@ import {
   type CompetitionLandingAxis,
 } from "@/lib/competition-taxonomy";
 import { getCompetitionPath } from "@/lib/competition-slug";
-import { getSiteUrl, SITE_NAME } from "@/lib/site";
+import {
+  getSiteUrl,
+  OPEN_GRAPH_IMAGE_URL,
+  SHARE_IMAGE_ALT,
+  SITE_NAME,
+  TWITTER_IMAGE_URL,
+} from "@/lib/site";
 
 interface CompetitionLandingPageProps {
   axis: CompetitionLandingAxis;
@@ -50,10 +56,10 @@ export async function generateCompetitionLandingMetadata({
       description: taxon.description,
       images: [
         {
-          url: "/opengraph-image",
+          url: OPEN_GRAPH_IMAGE_URL,
           width: 1200,
           height: 630,
-          alt: `${SITE_NAME} 공유 이미지`,
+          alt: SHARE_IMAGE_ALT,
         },
       ],
     },
@@ -61,7 +67,7 @@ export async function generateCompetitionLandingMetadata({
       card: "summary_large_image",
       title: fullTitle,
       description: taxon.description,
-      images: ["/twitter-image"],
+      images: [TWITTER_IMAGE_URL],
     },
   };
 }

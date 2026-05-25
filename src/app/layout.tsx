@@ -1,7 +1,15 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { Instrument_Serif, JetBrains_Mono } from "next/font/google";
-import { getSiteUrl, SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE } from "@/lib/site";
+import {
+  getSiteUrl,
+  OPEN_GRAPH_IMAGE_URL,
+  SHARE_IMAGE_ALT,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_TAGLINE,
+  TWITTER_IMAGE_URL,
+} from "@/lib/site";
 import "./globals.css";
 
 const instrumentSerif = Instrument_Serif({
@@ -50,10 +58,10 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
     images: [
       {
-        url: "/opengraph-image",
+        url: OPEN_GRAPH_IMAGE_URL,
         width: 1200,
         height: 630,
-        alt: `${SITE_NAME} 공유 이미지`,
+        alt: SHARE_IMAGE_ALT,
       },
     ],
   },
@@ -61,7 +69,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `${SITE_NAME} - ${SITE_TAGLINE}`,
     description: SITE_DESCRIPTION,
-    images: ["/twitter-image"],
+    images: [TWITTER_IMAGE_URL],
   },
   robots: {
     index: true,
