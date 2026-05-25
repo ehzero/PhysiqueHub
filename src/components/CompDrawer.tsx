@@ -96,8 +96,6 @@ export function CompDrawer({
             <ShareButton
               iconOnly
               path={getCompetitionPath(comp.id)}
-              text={`${comp.org} · ${dateLabel} · ${comp.venue}, ${comp.region}`}
-              title={comp.title}
             />
             <button className="icon-btn" onClick={onClose} aria-label="close">{Icons.close}</button>
           </div>

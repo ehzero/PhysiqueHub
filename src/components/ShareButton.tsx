@@ -5,8 +5,6 @@ import { Icons } from "./Icons";
 
 interface ShareButtonProps {
   path?: string;
-  title: string;
-  text: string;
   className?: string;
   label?: string;
   iconOnly?: boolean;
@@ -14,8 +12,6 @@ interface ShareButtonProps {
 
 export function ShareButton({
   path,
-  title,
-  text,
   className = "icon-btn",
   label = "공유",
   iconOnly = false,
@@ -35,18 +31,6 @@ export function ShareButton({
     const url = path
       ? new URL(path, window.location.origin).toString()
       : window.location.href;
-    const shareData = { title, text, url };
-
-    if (navigator.share) {
-      try {
-        await navigator.share(shareData);
-        return;
-      } catch (error) {
-        if (error instanceof DOMException && error.name === "AbortError") {
-          return;
-        }
-      }
-    }
 
     try {
       await copyToClipboard(url);
@@ -94,10 +78,15 @@ async function copyToClipboard(value: string) {
   textarea.value = value;
   textarea.setAttribute("readonly", "");
   textarea.style.position = "fixed";
-  textarea.style.top = "-9999px";
+  textarea.style.top = "0";
+  textarea.style.left = "0";
+  textarea.style.width = "1px";
+  textarea.style.height = "1px";
   textarea.style.opacity = "0";
   document.body.appendChild(textarea);
+  textarea.focus();
   textarea.select();
+  textarea.setSelectionRange(0, value.length);
 
   try {
     if (!document.execCommand("copy")) {

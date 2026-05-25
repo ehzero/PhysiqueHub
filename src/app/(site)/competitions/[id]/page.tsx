@@ -71,7 +71,6 @@ export default async function CompetitionDetailPage({
   const officialUrl = competition.sourceUrl || competition.registrationUrl;
   const eventJsonLd = getEventJsonLd(competition);
   const breadcrumbJsonLd = getBreadcrumbJsonLd(competition);
-  const shareText = `${competition.org} · ${getDateLabel(competition)} · ${competition.venue}, ${competition.region}`;
 
   return (
     <PageMain>
@@ -86,8 +85,6 @@ export default async function CompetitionDetailPage({
             <ShareButton
               className="cta-btn"
               path={getCompetitionPath(competition.id)}
-              text={shareText}
-              title={competition.title}
             />
             <Link className="cta-btn" href="/competitions" prefetch>
               대회 목록으로
