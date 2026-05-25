@@ -15,7 +15,7 @@ import type {
 } from "../types/competitionSchedule";
 
 const USER_AGENT =
-  "PhysiqueHubCrawlerPreview/0.1 (+https://physiquehub.local; contact: preview)";
+  "PhysiqueHubCrawlerPreview/0.1 (+https://physiquehub.kr; contact: support@physiquehub.kr)";
 
 const KOREA_TIMEZONE = "Asia/Seoul" as const;
 const UNCERTAIN_LOCATION_PATTERN = /추후\s*공지|공지\s*예정|예정|미정|확인\s*필요|인근|수도권/i;

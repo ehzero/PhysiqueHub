@@ -12,6 +12,7 @@ import {
   isAllowedContactAttachmentContentType,
   isAllowedContactAttachmentName,
 } from "@/lib/contact";
+import { SUPPORT_EMAIL } from "@/lib/site";
 import { Icons } from "./Icons";
 
 interface ContactDrawerProps {
@@ -178,7 +179,8 @@ export function ContactDrawer({ isOpen, onClose }: ContactDrawerProps) {
             <h2 className="page-title">문의하기</h2>
             <p className="page-subtitle">
               대회 정보 등록, 일정 정정, 서비스 오류, 기타 문의를 남겨주세요.
-              확인 후 필요한 내용을 반영하겠습니다.
+              확인 후 필요한 내용을 반영하겠습니다. 이메일 문의는{" "}
+              <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>로 보내주세요.
             </p>
           </div>
 

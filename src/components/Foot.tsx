@@ -1,5 +1,6 @@
 import packageJson from "../../package.json";
 import Link from "next/link";
+import { SUPPORT_EMAIL } from "@/lib/site";
 
 interface FootProps {
   seasonYear?: number;
@@ -48,6 +49,9 @@ export function Foot({
                     </button>
                   </li>
                 )}
+                <li>
+                  <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
+                </li>
               </ul>
             </div>
           </div>

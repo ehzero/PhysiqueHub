@@ -1,5 +1,6 @@
 import { StaticPageShell } from "@/components/StaticPageShell";
 import { createPageMetadata } from "@/lib/metadata";
+import { SUPPORT_EMAIL } from "@/lib/site";
 
 export const metadata = createPageMetadata({
   title: "개인정보 처리방침",
@@ -80,8 +81,9 @@ export default function PrivacyPage() {
         <h2>6. 이용자의 권리</h2>
         <p>
           이용자는 본인의 개인정보에 대해 열람, 정정, 삭제, 처리 정지를 요청할
-          수 있습니다. 요청은 이메일로 접수할 수 있으며, 본인 확인이
-          필요한 경우 추가 정보를 요청할 수 있습니다.
+          수 있습니다. 요청은{" "}
+          <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>로 접수할 수
+          있으며, 본인 확인이 필요한 경우 추가 정보를 요청할 수 있습니다.
         </p>
       </article>
 
@@ -98,7 +100,8 @@ export default function PrivacyPage() {
         <h2>8. 개인정보 보호 문의</h2>
         <p>
           개인정보 관련 문의, 열람·정정·삭제 요청은 사이트의 문의하기 기능을
-          통해 남겨주세요.
+          통해 남기거나{" "}
+          <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>로 보내주세요.
         </p>
       </article>
     </StaticPageShell>

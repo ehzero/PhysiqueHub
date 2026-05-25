@@ -1,5 +1,6 @@
 import { StaticPageShell } from "@/components/StaticPageShell";
 import { createPageMetadata } from "@/lib/metadata";
+import { SUPPORT_EMAIL } from "@/lib/site";
 
 export const metadata = createPageMetadata({
   title: "이용약관",
@@ -85,7 +86,8 @@ export default function TermsPage() {
       <article>
         <h2>7. 문의</h2>
         <p>
-          약관에 관한 문의는 사이트의 문의하기 기능을 통해 남겨주세요.
+          약관에 관한 문의는 사이트의 문의하기 기능을 통해 남기거나{" "}
+          <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>로 보내주세요.
         </p>
       </article>
     </StaticPageShell>
