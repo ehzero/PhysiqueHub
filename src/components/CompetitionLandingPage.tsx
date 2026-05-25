@@ -10,6 +10,7 @@ import {
   getCompetitionLandingPath,
   type CompetitionLandingAxis,
 } from "@/lib/competition-taxonomy";
+import { getCompetitionPath } from "@/lib/competition-slug";
 import { getSiteUrl, SITE_NAME } from "@/lib/site";
 
 interface CompetitionLandingPageProps {
@@ -293,7 +294,7 @@ function getItemListJsonLd(context: CompetitionLandingContext) {
     itemListElement: context.competitions.map((competition, index) => ({
       "@type": "ListItem",
       position: index + 1,
-      url: `${siteUrl}/competitions/${encodeURIComponent(competition.id)}`,
+      url: `${siteUrl}${getCompetitionPath(competition)}`,
       name: competition.title,
     })),
   };

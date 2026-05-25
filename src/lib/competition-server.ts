@@ -4,6 +4,10 @@ import { cache } from "react";
 import type { CompetitionSchedule } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { getKoreaDateParam } from "@/lib/date";
+import {
+  getCompetitionSlug,
+  normalizeCompetitionRouteSlug,
+} from "@/lib/competition-slug";
 import { compareRegionNames, normalizeCompetitionRegion } from "@/lib/location";
 import {
   buildCompetitionWhere,
@@ -195,16 +199,51 @@ export async function getCompetitionSeasonPage(
   };
 }
 
-export const getCompetitionById = cache(async (id: string) => {
+export const getCompetitionBySlug = cache(async (value: string) => {
+  const decoded = decodeURIComponent(value);
+  const normalizedSlug = normalizeCompetitionRouteSlug(decoded);
+  const year = Number(normalizedSlug.match(/^(\d{4})-/)?.[1]);
+
+  if (!Number.isInteger(year)) {
+    return null;
+  }
+
+  const records = await prisma.competitionSchedule.findMany({
+    where: { seasonYear: year },
+    orderBy: [{ dateStartsOn: "asc" }, { title: "asc" }],
+  });
+
+  const match = records
+    .map(serializePublicCompetitionListItem)
+    .map(toCompetition)
+    .find(
+      (competition) =>
+        normalizeCompetitionRouteSlug(getCompetitionSlug(competition)) ===
+        normalizedSlug,
+    );
+
+  return match ?? null;
+});
+
+export const getCompetitionIndexingMetaById = cache(async (id: string) => {
   const record = await prisma.competitionSchedule.findUnique({
     where: { id },
+    select: {
+      dateStartsOn: true,
+      updatedAt: true,
+    },
   });
 
   if (!record) {
     return null;
   }
 
-  return toCompetition(serializePublicCompetitionListItem(record));
+  return {
+    isIndexable: Boolean(
+      record.dateStartsOn && record.dateStartsOn >= getKoreaTodayStart(),
+    ),
+    lastModified: record.updatedAt,
+  };
 });
 
 export async function getUpcomingCompetitionContext(
@@ -291,6 +330,10 @@ const getUpcomingCompetitionFilters = cache(
       }),
     ),
 );
+
+function getKoreaTodayStart() {
+  return new Date(`${getKoreaDateParam()}T00:00:00+09:00`);
+}
 
 export async function getCompetitionFiltersPayload(
   query: CompetitionListQuery,

@@ -87,6 +87,8 @@ const CITY_REGION_HINTS: Array<[RegExp, RegionCityHint]> = [
 ];
 
 const VENUE_REGION_HINTS: Array<[RegExp, RegionCityHint]> = [
+  [/계양문화회관|인천\s*계양구|계양구\s*계양산로/i, { region: "인천광역시", city: "인천광역시" }],
+  [/세종대학교\s*컨벤션센터/i, { region: "서울특별시", city: "서울특별시" }],
   [/화성시청/, { region: "경기도", city: "화성시" }],
   [/장안대학교/, { region: "경기도", city: "화성시" }],
   [/루터대학교/, { region: "경기도", city: "용인시" }],

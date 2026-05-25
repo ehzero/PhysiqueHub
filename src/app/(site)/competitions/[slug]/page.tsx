@@ -5,26 +5,31 @@ import { PageHeader, PageMain, PageSection } from "@/components/PageLayout";
 import { ShareButton } from "@/components/ShareButton";
 import { fmtDate } from "@/lib/data";
 import type { Competition } from "@/lib/data";
-import { getCompetitionById } from "@/lib/competition-server";
+import { getCompetitionPath } from "@/lib/competition-slug";
+import {
+  getCompetitionBySlug,
+  getCompetitionIndexingMetaById,
+} from "@/lib/competition-server";
 import { getSiteUrl, SITE_NAME } from "@/lib/site";
 
 export const revalidate = 86_400;
 
 interface CompetitionDetailPageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ slug: string }>;
 }
 
 export async function generateMetadata({
   params,
 }: CompetitionDetailPageProps): Promise<Metadata> {
-  const id = decodeURIComponent((await params).id);
-  const competition = await getCompetitionById(id);
+  const slug = (await params).slug;
+  const competition = await getCompetitionBySlug(slug);
 
   if (!competition) {
     notFound();
   }
 
-  const path = getCompetitionPath(competition.id);
+  const indexingMeta = await getCompetitionIndexingMetaById(competition.id);
+  const path = getCompetitionPath(competition);
   const description = getDescription(competition);
 
   return {
@@ -32,6 +37,10 @@ export async function generateMetadata({
     description,
     alternates: {
       canonical: path,
+    },
+    robots: {
+      index: indexingMeta?.isIndexable ?? false,
+      follow: true,
     },
     openGraph: {
       type: "website",
@@ -61,8 +70,8 @@ export async function generateMetadata({
 export default async function CompetitionDetailPage({
   params,
 }: CompetitionDetailPageProps) {
-  const id = decodeURIComponent((await params).id);
-  const competition = await getCompetitionById(id);
+  const slug = (await params).slug;
+  const competition = await getCompetitionBySlug(slug);
 
   if (!competition) {
     notFound();
@@ -84,7 +93,7 @@ export default async function CompetitionDetailPage({
           <>
             <ShareButton
               className="cta-btn"
-              path={getCompetitionPath(competition.id)}
+              path={getCompetitionPath(competition)}
             />
             <Link className="cta-btn" href="/competitions" prefetch>
               대회 목록으로
@@ -170,10 +179,6 @@ function StructuredData({ data }: { data: Record<string, unknown> }) {
   );
 }
 
-function getCompetitionPath(id: string) {
-  return `/competitions/${encodeURIComponent(id)}`;
-}
-
 function getDescription(competition: Competition) {
   return `${competition.org} 주최 ${competition.title}은 ${getDateLabel(competition)}에 ${competition.venue}, ${competition.region}에서 열립니다. 접수 정보: ${getRegistrationLabel(competition)}.`;
 }
@@ -219,7 +224,7 @@ function getBreadcrumbJsonLd(competition: Competition) {
         "@type": "ListItem",
         position: 3,
         name: competition.title,
-        item: `${siteUrl}${getCompetitionPath(competition.id)}`,
+        item: `${siteUrl}${getCompetitionPath(competition)}`,
       },
     ],
   };
@@ -234,7 +239,7 @@ function getEventJsonLd(competition: Competition) {
     "@context": "https://schema.org",
     "@type": "Event",
     name: competition.title,
-    url: `${getSiteUrl()}${getCompetitionPath(competition.id)}`,
+    url: `${getSiteUrl()}${getCompetitionPath(competition)}`,
     startDate: competition.date,
     endDate: competition.dateEnd ?? competition.date,
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",

@@ -1,5 +1,6 @@
 "use client";
 
+import { getCompetitionPath } from "@/lib/competition-slug";
 import type { Competition } from "@/lib/data";
 import { CompetitionListItem } from "./CompetitionListItem";
 
@@ -12,7 +13,7 @@ interface CompRowProps {
 }
 
 export function CompRow({ comp, onOpen, today }: CompRowProps) {
-  const href = `/competitions/${encodeURIComponent(comp.id)}`;
+  const href = getCompetitionPath(comp);
 
   return (
     <CompetitionListItem

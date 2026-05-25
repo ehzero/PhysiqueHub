@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import type { MouseEventHandler } from "react";
+import { getCompetitionPath } from "@/lib/competition-slug";
 import { regStatusAt, type Competition } from "@/lib/data";
 import { COMPETITION_TIER_LABELS } from "@/lib/competition-classification";
 
@@ -44,7 +45,7 @@ function formatDday(days: number | null): string {
 export function CompetitionListItem({
   competition,
   today,
-  href = `/competitions/${encodeURIComponent(competition.id)}`,
+  href = getCompetitionPath(competition),
   onClick,
 }: CompetitionListItemProps) {
   const date = parseDateParts(competition.date);

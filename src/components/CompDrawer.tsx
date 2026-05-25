@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { getCompetitionPath } from "@/lib/competition-slug";
 import {
   Competition,
   parseDate,
@@ -95,7 +96,7 @@ export function CompDrawer({
             </button>
             <ShareButton
               iconOnly
-              path={getCompetitionPath(comp.id)}
+              path={getCompetitionPath(comp)}
             />
             <button className="icon-btn" onClick={onClose} aria-label="close">{Icons.close}</button>
           </div>
@@ -236,8 +237,4 @@ export function CompDrawer({
       </aside>
     </>
   );
-}
-
-function getCompetitionPath(id: string) {
-  return `/competitions/${encodeURIComponent(id)}`;
 }

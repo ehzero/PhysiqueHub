@@ -7,6 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { getCompetitionPath } from "@/lib/competition-slug";
 import type { Competition } from "@/lib/data";
 import type { HomeHubData, HomeExploreType } from "@/lib/home-hub";
 import { CompetitionListItem } from "./CompetitionListItem";
@@ -525,7 +526,7 @@ function MajorHeroCard({ comp, today }: { comp: Competition; today: Date }) {
   const days = daysUntil(comp.date, today);
   return (
     <Link
-      href={`/competitions/${comp.id}`}
+      href={getCompetitionPath(comp)}
       className="hub-lift-card"
       prefetch={false}
       style={{
@@ -624,7 +625,7 @@ function MajorCard({ comp, today }: { comp: Competition; today: Date }) {
   const days = daysUntil(comp.date, today);
   return (
     <Link
-      href={`/competitions/${comp.id}`}
+      href={getCompetitionPath(comp)}
       className="hub-lift-card"
       prefetch={false}
       style={{
@@ -789,7 +790,7 @@ function RookieCard({ item, today }: { item: Competition; today: Date }) {
   const days = daysUntil(item.date, today);
   return (
     <Link
-      href={`/competitions/${item.id}`}
+      href={getCompetitionPath(item)}
       className="hub-lift-card"
       prefetch={false}
       style={{

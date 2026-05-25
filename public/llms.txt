@@ -1,0 +1,44 @@
+# PhysiqueHub
+
+> PhysiqueHub is a Korean-language competition schedule hub for bodybuilding and fitness athletes. It helps users discover upcoming contests by date, region, organization, division, and competition type.
+
+PhysiqueHub focuses on public competition discovery, not athlete coaching, diet, training, or medical advice. Competition dates, venues, divisions, registration windows, natural/testing status, and pro-card routes can change by season and organizer. Treat official organizer or federation links on each competition detail page as the final source of truth.
+
+The canonical site is `https://physiquehub.kr`. Public pages are written primarily in Korean for Korean search users.
+
+## Core Pages
+
+- [Home](https://physiquehub.kr): Current season overview and curated upcoming competition sections.
+- [Competition list](https://physiquehub.kr/competitions): Upcoming bodybuilding and fitness competitions with filters for organization, region, category, registration status, and type.
+- [Guide](https://physiquehub.kr/guide): Introductory guidance for first-time competitors, divisions, and organizations.
+- [About](https://physiquehub.kr/about): Service purpose and scope.
+
+## Competition Discovery Pages
+
+- [Bodybuilding competitions](https://physiquehub.kr/competitions/categories/bodybuilding): Upcoming bodybuilding contests.
+- [Classic physique competitions](https://physiquehub.kr/competitions/categories/classic-physique): Upcoming classic physique contests.
+- [Men's physique competitions](https://physiquehub.kr/competitions/categories/mens-physique): Upcoming men's physique contests.
+- [Bikini competitions](https://physiquehub.kr/competitions/categories/bikini): Upcoming bikini contests.
+- [Natural competitions](https://physiquehub.kr/competitions/types/natural): Upcoming competitions tagged as natural or tested where supported by source data.
+- [Rookie competitions](https://physiquehub.kr/competitions/types/rookie): Upcoming beginner-friendly or rookie-class competitions.
+- [IFBB and NPC competitions](https://physiquehub.kr/competitions/organizations/ifbb): IFBB Pro League, NPC Worldwide, and related Korean schedule pages.
+- [KBBF competitions](https://physiquehub.kr/competitions/organizations/kbbf): Korea Bodybuilding Federation schedule pages.
+- [NABBA competitions](https://physiquehub.kr/competitions/organizations/nabba): NABBA Korea schedule pages.
+- [PCA competitions](https://physiquehub.kr/competitions/organizations/pca): PCA and NPCA Korea schedule pages.
+
+## Machine-Readable Discovery
+
+- [XML sitemap](https://physiquehub.kr/sitemap.xml): Canonical indexable URLs for public discovery.
+- [robots.txt](https://physiquehub.kr/robots.txt): Crawler access policy.
+
+## Source And Accuracy Notes
+
+- PhysiqueHub prefers official organizer, federation, registration, or board pages over aggregators.
+- Aggregator data may be used for discovery or review, but should not be treated as official truth.
+- Event detail pages may include structured data and source links when available.
+- Past competition detail pages may remain accessible for users but are not the primary indexing target.
+
+## Optional
+
+- [Terms](https://physiquehub.kr/terms): Terms of service.
+- [Privacy](https://physiquehub.kr/privacy): Privacy policy.
