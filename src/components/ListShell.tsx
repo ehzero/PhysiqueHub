@@ -19,6 +19,7 @@ interface ListShellProps {
   initialFilterOptions: CompetitionFilterOptions;
   initialFilterState: ListFilterQueryState;
   initialOpenedCompetitionId?: string;
+  description: string;
 }
 
 export function ListShell({
@@ -26,6 +27,7 @@ export function ListShell({
   initialFilterOptions,
   initialFilterState,
   initialOpenedCompetitionId,
+  description,
 }: ListShellProps) {
   const today = useClientToday();
   const { saved, toggleSave } = useSiteShell();
@@ -136,6 +138,7 @@ export function ListShell({
         search={search}
         setSearch={setSearch}
         today={today}
+        description={description}
       />
 
       <CompDrawer

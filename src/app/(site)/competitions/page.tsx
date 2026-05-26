@@ -7,8 +7,13 @@ import {
   type PageSearchParams,
 } from "@/lib/filter-query";
 import { createPageMetadata } from "@/lib/metadata";
+import { getKoreaYear } from "@/lib/date";
 
 export const revalidate = 86_400;
+
+function getCompetitionListDescription(seasonYear: number) {
+  return `${seasonYear}년 국내외 보디빌딩·피트니스 대회 일정을 한곳에서 확인하세요. 주최 단체, 지역, 종목, 대회 유형, 대회 티어별로 대회를 탐색할 수 있습니다.`;
+}
 
 interface CompetitionsPageProps {
   searchParams?: Promise<PageSearchParams>;
@@ -23,8 +28,7 @@ export async function generateMetadata({
   return {
     ...createPageMetadata({
       title: "대회 목록",
-      description:
-        "국내 보디빌딩·피트니스 대회 일정을 주최 단체, 카테고리, 접수 상태별로 탐색해보세요.",
+      description: getCompetitionListDescription(getKoreaYear()),
       path: "/competitions",
     }),
     robots: {
@@ -35,15 +39,17 @@ export async function generateMetadata({
 }
 
 export default async function CompetitionsPage() {
-  const { competitionPage, filterOptions } =
+  const { competitionPage, filterOptions, seasonYear } =
     await getUpcomingCompetitionContext({ includeFilters: true });
   const initialFilterState = parseListFilterQuery(new URLSearchParams());
+  const description = getCompetitionListDescription(seasonYear);
 
   return (
     <ListShell
       initialCompetitionPage={competitionPage}
       initialFilterOptions={filterOptions!}
       initialFilterState={initialFilterState}
+      description={description}
     />
   );
 }

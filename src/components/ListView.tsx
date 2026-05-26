@@ -19,6 +19,7 @@ interface ListViewProps {
   search: string;
   setSearch: (s: string) => void;
   today: Date | null;
+  description: string;
 }
 
 export function ListView({
@@ -33,6 +34,7 @@ export function ListView({
   search,
   setSearch,
   today,
+  description,
 }: ListViewProps) {
   const resultCountLabel = comps.length.toLocaleString("ko-KR");
   void allComps;
@@ -50,7 +52,7 @@ export function ListView({
                 대회 일정을 조건별로 찾아보세요.
               </h1>
               <p className="hub-section-body" style={{ color: "#86827C" }}>
-                필터 상태를 조정해 원하는 피트니스·보디빌딩 대회를 찾아보세요.
+                {description}
               </p>
             </div>
             <div className="competition-head-side">
