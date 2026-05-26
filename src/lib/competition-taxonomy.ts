@@ -52,17 +52,17 @@ const CATEGORY_TAXONS: CompetitionLandingTaxon[] = [
   {
     axis: "category",
     slug: "mens-physique",
-    label: "남자 피지크",
-    shortLabel: "피지크",
-    title: "피지크 대회 일정",
+    label: "맨즈 피지크",
+    shortLabel: "맨즈 피지크",
+    title: "맨즈 피지크 대회 일정",
     description:
-      "피지크 대회 일정을 모아 지역, 단체, 접수 상태를 비교해보세요.",
-    h1: "피지크 대회 일정",
+      "맨즈 피지크 대회 일정을 모아 지역, 단체, 접수 상태를 비교해보세요.",
+    h1: "맨즈 피지크 대회 일정",
     intro:
-      "피지크 오픈, 노비스, 시니어, 중·고등부, 내추럴 등 세부 부문을 함께 살펴볼 수 있습니다. 세부 출전 자격은 각 대회 공식 요강을 기준으로 확인하세요.",
+      "맨즈 피지크 오픈, 노비스, 시니어, 중·고등부, 내추럴 등 세부 부문을 함께 살펴볼 수 있습니다. 세부 출전 자격은 각 대회 공식 요강을 기준으로 확인하세요.",
     filterHref:
       "/competitions?q=%ED%94%BC%EC%A7%80%ED%81%AC",
-    keywords: ["피지크 대회", "남자 피지크", "mens physique"],
+    keywords: ["맨즈 피지크 대회", "mens physique"],
   },
   {
     axis: "category",
