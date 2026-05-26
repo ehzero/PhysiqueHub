@@ -27,6 +27,21 @@ export function Foot({
           </div>
           <div className="foot-cols">
             <div className="foot-col">
+              <h5>Explore</h5>
+              <ul>
+                <li>
+                  <Link href="/competitions">
+                    전체 보디빌딩·피트니스 대회 목록
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/guide#first-competition">
+                    첫 보디빌딩 대회 출전 가이드 보기
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div className="foot-col">
               <h5>About</h5>
               <ul>
                 <li>
