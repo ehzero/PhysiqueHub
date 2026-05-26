@@ -2870,8 +2870,14 @@ ol {
   .nav-desktop {
     height: 56px;
   }
+  .nav-left {
+    gap: 24px;
+  }
+  .nav-right {
+    gap: 8px;
+  }
   .nav-links {
-    display: none;
+    gap: 16px;
   }
   .nav-search-pill {
     min-width: 0;
@@ -2883,12 +2889,6 @@ ol {
   }
   .nav-search-pill > span:first-of-type,
   .nav-search-kbd {
-    display: none;
-  }
-  .nav-contact-btn {
-    display: none;
-  }
-  .nav-cta-btn {
     display: none;
   }
   .hero {
@@ -3308,7 +3308,7 @@ ol {
     bottom: 0;
     left: 0;
     z-index: 60;
-    display: grid;
+    display: none;
     grid-template-columns: repeat(5, minmax(0, 1fr));
     min-height: calc(62px + env(safe-area-inset-bottom));
     padding: 6px 10px calc(6px + env(safe-area-inset-bottom));
@@ -4262,6 +4262,14 @@ ol {
 }
 
 @media (max-width: 640px) {
+  .nav-contact-btn,
+  .nav-links,
+  .nav-cta-btn {
+    display: none;
+  }
+  .mobile-tabbar {
+    display: grid;
+  }
   .competition-list-section {
     padding: 40px 0 56px;
   }
