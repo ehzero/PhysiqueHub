@@ -4541,10 +4541,15 @@ ol {
 }
 .comp-body-section .list-layout {
   padding: 0;
-  gap: 0;
+  gap: 40px;
 }
 .comp-body-section .filter-rail {
   padding: 28px 8px 0 0;
+}
+@media (max-width: 980px) {
+  .comp-body-section .list-layout {
+    gap: 0;
+  }
 }
 
 /* ── Rail (new filter sidebar design) ──────────────────────── */
