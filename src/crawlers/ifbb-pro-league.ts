@@ -18,7 +18,7 @@ import {
 
 const IFBB_PRO_LEAGUE_SOURCE = {
   organizationId: "ifbb-pro-league",
-  organizationName: "IFBB Pro League",
+  organizationName: "IFBB Pro",
   organizationShortName: "IFBB Pro",
   url: "https://www.ifbbpro.com/schedule/",
 } as const;
@@ -66,7 +66,7 @@ export async function crawlIfbbProLeague(
     const groupedEvents = groupScheduleRows(rows);
     const events = groupedEvents.map((event) => createProScheduleEvent(event, fetchedAt));
     const warnings = [
-      "IFBB Pro League 공식 Pro Schedule 표에서 수집한 글로벌 프로 대회입니다.",
+      "IFBB Pro 공식 Pro Schedule 표에서 수집한 글로벌 프로 대회입니다.",
       "디비전별로 반복되는 동일 대회는 제목/날짜/장소 기준으로 묶고 divisions에 보존합니다.",
     ];
 
@@ -93,7 +93,7 @@ export async function crawlIfbbProLeague(
       url: IFBB_PRO_LEAGUE_SOURCE.url,
       ok: false,
       count: 0,
-      warnings: ["IFBB Pro League Pro Schedule fetch 또는 표 파싱에 실패했습니다."],
+      warnings: ["IFBB Pro 공식 Pro Schedule fetch 또는 표 파싱에 실패했습니다."],
     });
 
     return { sources, events: [], errors };
@@ -215,7 +215,7 @@ function createProScheduleEvent(
     location,
     divisions: mergeDivisions(event.divisions),
     tags: uniqueTexts([
-      "IFBB Pro League",
+      "IFBB Pro",
       "글로벌",
       "프로",
       /natural/i.test(event.title) ? "내추럴" : "",
@@ -243,7 +243,7 @@ function createProScheduleEvent(
     confidence: "high",
     qualityIssues: [],
     notes:
-      "IFBB Pro League 공식 Pro Schedule에서 수집한 글로벌 프로 대회입니다. 국내 출전 접수 대회와 구분해 표시해야 합니다.",
+      "IFBB Pro 공식 Pro Schedule에서 수집한 글로벌 프로 대회입니다. 국내 출전 접수 대회와 구분해 표시해야 합니다.",
   });
 }
 

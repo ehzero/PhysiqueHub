@@ -8,6 +8,7 @@ import {
   type CompetitionTier,
 } from "@/lib/competition-classification";
 import { KOREAN_REGION_ORDER } from "@/lib/location";
+import { getOrganizationDisplayName } from "@/lib/organization-display";
 import type { CompetitionFilterOptions } from "@/lib/competition-public";
 
 const ACCENT = "#B85C3C";
@@ -132,7 +133,10 @@ export function FilterRail({
 }: FilterRailProps) {
   const regions = filterOptions?.regions ?? getRegionCounts(allComps);
   const orgs =
-    filterOptions?.organizations.map((o) => ({ name: o.name, count: o.count })) ??
+    filterOptions?.organizations.map((o) => ({
+      name: getOrganizationDisplayName(o),
+      count: o.count,
+    })) ??
     getOrganizationCounts(allComps);
   const categories = filterOptions?.categories ?? getCategoryCounts(allComps);
   const tiers = filterOptions?.tiers ?? getTierCounts(allComps);

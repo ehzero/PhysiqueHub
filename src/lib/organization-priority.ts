@@ -1,5 +1,7 @@
 const ORGANIZATION_DISPLAY_PRIORITY: Record<string, number> = {
   "NPC/IFBB Pro Korea": 10,
+  "IFBB Pro": 20,
+  "IFBB Pro League": 20,
   AGP: 20,
   Monsterzym: 30,
   대한보디빌딩협회: 40,
