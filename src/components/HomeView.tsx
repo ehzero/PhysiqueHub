@@ -727,7 +727,6 @@ function UpcomingSection({
               />
             ))
           )}
-          <div style={{ borderTop: `1px solid ${FAINT}` }} />
         </div>
       </div>
     </section>

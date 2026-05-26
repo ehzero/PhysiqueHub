@@ -3722,6 +3722,7 @@ ol {
 .hub-upcoming-list {
   display: flex;
   flex-direction: column;
+  gap: 10px;
 }
 .hub-upcoming-row {
   display: grid;
@@ -4386,7 +4387,7 @@ ol {
 /* Page intro */
 .comp-intro-section {
   padding: 56px 0 28px;
-  background: #fff;
+  background: #F7F5F0;
 }
 .comp-intro-grid {
   display: grid;
@@ -4415,8 +4416,8 @@ ol {
 
 /* Search bar */
 .comp-search-section {
-  padding: 0 0 24px;
-  background: #fff;
+  padding: 32px 0 24px;
+  background: #F7F5F0;
 }
 .comp-search-bar {
   display: flex;
@@ -4485,7 +4486,7 @@ ol {
 
 /* Segment tabs */
 .comp-segment-tabs-wrap {
-  background: #fff;
+  background: #F7F5F0;
   border-bottom: 1px solid #E8E5DE;
 }
 .comp-segment-tabs {
@@ -4527,12 +4528,12 @@ ol {
 
 /* Body section */
 .comp-body-section {
-  padding: 8px 0 80px;
+  padding: 0 0 80px;
   background: #F7F5F0;
 }
 .comp-body-section .list-layout {
   padding: 0;
-  gap: 40px;
+  gap: 0;
 }
 .comp-body-section .filter-rail {
   padding: 28px 8px 0 0;
