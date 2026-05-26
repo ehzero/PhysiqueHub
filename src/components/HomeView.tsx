@@ -10,6 +10,7 @@ import {
 import { getCompetitionPath } from "@/lib/competition-slug";
 import type { Competition } from "@/lib/data";
 import type { HomeHubData, HomeExploreType } from "@/lib/home-hub";
+import { getOrganizationDisplayName } from "@/lib/organization-display";
 import { CompetitionListItem } from "./CompetitionListItem";
 
 // ── Design tokens ─────────────────────────────────────────────────
@@ -91,6 +92,8 @@ function getOrganizationLabel(organization: {
   name: string;
   shortName?: string | null;
 }): string {
+  const displayName = getOrganizationDisplayName(organization);
+
   if (
     organization.id === "kbbf" ||
     organization.name === "대한보디빌딩협회" ||
@@ -99,7 +102,7 @@ function getOrganizationLabel(organization: {
     return "대한보디빌딩협회(KBBF)";
   }
 
-  return organization.name;
+  return displayName;
 }
 
 // ── Entry point ────────────────────────────────────────────────────
@@ -533,6 +536,7 @@ function MajorHeroCard({ comp, today }: { comp: Competition; today: Date }) {
         display: "block",
         background: INK,
         color: "#fff",
+        border: "1px solid transparent",
         borderRadius: 18,
         padding: "36px 40px",
         position: "relative",
@@ -904,7 +908,7 @@ function GuideSection() {
                 flexDirection: "column",
                 background: c.dark ? INK : "#fff",
                 color: c.dark ? "#fff" : INK,
-                border: c.dark ? "none" : `1px solid ${FAINT}`,
+                border: c.dark ? "1px solid transparent" : `1px solid ${FAINT}`,
                 borderRadius: 14,
                 padding: 28,
                 textDecoration: "none",

@@ -3550,7 +3550,9 @@ ol {
 .hub-link-more:hover {
   text-decoration: underline;
 }
-.hub-lift-card {
+.hub-lift-card,
+.comp-card,
+.comp-grid-card {
   transition:
     transform 0.18s ease,
     box-shadow 0.18s ease,
@@ -3558,25 +3560,37 @@ ol {
   will-change: transform;
 }
 @media (hover: hover) and (pointer: fine) {
-  .hub-lift-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 18px rgba(14, 14, 12, 0.08);
+  .hub-lift-card:hover,
+  .comp-card:hover,
+  .comp-grid-card:hover {
+    border-color: #c9c6bf;
+    box-shadow: 0 6px 16px rgba(14, 14, 12, 0.07);
+    transform: translateY(-2px);
   }
-  .hub-lift-card:focus-visible {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 18px rgba(14, 14, 12, 0.08);
+  .hub-lift-card:focus-visible,
+  .comp-card:focus-visible,
+  .comp-grid-card:focus-visible {
+    border-color: #c9c6bf;
+    box-shadow: 0 6px 16px rgba(14, 14, 12, 0.07);
+    transform: translateY(-2px);
     outline: 2px solid #b85c3c;
     outline-offset: 3px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
   .hub-lift-card,
+  .comp-card,
+  .comp-grid-card,
   .hub-upcoming-row {
     transition: none;
     will-change: auto;
   }
   .hub-lift-card:hover,
   .hub-lift-card:focus-visible,
+  .comp-card:hover,
+  .comp-card:focus-visible,
+  .comp-grid-card:hover,
+  .comp-grid-card:focus-visible,
   .hub-upcoming-row:hover,
   .hub-upcoming-row:focus-visible {
     transform: none;
@@ -3955,7 +3969,7 @@ ol {
   padding-top: 6px;
 }
 .guide-hub-step h2,
-.guide-hub-org-card h2 {
+.guide-hub-org-card h3 {
   margin: 0;
   color: #0e0e0c;
   font-size: 24px;
@@ -4034,6 +4048,12 @@ ol {
 .guide-hub-anchor {
   scroll-margin-top: 88px;
 }
+.guide-hub-legacy-anchor {
+  display: block;
+  height: 0;
+  overflow: hidden;
+  scroll-margin-top: 88px;
+}
 .guide-hub-subblock {
   margin-top: 56px;
 }
@@ -4071,7 +4091,8 @@ ol {
   gap: 8px;
   min-width: 0;
 }
-.guide-hub-item-copy strong {
+.guide-hub-item-copy h2 {
+  margin: 0;
   color: #0e0e0c;
   font-size: 28px;
   font-weight: 700;
@@ -4330,7 +4351,7 @@ ol {
     gap: 14px;
     padding: 22px 0;
   }
-  .guide-hub-item-copy strong {
+  .guide-hub-item-copy h2 {
     font-size: 23px;
   }
   .guide-hub-item-icon {
@@ -4863,13 +4884,6 @@ ol {
     transform 0.18s ease;
   will-change: transform;
 }
-@media (hover: hover) and (pointer: fine) {
-  .comp-grid-card:hover {
-    border-color: #c9c6bf;
-    box-shadow: 0 6px 16px rgba(14, 14, 12, 0.07);
-    transform: translateY(-2px);
-  }
-}
 .comp-grid-top {
   display: flex;
   align-items: flex-start;
@@ -5023,14 +5037,6 @@ ol {
     transform 0.18s ease;
   will-change: transform;
 }
-@media (hover: hover) and (pointer: fine) {
-  .comp-card:hover {
-    border-color: #c9c6bf;
-    box-shadow: 0 6px 16px rgba(14, 14, 12, 0.07);
-    transform: translateY(-2px);
-  }
-}
-
 /* Card: date block */
 .comp-card-date {
   text-align: left;
@@ -5227,356 +5233,5 @@ ol {
   }
   .comp-grid {
     grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════════════
-   GUIDE PAGE
-   ═══════════════════════════════════════════════════════════════════ */
-
-.guide-page {
-  background: #fff;
-}
-
-/* ── Shared eyebrow ─────────────────────────────────────────────── */
-.guide-eyebrow-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-
-/* ── Shared section h2 ─────────────────────────────────────────── */
-.guide-section-h2 {
-  font-size: clamp(24px, 3.5vw, 40px);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1.2;
-  color: #0E0E0C;
-}
-
-/* ── Shared CTA buttons ────────────────────────────────────────── */
-.guide-cta-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 12px 22px;
-  background: #B85C3C;
-  color: #fff;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  text-decoration: none;
-  transition: background 0.15s;
-  white-space: nowrap;
-}
-.guide-cta-btn:hover {
-  background: #9b4d31;
-}
-.guide-cta-btn--outline {
-  background: transparent;
-  color: #B85C3C;
-  border: 1.5px solid #B85C3C;
-}
-.guide-cta-btn--outline:hover {
-  background: rgba(184,92,60,.06);
-}
-.guide-cta-btn--sm {
-  padding: 8px 16px;
-  font-size: 12px;
-}
-
-/* ═══════════════════════════════════════════════════════════════════
-   1. DIVISION CARDS
-   ═══════════════════════════════════════════════════════════════════ */
-.guide-division-section {
-  padding: 56px 0;
-  background: #fff;
-}
-.guide-division-head {
-  margin-bottom: 32px;
-}
-.guide-division-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-}
-.guide-division-card {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 22px;
-  background: #F7F5F0;
-  border: 1px solid #E8E5DE;
-  border-radius: 14px;
-}
-.guide-division-card-top {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.guide-division-scope {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #86827C;
-  background: #E8E5DE;
-  padding: 3px 8px;
-  border-radius: 4px;
-}
-.guide-division-name {
-  font-size: 18px;
-  font-weight: 700;
-  color: #0E0E0C;
-  letter-spacing: -0.02em;
-}
-.guide-division-orgs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-}
-.guide-division-org {
-  font-size: 10px;
-  font-weight: 600;
-  color: #54514C;
-  background: #E8E5DE;
-  padding: 2px 7px;
-  border-radius: 4px;
-}
-.guide-division-rows {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  border: 1px solid #E8E5DE;
-  border-radius: 8px;
-  overflow: hidden;
-  flex: 1;
-}
-.guide-division-row {
-  display: grid;
-  grid-template-columns: 80px 1fr;
-  gap: 12px;
-  padding: 10px 12px;
-  background: #fff;
-}
-.guide-division-row + .guide-division-row {
-  border-top: 1px solid #E8E5DE;
-}
-.guide-division-row-label {
-  font-size: 10px;
-  font-weight: 700;
-  color: #86827C;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  padding-top: 1px;
-}
-.guide-division-row-val {
-  font-size: 12px;
-  color: #0E0E0C;
-  line-height: 1.5;
-}
-.guide-division-caution {
-  font-size: 12px;
-  color: #86827C;
-  line-height: 1.5;
-}
-.guide-division-cta {
-  font-size: 13px;
-  font-weight: 600;
-  text-decoration: none;
-  letter-spacing: 0.01em;
-  margin-top: auto;
-}
-.guide-division-cta:hover {
-  text-decoration: underline;
-}
-
-/* ═══════════════════════════════════════════════════════════════════
-   7. FEDERATION ROUTES
-   ═══════════════════════════════════════════════════════════════════ */
-.guide-federation-section {
-  padding: 56px 0;
-  background: #F7F5F0;
-  border-top: 1px solid #E8E5DE;
-}
-.guide-federation-head {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 24px;
-  margin-bottom: 32px;
-  flex-wrap: wrap;
-}
-.guide-federation-sub {
-  font-size: 14px;
-  line-height: 1.6;
-  color: #54514C;
-  margin-top: 10px;
-  max-width: 520px;
-}
-.guide-federation-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-.guide-fed-card {
-  display: grid;
-  grid-template-columns: 200px 1fr 220px;
-  gap: 0;
-  background: #fff;
-  border: 1px solid #E8E5DE;
-  border-radius: 16px;
-  overflow: hidden;
-}
-.guide-fed-badge {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 28px 22px;
-  gap: 12px;
-}
-.guide-fed-badge-text {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  line-height: 1.5;
-  text-transform: uppercase;
-}
-.guide-fed-route-label {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-}
-.guide-fed-main {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 28px 28px;
-  border-left: 1px solid #E8E5DE;
-  border-right: 1px solid #E8E5DE;
-}
-.guide-fed-title {
-  font-size: 18px;
-  font-weight: 700;
-  color: #0E0E0C;
-  letter-spacing: -0.02em;
-}
-.guide-fed-subtitle {
-  font-size: 12px;
-  color: #86827C;
-  margin-top: -4px;
-}
-.guide-fed-body {
-  font-size: 13px;
-  line-height: 1.65;
-  color: #54514C;
-}
-.guide-fed-detail-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px 16px;
-  margin-top: 4px;
-}
-.guide-fed-detail {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.guide-fed-detail-label {
-  font-size: 10px;
-  font-weight: 700;
-  color: #86827C;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-.guide-fed-detail-val {
-  font-size: 12px;
-  color: #0E0E0C;
-  line-height: 1.4;
-}
-.guide-fed-right {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 28px 24px;
-  gap: 20px;
-}
-.guide-fed-orgs-label {
-  font-size: 10px;
-  font-weight: 700;
-  color: #86827C;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-bottom: 10px;
-}
-.guide-fed-orgs {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-.guide-fed-org {
-  font-size: 12px;
-  font-weight: 600;
-  color: #0E0E0C;
-  padding: 5px 10px;
-  background: #F7F5F0;
-  border-radius: 6px;
-}
-.guide-fed-count-row {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.guide-fed-count {
-  font-size: 28px;
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  color: #0E0E0C;
-  line-height: 1;
-}
-.guide-fed-count-unit {
-  font-size: 13px;
-  font-weight: 500;
-  color: #86827C;
-  letter-spacing: 0;
-}
-
-/* ═══════════════════════════════════════════════════════════════════
-   GUIDE RESPONSIVE
-   ═══════════════════════════════════════════════════════════════════ */
-@media (max-width: 1100px) {
-  .guide-fed-card {
-    grid-template-columns: 180px 1fr 200px;
-  }
-}
-@media (max-width: 960px) {
-  .guide-division-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .guide-fed-card {
-    grid-template-columns: 1fr;
-  }
-  .guide-fed-main {
-    border-left: none;
-    border-right: none;
-    border-top: 1px solid #E8E5DE;
-    border-bottom: 1px solid #E8E5DE;
-  }
-  .guide-federation-head {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-}
-@media (max-width: 680px) {
-  .guide-division-grid {
-    grid-template-columns: 1fr;
-  }
-  .guide-fed-card {
-    border-radius: 12px;
-  }
-  .guide-fed-detail-grid {
-    grid-template-columns: 1fr;
   }
 }
