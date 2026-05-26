@@ -25,6 +25,7 @@ export interface CompetitionClassificationInput {
   organizationName?: string | null;
   organizationShortName?: string | null;
   country?: string | null;
+  divisions?: unknown[];
   tags?: unknown[];
   flags?: Record<string, unknown>;
 }

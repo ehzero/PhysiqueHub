@@ -5,6 +5,7 @@ import type { CompetitionSchedule } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { getKoreaDateParam } from "@/lib/date";
 import { serializePublicCompetitionListItem } from "@/lib/competition-api";
+import { normalizeCompetitionDivision } from "@/lib/competition-division";
 import { toCompetition } from "@/lib/competition-public";
 import { getCompetitionFiltersPayload } from "@/lib/competition-server";
 import {
@@ -104,6 +105,10 @@ export const getHomeHubData = cache(async (): Promise<HomeHubData> => {
       pageSize: 1,
       organizationIds: [],
       registrationStatuses: [],
+      ageGroups: [],
+      experienceClasses: [],
+      measurementClasses: [],
+      classTexts: [],
       startsFrom: todayDate,
       tiers: [],
       sort: "date-asc",
@@ -112,9 +117,7 @@ export const getHomeHubData = cache(async (): Promise<HomeHubData> => {
     prisma.competitionSchedule.findMany({
       where: { seasonYear, dateStartsOn: { gte: todayDate } },
       select: {
-        title: true,
         divisionsJson: true,
-        tagsJson: true,
       },
     }),
   ]);
@@ -192,7 +195,7 @@ export const getHomeHubData = cache(async (): Promise<HomeHubData> => {
         key: "championship",
         kr: "챔피언십",
         en: "Championship",
-        hint: "최상위 타이틀전 · 올림피아, 아놀드 클래식 등 메이저 무대",
+        hint: "최상위 타이틀전 · 올림피아, 아놀드 클래식 등 상징적 무대",
         href: championshipTaxon ? getCompetitionLandingPath(championshipTaxon) : "/competitions",
         count: filterOptions.tiers.championship,
       },
@@ -277,9 +280,7 @@ export const getHomeHubData = cache(async (): Promise<HomeHubData> => {
 
 function getHomeCategoryGroups(
   records: Array<{
-    title: string;
     divisionsJson: string;
-    tagsJson: string;
   }>,
 ) {
   const countBySlug = new Map<string, number>();
@@ -287,7 +288,7 @@ function getHomeCategoryGroups(
   for (const record of records) {
     const slugs = new Set<string>();
 
-    for (const value of getCategoryCandidateTexts(record)) {
+    for (const value of getNormalizedCategoryTexts(record)) {
       const taxon = getCategoryTaxonForName(value);
 
       if (taxon) {
@@ -392,19 +393,16 @@ function getHomeOrganizationGroups(
   return Array.from(grouped.values());
 }
 
-function getCategoryCandidateTexts(record: {
-  title: string;
+function getNormalizedCategoryTexts(record: {
   divisionsJson: string;
-  tagsJson: string;
 }) {
-  const divisions = parseJsonArray(record.divisionsJson).flatMap((division) => {
-    if (!isRecord(division)) return [];
+  return parseJsonArray(record.divisionsJson).flatMap((division) => {
+    if (!isRecord(division) && typeof division !== "string") return [];
 
-    return [division.name, division.group].filter(isString);
+    const normalized = normalizeCompetitionDivision(division);
+
+    return normalized.baseDivision === "unknown" ? [] : [normalized.name];
   });
-  const tags = parseJsonArray(record.tagsJson).filter(isString);
-
-  return [record.title, ...divisions, ...tags];
 }
 
 function parseJsonArray(value: string): unknown[] {
@@ -419,10 +417,6 @@ function parseJsonArray(value: string): unknown[] {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
-}
-
-function isString(value: unknown): value is string {
-  return typeof value === "string" && value.trim().length > 0;
 }
 
 function sortByCountThenName<T extends { count: number }>(

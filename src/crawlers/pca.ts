@@ -316,7 +316,7 @@ function extractSelectDivisions($: cheerio.CheerioAPI): CompetitionDivision[] {
   const names = $(".class_select option")
     .toArray()
     .map((option) => cleanText($(option).text()))
-    .filter((name) => name && !/선택해주세요/.test(name));
+    .filter((name) => name && !/선택|추가\s*신청자|추가종목|---/.test(name));
 
   return uniqueTexts(names).map((name) => ({
     name,

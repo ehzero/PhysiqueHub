@@ -155,7 +155,7 @@ async function fetchUnmoDetail(item: UnmoListItem): Promise<UnmoDetailData> {
   const optionTexts = $("#it_option_1 option")
     .toArray()
     .map((option) => cleanText($(option).text()))
-    .filter((text) => text && !text.includes("선택하세요") && !/^-+$/.test(text));
+    .filter((text) => text && !/선택|추가\s*신청자|추가종목|^-+$/.test(text));
 
   return {
     title: title.replace(/\s*\|\s*운동의모든것.*$/, ""),
@@ -166,7 +166,7 @@ async function fetchUnmoDetail(item: UnmoListItem): Promise<UnmoDetailData> {
     divisions: optionTexts.map((name) => ({
       name,
       group: inferDivisionGroup(name),
-      rawText: optionTexts.join(", "),
+      rawText: name,
     })),
     rawHtml: $(".vi_txt_bx").first().html() ?? html,
     fetchedAt,

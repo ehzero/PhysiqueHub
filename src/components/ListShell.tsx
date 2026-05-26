@@ -66,6 +66,43 @@ export function ListShell({
         ) {
           return false;
         }
+        if (
+          filters.ageGroups?.length &&
+          !competition.classFacets.some(
+            (facet) =>
+              facet.type === "age" && filters.ageGroups!.includes(facet.value),
+          )
+        ) {
+          return false;
+        }
+        if (
+          filters.experienceClasses?.length &&
+          !competition.classFacets.some(
+            (facet) =>
+              facet.type === "experience" &&
+              filters.experienceClasses!.includes(facet.value),
+          )
+        ) {
+          return false;
+        }
+        if (
+          filters.measurementClasses?.length &&
+          !competition.classFacets.some(
+            (facet) =>
+              facet.type === "measurement" &&
+              filters.measurementClasses!.includes(facet.value),
+          )
+        ) {
+          return false;
+        }
+        if (
+          filters.classTexts?.length &&
+          !competition.classTexts.some((classText) =>
+            filters.classTexts!.includes(classText),
+          )
+        ) {
+          return false;
+        }
         if (filters.status?.length) {
           if (!today) {
             return false;
@@ -87,9 +124,6 @@ export function ListShell({
           return false;
         }
         if (filters.global && !competition.attributes.global) {
-          return false;
-        }
-        if (filters.major && !competition.attributes.major) {
           return false;
         }
         if (

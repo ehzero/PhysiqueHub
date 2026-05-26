@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import {
   Competition,
   Filters,
@@ -14,7 +15,6 @@ import { FilterOption } from "./FilterOption";
 
 type AttributeFlagKey =
   | "global"
-  | "major"
   | "nationalSelection"
   | "nationalTeamEvent"
   | "nationalSportsFestival";
@@ -40,6 +40,7 @@ export function FilterRail({
       count: organization.count,
     })) ?? [];
   const categories = filterOptions?.categories ?? [];
+  const classFilters = filterOptions?.classFilters ?? getClassFilterCounts(allComps);
   const flags = filterOptions?.flags;
   const tiers = filterOptions?.tiers ?? getTierCounts(allComps);
   const attributes = filterOptions?.attributes ?? getAttributeCounts(allComps);
@@ -70,7 +71,6 @@ export function FilterRail({
     count?: number;
   }[] = [
     { key: "global", label: "글로벌", count: attributes.global },
-    { key: "major", label: "메이저", count: attributes.major },
     {
       key: "nationalSelection",
       label: "국가대표 선발",
@@ -93,6 +93,10 @@ export function FilterRail({
     orgs: filters.orgs?.length ?? 0,
     regions: filters.regions?.length ?? 0,
     cats: filters.cats?.length ?? 0,
+    ageGroups: filters.ageGroups?.length ?? 0,
+    experienceClasses: filters.experienceClasses?.length ?? 0,
+    measurementClasses: filters.measurementClasses?.length ?? 0,
+    classTexts: filters.classTexts?.length ?? 0,
     status: filters.status?.length ?? 0,
     tiers: filters.tiers?.length ?? 0,
     attributes: attributeOptions.filter((option) => filters[option.key]).length,
@@ -102,7 +106,18 @@ export function FilterRail({
     0,
   );
 
-  function toggle(group: "regions" | "orgs" | "cats" | "status", val: string) {
+  function toggle(
+    group:
+      | "regions"
+      | "orgs"
+      | "cats"
+      | "ageGroups"
+      | "experienceClasses"
+      | "measurementClasses"
+      | "classTexts"
+      | "status",
+    val: string,
+  ) {
     setFilters((f) => {
       const cur = new Set<string>(f[group] || []);
       if (cur.has(val)) cur.delete(val); else cur.add(val);
@@ -110,7 +125,18 @@ export function FilterRail({
     });
   }
 
-  function isOn(group: "regions" | "orgs" | "cats" | "status", val: string) {
+  function isOn(
+    group:
+      | "regions"
+      | "orgs"
+      | "cats"
+      | "ageGroups"
+      | "experienceClasses"
+      | "measurementClasses"
+      | "classTexts"
+      | "status",
+    val: string,
+  ) {
     return (filters[group] || []).includes(val);
   }
 
@@ -202,6 +228,70 @@ export function FilterRail({
 
           <details className="filter-mobile-group">
             <summary>
+              세부 클래스
+              <span>
+                {activeCounts.ageGroups +
+                  activeCounts.experienceClasses +
+                  activeCounts.measurementClasses +
+                  activeCounts.classTexts ||
+                  classFilters.ageGroups.length +
+                    classFilters.experienceClasses.length +
+                    classFilters.measurementClasses.length +
+                    classFilters.classTexts.length}
+              </span>
+            </summary>
+            <div className="filter-options">
+              <FilterSubheading>경력·오픈 클래스</FilterSubheading>
+              {classFilters.experienceClasses.map((option) => (
+                <FilterOption
+                  key={option.name}
+                  on={isOn("experienceClasses", option.name)}
+                  onClick={() => toggle("experienceClasses", option.name)}
+                  count={option.count}
+                >
+                  {option.label}
+                </FilterOption>
+              ))}
+              <FilterSubheading>연령·자격</FilterSubheading>
+              {classFilters.ageGroups.map((option) => (
+                <FilterOption
+                  key={option.name}
+                  on={isOn("ageGroups", option.name)}
+                  onClick={() => toggle("ageGroups", option.name)}
+                  count={option.count}
+                >
+                  {option.label}
+                </FilterOption>
+              ))}
+              <FilterSubheading>계측 기준</FilterSubheading>
+              {classFilters.measurementClasses.map((option) => (
+                <FilterOption
+                  key={option.name}
+                  on={isOn("measurementClasses", option.name)}
+                  onClick={() => toggle("measurementClasses", option.name)}
+                  count={option.count}
+                >
+                  {option.label}
+                </FilterOption>
+              ))}
+              {classFilters.classTexts.length > 0 && (
+                <FilterSubheading>원문 클래스</FilterSubheading>
+              )}
+              {classFilters.classTexts.map((option) => (
+                <FilterOption
+                  key={option.name}
+                  on={isOn("classTexts", option.name)}
+                  onClick={() => toggle("classTexts", option.name)}
+                  count={option.count}
+                >
+                  {option.name}
+                </FilterOption>
+              ))}
+            </div>
+          </details>
+
+          <details className="filter-mobile-group">
+            <summary>
               접수 상태
               <span>{activeCounts.status || statusOptions.length}</span>
             </summary>
@@ -216,10 +306,14 @@ export function FilterRail({
 
           <details className="filter-mobile-group">
             <summary>
-              대회 티어
-              <span>{activeCounts.tiers || tierOptions.length}</span>
+              대회 유형
+              <span>
+                {activeCounts.tiers + activeCounts.attributes ||
+                  tierOptions.length + attributeOptions.length}
+              </span>
             </summary>
             <div className="filter-options">
+              <FilterSubheading>티어</FilterSubheading>
               {tierOptions.map((option) => (
                 <FilterOption
                   key={option.key}
@@ -230,15 +324,7 @@ export function FilterRail({
                   {option.label}
                 </FilterOption>
               ))}
-            </div>
-          </details>
-
-          <details className="filter-mobile-group">
-            <summary>
-              보조 속성
-              <span>{activeCounts.attributes || attributeOptions.length}</span>
-            </summary>
-            <div className="filter-options">
+              <FilterSubheading>속성</FilterSubheading>
               {attributeOptions.map((option) => (
                 <FilterOption
                   key={option.key}
@@ -337,6 +423,66 @@ export function FilterRail({
         </div>
 
         <div className="filter-group">
+          <h4>
+            세부 클래스{" "}
+            <span className="cnt">
+              {classFilters.ageGroups.length +
+                classFilters.experienceClasses.length +
+                classFilters.measurementClasses.length +
+                classFilters.classTexts.length}
+            </span>
+          </h4>
+          <div className="filter-options">
+            <FilterSubheading>경력·오픈 클래스</FilterSubheading>
+            {classFilters.experienceClasses.map((option) => (
+              <FilterOption
+                key={option.name}
+                on={isOn("experienceClasses", option.name)}
+                onClick={() => toggle("experienceClasses", option.name)}
+                count={option.count}
+              >
+                {option.label}
+              </FilterOption>
+            ))}
+            <FilterSubheading>연령·자격</FilterSubheading>
+            {classFilters.ageGroups.map((option) => (
+              <FilterOption
+                key={option.name}
+                on={isOn("ageGroups", option.name)}
+                onClick={() => toggle("ageGroups", option.name)}
+                count={option.count}
+              >
+                {option.label}
+              </FilterOption>
+            ))}
+            <FilterSubheading>계측 기준</FilterSubheading>
+            {classFilters.measurementClasses.map((option) => (
+              <FilterOption
+                key={option.name}
+                on={isOn("measurementClasses", option.name)}
+                onClick={() => toggle("measurementClasses", option.name)}
+                count={option.count}
+              >
+                {option.label}
+              </FilterOption>
+            ))}
+            {classFilters.classTexts.length > 0 && (
+              <FilterSubheading>원문 클래스</FilterSubheading>
+            )}
+            {classFilters.classTexts.map((option) => (
+              <FilterOption
+                key={option.name}
+                on={isOn("classTexts", option.name)}
+                onClick={() => toggle("classTexts", option.name)}
+                count={option.count}
+              >
+                {option.name}
+              </FilterOption>
+            ))}
+          </div>
+        </div>
+
+        <div className="filter-group">
           <h4>접수 상태</h4>
           <div className="filter-options">
             {statusOptions.map((option) => (
@@ -352,8 +498,12 @@ export function FilterRail({
         </div>
 
         <div className="filter-group">
-          <h4>대회 티어</h4>
+          <h4>
+            대회 유형{" "}
+            <span className="cnt">{tierOptions.length + attributeOptions.length}</span>
+          </h4>
           <div className="filter-options">
+            <FilterSubheading>티어</FilterSubheading>
             {tierOptions.map((option) => (
               <FilterOption
                 key={option.key}
@@ -364,12 +514,7 @@ export function FilterRail({
                 {option.label}
               </FilterOption>
             ))}
-          </div>
-        </div>
-
-        <div className="filter-group">
-          <h4>보조 속성</h4>
-          <div className="filter-options">
+            <FilterSubheading>속성</FilterSubheading>
             {attributeOptions.map((option) => (
               <FilterOption
                 key={option.key}
@@ -418,4 +563,78 @@ function getAttributeCounts(comps: Competition[]) {
     ).length,
     beginner: comps.filter((competition) => competition.attributes.beginner).length,
   };
+}
+
+function FilterSubheading({ children }: { children: ReactNode }) {
+  return <div className="filter-subheading">{children}</div>;
+}
+
+function getClassFilterCounts(comps: Competition[]) {
+  const ageGroups = new Map<string, { label: string; count: number }>();
+  const experienceClasses = new Map<string, { label: string; count: number }>();
+  const measurementClasses = new Map<string, { label: string; count: number }>();
+  const classTexts = new Map<string, number>();
+
+  for (const competition of comps) {
+    const seenAge = new Set<string>();
+    const seenExperience = new Set<string>();
+    const seenMeasurement = new Set<string>();
+    const seenClassTexts = new Set(competition.classTexts);
+
+    for (const facet of competition.classFacets) {
+      if (facet.type === "age") seenAge.add(facet.value);
+      if (facet.type === "experience") seenExperience.add(facet.value);
+      if (facet.type === "measurement") seenMeasurement.add(facet.value);
+    }
+
+    for (const value of seenAge) {
+      const facet = competition.classFacets.find(
+        (item) => item.type === "age" && item.value === value,
+      );
+      const current = ageGroups.get(value);
+      ageGroups.set(value, {
+        label: facet?.label ?? value,
+        count: (current?.count ?? 0) + 1,
+      });
+    }
+    for (const value of seenExperience) {
+      const facet = competition.classFacets.find(
+        (item) => item.type === "experience" && item.value === value,
+      );
+      const current = experienceClasses.get(value);
+      experienceClasses.set(value, {
+        label: facet?.label ?? value,
+        count: (current?.count ?? 0) + 1,
+      });
+    }
+    for (const value of seenMeasurement) {
+      const facet = competition.classFacets.find(
+        (item) => item.type === "measurement" && item.value === value,
+      );
+      const current = measurementClasses.get(value);
+      measurementClasses.set(value, {
+        label: facet?.label ?? value,
+        count: (current?.count ?? 0) + 1,
+      });
+    }
+    for (const value of seenClassTexts) {
+      classTexts.set(value, (classTexts.get(value) ?? 0) + 1);
+    }
+  }
+
+  return {
+    ageGroups: mapFacetOptions(ageGroups),
+    experienceClasses: mapFacetOptions(experienceClasses),
+    measurementClasses: mapFacetOptions(measurementClasses),
+    classTexts: Array.from(classTexts.entries())
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
+      .slice(0, 24),
+  };
+}
+
+function mapFacetOptions(values: Map<string, { label: string; count: number }>) {
+  return Array.from(values.entries())
+    .map(([name, item]) => ({ name, label: item.label, count: item.count }))
+    .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
 }

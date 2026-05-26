@@ -323,12 +323,12 @@ function extractAgonasDivisions($: cheerio.CheerioAPI): CompetitionDivision[] {
     .find("option")
     .toArray()
     .map((option) => cleanText($(option).text()))
-    .filter((name) => name && !/필수|선택|---/.test(name));
+    .filter((name) => name && !/필수|선택|추가\s*신청자|추가종목|---/.test(name));
 
   return uniqueTexts(names).map((name) => ({
     name,
     group: inferDivisionGroup(name),
-    rawText: names.join(", "),
+    rawText: name,
   }));
 }
 

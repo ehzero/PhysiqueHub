@@ -92,11 +92,65 @@ export interface CompetitionLocation {
   confidence: CompetitionConfidence;
 }
 
+export type CompetitionBaseDivision =
+  | "bodybuilding"
+  | "classic_physique"
+  | "mens_physique"
+  | "bikini"
+  | "wellness"
+  | "figure_bodyfitness"
+  | "sports_model"
+  | "fit_model"
+  | "unknown";
+
+export type CompetitionGenderGroup = "mens" | "womens" | "mixed" | "unknown";
+
+export type CompetitionAgeGroup =
+  | "middle_school"
+  | "high_school"
+  | "junior"
+  | "university"
+  | "open"
+  | "masters"
+  | "senior"
+  | "unknown";
+
+export type CompetitionExperienceClass =
+  | "first_timer"
+  | "rookie"
+  | "novice"
+  | "open"
+  | "unknown";
+
+export type CompetitionMeasurementClass =
+  | "weight"
+  | "height"
+  | "height_weight_cap"
+  | "none"
+  | "unknown";
+
+export type CompetitionClassFacet =
+  | { type: "age"; value: CompetitionAgeGroup; rawText: string }
+  | { type: "experience"; value: CompetitionExperienceClass; rawText: string }
+  | { type: "measurement"; value: CompetitionMeasurementClass; rawText: string }
+  | { type: "weight"; value: string; rawText: string }
+  | { type: "height"; value: string; rawText: string }
+  | { type: "height_weight_cap"; value: string; rawText: string }
+  | { type: "natural"; value: "natural"; rawText: string }
+  | {
+      type: "pro";
+      value: "pro_qualifier" | "pro_card" | "pro_show";
+      rawText: string;
+    };
+
 export interface CompetitionDivision {
-  name: string;
-  group?: "mens" | "womens" | "mixed" | "unknown";
-  classText?: string;
   rawText?: string;
+  name: string;
+  baseDivision?: CompetitionBaseDivision;
+  genderGroup?: CompetitionGenderGroup;
+  group?: CompetitionGenderGroup;
+  classText?: string;
+  classFacets?: CompetitionClassFacet[];
 }
 
 export interface CompetitionSourceSnapshot {

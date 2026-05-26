@@ -20,6 +20,8 @@ export interface Competition {
   region: string;
   venue: string;
   categories: string[];
+  classFacets: CompetitionClassFilterFacet[];
+  classTexts: string[];
   classes: string;
   fee: number;
   natural: boolean;
@@ -33,6 +35,13 @@ export interface Competition {
   desc: string;
   historyYears: number;
   instagram: string;
+}
+
+export interface CompetitionClassFilterFacet {
+  type: "age" | "experience" | "measurement";
+  value: string;
+  label: string;
+  rawText: string;
 }
 
 interface RegStatus {
@@ -219,12 +228,15 @@ export interface Filters {
   regions?: string[];
   orgs?: string[];
   cats?: string[];
+  ageGroups?: string[];
+  experienceClasses?: string[];
+  measurementClasses?: string[];
+  classTexts?: string[];
   status?: string[];
   tiers?: CompetitionTier[];
   beginner?: boolean;
   natural?: boolean;
   global?: boolean;
-  major?: boolean;
   nationalSelection?: boolean;
   nationalTeamEvent?: boolean;
   nationalSportsFestival?: boolean;

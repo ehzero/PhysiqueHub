@@ -1,7 +1,6 @@
 import * as cheerio from "cheerio";
 import type {
   CompetitionDateRange,
-  CompetitionDivision,
   CompetitionLocation,
   CompetitionQualityIssue,
   CompetitionScheduleDraft,
@@ -184,11 +183,7 @@ function createNacEvent(
       confidence: "medium",
     },
     location,
-    divisions: pageData.products.map((product) => ({
-      name: product.name,
-      group: inferNacDivisionGroup(product.name),
-      rawText: product.name,
-    })),
+    divisions: [],
     tags: uniqueTexts(["NAC Korea", "NAC", "국제대회 선발전", "공식 접수"]),
     flags: {
       international: true,
@@ -250,18 +245,6 @@ function normalizeProductName(rawName: string): string {
     .replace(/\[얼리버드\]/g, "")
     .replace(/\s+/g, " ")
     .trim();
-}
-
-function inferNacDivisionGroup(name: string): CompetitionDivision["group"] {
-  if (/여자|우먼|미즈|비키니|웰니스/.test(name)) {
-    return "womens";
-  }
-
-  if (/남자|맨|보디빌딩|클래식 피지크|피지크/.test(name)) {
-    return "mens";
-  }
-
-  return "unknown";
 }
 
 function degradeCandidateDate(date: CompetitionDateRange): CompetitionDateRange {

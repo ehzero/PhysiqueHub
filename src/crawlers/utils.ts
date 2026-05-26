@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { normalizeCompetitionDivision } from "../lib/competition-division";
 import { FETCH_TIMEOUT_MS } from "./config";
 import type {
   CompetitionConfidence,
@@ -391,11 +392,13 @@ export function extractDivisions(rawText: string | undefined): CompetitionDivisi
     .split(/[,/·]/)
     .map((name) => cleanText(name))
     .filter((name) => name.length > 1)
-    .map((name) => ({
-      name,
-      group: inferDivisionGroup(name),
-      rawText: text,
-    }));
+    .map((name) =>
+      normalizeCompetitionDivision({
+        name,
+        genderGroup: inferDivisionGroup(name),
+        rawText: name,
+      }),
+    );
 }
 
 export function createScheduleDraft(input: {
@@ -461,7 +464,9 @@ export function createScheduleDraft(input: {
       rawText: input.location?.rawText,
       confidence: locationConfidence,
     },
-    divisions: input.divisions ?? [],
+    divisions: (input.divisions ?? []).map((division) =>
+      normalizeCompetitionDivision(division),
+    ),
     tags: uniqueTexts(input.tags ?? []),
     flags: input.flags ?? {},
     media: input.media,

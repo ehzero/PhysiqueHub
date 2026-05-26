@@ -4,6 +4,11 @@ import {
   type CompetitionAttributes,
   type CompetitionTier,
 } from "@/lib/competition-classification";
+import type {
+  CompetitionBaseDivision,
+  CompetitionClassFacet,
+  CompetitionGenderGroup,
+} from "@/types/competitionSchedule";
 import { normalizeCompetitionRegion } from "@/lib/location";
 
 export interface ApiCompetitionListResponse {
@@ -20,6 +25,12 @@ export interface ApiCompetitionFiltersResponse {
   organizations: CompetitionFilterOrganization[];
   regions: CompetitionFilterCount[];
   categories: CompetitionFilterCount[];
+  classFilters: {
+    ageGroups: CompetitionFacetFilterCount[];
+    experienceClasses: CompetitionFacetFilterCount[];
+    measurementClasses: CompetitionFacetFilterCount[];
+    classTexts: CompetitionFilterCount[];
+  };
   registrationStatuses: Array<{
     status: string;
     count: number;
@@ -59,6 +70,10 @@ interface CompetitionFilterCount {
   count: number;
 }
 
+interface CompetitionFacetFilterCount extends CompetitionFilterCount {
+  label: string;
+}
+
 export type CompetitionFilterOptions = ApiCompetitionFiltersResponse;
 
 export interface CompetitionListPage {
@@ -82,7 +97,6 @@ export interface CompetitionPageOptions {
   natural?: boolean;
   tiers?: CompetitionTier[];
   global?: boolean;
-  major?: boolean;
   nationalSelection?: boolean;
   nationalTeamEvent?: boolean;
   nationalSportsFestival?: boolean;
@@ -124,7 +138,12 @@ interface ApiCompetitionListItem {
   };
   divisions: Array<{
     name?: string;
-    group?: string;
+    baseDivision?: CompetitionBaseDivision;
+    genderGroup?: CompetitionGenderGroup;
+    group?: CompetitionGenderGroup;
+    classText?: string;
+    classFacets?: CompetitionClassFacet[];
+    rawText?: string;
   }>;
   tags: unknown[];
   flags: Record<string, unknown>;
@@ -148,6 +167,8 @@ const HIDDEN_CRAWL_TAG_PATTERN = /운동의모든것|unmo/i;
 
 export function toCompetition(item: ApiCompetitionListItem): Competition {
   const categories = getCategories(item);
+  const classFacets = getClassFacets(item);
+  const classTexts = getClassTexts(item);
   const startsOn = item.date.startsOn ?? `${item.seasonYear ?? new Date().getFullYear()}-12-31`;
   const closesOn = toDateOnly(item.registration.closesAt) ?? startsOn;
   const opensOn = toDateOnly(item.registration.opensAt) ?? startsOn;
@@ -159,6 +180,7 @@ export function toCompetition(item: ApiCompetitionListItem): Competition {
     organizationName: item.organizationName,
     organizationShortName: item.organizationShortName,
     country: item.location.country,
+    divisions: item.divisions,
     tags: item.tags,
     flags,
   });
@@ -180,6 +202,8 @@ export function toCompetition(item: ApiCompetitionListItem): Competition {
     region: normalizeCompetitionRegion(item.location) ?? "지역 확인 필요",
     venue: item.location.venue ?? "장소 확인 필요",
     categories,
+    classFacets,
+    classTexts,
     classes: categories.length > 0 ? `${categories.length}개 종목` : "종목 확인 필요",
     fee: item.registration.fee?.minAmount ?? item.registration.fee?.maxAmount ?? 0,
     natural: flags.natural === true,
@@ -196,8 +220,86 @@ export function toCompetition(item: ApiCompetitionListItem): Competition {
   };
 }
 
+function getClassFacets(item: ApiCompetitionListItem): Competition["classFacets"] {
+  return Array.from(
+    new Map(
+      item.divisions
+        .flatMap((division) => division.classFacets ?? [])
+        .flatMap((facet) => {
+          if (!["age", "experience", "measurement"].includes(facet.type)) {
+            return [];
+          }
+
+          return [
+            {
+              type: facet.type as "age" | "experience" | "measurement",
+              value: facet.value,
+              label: getClassFacetLabel(facet.type, facet.value),
+              rawText: facet.rawText,
+            },
+          ];
+        })
+        .map((facet) => [`${facet.type}:${facet.value}`, facet] as const),
+    ).values(),
+  );
+}
+
+function getClassTexts(item: ApiCompetitionListItem): string[] {
+  return Array.from(
+    new Set(
+      item.divisions
+        .map((division) => division.classText?.trim())
+        .filter((value): value is string => Boolean(value)),
+    ),
+  );
+}
+
+function getClassFacetLabel(type: string, value: string) {
+  if (type === "age") {
+    return (
+      {
+        middle_school: "중등부",
+        high_school: "고등부",
+        junior: "주니어",
+        university: "대학부",
+        open: "오픈",
+        masters: "마스터즈",
+        senior: "시니어",
+        unknown: "연령 확인 필요",
+      }[value] ?? value
+    );
+  }
+
+  if (type === "experience") {
+    return (
+      {
+        first_timer: "첫 출전",
+        rookie: "루키",
+        novice: "노비스",
+        open: "오픈",
+        unknown: "경력 확인 필요",
+      }[value] ?? value
+    );
+  }
+
+  if (type === "measurement") {
+    return (
+      {
+        weight: "체급",
+        height: "신장급",
+        height_weight_cap: "신장·체중 제한",
+        none: "계측 없음",
+        unknown: "계측 확인 필요",
+      }[value] ?? value
+    );
+  }
+
+  return value;
+}
+
 function getCategories(item: ApiCompetitionListItem): string[] {
   const divisionNames = item.divisions
+    .filter((division) => division.baseDivision !== "unknown")
     .map((division) => division.name)
     .filter((name): name is string => Boolean(name));
 
@@ -205,10 +307,7 @@ function getCategories(item: ApiCompetitionListItem): string[] {
     return Array.from(new Set(divisionNames));
   }
 
-  return item.tags
-    .filter((tag): tag is string => typeof tag === "string")
-    .filter((tag) => !isHiddenCrawlTag(tag))
-    .slice(0, 6);
+  return [];
 }
 
 function getTags(item: ApiCompetitionListItem): string[] {

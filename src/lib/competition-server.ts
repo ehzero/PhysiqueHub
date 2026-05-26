@@ -25,6 +25,7 @@ import {
   type CompetitionAttributes,
   type CompetitionTier,
 } from "@/lib/competition-classification";
+import { normalizeCompetitionDivision } from "@/lib/competition-division";
 import {
   competitionMatchesTaxon,
   getAllCompetitionLandingTaxons,
@@ -107,12 +108,21 @@ export async function getCompetitionListPayload(
 function hasClassificationFilters(query: CompetitionListQuery) {
   return (
     query.tiers.length > 0 ||
+    hasClassFilters(query) ||
     query.beginnerAny !== undefined ||
     query.global !== undefined ||
-    query.major !== undefined ||
     query.nationalSelection !== undefined ||
     query.nationalTeamEvent !== undefined ||
     query.nationalSportsFestival !== undefined
+  );
+}
+
+function hasClassFilters(query: CompetitionListQuery) {
+  return (
+    query.ageGroups.length > 0 ||
+    query.experienceClasses.length > 0 ||
+    query.measurementClasses.length > 0 ||
+    query.classTexts.length > 0
   );
 }
 
@@ -126,11 +136,15 @@ function competitionMatchesClassificationQuery(
     organizationName: record.organizationName,
     organizationShortName: record.organizationShortName,
     country: record.country,
+    divisions: parseJsonArray(record.divisionsJson),
     tags: parseJsonArray(record.tagsJson),
     flags: parseJsonObject(record.flagsJson),
   });
 
   if (query.tiers.length > 0 && !query.tiers.includes(classification.tier)) {
+    return false;
+  }
+  if (!competitionMatchesClassQuery(record, query)) {
     return false;
   }
   if (
@@ -142,12 +156,6 @@ function competitionMatchesClassificationQuery(
   if (
     query.global !== undefined &&
     classification.attributes.global !== query.global
-  ) {
-    return false;
-  }
-  if (
-    query.major !== undefined &&
-    classification.attributes.major !== query.major
   ) {
     return false;
   }
@@ -166,6 +174,56 @@ function competitionMatchesClassificationQuery(
   if (
     query.nationalSportsFestival !== undefined &&
     classification.attributes.nationalSportsFestival !== query.nationalSportsFestival
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
+function competitionMatchesClassQuery(
+  record: CompetitionSchedule,
+  query: CompetitionListQuery,
+) {
+  if (!hasClassFilters(query)) {
+    return true;
+  }
+
+  const divisions = parseJsonArray(record.divisionsJson);
+  const classTexts = divisions.flatMap(getDivisionClassTexts);
+  const facets = divisions.flatMap(getDivisionClassFacets);
+
+  if (
+    query.ageGroups.length > 0 &&
+    !facets.some(
+      (facet) => facet.type === "age" && query.ageGroups.includes(facet.value),
+    )
+  ) {
+    return false;
+  }
+  if (
+    query.experienceClasses.length > 0 &&
+    !facets.some(
+      (facet) =>
+        facet.type === "experience" &&
+        query.experienceClasses.includes(facet.value),
+    )
+  ) {
+    return false;
+  }
+  if (
+    query.measurementClasses.length > 0 &&
+    !facets.some(
+      (facet) =>
+        facet.type === "measurement" &&
+        query.measurementClasses.includes(facet.value),
+    )
+  ) {
+    return false;
+  }
+  if (
+    query.classTexts.length > 0 &&
+    !classTexts.some((classText) => query.classTexts.includes(classText))
   ) {
     return false;
   }
@@ -400,6 +458,10 @@ export async function getCompetitionFiltersPayload(
   };
   const regionCounts = new Map<string, number>();
   const categoryCounts = new Map<string, number>();
+  const ageGroupCounts = new Map<string, number>();
+  const experienceClassCounts = new Map<string, number>();
+  const measurementClassCounts = new Map<string, number>();
+  const classTextCounts = new Map<string, number>();
 
   for (const item of filterRecords) {
     const month = toKoreaMonthString(item.dateStartsOn);
@@ -409,12 +471,14 @@ export async function getCompetitionFiltersPayload(
 
     const flags = parseJsonObject(item.flagsJson);
     const tags = parseJsonArray(item.tagsJson);
+    const divisions = parseJsonArray(item.divisionsJson);
     const classification = classifyCompetition({
       title: item.title,
       organizationId: item.organizationId,
       organizationName: item.organizationName,
       organizationShortName: item.organizationShortName,
       country: item.country,
+      divisions,
       tags,
       flags,
     });
@@ -444,8 +508,35 @@ export async function getCompetitionFiltersPayload(
       regionCounts.set(region, (regionCounts.get(region) ?? 0) + 1);
     }
 
-    for (const category of getRecordCategories(item.divisionsJson, item.tagsJson)) {
+    for (const category of getRecordCategories(item.divisionsJson)) {
       categoryCounts.set(category, (categoryCounts.get(category) ?? 0) + 1);
+    }
+
+    const classTexts = new Set<string>();
+    const ageGroups = new Set<string>();
+    const experienceClasses = new Set<string>();
+    const measurementClasses = new Set<string>();
+    for (const division of divisions) {
+      for (const classText of getDivisionClassTexts(division)) {
+        classTexts.add(classText);
+      }
+      for (const facet of getDivisionClassFacets(division)) {
+        if (facet.type === "age") ageGroups.add(facet.value);
+        if (facet.type === "experience") experienceClasses.add(facet.value);
+        if (facet.type === "measurement") measurementClasses.add(facet.value);
+      }
+    }
+    for (const value of ageGroups) {
+      ageGroupCounts.set(value, (ageGroupCounts.get(value) ?? 0) + 1);
+    }
+    for (const value of experienceClasses) {
+      experienceClassCounts.set(value, (experienceClassCounts.get(value) ?? 0) + 1);
+    }
+    for (const value of measurementClasses) {
+      measurementClassCounts.set(value, (measurementClassCounts.get(value) ?? 0) + 1);
+    }
+    for (const value of classTexts) {
+      classTextCounts.set(value, (classTextCounts.get(value) ?? 0) + 1);
     }
   }
 
@@ -463,6 +554,18 @@ export async function getCompetitionFiltersPayload(
     ),
     regions: mapCounts(regionCounts, compareRegionNames),
     categories: mapCounts(categoryCounts),
+    classFilters: {
+      ageGroups: mapFacetCounts(ageGroupCounts, getAgeGroupLabel),
+      experienceClasses: mapFacetCounts(
+        experienceClassCounts,
+        getExperienceClassLabel,
+      ),
+      measurementClasses: mapFacetCounts(
+        measurementClassCounts,
+        getMeasurementClassLabel,
+      ),
+      classTexts: mapCounts(classTextCounts).slice(0, 24),
+    },
     registrationStatuses: registrationStatuses.map((status) => ({
       status: status.registrationStatus,
       count: status._count._all,
@@ -487,6 +590,10 @@ function toCompetitionListQuery(
     pageSize: options.pageSize ?? 20,
     organizationIds: options.organizationId ? [options.organizationId] : [],
     registrationStatuses: normalizeStringList(options.registrationStatus),
+    ageGroups: [],
+    experienceClasses: [],
+    measurementClasses: [],
+    classTexts: [],
     startsFrom: parseKoreaDateParam(options.startsFrom),
     startsTo: undefined,
     keyword: undefined,
@@ -498,7 +605,6 @@ function toCompetitionListQuery(
     proQualifier: undefined,
     tiers: options.tiers ?? [],
     global: options.global,
-    major: options.major,
     nationalSelection: options.nationalSelection,
     nationalTeamEvent: options.nationalTeamEvent,
     nationalSportsFestival: options.nationalSportsFestival,
@@ -524,7 +630,7 @@ function parseKoreaDateParam(value: string | undefined): Date | undefined {
   return Number.isNaN(parsed.getTime()) ? undefined : parsed;
 }
 
-function getRecordCategories(divisionsJson: string, tagsJson: string): string[] {
+function getRecordCategories(divisionsJson: string): string[] {
   const divisions = parseJsonArray(divisionsJson)
     .map((division) => getDivisionName(division))
     .filter((name): name is string => Boolean(name));
@@ -533,23 +639,59 @@ function getRecordCategories(divisionsJson: string, tagsJson: string): string[] 
     return Array.from(new Set(divisions));
   }
 
-  return parseJsonArray(tagsJson)
-    .map((tag) => (typeof tag === "string" ? tag.trim() : ""))
-    .filter(Boolean);
+  return [];
 }
 
 function getDivisionName(value: unknown): string | undefined {
   if (typeof value === "string") {
-    return value.trim() || undefined;
+    const division = normalizeCompetitionDivision(value);
+
+    return division.baseDivision === "unknown" ? undefined : division.name;
   }
 
   if (!value || typeof value !== "object") {
     return undefined;
   }
 
-  const name = (value as { name?: unknown }).name;
+  const division = normalizeCompetitionDivision(
+    value as Parameters<typeof normalizeCompetitionDivision>[0],
+  );
 
-  return typeof name === "string" ? name.trim() || undefined : undefined;
+  return division.baseDivision === "unknown" ? undefined : division.name;
+}
+
+function getDivisionClassTexts(value: unknown): string[] {
+  if (!value || (typeof value !== "string" && typeof value !== "object")) {
+    return [];
+  }
+
+  const division = normalizeCompetitionDivision(
+    typeof value === "string"
+      ? value
+      : (value as Parameters<typeof normalizeCompetitionDivision>[0]),
+  );
+
+  return division.classText ? [division.classText] : [];
+}
+
+function getDivisionClassFacets(value: unknown) {
+  if (!value || (typeof value !== "string" && typeof value !== "object")) {
+    return [];
+  }
+
+  const division = normalizeCompetitionDivision(
+    typeof value === "string"
+      ? value
+      : (value as Parameters<typeof normalizeCompetitionDivision>[0]),
+  );
+
+  return (division.classFacets ?? []).flatMap((facet) => {
+    if (!["age", "experience", "measurement"].includes(facet.type)) {
+      return [];
+    }
+
+    return [{ type: facet.type, value: String(facet.value) }];
+  });
 }
 
 function mapCounts(
@@ -563,6 +705,54 @@ function mapCounts(
         ? compareNames(a.name, b.name)
         : b.count - a.count || a.name.localeCompare(b.name),
     );
+}
+
+function mapFacetCounts(
+  counts: Map<string, number>,
+  getLabel: (value: string) => string,
+) {
+  return Array.from(counts.entries())
+    .map(([name, count]) => ({ name, label: getLabel(name), count }))
+    .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+}
+
+function getAgeGroupLabel(value: string) {
+  return (
+    {
+      middle_school: "중등부",
+      high_school: "고등부",
+      junior: "주니어",
+      university: "대학부",
+      open: "오픈",
+      masters: "마스터즈",
+      senior: "시니어",
+      unknown: "연령 확인 필요",
+    }[value] ?? value
+  );
+}
+
+function getExperienceClassLabel(value: string) {
+  return (
+    {
+      first_timer: "첫 출전",
+      rookie: "루키",
+      novice: "노비스",
+      open: "오픈",
+      unknown: "경력 확인 필요",
+    }[value] ?? value
+  );
+}
+
+function getMeasurementClassLabel(value: string) {
+  return (
+    {
+      weight: "체급",
+      height: "신장급",
+      height_weight_cap: "신장·체중 제한",
+      none: "계측 없음",
+      unknown: "계측 확인 필요",
+    }[value] ?? value
+  );
 }
 
 function toKoreaMonthString(value: CompetitionSchedule["dateStartsOn"]): string | undefined {

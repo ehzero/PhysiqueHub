@@ -27,6 +27,12 @@ const LIST_KEYS = [
   "region",
   "org",
   "cat",
+  "age",
+  "exp",
+  "experience",
+  "measure",
+  "measurement",
+  "class",
   "status",
   "tier",
   "tiers",
@@ -63,12 +69,15 @@ export function parseListFilterQuery(
       regions: getListParam(params, "region"),
       orgs: getListParam(params, "org"),
       cats: getListParam(params, "cat"),
+      ageGroups: getListParam(params, "age"),
+      experienceClasses: getListParam(params, "exp") ?? getListParam(params, "experience"),
+      measurementClasses: getListParam(params, "measure") ?? getListParam(params, "measurement"),
+      classTexts: getListParam(params, "class"),
       status: getListParam(params, "status"),
       tiers: getTierParams(params),
       beginner: getBooleanParam(params, "beginner"),
       natural: getBooleanParam(params, "natural"),
       global: getBooleanParam(params, "global") ?? getBooleanParam(params, "intl"),
-      major: getBooleanParam(params, "major"),
       nationalSelection:
         getBooleanParam(params, "nationalSelection") ??
         getBooleanParam(params, "national"),
@@ -93,12 +102,15 @@ export function buildListFilterPath(
   appendListParam(params, "region", state.filters.regions);
   appendListParam(params, "org", state.filters.orgs);
   appendListParam(params, "cat", state.filters.cats);
+  appendListParam(params, "age", state.filters.ageGroups);
+  appendListParam(params, "exp", state.filters.experienceClasses);
+  appendListParam(params, "measure", state.filters.measurementClasses);
+  appendListParam(params, "class", state.filters.classTexts);
   appendListParam(params, "status", state.filters.status);
   appendListParam(params, "tier", state.filters.tiers);
   appendBooleanParam(params, "beginner", state.filters.beginner);
   appendBooleanParam(params, "natural", state.filters.natural);
   appendBooleanParam(params, "global", state.filters.global);
-  appendBooleanParam(params, "major", state.filters.major);
   appendBooleanParam(params, "national", state.filters.nationalSelection);
   appendBooleanParam(params, "nationalTeamEvent", state.filters.nationalTeamEvent);
   appendBooleanParam(

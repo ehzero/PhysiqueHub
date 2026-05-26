@@ -72,7 +72,6 @@ export function CompDrawer({
       : `${fmtDate(comp.regOpen, { style: "long" })} → ${fmtDate(comp.regClose, { style: "long" })}`;
   const classificationTags = [
     COMPETITION_TIER_LABELS[comp.tier],
-    comp.attributes.major ? "메이저" : "",
     comp.attributes.global ? "글로벌" : "",
     comp.attributes.nationalSelection ? "국가대표 선발" : "",
     comp.attributes.nationalTeamEvent ? "국가대표전" : "",

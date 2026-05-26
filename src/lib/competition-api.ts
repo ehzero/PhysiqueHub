@@ -3,6 +3,7 @@ import {
   COMPETITION_TIERS,
   type CompetitionTier,
 } from "@/lib/competition-classification";
+import { normalizeCompetitionDivision } from "@/lib/competition-division";
 import { normalizeCompetitionRegion } from "@/lib/location";
 
 const DEFAULT_COMPETITION_PAGE_SIZE = 20;
@@ -20,6 +21,10 @@ export interface CompetitionListQuery {
   pageSize: number;
   organizationIds: string[];
   registrationStatuses: string[];
+  ageGroups: string[];
+  experienceClasses: string[];
+  measurementClasses: string[];
+  classTexts: string[];
   startsFrom?: Date;
   startsTo?: Date;
   keyword?: string;
@@ -31,7 +36,6 @@ export interface CompetitionListQuery {
   proQualifier?: boolean;
   tiers: CompetitionTier[];
   global?: boolean;
-  major?: boolean;
   nationalSelection?: boolean;
   nationalTeamEvent?: boolean;
   nationalSportsFestival?: boolean;
@@ -55,6 +59,14 @@ export function parseCompetitionListQuery(searchParams: URLSearchParams): Compet
     registrationStatuses: parseStringList(
       searchParams.get("registrationStatus") ?? searchParams.get("status"),
     ),
+    ageGroups: parseStringList(searchParams.get("age")),
+    experienceClasses: parseStringList(
+      searchParams.get("exp") ?? searchParams.get("experience"),
+    ),
+    measurementClasses: parseStringList(
+      searchParams.get("measure") ?? searchParams.get("measurement"),
+    ),
+    classTexts: parseStringList(searchParams.get("class")),
     startsFrom: parseDateParam(searchParams.get("startsFrom")),
     startsTo: parseDateParam(searchParams.get("startsTo")),
     keyword: normalizeKeyword(searchParams.get("keyword") ?? searchParams.get("q")),
@@ -71,7 +83,6 @@ export function parseCompetitionListQuery(searchParams: URLSearchParams): Compet
       parseBooleanParam(searchParams.get("global")) ??
       parseBooleanParam(searchParams.get("internationalRoute")) ??
       parseBooleanParam(searchParams.get("intl")),
-    major: parseBooleanParam(searchParams.get("major")),
     nationalSelection: parseBooleanParam(
       searchParams.get("nationalSelection") ?? searchParams.get("national"),
     ),
@@ -248,15 +259,42 @@ function safeJsonParse(value: string, fallback: unknown): unknown {
 }
 
 function toPublicDivision(value: unknown) {
-  if (!value || typeof value !== "object") {
-    return { name: undefined, group: undefined };
+  if (typeof value === "string") {
+    const division = normalizeCompetitionDivision(value);
+
+    return {
+      name: division.name,
+      baseDivision: division.baseDivision,
+      genderGroup: division.genderGroup,
+      group: division.group,
+      classText: division.classText,
+      classFacets: division.classFacets,
+      rawText: division.rawText,
+    };
   }
 
-  const division = value as { name?: unknown; group?: unknown };
+  if (!value || typeof value !== "object") {
+    return {
+      name: undefined,
+      baseDivision: undefined,
+      genderGroup: undefined,
+      group: undefined,
+      classText: undefined,
+      classFacets: undefined,
+      rawText: undefined,
+    };
+  }
+
+  const division = normalizeCompetitionDivision(value as Parameters<typeof normalizeCompetitionDivision>[0]);
 
   return {
-    name: typeof division.name === "string" ? division.name : undefined,
-    group: typeof division.group === "string" ? division.group : undefined,
+    name: division.name,
+    baseDivision: division.baseDivision,
+    genderGroup: division.genderGroup,
+    group: division.group,
+    classText: division.classText,
+    classFacets: division.classFacets,
+    rawText: division.rawText,
   };
 }
 

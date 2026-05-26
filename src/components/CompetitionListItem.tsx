@@ -107,14 +107,6 @@ export function CompetitionListItem({
           >
             {tierLabel}
           </span>
-          {competition.attributes.major && (
-            <span
-              className="hub-tag-outline"
-              style={{ color: A, borderColor: A }}
-            >
-              메이저
-            </span>
-          )}
           {competition.attributes.global && (
             <span
               className="hub-tag-outline"

@@ -247,7 +247,7 @@ function extractDivisions(card: MonsterzymCard) {
     .map((name) => ({
       name,
       group: inferDivisionGroup(name),
-      rawText: divisionText,
+      rawText: name,
     }));
 }
 

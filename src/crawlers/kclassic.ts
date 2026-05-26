@@ -271,7 +271,7 @@ function extractKclassicDivisions($: cheerio.CheerioAPI): CompetitionDivision[] 
     .map((name) => ({
       name,
       group: inferDivisionGroup(name),
-      rawText: cleanText($(primarySelect).text()),
+      rawText: name,
     }));
 }
 
