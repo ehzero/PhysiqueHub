@@ -35,8 +35,8 @@ export function Foot({
                   </Link>
                 </li>
                 <li>
-                  <Link href="/guide#first-competition">
-                    첫 보디빌딩 대회 출전 가이드 보기
+                  <Link href="/guide#divisions">
+                    종목별 가이드 보기
                   </Link>
                 </li>
               </ul>

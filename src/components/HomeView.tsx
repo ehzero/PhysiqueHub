@@ -182,11 +182,11 @@ function HeroSection({
                 전체 보디빌딩·피트니스 대회 목록 →
               </Link>
               <Link
-                href="/guide#first-competition"
+                href="/guide#divisions"
                 className="hub-btn-outline"
                 prefetch={false}
               >
-                첫 보디빌딩 대회 출전 가이드 보기
+                종목별 가이드 보기
               </Link>
             </div>
           </div>
@@ -860,26 +860,18 @@ function GuideSection() {
   const cards = [
     {
       eyebrow: "GUIDE 01",
-      title: "첫 출전 가이드",
-      body: "체급 선택, 컨디셔닝, 포징, 준비물까지 첫 대회를 준비할 때 확인해야 할 내용을 정리했습니다.",
-      cta: "첫 보디빌딩 대회 출전 가이드 보기 →",
-      href: "/guide#first-competition",
+      title: "종목별 가이드",
+      body: "보디빌딩, 클래식 피지크, 맨즈 피지크, 비키니, 웰니스 등 주요 종목의 특징과 평가 포인트를 비교합니다.",
+      cta: "보디빌딩·피트니스 종목별 차이 비교하기 →",
+      href: "/guide#divisions",
       dark: true,
     },
     {
       eyebrow: "GUIDE 02",
-      title: "종목별 가이드",
-      body: "보디빌딩, 클래식 피지크, 맨즈 피지크, 비키니, 웰니스 등 주요 종목의 특징과 평가 포인트를 비교합니다.",
-      cta: "보디빌딩·피트니스 종목별 차이 비교하기 →",
-      href: "/guide#categories",
-      dark: false,
-    },
-    {
-      eyebrow: "GUIDE 03",
       title: "단체별 가이드",
       body: "KBBF, IFBB, NABBA, WNBF, Musclemania 등 주요 단체의 대회 성격, 출전 기준, 프로카드 흐름을 비교합니다.",
       cta: "보디빌딩·피트니스 대회 단체별 차이 비교하기 →",
-      href: "/guide#organizations",
+      href: "/guide#federations",
       dark: false,
     },
   ];

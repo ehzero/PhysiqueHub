@@ -265,6 +265,9 @@ export function regStatusAt(c: Competition, today: Date): RegStatus {
   if (c.registrationStatus === "closed" || c.registrationStatus === "cancelled") {
     return { label: "접수 마감", short: "마감", kind: "closed" };
   }
+  if (c.registrationStatus === "closing-soon") {
+    return { label: "마감 임박", short: "임박", kind: "urgent" };
+  }
   if (c.registrationStatus === "scheduled") {
     return { label: "접수 예정", short: "예정", kind: "soon" };
   }
