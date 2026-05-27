@@ -1,8 +1,9 @@
 const CACHE_PREFIX = "physiquehub-pwa";
-const CACHE_VERSION = "v1";
+const CACHE_VERSION = "v2";
 const STATIC_CACHE = `${CACHE_PREFIX}-${CACHE_VERSION}-static`;
 const PAGE_CACHE = `${CACHE_PREFIX}-${CACHE_VERSION}-pages`;
 const OFFLINE_URL = "/offline.html";
+const APP_SHELL_URLS = ["/", "/competitions", "/guide", "/saved"];
 
 const PRECACHE_URLS = [
   OFFLINE_URL,
@@ -16,9 +17,10 @@ const PRECACHE_URLS = [
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches
-      .open(STATIC_CACHE)
-      .then((cache) => cache.addAll(PRECACHE_URLS))
+    Promise.all([
+      caches.open(STATIC_CACHE).then((cache) => cache.addAll(PRECACHE_URLS)),
+      precacheAppShell(),
+    ])
       .then(() => self.skipWaiting()),
   );
 });
@@ -38,6 +40,7 @@ self.addEventListener("activate", (event) => {
             .map((key) => caches.delete(key)),
         ),
       )
+      .then(() => precacheAppShell())
       .then(() => self.clients.claim()),
   );
 });
@@ -90,7 +93,8 @@ async function networkFirstPage(request) {
 
     return response;
   } catch {
-    const cached = await cache.match(request);
+    const cached =
+      (await cache.match(request)) || (await getRouteFallback(cache, request));
     const offline = await caches.match(OFFLINE_URL);
 
     return (
@@ -102,6 +106,47 @@ async function networkFirstPage(request) {
       })
     );
   }
+}
+
+async function precacheAppShell() {
+  const cache = await caches.open(PAGE_CACHE);
+
+  await Promise.allSettled(
+    APP_SHELL_URLS.map(async (url) => {
+      const request = new Request(url, {
+        cache: "reload",
+        credentials: "same-origin",
+        headers: {
+          Accept: "text/html",
+        },
+      });
+      const response = await fetch(request);
+
+      if (response.ok && response.type === "basic") {
+        await cache.put(url, response.clone());
+      }
+    }),
+  );
+}
+
+async function getRouteFallback(cache, request) {
+  const url = new URL(request.url);
+  const normalizedPath = normalizeAppShellPath(url.pathname);
+
+  if (!normalizedPath) {
+    return undefined;
+  }
+
+  return cache.match(normalizedPath);
+}
+
+function normalizeAppShellPath(pathname) {
+  const normalized =
+    pathname.length > 1 && pathname.endsWith("/")
+      ? pathname.slice(0, -1)
+      : pathname;
+
+  return APP_SHELL_URLS.includes(normalized) ? normalized : undefined;
 }
 
 async function cacheFirst(request) {
