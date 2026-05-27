@@ -514,6 +514,86 @@ ol {
   transform: translateY(0);
 }
 
+/* ── PWA install prompt ── */
+.pwa-install-banner {
+  position: fixed;
+  right: 18px;
+  bottom: calc(84px + env(safe-area-inset-bottom));
+  left: 18px;
+  z-index: 75;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--bg-elev) 96%, transparent);
+  box-shadow: 0 18px 48px rgba(10, 10, 10, 0.14);
+  backdrop-filter: blur(16px);
+}
+.pwa-install-mark {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--ink);
+  color: var(--bg);
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+.pwa-install-copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+.pwa-install-copy strong {
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0;
+  line-height: 1.25;
+}
+.pwa-install-copy span {
+  color: var(--ink-3);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.pwa-install-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.pwa-install-primary,
+.pwa-install-close {
+  height: 34px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 800;
+}
+.pwa-install-primary {
+  padding: 0 12px;
+  background: var(--ink);
+  color: var(--bg);
+}
+.pwa-install-close {
+  width: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line-soft);
+  background: var(--bg-elev);
+}
+.pwa-install-close svg {
+  width: 15px;
+  height: 15px;
+}
+
 /* ── Quick filter bar ── */
 .quickbar {
   display: flex;

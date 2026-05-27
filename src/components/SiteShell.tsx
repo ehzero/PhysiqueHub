@@ -6,6 +6,7 @@ import { useSavedCompetitions } from "@/hooks/use-saved-competitions";
 import { Nav } from "@/components/Nav";
 import { Foot } from "@/components/Foot";
 import { ContactDrawer } from "@/components/ContactDrawer";
+import { PwaBootstrap } from "@/components/PwaBootstrap";
 
 interface SiteShellContextValue {
   saved: string[];
@@ -52,6 +53,8 @@ export function SiteShell({ seasonYear, children }: SiteShellProps) {
           isOpen={contactOpen}
           onClose={() => setContactOpen(false)}
         />
+
+        <PwaBootstrap />
       </div>
     </SiteShellContext.Provider>
   );

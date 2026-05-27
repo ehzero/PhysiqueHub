@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import {
@@ -30,6 +30,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
   applicationName: SITE_NAME,
+  manifest: "/manifest.webmanifest",
   title: {
     default: `${SITE_NAME} - ${SITE_TAGLINE}`,
     template: `%s - ${SITE_NAME}`,
@@ -72,6 +73,33 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
     images: [TWITTER_IMAGE_URL],
   },
+  appleWebApp: {
+    capable: true,
+    title: SITE_NAME,
+    statusBarStyle: "default",
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      {
+        url: "/icons/favicon-32x32.png",
+        sizes: "32x32",
+        type: "image/png",
+      },
+      {
+        url: "/icons/favicon-16x16.png",
+        sizes: "16x16",
+        type: "image/png",
+      },
+    ],
+    apple: [
+      {
+        url: "/icons/apple-touch-icon.png",
+        sizes: "180x180",
+        type: "image/png",
+      },
+    ],
+  },
   robots: {
     index: true,
     follow: true,
@@ -81,6 +109,11 @@ export const metadata: Metadata = {
     address: false,
     email: false,
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0E0E0C",
+  colorScheme: "light",
 };
 
 export default function RootLayout({

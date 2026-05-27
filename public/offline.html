@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0E0E0C" />
+    <meta name="robots" content="noindex, follow" />
+    <title>오프라인 - PhysiqueHub</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: grid;
+        place-items: center;
+        padding: 32px;
+        background: #faf9f6;
+        color: #0e0e0c;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Pretendard", system-ui,
+          sans-serif;
+      }
+      main {
+        width: min(100%, 420px);
+        border: 1px solid #0e0e0c;
+        background: #ffffff;
+        padding: 28px;
+      }
+      .mark {
+        width: 40px;
+        height: 40px;
+        display: grid;
+        place-items: center;
+        margin-bottom: 24px;
+        background: #0e0e0c;
+        color: #ffffff;
+        border-radius: 8px;
+        font-size: 21px;
+        font-weight: 900;
+      }
+      h1 {
+        margin: 0 0 10px;
+        font-size: 24px;
+        line-height: 1.25;
+        letter-spacing: 0;
+      }
+      p {
+        margin: 0;
+        color: #6b6b6b;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+      a {
+        display: inline-flex;
+        margin-top: 24px;
+        padding: 10px 14px;
+        background: #0e0e0c;
+        color: #ffffff;
+        border-radius: 2px;
+        font-size: 13px;
+        font-weight: 800;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="mark" aria-hidden="true">P</div>
+      <h1>현재 오프라인입니다.</h1>
+      <p>
+        네트워크 연결 후 다시 시도해 주세요. 이미 방문한 일부 화면은
+        기기에 저장된 내용으로 열릴 수 있습니다.
+      </p>
+      <a href="/">홈으로 이동</a>
+    </main>
+  </body>
+</html>
