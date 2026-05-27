@@ -69,7 +69,7 @@ export function Nav({ route, savedCount, onOpenContact }: NavProps) {
               href="/saved"
               className="nav-cta-btn"
               aria-label={savedLabel}
-              prefetch={false}
+              prefetch
             >
               {savedLabel}
             </Link>
@@ -115,7 +115,7 @@ export function Nav({ route, savedCount, onOpenContact }: NavProps) {
           className={`mobile-tab ${route === "saved" ? "active" : ""}`}
           href="/saved"
           aria-label={savedLabel}
-          prefetch={false}
+          prefetch
         >
           <span className="mobile-tab-icon-wrap">
             {savedCount > 0 && (

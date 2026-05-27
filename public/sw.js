@@ -1,19 +1,8 @@
-// Service worker behavior is temporarily disabled for PWA routing tests.
-self.addEventListener("install", (event) => {
-  event.waitUntil(self.skipWaiting());
-});
-
-self.addEventListener("activate", (event) => {
-  event.waitUntil(self.clients.claim());
-});
-
-/*
 const CACHE_PREFIX = "physiquehub-pwa";
 const CACHE_VERSION = "v2";
 const STATIC_CACHE = `${CACHE_PREFIX}-${CACHE_VERSION}-static`;
 const PAGE_CACHE = `${CACHE_PREFIX}-${CACHE_VERSION}-pages`;
 const OFFLINE_URL = "/offline.html";
-const APP_SHELL_URLS = ["/", "/competitions", "/guide", "/saved"];
 
 const PRECACHE_URLS = [
   OFFLINE_URL,
@@ -27,10 +16,9 @@ const PRECACHE_URLS = [
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    Promise.all([
-      caches.open(STATIC_CACHE).then((cache) => cache.addAll(PRECACHE_URLS)),
-      precacheAppShell(),
-    ])
+    caches
+      .open(STATIC_CACHE)
+      .then((cache) => cache.addAll(PRECACHE_URLS))
       .then(() => self.skipWaiting()),
   );
 });
@@ -50,7 +38,6 @@ self.addEventListener("activate", (event) => {
             .map((key) => caches.delete(key)),
         ),
       )
-      .then(() => precacheAppShell())
       .then(() => self.clients.claim()),
   );
 });
@@ -118,45 +105,18 @@ async function networkFirstPage(request) {
   }
 }
 
-async function precacheAppShell() {
-  const cache = await caches.open(PAGE_CACHE);
-
-  await Promise.allSettled(
-    APP_SHELL_URLS.map(async (url) => {
-      const request = new Request(url, {
-        cache: "reload",
-        credentials: "same-origin",
-        headers: {
-          Accept: "text/html",
-        },
-      });
-      const response = await fetch(request);
-
-      if (response.ok && response.type === "basic") {
-        await cache.put(url, response.clone());
-      }
-    }),
-  );
-}
-
 async function getRouteFallback(cache, request) {
   const url = new URL(request.url);
-  const normalizedPath = normalizeAppShellPath(url.pathname);
+  const normalizedPath =
+    url.pathname.length > 1 && url.pathname.endsWith("/")
+      ? url.pathname.slice(0, -1)
+      : url.pathname;
 
-  if (!normalizedPath) {
+  if (normalizedPath === url.pathname && !url.search) {
     return undefined;
   }
 
   return cache.match(normalizedPath);
-}
-
-function normalizeAppShellPath(pathname) {
-  const normalized =
-    pathname.length > 1 && pathname.endsWith("/")
-      ? pathname.slice(0, -1)
-      : pathname;
-
-  return APP_SHELL_URLS.includes(normalized) ? normalized : undefined;
 }
 
 async function cacheFirst(request) {
@@ -175,4 +135,3 @@ async function cacheFirst(request) {
 
   return response;
 }
-*/
