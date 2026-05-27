@@ -1,13 +1,7 @@
 import type { Prisma, CompetitionSchedule } from "@prisma/client";
-import {
-  COMPETITION_TIERS,
-  type CompetitionTier,
-} from "@/lib/competition-classification";
+import type { CompetitionTier } from "@/lib/competition-classification";
 import { normalizeCompetitionDivision } from "@/lib/competition-division";
 import { normalizeCompetitionRegion } from "@/lib/location";
-
-const DEFAULT_COMPETITION_PAGE_SIZE = 20;
-const MAX_COMPETITION_PAGE_SIZE = 500;
 
 type CompetitionSort =
   | "date-asc"
@@ -40,61 +34,6 @@ export interface CompetitionListQuery {
   nationalTeamEvent?: boolean;
   nationalSportsFestival?: boolean;
   sort: CompetitionSort;
-}
-
-export function parseCompetitionListQuery(searchParams: URLSearchParams): CompetitionListQuery {
-  return {
-    seasonYear: parseInteger(searchParams.get("seasonYear"), new Date().getFullYear(), {
-      min: 2000,
-      max: 2100,
-    }),
-    page: parseInteger(searchParams.get("page"), 1, { min: 1, max: 10_000 }),
-    pageSize: parseInteger(searchParams.get("pageSize"), DEFAULT_COMPETITION_PAGE_SIZE, {
-      min: 1,
-      max: MAX_COMPETITION_PAGE_SIZE,
-    }),
-    organizationIds: parseStringList(
-      searchParams.get("organizationId") ?? searchParams.get("organizationIds"),
-    ),
-    registrationStatuses: parseStringList(
-      searchParams.get("registrationStatus") ?? searchParams.get("status"),
-    ),
-    ageGroups: parseStringList(searchParams.get("age")),
-    experienceClasses: parseStringList(
-      searchParams.get("exp") ?? searchParams.get("experience"),
-    ),
-    measurementClasses: parseStringList(
-      searchParams.get("measure") ?? searchParams.get("measurement"),
-    ),
-    classTexts: parseStringList(searchParams.get("class")),
-    startsFrom: parseDateParam(searchParams.get("startsFrom")),
-    startsTo: parseDateParam(searchParams.get("startsTo")),
-    keyword: normalizeKeyword(searchParams.get("keyword") ?? searchParams.get("q")),
-    hasDate: parseBooleanParam(searchParams.get("hasDate")),
-    natural: parseBooleanParam(searchParams.get("natural")),
-    beginnerAny: parseBooleanParam(
-      searchParams.get("beginnerAny") ?? searchParams.get("beginner"),
-    ),
-    beginnerFriendly: parseBooleanParam(searchParams.get("beginnerFriendly")),
-    rookieClass: parseBooleanParam(searchParams.get("rookieClass")),
-    proQualifier: parseBooleanParam(searchParams.get("proQualifier")),
-    tiers: parseTierList(searchParams),
-    global:
-      parseBooleanParam(searchParams.get("global")) ??
-      parseBooleanParam(searchParams.get("internationalRoute")) ??
-      parseBooleanParam(searchParams.get("intl")),
-    nationalSelection: parseBooleanParam(
-      searchParams.get("nationalSelection") ?? searchParams.get("national"),
-    ),
-    nationalTeamEvent: parseBooleanParam(
-      searchParams.get("nationalTeamEvent") ?? searchParams.get("nationalEvent"),
-    ),
-    nationalSportsFestival: parseBooleanParam(
-      searchParams.get("nationalSportsFestival") ??
-        searchParams.get("sportsFestival"),
-    ),
-    sort: parseSort(searchParams.get("sort")),
-  };
 }
 
 export function buildCompetitionWhere(
@@ -223,19 +162,6 @@ export function serializePublicCompetitionListItem(record: CompetitionSchedule) 
   return serializePublicCompetition(record);
 }
 
-export function normalizePageMeta(page: number, pageSize: number, total: number) {
-  const totalPages = Math.ceil(total / pageSize);
-
-  return {
-    page,
-    pageSize,
-    total,
-    totalPages,
-    hasNextPage: page < totalPages,
-    hasPreviousPage: page > 1,
-  };
-}
-
 export function parseJsonArray(value: string): unknown[] {
   const parsed = safeJsonParse(value, []);
 
@@ -348,101 +274,6 @@ function isAdministrativeLocationText(
       return administrativeNames.has(part) || Boolean(normalizedPart && administrativeNames.has(normalizedPart));
     })
   );
-}
-
-function parseStringList(value: string | null): string[] {
-  return (value ?? "")
-    .split(",")
-    .map((item) => item.trim())
-    .filter(Boolean);
-}
-
-function parseTierList(searchParams: URLSearchParams): CompetitionTier[] {
-  const values = [
-    ...searchParams.getAll("tier"),
-    ...parseStringList(searchParams.get("tiers")),
-  ]
-    .flatMap((value) => value.split(","))
-    .map((value) => value.trim())
-    .filter(Boolean);
-  const legacyTiers: CompetitionTier[] = [];
-
-  if (parseBooleanParam(searchParams.get("regional")) === true) {
-    legacyTiers.push("regional");
-  }
-  if (
-    parseBooleanParam(searchParams.get("proPath")) === true ||
-    parseBooleanParam(searchParams.get("pro")) === true
-  ) {
-    legacyTiers.push("pro_qualifier");
-  }
-
-  return Array.from(
-    new Set(
-      [...values, ...legacyTiers].filter((value): value is CompetitionTier =>
-        COMPETITION_TIERS.includes(value as CompetitionTier),
-      ),
-    ),
-  );
-}
-
-function parseInteger(
-  value: string | null,
-  fallback: number,
-  constraints: { min: number; max: number },
-): number {
-  const parsed = Number(value);
-
-  if (!Number.isInteger(parsed)) {
-    return fallback;
-  }
-
-  return Math.min(Math.max(parsed, constraints.min), constraints.max);
-}
-
-function parseDateParam(value: string | null): Date | undefined {
-  if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    return undefined;
-  }
-
-  const parsed = new Date(`${value}T00:00:00+09:00`);
-
-  return Number.isNaN(parsed.getTime()) ? undefined : parsed;
-}
-
-function parseBooleanParam(value: string | null): boolean | undefined {
-  if (value === null || value === "") {
-    return undefined;
-  }
-
-  if (["1", "true", "yes"].includes(value.toLowerCase())) {
-    return true;
-  }
-
-  if (["0", "false", "no"].includes(value.toLowerCase())) {
-    return false;
-  }
-
-  return undefined;
-}
-
-function parseSort(value: string | null): CompetitionSort {
-  if (
-    value === "date-desc" ||
-    value === "deadline-asc" ||
-    value === "updated-desc" ||
-    value === "date-asc"
-  ) {
-    return value;
-  }
-
-  return "date-asc";
-}
-
-function normalizeKeyword(value: string | null): string | undefined {
-  const keyword = value?.trim();
-
-  return keyword ? keyword : undefined;
 }
 
 function toIsoString(value: Date | null): string | undefined {

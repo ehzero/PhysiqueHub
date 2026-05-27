@@ -15,15 +15,6 @@ import {
   getOrganizationDisplayShortName,
 } from "@/lib/organization-display";
 
-export interface ApiCompetitionListResponse {
-  items: ApiCompetitionListItem[];
-  total: number;
-  page: number;
-  pageSize: number;
-  totalPages: number;
-  hasNextPage: boolean;
-}
-
 export interface ApiCompetitionFiltersResponse {
   seasonYear: number;
   organizations: CompetitionFilterOrganization[];

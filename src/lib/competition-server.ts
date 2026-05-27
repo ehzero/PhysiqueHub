@@ -12,7 +12,6 @@ import { compareRegionNames, normalizeCompetitionRegion } from "@/lib/location";
 import {
   buildCompetitionWhere,
   getCompetitionOrderBy,
-  normalizePageMeta,
   parseJsonArray,
   parseJsonObject,
   serializePublicCompetitionListItem,
@@ -38,7 +37,6 @@ import {
 import {
   toCompetition,
   type ApiCompetitionFiltersResponse,
-  type ApiCompetitionListResponse,
   type CompetitionListPage,
   type CompetitionPageOptions,
 } from "@/lib/competition-public";
@@ -63,172 +61,6 @@ export interface CompetitionLandingContext {
   total: number;
   relatedTaxons: CompetitionLandingTaxon[];
   isIndexable: boolean;
-}
-
-export async function getCompetitionListPayload(
-  query: CompetitionListQuery,
-): Promise<ApiCompetitionListResponse> {
-  const where = buildCompetitionWhere(query);
-  const skip = (query.page - 1) * query.pageSize;
-  const orderBy = getCompetitionOrderBy(query.sort);
-
-  if (hasClassificationFilters(query)) {
-    const records = await prisma.competitionSchedule.findMany({
-      where,
-      orderBy,
-    });
-    const filtered = records.filter((record) =>
-      competitionMatchesClassificationQuery(record, query),
-    );
-
-    return {
-      items: filtered
-        .slice(skip, skip + query.pageSize)
-        .map(serializePublicCompetitionListItem),
-      ...normalizePageMeta(query.page, query.pageSize, filtered.length),
-    };
-  }
-
-  const [items, total] = await Promise.all([
-    prisma.competitionSchedule.findMany({
-      where,
-      orderBy,
-      skip,
-      take: query.pageSize,
-    }),
-    prisma.competitionSchedule.count({ where }),
-  ]);
-
-  return {
-    items: items.map(serializePublicCompetitionListItem),
-    ...normalizePageMeta(query.page, query.pageSize, total),
-  };
-}
-
-function hasClassificationFilters(query: CompetitionListQuery) {
-  return (
-    query.tiers.length > 0 ||
-    hasClassFilters(query) ||
-    query.beginnerAny !== undefined ||
-    query.global !== undefined ||
-    query.nationalSelection !== undefined ||
-    query.nationalTeamEvent !== undefined ||
-    query.nationalSportsFestival !== undefined
-  );
-}
-
-function hasClassFilters(query: CompetitionListQuery) {
-  return (
-    query.ageGroups.length > 0 ||
-    query.experienceClasses.length > 0 ||
-    query.measurementClasses.length > 0 ||
-    query.classTexts.length > 0
-  );
-}
-
-function competitionMatchesClassificationQuery(
-  record: CompetitionSchedule,
-  query: CompetitionListQuery,
-) {
-  const classification = classifyCompetition({
-    title: record.title,
-    organizationId: record.organizationId,
-    organizationName: record.organizationName,
-    organizationShortName: record.organizationShortName,
-    country: record.country,
-    divisions: parseJsonArray(record.divisionsJson),
-    tags: parseJsonArray(record.tagsJson),
-    flags: parseJsonObject(record.flagsJson),
-  });
-
-  if (query.tiers.length > 0 && !query.tiers.includes(classification.tier)) {
-    return false;
-  }
-  if (!competitionMatchesClassQuery(record, query)) {
-    return false;
-  }
-  if (
-    query.beginnerAny !== undefined &&
-    classification.attributes.beginner !== query.beginnerAny
-  ) {
-    return false;
-  }
-  if (
-    query.global !== undefined &&
-    classification.attributes.global !== query.global
-  ) {
-    return false;
-  }
-  if (
-    query.nationalSelection !== undefined &&
-    classification.attributes.nationalSelection !== query.nationalSelection
-  ) {
-    return false;
-  }
-  if (
-    query.nationalTeamEvent !== undefined &&
-    classification.attributes.nationalTeamEvent !== query.nationalTeamEvent
-  ) {
-    return false;
-  }
-  if (
-    query.nationalSportsFestival !== undefined &&
-    classification.attributes.nationalSportsFestival !== query.nationalSportsFestival
-  ) {
-    return false;
-  }
-
-  return true;
-}
-
-function competitionMatchesClassQuery(
-  record: CompetitionSchedule,
-  query: CompetitionListQuery,
-) {
-  if (!hasClassFilters(query)) {
-    return true;
-  }
-
-  const divisions = parseJsonArray(record.divisionsJson);
-  const classTexts = divisions.flatMap(getDivisionClassTexts);
-  const facets = divisions.flatMap(getDivisionClassFacets);
-
-  if (
-    query.ageGroups.length > 0 &&
-    !facets.some(
-      (facet) => facet.type === "age" && query.ageGroups.includes(facet.value),
-    )
-  ) {
-    return false;
-  }
-  if (
-    query.experienceClasses.length > 0 &&
-    !facets.some(
-      (facet) =>
-        facet.type === "experience" &&
-        query.experienceClasses.includes(facet.value),
-    )
-  ) {
-    return false;
-  }
-  if (
-    query.measurementClasses.length > 0 &&
-    !facets.some(
-      (facet) =>
-        facet.type === "measurement" &&
-        query.measurementClasses.includes(facet.value),
-    )
-  ) {
-    return false;
-  }
-  if (
-    query.classTexts.length > 0 &&
-    !classTexts.some((classText) => query.classTexts.includes(classText))
-  ) {
-    return false;
-  }
-
-  return true;
 }
 
 export async function getCompetitionSeasonPage(
