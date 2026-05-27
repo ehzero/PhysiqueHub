@@ -3380,7 +3380,12 @@ ol {
     padding-top: 40px;
   }
   .shell {
-    padding-bottom: calc(70px + max(env(safe-area-inset-bottom, 0px), 16px));
+    padding-bottom: 0;
+  }
+  .foot {
+    padding-bottom: calc(
+      32px + 70px + max(env(safe-area-inset-bottom, 0px), 16px)
+    );
   }
   .mobile-tabbar {
     position: fixed;

@@ -4,7 +4,8 @@ import { useCallback, useEffect, useState } from "react";
 import { Icons } from "./Icons";
 
 const DISMISS_STORAGE_KEY = "ph-pwa-install-dismissed-at";
-const DISMISS_TTL_MS = 14 * 24 * 60 * 60 * 1000;
+const DISMISS_TTL_MS = 24 * 60 * 60 * 1000;
+export const PWA_INSTALL_REQUEST_EVENT = "physiquehub:pwa-install-request";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -126,6 +127,31 @@ export function PwaBootstrap() {
     }
   }, [deferredPrompt, dismiss]);
 
+  const requestInstall = useCallback(() => {
+    if (isStandalone) {
+      return;
+    }
+
+    try {
+      localStorage.removeItem(DISMISS_STORAGE_KEY);
+    } catch {
+      // Storage can be unavailable in private browsing modes.
+    }
+
+    setIsDismissed(false);
+
+    if (!isIOS && deferredPrompt) {
+      void install();
+    }
+  }, [deferredPrompt, install, isIOS, isStandalone]);
+
+  useEffect(() => {
+    window.addEventListener(PWA_INSTALL_REQUEST_EVENT, requestInstall);
+
+    return () =>
+      window.removeEventListener(PWA_INSTALL_REQUEST_EVENT, requestInstall);
+  }, [requestInstall]);
+
   const shouldShow =
     isMobile && !isStandalone && !isDismissed && (isIOS || deferredPrompt);
 
@@ -142,18 +168,20 @@ export function PwaBootstrap() {
         <strong>PhysiqueHub 바로 열기</strong>
         <span>
           {isIOS
-            ? "Safari 공유 메뉴에서 홈 화면에 추가하세요."
+            ? "Safari 공유 메뉴 > 더보기 > 홈 화면에 추가"
             : "홈 화면에 추가해 모바일 앱처럼 사용할 수 있습니다."}
         </span>
       </div>
       <div className="pwa-install-actions">
-        <button
-          className="pwa-install-primary"
-          type="button"
-          onClick={install}
-        >
-          {isIOS ? "확인" : "추가"}
-        </button>
+        {!isIOS && (
+          <button
+            className="pwa-install-primary"
+            type="button"
+            onClick={install}
+          >
+            추가
+          </button>
+        )}
         <button
           className="pwa-install-close"
           type="button"

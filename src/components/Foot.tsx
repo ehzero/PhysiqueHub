@@ -1,5 +1,6 @@
 import packageJson from "../../package.json";
 import Link from "next/link";
+import { PWA_INSTALL_REQUEST_EVENT } from "@/components/PwaBootstrap";
 import { SUPPORT_EMAIL } from "@/lib/site";
 
 interface FootProps {
@@ -11,6 +12,10 @@ export function Foot({
   seasonYear = new Date().getFullYear(),
   onOpenContact,
 }: FootProps) {
+  const requestPwaInstall = () => {
+    window.dispatchEvent(new Event(PWA_INSTALL_REQUEST_EVENT));
+  };
+
   return (
     <footer className="foot">
       <div className="container">
@@ -38,6 +43,15 @@ export function Foot({
                   <Link href="/guide#divisions">
                     종목별 가이드 보기
                   </Link>
+                </li>
+                <li>
+                  <button
+                    className="foot-link-btn"
+                    type="button"
+                    onClick={requestPwaInstall}
+                  >
+                    홈 화면에 추가
+                  </button>
                 </li>
               </ul>
             </div>
