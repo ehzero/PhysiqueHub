@@ -117,7 +117,7 @@ function CategoriesSection() {
             </details>
           ))}
         </div>
-        <GuideCta href="/competitions/categories/mens-physique" label="내 종목 대회 찾아보기" />
+        <GuideCta href="/competitions" label="종목별 보디빌딩·피트니스 대회 목록" />
       </div>
     </section>
   );
@@ -166,7 +166,7 @@ function OrganizationsSection() {
             반드시 함께 확인하세요.
           </p>
         </div>
-        <GuideCta href="/competitions/organizations/ifbb" label="단체별 대회 찾아보기" />
+        <GuideCta href="/competitions" label="단체별 보디빌딩·피트니스 대회 목록" />
       </div>
     </section>
   );
