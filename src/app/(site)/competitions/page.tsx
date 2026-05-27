@@ -4,6 +4,7 @@ import { getUpcomingCompetitionContext } from "@/lib/competition-server";
 import {
   isListFilterQueryKey,
   parseListFilterQuery,
+  toURLSearchParams,
   type PageSearchParams,
 } from "@/lib/filter-query";
 import { createPageMetadata } from "@/lib/metadata";
@@ -38,10 +39,14 @@ export async function generateMetadata({
   };
 }
 
-export default async function CompetitionsPage() {
+export default async function CompetitionsPage({
+  searchParams,
+}: CompetitionsPageProps) {
   const { competitionPage, filterOptions, seasonYear } =
     await getUpcomingCompetitionContext({ includeFilters: true });
-  const initialFilterState = parseListFilterQuery(new URLSearchParams());
+  const initialFilterState = parseListFilterQuery(
+    toURLSearchParams(await searchParams),
+  );
   const description = getCompetitionListDescription(seasonYear);
 
   return (

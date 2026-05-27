@@ -203,6 +203,7 @@ export function toCompetition(item: ApiCompetitionListItem): Competition {
     registrationUrl: item.registration.registrationUrl ?? item.source.detailUrl ?? undefined,
     sourceUrl: item.source.detailUrl ?? item.source.sourceUrl ?? undefined,
     updatedAt: item.updatedAt ?? undefined,
+    country: item.location.country,
     region: normalizeCompetitionRegion(item.location) ?? "지역 확인 필요",
     venue: item.location.venue ?? "장소 확인 필요",
     categories,

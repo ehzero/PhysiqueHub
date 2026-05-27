@@ -204,30 +204,25 @@ function HeroSection({
                 {
                   label: "전체 대회",
                   value: stats.totalShows,
-                  sub: "등록된 일정",
                 },
                 {
                   label: "예정 대회",
                   value: stats.upcomingShows,
-                  sub: "다가오는 일정",
                 },
                 {
-                  label: "국내 대회",
+                  label: "국내 대회(예정)",
                   value: stats.domesticShows,
-                  sub: "국내 개최 일정",
                 },
                 {
-                  label: "주요 해외 무대",
+                  label: "주요 국제 대회(예정)",
                   value: stats.majorShows,
-                  sub: "글로벌 주요 일정",
                 },
-              ].map(({ label, value, sub }) => (
+              ].map(({ label, value }) => (
                 <div key={label}>
                   <div className="hub-stat-cell-label">{label}</div>
                   <div className="hub-stat-num">
                     <CountUpNumber value={value} />
                   </div>
-                  <div className="hub-stat-cell-sub">{sub}</div>
                 </div>
               ))}
             </div>

@@ -17,6 +17,7 @@ export interface Competition {
   registrationUrl?: string;
   sourceUrl?: string;
   updatedAt?: string;
+  country: string;
   region: string;
   venue: string;
   categories: string[];

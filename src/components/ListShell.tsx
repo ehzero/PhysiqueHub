@@ -31,7 +31,7 @@ export function ListShell({
 }: ListShellProps) {
   const today = useClientToday();
   const { saved, toggleSave } = useSiteShell();
-  const { filters, setFilters, search, setSearch, currentPath } =
+  const { filters, setFilters, search, setSearch, scope, setScope, currentPath } =
     useListFilterQueryState(initialFilterState);
   const initialOpenedCompetition =
     initialOpenedCompetitionId
@@ -171,6 +171,8 @@ export function ListShell({
         filterOptions={initialFilterOptions}
         search={search}
         setSearch={setSearch}
+        scope={scope}
+        setScope={setScope}
         today={today}
         description={description}
       />

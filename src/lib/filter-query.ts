@@ -7,6 +7,7 @@ import {
 export interface ListFilterQueryState {
   filters: Filters;
   search: string;
+  scope: CompetitionLocationScope;
 }
 
 export interface HomeFilterQueryState {
@@ -14,6 +15,8 @@ export interface HomeFilterQueryState {
   activePreset: string;
   sortBy: string;
 }
+
+export type CompetitionLocationScope = "all" | "domestic" | "overseas";
 
 export type PageSearchParams = Record<string, string | string[] | undefined>;
 
@@ -24,6 +27,7 @@ interface QueryParamsLike {
 
 const LIST_KEYS = [
   "q",
+  "scope",
   "region",
   "org",
   "cat",
@@ -89,6 +93,7 @@ export function parseListFilterQuery(
         getBooleanParam(params, "sportsFestival"),
     },
     search: params.get("q")?.trim() ?? "",
+    scope: getLocationScopeParam(params),
   };
 }
 
@@ -99,6 +104,9 @@ export function buildListFilterPath(
   const params = new URLSearchParams();
 
   appendStringParam(params, "q", state.search);
+  if (state.scope !== "all") {
+    appendStringParam(params, "scope", state.scope);
+  }
   appendListParam(params, "region", state.filters.regions);
   appendListParam(params, "org", state.filters.orgs);
   appendListParam(params, "cat", state.filters.cats);
@@ -211,6 +219,12 @@ function getBooleanParam(params: QueryParamsLike, key: string) {
   const value = params.get(key);
 
   return value === "1" || value === "true" ? true : undefined;
+}
+
+function getLocationScopeParam(params: QueryParamsLike): CompetitionLocationScope {
+  const value = params.get("scope")?.trim();
+
+  return value === "domestic" || value === "overseas" ? value : "all";
 }
 
 function appendStringParam(

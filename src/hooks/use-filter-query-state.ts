@@ -8,6 +8,7 @@ import {
   parseHomeFilterQuery,
   parseListFilterQuery,
   type HomeFilterQueryState,
+  type CompetitionLocationScope,
   type ListFilterQueryState,
 } from "@/lib/filter-query";
 
@@ -79,11 +80,23 @@ export function useListFilterQueryState(
     [updateState],
   );
 
+  const setScope = useCallback(
+    (scope: CompetitionLocationScope) => {
+      updateState({
+        ...stateRef.current,
+        scope,
+      });
+    },
+    [updateState],
+  );
+
   return {
     filters: state.filters,
     search: state.search,
+    scope: state.scope,
     setFilters,
     setSearch,
+    setScope,
     currentPath: buildListFilterPath(basePath, state),
   };
 }

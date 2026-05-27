@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Competition, Filters } from "@/lib/data";
 import { COMPETITION_TIER_LABELS } from "@/lib/competition-classification";
 import type { CompetitionFilterOptions } from "@/lib/competition-public";
+import type { CompetitionLocationScope } from "@/lib/filter-query";
 import { Icons } from "./Icons";
 import { CompRow } from "./CompRow";
 import { CompetitionGridCard } from "./CompetitionListItem";
@@ -19,7 +20,6 @@ const MONTH_KR = [
 ];
 
 type SortKey = "date" | "deadline";
-type Segment = "all" | "domestic" | "overseas";
 type ViewMode = "list" | "grid";
 
 interface ListViewProps {
@@ -33,6 +33,8 @@ interface ListViewProps {
   filterOptions?: CompetitionFilterOptions;
   search: string;
   setSearch: (s: string) => void;
+  scope: CompetitionLocationScope;
+  setScope: (scope: CompetitionLocationScope) => void;
   today: Date | null;
   description: string;
 }
@@ -48,6 +50,8 @@ export function ListView({
   filterOptions,
   search,
   setSearch,
+  scope,
+  setScope,
   today,
   description,
 }: ListViewProps) {
@@ -56,14 +60,13 @@ export function ListView({
   void allComps;
 
   const [sortKey, setSortKey] = useState<SortKey>("date");
-  const [segment, setSegment] = useState<Segment>("all");
   const [viewMode, setViewMode] = useState<ViewMode>("list");
 
   const segmented = useMemo(() => {
-    if (segment === "domestic") return comps.filter((c) => !c.attributes.global);
-    if (segment === "overseas") return comps.filter((c) => c.attributes.global);
+    if (scope === "domestic") return comps.filter((c) => c.country === "KR");
+    if (scope === "overseas") return comps.filter((c) => c.country !== "KR");
     return comps;
-  }, [comps, segment]);
+  }, [comps, scope]);
 
   const sorted = useMemo(() => {
     if (sortKey === "deadline") {
@@ -88,11 +91,11 @@ export function ListView({
   }, [sorted]);
 
   const domesticCount = useMemo(
-    () => comps.filter((c) => !c.attributes.global).length,
+    () => comps.filter((c) => c.country === "KR").length,
     [comps],
   );
   const overseasCount = useMemo(
-    () => comps.filter((c) => c.attributes.global).length,
+    () => comps.filter((c) => c.country !== "KR").length,
     [comps],
   );
 
@@ -210,7 +213,7 @@ export function ListView({
 
   const hasActiveFilters = activeFilterChips.length > 0 || !!search;
 
-  const segmentTabs: { id: Segment; label: string; count: number }[] = [
+  const segmentTabs: { id: CompetitionLocationScope; label: string; count: number }[] = [
     { id: "all", label: "전체", count: comps.length },
     { id: "domestic", label: "국내 대회", count: domesticCount },
     { id: "overseas", label: "해외 대회", count: overseasCount },
@@ -266,8 +269,8 @@ export function ListView({
             {segmentTabs.map((t) => (
               <button
                 key={t.id}
-                className={`comp-segment-tab${segment === t.id ? " active" : ""}`}
-                onClick={() => setSegment(t.id)}
+                className={`comp-segment-tab${scope === t.id ? " active" : ""}`}
+                onClick={() => setScope(t.id)}
               >
                 {t.label}
                 <span className="comp-segment-count mono">{t.count}</span>
@@ -397,7 +400,7 @@ export function ListView({
                       onClick={() => {
                         setFilters(() => ({}));
                         setSearch("");
-                        setSegment("all");
+                        setScope("all");
                       }}
                     >
                       필터 초기화

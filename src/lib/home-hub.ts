@@ -82,7 +82,7 @@ export const getHomeHubData = cache(async (): Promise<HomeHubData> => {
     }),
 
     prisma.competitionSchedule.count({
-      where: { seasonYear, country: "KR" },
+      where: { seasonYear, country: "KR", dateStartsOn: { gte: todayDate } },
     }),
 
     prisma.competitionSchedule.findMany({
