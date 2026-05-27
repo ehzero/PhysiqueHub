@@ -518,7 +518,7 @@ ol {
 .pwa-install-banner {
   position: fixed;
   right: 18px;
-  bottom: calc(84px + env(safe-area-inset-bottom));
+  bottom: calc(84px + max(env(safe-area-inset-bottom, 0px), 16px));
   left: 18px;
   z-index: 75;
   display: flex;
@@ -3380,7 +3380,7 @@ ol {
     padding-top: 40px;
   }
   .shell {
-    padding-bottom: calc(70px + env(safe-area-inset-bottom));
+    padding-bottom: calc(70px + max(env(safe-area-inset-bottom, 0px), 16px));
   }
   .mobile-tabbar {
     position: fixed;
@@ -3390,8 +3390,8 @@ ol {
     z-index: 60;
     display: none;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    min-height: calc(62px + env(safe-area-inset-bottom));
-    padding: 6px 10px calc(6px + env(safe-area-inset-bottom));
+    min-height: calc(62px + max(env(safe-area-inset-bottom, 0px), 16px));
+    padding: 6px 10px calc(6px + max(env(safe-area-inset-bottom, 0px), 16px));
     border-top: 1px solid var(--line);
     background: color-mix(in srgb, var(--bg) 94%, transparent);
     backdrop-filter: blur(14px);
