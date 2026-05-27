@@ -9,7 +9,7 @@
 
 | 우선순위 | 단체/루트 | 공식 일정 소스 | 기술적 크롤링 가능성 | 메모 |
 | --- | --- | --- | --- | --- |
-| 1 | NPC / IFBB Pro League Korea, AGP | `https://ifbbprokorea.com/schedule/` | 높음 | WordPress/Elementor HTML에 일정 텍스트가 포함됨. robots 허용. |
+| 1 | NPC / IFBB Pro Korea, AGP | `https://ifbbprokorea.com/schedule/` | 높음 | WordPress/Elementor HTML에 일정 텍스트가 포함됨. robots 허용. |
 | 1 | 대한보디빌딩협회(KBBF) | `https://bodybuilding.or.kr/contest_kr` | 높음 | 국내/국제/시도대회 게시판 구조가 명확함. robots 허용. |
 | 1 | NABBA Korea | `https://www.nabba.kr/board/com_schedule.html` | 높음 | Cafe24 HTML에 대회명, 날짜, 장소, 신청 링크가 노출됨. |
 | 1 | MUSA / WNGP / BOB / ANBC | `https://unmo.kr/shop/tournament.php` | 중간 | 목록과 상세 HTML이 정적에 가까움. 다만 사이트 하단에 무단 스크래핑 금지 문구가 있어 운영 전 허가 검토 필요. |
@@ -27,7 +27,7 @@
 
 ## 상세 소스
 
-### 1. NPC / IFBB Pro League Korea, AGP
+### 1. NPC / IFBB Pro Korea, AGP
 
 - 공식 소스:
   - 전체 일정: `https://ifbbprokorea.com/schedule/`
@@ -204,7 +204,7 @@
   - 사용자 요청에 따라 preview crawler는 구현하되, 모든 이벤트를 `reviewStatus: "needs-review"`로 둔다.
   - 상세 페이지는 순회하지 않고 이벤트 메인 페이지의 공개 카드만 파싱한다.
   - 운영 자동 수집 또는 DB 저장 전에는 robots/약관 확인과 주최 측 허가가 필요하다.
-  - Monsterzym Korea Pro, AGP 계열 IFBB 일정은 `ifbbprokorea.com` 공식 일정과 중복 여부를 교차 검수한다.
+  - Monsterzym Korea Pro, AGP 계열 IFBB Pro 일정은 `ifbbprokorea.com` 공식 일정과 중복 여부를 교차 검수한다.
 
 ## 추가 후보 소스
 
@@ -303,7 +303,7 @@
 
 ## 권장 수집 전략
 
-1. 공식 소스 우선순위는 `IFBB/KBBF/NABBA/UNMO`부터 시작한다.
+1. 공식 소스 우선순위는 `IFBB Pro/KBBF/NABBA/UNMO`부터 시작한다.
 2. 각 사이트별 `robots.txt`와 요청 제한을 매 수집 전에 캐시 확인한다.
 3. 목록 페이지에서 상세 URL을 수집하고, 상세 페이지에서 날짜/장소/접수 마감/종목을 보강한다.
 4. 일정 데이터는 `source_url`, `source_label`, `fetched_at`, `source_updated_at`, `confidence`를 함께 저장한다.
@@ -315,7 +315,7 @@
 
 | 파서 | 대상 | 방식 |
 | --- | --- | --- |
-| `ifbbProKoreaParser` | IFBB/NPC/AGP | WordPress HTML 또는 REST API, 일정 카드/본문 텍스트 파싱 |
+| `ifbbProKoreaParser` (`ifbb-pro-korea.ts`) | NPC/IFBB Pro/AGP | WordPress HTML 또는 REST API, 일정 카드/본문 텍스트 파싱 |
 | `kbbfParser` | 대한보디빌딩협회 | Imweb 게시판 목록 + 상세 + 첨부파일 |
 | `nabbaParser` | NABBA Korea | Cafe24 공개 일정 HTML + 상세 신청 링크 |
 | `unmoTournamentParser` | MUSA/WNGP/BOB/ANBC | 목록 페이지네이션 + 상세 `dt/dd` 라벨 파싱 |
@@ -340,7 +340,7 @@
 
 | 단체/루트 | 상태 | 소스 확인 | 파서 구현 | 샘플 수집 | 검수 완료 | 비고 |
 | --- | --- | --- | --- | --- | --- | --- |
-| NPC / IFBB Pro League Korea | 소스 확인 | [x] | [ ] | [ ] | [ ] | WordPress/Elementor 일정 페이지 우선 |
+| NPC / IFBB Pro Korea | 소스 확인 | [x] | [ ] | [ ] | [ ] | WordPress/Elementor 일정 페이지 우선 |
 | AGP | 소스 확인 | [x] | [ ] | [ ] | [ ] | IFBB Pro Korea 일정 내 AGP 항목 기준 |
 | 대한보디빌딩협회(KBBF) | 소스 확인 | [x] | [ ] | [ ] | [ ] | 국내/국제/시도대회 게시판 분리 |
 | NABBA Korea | 소스 확인 | [x] | [ ] | [ ] | [ ] | `com_schedule.html` 우선 |

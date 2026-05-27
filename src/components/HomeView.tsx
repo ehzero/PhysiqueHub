@@ -872,7 +872,7 @@ function GuideSection() {
     {
       eyebrow: "GUIDE 02",
       title: "단체별 가이드",
-      body: "KBBF, IFBB, NABBA, WNBF, Musclemania 등 주요 단체의 대회 성격, 출전 기준, 프로카드 흐름을 비교합니다.",
+      body: "KBBF, IFBB International, IFBB Pro/NPC, NABBA, WNBF 등 주요 단체의 대회 성격, 출전 기준, 프로카드 흐름을 비교합니다.",
       cta: "보디빌딩·피트니스 대회 단체별 차이 비교하기 →",
       href: "/guide#federations",
       dark: false,

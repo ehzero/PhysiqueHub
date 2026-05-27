@@ -24,9 +24,9 @@ const IFBB_SOURCES = [
   "https://ifbbprokorea.com/schedule/ifbb-pro/",
 ] as const;
 
-const PARSER_NAME = "ifbb-npc-agp-elementor-preview";
+const PARSER_NAME = "ifbb-pro-korea-npc-agp-elementor-preview";
 
-export async function crawlIfbbNpcAgp(): Promise<CrawlerResult> {
+export async function crawlIfbbProKoreaNpcAgp(): Promise<CrawlerResult> {
   const sources: CrawlerResult["sources"] = [];
   const events: CompetitionScheduleDraft[] = [];
   const errors: CrawlerResult["errors"] = [];
@@ -70,7 +70,7 @@ export async function crawlIfbbNpcAgp(): Promise<CrawlerResult> {
         const organizationId = inferOrganizationId(title, detailTexts.join(" "), url);
         const organizationName =
           organizationId === "agp" ? "AGP" : "NPC/IFBB Pro Korea";
-        const organizationShortName = organizationId === "agp" ? "AGP" : "NPC/IFBB";
+        const organizationShortName = organizationId === "agp" ? "AGP" : "NPC/IFBB Pro";
         const date = parseKoreanDateRange(dateText, fallbackYear, dateText ? "high" : "low");
         const deadline = parseKoreanDeadline(registrationText, fallbackYear);
         const sourceEventId = slugify([title, date.startsOn ?? dateText ?? url].join(" "));
@@ -244,7 +244,7 @@ function inferOrganizationId(
 
 function inferTags(title: string, details: string[], sourceUrl: string): string[] {
   const text = `${title} ${details.join(" ")} ${sourceUrl}`;
-  const tags = ["NPC", "IFBB"];
+  const tags = ["NPC", "IFBB Pro"];
 
   if (/AGP/i.test(text)) {
     tags.push("AGP");

@@ -10,7 +10,10 @@ import type {
   CompetitionGenderGroup,
 } from "@/types/competitionSchedule";
 import { normalizeCompetitionRegion } from "@/lib/location";
-import { getOrganizationDisplayName } from "@/lib/organization-display";
+import {
+  getOrganizationDisplayName,
+  getOrganizationDisplayShortName,
+} from "@/lib/organization-display";
 
 export interface ApiCompetitionListResponse {
   items: ApiCompetitionListItem[];
@@ -174,7 +177,11 @@ export function toCompetition(item: ApiCompetitionListItem): Competition {
   const closesOn = toDateOnly(item.registration.closesAt) ?? startsOn;
   const opensOn = toDateOnly(item.registration.opensAt) ?? startsOn;
   const flags = item.flags ?? {};
-  const orgShort = item.organizationShortName || makeShortName(item.organizationName);
+  const orgShort = getOrganizationDisplayShortName({
+    id: item.organizationId,
+    name: item.organizationName,
+    shortName: item.organizationShortName,
+  });
   const org = getOrganizationDisplayName({
     id: item.organizationId,
     name: item.organizationName,
@@ -336,7 +343,7 @@ function getTags(item: ApiCompetitionListItem): string[] {
 }
 
 function getDisplayTag(tag: string) {
-  return tag === "IFBB Pro League" ? "IFBB Pro" : tag;
+  return tag === "IFBB Pro League" || tag === "IFBB" ? "IFBB Pro" : tag;
 }
 
 function isHiddenCrawlTag(tag: string): boolean {
@@ -357,15 +364,6 @@ function getScale(item: ApiCompetitionListItem): Competition["scale"] {
 
 function toDateOnly(value: string | null | undefined): string | undefined {
   return value?.slice(0, 10);
-}
-
-function makeShortName(value: string): string {
-  return value
-    .split(/[ /·()]+/)
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 8)
-    .toUpperCase();
 }
 
 function hashCode(value: string): number {

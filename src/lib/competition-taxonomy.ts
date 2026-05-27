@@ -172,15 +172,15 @@ const ORGANIZATION_TAXONS: CompetitionLandingTaxon[] = [
   {
     axis: "organization",
     slug: "ifbb",
-    label: "IFBB · NPC",
-    title: "IFBB · NPC 대회 일정",
+    label: "IFBB Pro · NPC",
+    title: "IFBB Pro · NPC 대회 일정",
     description:
-      "IFBB Pro League와 NPC 계열 대회 일정을 날짜와 지역별로 비교하세요.",
-    h1: "IFBB · NPC 보디빌딩·피트니스 대회 일정",
+      "IFBB Pro와 NPC/NPC Worldwide 계열 대회 일정을 날짜와 지역별로 비교하세요.",
+    h1: "IFBB Pro · NPC 보디빌딩·피트니스 대회 일정",
     intro:
-      "IFBB Pro League와 NPC 계열 대회 일정을 모았습니다. 리저널, 프로 퀄리파이어, 프로전 등 세부 성격은 대회별 공식 요강에서 확인하세요.",
-    filterHref: "/competitions?q=IFBB",
-    keywords: ["IFBB 대회", "NPC 대회", "IFBB Pro League"],
+      "IFBB Pro와 NPC/NPC Worldwide 계열 대회 일정을 모았습니다. 리저널, 프로 퀄리파이어, 프로전 등 세부 성격은 대회별 공식 요강에서 확인하세요.",
+    filterHref: "/competitions?q=IFBB%20Pro",
+    keywords: ["IFBB Pro 대회", "NPC 대회", "NPC Worldwide"],
     organizationIds: ["npc-ifbb-pro-korea", "agp", "ifbb-pro-league"],
   },
   {

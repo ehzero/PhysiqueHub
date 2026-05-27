@@ -21,7 +21,7 @@ The canonical site is `https://physiquehub.kr`. Public pages are written primari
 - [Bikini competitions](https://physiquehub.kr/competitions/categories/bikini): Upcoming bikini contests.
 - [Natural competitions](https://physiquehub.kr/competitions/types/natural): Upcoming competitions tagged as natural or tested where supported by source data.
 - [Rookie competitions](https://physiquehub.kr/competitions/types/rookie): Upcoming beginner-friendly or rookie-class competitions.
-- [IFBB and NPC competitions](https://physiquehub.kr/competitions/organizations/ifbb): IFBB Pro League, NPC Worldwide, and related Korean schedule pages.
+- [IFBB Pro and NPC competitions](https://physiquehub.kr/competitions/organizations/ifbb): IFBB Pro, NPC Worldwide, and related Korean schedule pages.
 - [KBBF competitions](https://physiquehub.kr/competitions/organizations/kbbf): Korea Bodybuilding Federation schedule pages.
 - [NABBA competitions](https://physiquehub.kr/competitions/organizations/nabba): NABBA Korea schedule pages.
 - [PCA competitions](https://physiquehub.kr/competitions/organizations/pca): PCA and NPCA Korea schedule pages.

@@ -19,9 +19,9 @@ const ORGANIZATION_GUIDE = [
     ],
   },
   {
-    name: "NPC Worldwide / IFBB Pro League",
+    name: "NPC Worldwide / IFBB Pro",
     scope: "프로카드·글로벌 프로 리그 루트",
-    desc: "NPC Worldwide와 IFBB Pro League 축은 리저널, 프로 퀄리파이어, 프로카드 흐름을 중심으로 대회를 비교합니다.",
+    desc: "NPC Worldwide와 IFBB Pro 축은 리저널, 프로 퀄리파이어, 프로카드 흐름을 중심으로 대회를 비교합니다.",
     points: [
       "리저널 출전 필요 여부와 프로 퀄리파이어 자격 확인",
       "212, 클래식 피지크, 맨즈 피지크 등 디비전별 운영 여부 확인",

@@ -7,8 +7,8 @@ const ACCENT = "#B85C3C";
 const INK = "#0E0E0C";
 const PAPER = "#F7F5F0";
 const ORGANIZATIONS = [
-  "IFBB Pro League",
-  "NPC/IFBB",
+  "IFBB Pro",
+  "NPC/IFBB Pro",
   "KBBF",
   "NABBA",
   "PCA",

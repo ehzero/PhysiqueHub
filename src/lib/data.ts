@@ -65,7 +65,7 @@ export const CATEGORY_GUIDE: CategoryGuide[] = [
     key: "보디빌딩",
     scope: "Men's Bodybuilding / Women's Bodybuilding",
     desc: "근육량, 컨디셔닝, 대칭성, 포징 완성도를 가장 강하게 보는 전통 종목입니다.",
-    organizations: "IFBB Pro/NPC, IFBB International, KBBF, NABBA, WNBF, OCB 등",
+    organizations: "IFBB Pro/NPC Worldwide, IFBB International, KBBF, NABBA, WNBF, OCB 등",
     judgingPoints: [
       "전신 근육량과 부위별 완성도",
       "체지방·수분 조절로 드러나는 컨디셔닝",
@@ -73,7 +73,7 @@ export const CATEGORY_GUIDE: CategoryGuide[] = [
     ],
     checkpoints: [
       "체급, 계측 방식, 필수 포즈는 단체별 룰북을 확인",
-      "KBBF·IFBB International 축과 NPC·IFBB Pro League 축의 여성 종목 운영 차이 확인",
+      "KBBF·IFBB International 축과 NPC Worldwide·IFBB Pro 축의 여성 종목 운영 차이 확인",
     ],
     caution: "Novice, Junior, Masters는 보통 종목이 아니라 경력·연령 클래스입니다.",
   },
@@ -81,7 +81,7 @@ export const CATEGORY_GUIDE: CategoryGuide[] = [
     key: "212 보디빌딩",
     scope: "Men's 212 Bodybuilding",
     desc: "남자 보디빌딩의 체중 제한 디비전으로, 오픈 보디빌딩보다 작은 체급 안에서 근육량과 완성도를 겨룹니다.",
-    organizations: "IFBB Pro League, NPC/NPC Worldwide, 일부 국내 리저널·프로 퀄리파이어 등",
+    organizations: "IFBB Pro, NPC/NPC Worldwide, 일부 국내 리저널·프로 퀄리파이어 등",
     judgingPoints: [
       "체중 제한 안에서의 근육량, 밀도, 분리도",
       "보디빌딩 기준의 컨디셔닝과 필수 포즈 수행력",
@@ -98,7 +98,7 @@ export const CATEGORY_GUIDE: CategoryGuide[] = [
     key: "클래식 피지크",
     scope: "Classic Physique",
     desc: "보디빌딩보다 고전적 비율과 라인을 강조하며, 신장 대비 체중 제한을 두는 경우가 많습니다.",
-    organizations: "IFBB Pro/NPC, NPC Worldwide, IFBB International, PCA, SSA 등",
+    organizations: "IFBB Pro/NPC Worldwide, IFBB International, PCA, SSA 등",
     judgingPoints: [
       "넓은 어깨, 좁은 허리, 균형 잡힌 하체",
       "과도한 매스보다 미적 비율과 라인",
@@ -130,7 +130,7 @@ export const CATEGORY_GUIDE: CategoryGuide[] = [
     key: "남자 피지크",
     scope: "Men's Physique",
     desc: "보드숏을 착용하고 상체 라인, 어깨-허리 비율, 자연스러운 무대 표현을 평가합니다.",
-    organizations: "IFBB Pro/NPC, NPC Worldwide, PCA, WBFF, SSA, ICN 등",
+    organizations: "IFBB Pro/NPC Worldwide, PCA, WBFF, SSA, ICN 등",
     judgingPoints: [
       "V 테이퍼와 상체 비율",
       "과하지 않은 근육량과 깔끔한 컨디셔닝",
@@ -162,7 +162,7 @@ export const CATEGORY_GUIDE: CategoryGuide[] = [
     key: "비키니",
     scope: "Bikini",
     desc: "여성 피트니스 대회에서 가장 대중적인 모델형 피지크 종목으로, 균형과 자연스러운 라인을 봅니다.",
-    organizations: "IFBB Pro/NPC, IFBB International, PCA, WBFF, ICN 등",
+    organizations: "IFBB Pro/NPC Worldwide, IFBB International, PCA, WBFF, ICN 등",
     judgingPoints: [
       "과하지 않은 근육 톤과 전체 비율",
       "둔근·하체 라인과 상체 균형",
@@ -178,7 +178,7 @@ export const CATEGORY_GUIDE: CategoryGuide[] = [
     key: "웰니스",
     scope: "Wellness",
     desc: "비키니보다 하체 발달과 곡선미를 더 강하게 보는 여성 피지크 종목입니다.",
-    organizations: "IFBB Pro/NPC, IFBB International, PCA, WBFF 등",
+    organizations: "IFBB Pro/NPC Worldwide, IFBB International, PCA, WBFF 등",
     judgingPoints: [
       "둔근, 대퇴부, 하체 볼륨",
       "상체와 하체의 의도적인 비율 차이",
@@ -194,7 +194,7 @@ export const CATEGORY_GUIDE: CategoryGuide[] = [
     key: "피규어 / 보디피트니스",
     scope: "Figure / Bodyfitness",
     desc: "여성 종목 중 비키니보다 근육 톤과 대칭성을 더 강조하며, 보디빌딩보다는 완화된 기준을 적용합니다.",
-    organizations: "IFBB Pro/NPC, IFBB International, KBBF, WNBF 등",
+    organizations: "IFBB Pro/NPC Worldwide, IFBB International, KBBF, WNBF 등",
     judgingPoints: [
       "어깨-허리-하체의 X 프레임",
       "근육 톤, 선명도, 좌우 대칭",

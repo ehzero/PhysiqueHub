@@ -2,7 +2,7 @@ import type { CompetitionScheduleDraft } from "../types/competitionSchedule";
 import type { CrawlOrganizationId } from "./config";
 import { crawlAgonas } from "./agonas";
 import { crawlKclassicRelatedCandidates } from "./candidates";
-import { crawlIfbbNpcAgp } from "./ifbb";
+import { crawlIfbbProKoreaNpcAgp } from "./ifbb-pro-korea";
 import { crawlIfbbProLeague } from "./ifbb-pro-league";
 import { crawlInbaPnba } from "./inba";
 import { crawlKclassic } from "./kclassic";
@@ -23,7 +23,7 @@ const CRAWLER_GROUPS: Array<{
 }> = [
   {
     organizationIds: ["npc-ifbb-pro-korea", "agp"],
-    crawler: crawlIfbbNpcAgp,
+    crawler: crawlIfbbProKoreaNpcAgp,
   },
   {
     organizationIds: ["ifbb-pro-league"],

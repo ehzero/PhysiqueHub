@@ -245,7 +245,7 @@ export function ListView({
             <span className="comp-search-icon">{Icons.search}</span>
             <input
               className="comp-search-input"
-              placeholder="대회명·단체·지역으로 검색 (예: IFBB, KBBF, 서울)"
+              placeholder="대회명·단체·지역으로 검색 (예: IFBB Pro, KBBF, 서울)"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
