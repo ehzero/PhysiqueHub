@@ -1,3 +1,13 @@
+// Service worker behavior is temporarily disabled for PWA routing tests.
+self.addEventListener("install", (event) => {
+  event.waitUntil(self.skipWaiting());
+});
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil(self.clients.claim());
+});
+
+/*
 const CACHE_PREFIX = "physiquehub-pwa";
 const CACHE_VERSION = "v2";
 const STATIC_CACHE = `${CACHE_PREFIX}-${CACHE_VERSION}-static`;
@@ -165,3 +175,4 @@ async function cacheFirst(request) {
 
   return response;
 }
+*/
