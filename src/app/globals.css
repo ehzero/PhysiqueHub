@@ -4754,6 +4754,21 @@ ol {
   flex-shrink: 0;
   transition: background 0.1s, border-color 0.1s;
 }
+.rail-check svg {
+  width: 11px;
+  height: 11px;
+}
+.rail-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.15s;
+}
+.rail-chevron svg {
+  width: 12px;
+  height: 12px;
+}
 .rail-dot {
   width: 7px;
   height: 7px;
@@ -4847,6 +4862,10 @@ ol {
   padding: 0;
   line-height: 1;
   transition: color 0.1s;
+}
+.comp-chip-remove svg {
+  width: 10px;
+  height: 10px;
 }
 .comp-chip-remove:hover {
   color: #0E0E0C;
@@ -4958,6 +4977,10 @@ ol {
   border-color: #0E0E0C;
   color: #0E0E0C;
 }
+.comp-view-btn svg {
+  width: 15px;
+  height: 15px;
+}
 
 /* ── Grid view ──────────────────────────────────────────────── */
 .comp-grid {
@@ -5062,6 +5085,12 @@ ol {
   display: flex;
   align-items: center;
   gap: 5px;
+}
+.comp-grid-location svg {
+  width: 11px;
+  height: 11px;
+  flex-shrink: 0;
+  color: #86827C;
 }
 .comp-grid-cats {
   display: flex;
@@ -5224,6 +5253,8 @@ ol {
   margin-bottom: 10px;
 }
 .comp-card-location svg {
+  width: 12px;
+  height: 12px;
   flex-shrink: 0;
   color: #86827C;
 }

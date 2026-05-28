@@ -10,6 +10,7 @@ import {
 import { KOREAN_REGION_ORDER } from "@/lib/location";
 import { getOrganizationDisplayName } from "@/lib/organization-display";
 import type { CompetitionFilterOptions } from "@/lib/competition-public";
+import { Icons } from "./Icons";
 
 const ACCENT = "#B85C3C";
 const INK = "#0E0E0C";
@@ -55,13 +56,10 @@ function FilterCheckRow({
         style={{
           background: selected ? INK : "#fff",
           borderColor: selected ? INK : "#C9C6BF",
+          color: selected ? "#fff" : "transparent",
         }}
       >
-        {selected && (
-          <svg width="10" height="8" viewBox="0 0 10 8" fill="none" stroke="#fff" strokeWidth="2">
-            <path d="M1 4l3 3 5-6" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        )}
+        {selected && Icons.check}
       </span>
       {dot && (
         <span
@@ -106,17 +104,15 @@ function FilterSection({
           {hint && <span className="rail-section-hint mono">{hint}</span>}
           {count != null && <span className="rail-section-hint mono">{count}</span>}
         </span>
-        <svg
-          width="10"
-          height="10"
-          viewBox="0 0 10 10"
-          fill="none"
-          stroke={MUTE}
-          strokeWidth="1.5"
-          style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.15s", flexShrink: 0 }}
+        <span
+          className="rail-chevron"
+          style={{
+            color: MUTE,
+            transform: open ? "rotate(180deg)" : "rotate(0deg)",
+          }}
         >
-          <path d="M2 4l3 3 3-3" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+          {Icons.chevronDown}
+        </span>
       </button>
       {open && <div className="rail-section-body">{children}</div>}
     </div>
@@ -276,17 +272,17 @@ export function FilterRail({
                 </span>
                 <span className="rail-overseas-count">
                   +{overseasRegions.length}
-                  <svg
-                    width="10"
-                    height="10"
-                    viewBox="0 0 10 10"
-                    fill="none"
-                    stroke={MUTE}
-                    strokeWidth="1.5"
-                    style={{ transform: showOverseasRegions ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.15s" }}
+                  <span
+                    className="rail-chevron"
+                    style={{
+                      color: MUTE,
+                      transform: showOverseasRegions
+                        ? "rotate(180deg)"
+                        : "rotate(0deg)",
+                    }}
                   >
-                    <path d="M2 4l3 3 3-3" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
+                    {Icons.chevronDown}
+                  </span>
                 </span>
               </button>
               {showOverseasRegions &&

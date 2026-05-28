@@ -95,7 +95,10 @@ export function getCompetitionClassificationTags(competition: Competition) {
 }
 
 export function getCompetitionFeatureTags(competition: Competition) {
-  return competition.tags.length > 0 ? competition.tags : ["공식 소스 기준 정보 확인 필요"];
+  const classificationTags = new Set(getCompetitionClassificationTags(competition));
+  const tags = competition.tags.filter((tag) => !classificationTags.has(tag));
+
+  return tags.length > 0 ? tags : ["공식 소스 기준 정보 확인 필요"];
 }
 
 function getClassFacetDisplayLabel(facet: CompetitionClassFilterFacet) {

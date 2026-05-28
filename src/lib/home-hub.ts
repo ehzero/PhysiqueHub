@@ -132,7 +132,7 @@ export const getHomeHubData = cache(async (): Promise<HomeHubData> => {
   const naturalTaxon = getCompetitionLandingTaxon("type", "natural");
   const rookieTaxon = getCompetitionLandingTaxon("type", "rookie");
   const regionalTaxon = getCompetitionLandingTaxon("type", "regional");
-  const proPathTaxon = getCompetitionLandingTaxon("type", "pro-path");
+  const proPathTaxon = getCompetitionLandingTaxon("type", "pro-qualifier");
   const proShowTaxon = getCompetitionLandingTaxon("type", "pro-show");
   const championshipTaxon = getCompetitionLandingTaxon("type", "championship");
   const globalTaxon = getCompetitionLandingTaxon("type", "global");

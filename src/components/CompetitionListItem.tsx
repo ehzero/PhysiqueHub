@@ -6,6 +6,7 @@ import { getCompetitionPath } from "@/lib/competition-slug";
 import { getCompetitionLocationLabel } from "@/lib/competition-display";
 import { regStatusAt, type Competition } from "@/lib/data";
 import { COMPETITION_TIER_LABELS } from "@/lib/competition-classification";
+import { Icons } from "./Icons";
 
 const ACCENT = "#B85C3C";
 const INK = "#0E0E0C";
@@ -92,8 +93,6 @@ function getFlagStyle(flag: string): FlagStyle {
 function buildFlags(competition: Competition): string[] {
   const flags: string[] = [];
   if (competition.attributes.global) flags.push("글로벌");
-  if (competition.tier === "pro_show") flags.push("프로쇼");
-  if (competition.tier === "pro_qualifier") flags.push("프로 퀄리파이어");
   if (competition.natural) flags.push("내추럴");
   if (competition.beginner || competition.rookie) flags.push("루키부문");
   if (competition.attributes.nationalSelection) flags.push("국가대표 선발");
@@ -177,10 +176,7 @@ export function CompetitionGridCard({
 
       {/* Location */}
       <div className="comp-grid-location">
-        <svg width="10" height="12" viewBox="0 0 11 13" fill="none" stroke="currentColor" strokeWidth="1.4">
-          <path d="M5.5 12C5.5 12 1 7.5 1 5C1 2.5 3 1 5.5 1S10 2.5 10 5C10 7.5 5.5 12 5.5 12Z" />
-          <circle cx="5.5" cy="5" r="1.5" />
-        </svg>
+        {Icons.pin}
         {locationLabel}
       </div>
 
@@ -258,17 +254,7 @@ export function CompetitionListItem({
         </div>
 
         <div className="comp-card-location">
-          <svg
-            width="11"
-            height="13"
-            viewBox="0 0 11 13"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.4"
-          >
-            <path d="M5.5 12C5.5 12 1 7.5 1 5C1 2.5 3 1 5.5 1S10 2.5 10 5C10 7.5 5.5 12 5.5 12Z" />
-            <circle cx="5.5" cy="5" r="1.5" />
-          </svg>
+          {Icons.pin}
           {locationLabel}
         </div>
 

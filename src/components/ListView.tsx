@@ -307,16 +307,7 @@ export function ListView({
                         onClick={chip.onRemove}
                         aria-label={`${chip.label} 필터 제거`}
                       >
-                        <svg
-                          width="10"
-                          height="10"
-                          viewBox="0 0 10 10"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                        >
-                          <path d="M1 1l8 8M9 1l-8 8" strokeLinecap="round" />
-                        </svg>
+                        {Icons.close}
                       </button>
                     </span>
                   ))}
@@ -368,9 +359,7 @@ export function ListView({
                       aria-label="리스트 뷰"
                       title="리스트 뷰"
                     >
-                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5">
-                        <path d="M1 3h12M1 7h12M1 11h12" strokeLinecap="round" />
-                      </svg>
+                      {Icons.list}
                     </button>
                     <button
                       className={`comp-view-btn${viewMode === "grid" ? " active" : ""}`}
@@ -378,12 +367,7 @@ export function ListView({
                       aria-label="그리드 뷰"
                       title="그리드 뷰"
                     >
-                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5">
-                        <rect x="1" y="1" width="5" height="5" rx="1" />
-                        <rect x="8" y="1" width="5" height="5" rx="1" />
-                        <rect x="1" y="8" width="5" height="5" rx="1" />
-                        <rect x="8" y="8" width="5" height="5" rx="1" />
-                      </svg>
+                      {Icons.grid}
                     </button>
                   </div>
                 </div>

@@ -327,7 +327,7 @@ const TYPE_TAXONS: CompetitionLandingTaxon[] = [
   },
   {
     axis: "type",
-    slug: "pro-path",
+    slug: "pro-qualifier",
     label: "프로 퀄리파이어",
     title: "프로 퀄리파이어 대회 일정",
     description:
@@ -575,7 +575,7 @@ function competitionMatchesType(competition: Competition, slug: string) {
       return competition.beginner === true || competition.rookie === true;
     case "regional":
       return competition.tier === "regional";
-    case "pro-path":
+    case "pro-qualifier":
       return competition.tier === "pro_qualifier";
     case "pro-show":
       return competition.tier === "pro_show";
