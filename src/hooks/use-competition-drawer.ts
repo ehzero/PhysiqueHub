@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { Competition } from "@/lib/data";
+import { getCompetitionPath } from "@/lib/competition-slug";
 
 interface UseCompetitionDrawerOptions {
   closePath: string;
@@ -20,7 +21,7 @@ export function useCompetitionDrawer({
   function openComp(comp: Competition) {
     setOpenedComp(comp);
     setDrawerOpen(true);
-    window.history.pushState(null, "", getCompetitionPath(comp.id));
+    window.history.pushState(null, "", getCompetitionPath(comp));
   }
 
   function closeDrawer() {
@@ -35,8 +36,4 @@ export function useCompetitionDrawer({
     openComp,
     closeDrawer,
   };
-}
-
-function getCompetitionPath(id: string) {
-  return `/competitions/${encodeURIComponent(id)}`;
 }

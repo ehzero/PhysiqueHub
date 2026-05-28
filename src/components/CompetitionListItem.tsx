@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { MouseEventHandler } from "react";
 import { getCompetitionPath } from "@/lib/competition-slug";
+import { getCompetitionLocationLabel } from "@/lib/competition-display";
 import { regStatusAt, type Competition } from "@/lib/data";
 import { COMPETITION_TIER_LABELS } from "@/lib/competition-classification";
 
@@ -114,6 +115,7 @@ export function CompetitionGridCard({
   const statusInfo = registrationStatus ? getStatusInfo(registrationStatus.kind) : null;
   const flags = buildFlags(competition);
   const isUrgent = registrationStatus?.kind === "urgent";
+  const locationLabel = getCompetitionLocationLabel(competition);
 
   const mm = String(date.month).padStart(2, "0");
   const dd = String(date.day).padStart(2, "0");
@@ -179,7 +181,7 @@ export function CompetitionGridCard({
           <path d="M5.5 12C5.5 12 1 7.5 1 5C1 2.5 3 1 5.5 1S10 2.5 10 5C10 7.5 5.5 12 5.5 12Z" />
           <circle cx="5.5" cy="5" r="1.5" />
         </svg>
-        {competition.region}
+        {locationLabel}
       </div>
 
       {/* Categories */}
@@ -210,6 +212,7 @@ export function CompetitionListItem({
     : null;
   const flags = buildFlags(competition);
   const isUrgent = registrationStatus?.kind === "urgent";
+  const locationLabel = getCompetitionLocationLabel(competition);
 
   const mm = String(date.month).padStart(2, "0");
   const dd = String(date.day).padStart(2, "0");
@@ -266,10 +269,7 @@ export function CompetitionListItem({
             <path d="M5.5 12C5.5 12 1 7.5 1 5C1 2.5 3 1 5.5 1S10 2.5 10 5C10 7.5 5.5 12 5.5 12Z" />
             <circle cx="5.5" cy="5" r="1.5" />
           </svg>
-          {competition.region}
-          {competition.venue && competition.venue !== competition.region && (
-            <span className="comp-card-venue"> · {competition.venue}</span>
-          )}
+          {locationLabel}
         </div>
 
         <div className="comp-card-cats">

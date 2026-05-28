@@ -3,14 +3,22 @@
 import { useEffect } from "react";
 import { getCompetitionPath } from "@/lib/competition-slug";
 import {
+  getCompetitionCategoryCountLabel,
+  getCompetitionClassificationTags,
+  getCompetitionClassLabel,
+  getCompetitionDateLabel,
+  getCompetitionFeatureTags,
+  getCompetitionFeeLabel,
+  getCompetitionLocationLabel,
+  getCompetitionRegistrationLabel,
+} from "@/lib/competition-display";
+import {
   Competition,
   parseDate,
   regStatusAt,
   daysBetween,
-  fmtDate,
   formatDday,
 } from "@/lib/data";
-import { COMPETITION_TIER_LABELS } from "@/lib/competition-classification";
 import { Icons } from "./Icons";
 import { PosterFigure, posterFigureColor } from "./PosterFigure";
 import { ShareButton } from "./ShareButton";
@@ -58,26 +66,12 @@ export function CompDrawer({
     : null;
   const ddClose = today ? daysBetween(today, comp.regClose) : null;
   const variant = comp.id.charCodeAt(Math.min(2, comp.id.length - 1)) % 6;
-  const dateLabel = comp.dateEnd
-    ? `${fmtDate(comp.date, { style: "long" })} → ${fmtDate(comp.dateEnd, { style: "long" })}`
-    : fmtDate(comp.date, { style: "long" });
+  const dateLabel = getCompetitionDateLabel(comp);
+  const locationLabel = getCompetitionLocationLabel(comp);
   const officialUrl = comp.sourceUrl || comp.registrationUrl;
-  const registrationLabel =
-    comp.registrationStatus === "unknown"
-      ? comp.regClose === comp.date
-        ? status?.kind === "closed"
-          ? "접수 마감"
-          : "공식 접수 정보 확인 필요"
-        : `마감 ${fmtDate(comp.regClose, { style: "long" })}`
-      : `${fmtDate(comp.regOpen, { style: "long" })} → ${fmtDate(comp.regClose, { style: "long" })}`;
-  const classificationTags = [
-    COMPETITION_TIER_LABELS[comp.tier],
-    comp.attributes.global ? "글로벌" : "",
-    comp.attributes.nationalSelection ? "국가대표 선발" : "",
-    comp.attributes.nationalTeamEvent ? "국가대표전" : "",
-    comp.attributes.nationalSportsFestival ? "전국체전" : "",
-    comp.attributes.beginner ? "입문·루키" : "",
-  ].filter(Boolean);
+  const registrationLabel = getCompetitionRegistrationLabel(comp, today);
+  const classificationTags = getCompetitionClassificationTags(comp);
+  const featureTags = getCompetitionFeatureTags(comp);
 
   return (
     <>
@@ -106,7 +100,7 @@ export function CompDrawer({
             <PosterFigure variant={variant} color={posterFigureColor(comp.poster)} />
           </div>
           <div className="label-overlay">
-            <div className="ord">{comp.org} · {comp.region}</div>
+            <div className="ord">{comp.org} · {locationLabel}</div>
             <div className="ttl">{comp.title}</div>
           </div>
         </div>
@@ -124,13 +118,15 @@ export function CompDrawer({
               </div>
             </div>
             <div className="cell">
-              <div className="lbl">참가비</div>
-              <div className="val">{comp.fee > 0 ? `${(comp.fee / 10000).toFixed(0)}만원` : "확인"}</div>
+              <div className="lbl">지역</div>
+              <div className="val" style={{ fontSize: 14 }}>
+                {comp.region}
+              </div>
             </div>
             <div className="cell">
-              <div className="lbl">참가 가능</div>
+              <div className="lbl">종목</div>
               <div className="val" style={{ fontSize: 14 }}>
-                {comp.beginner ? "초보 환영" : "경력자"}
+                {getCompetitionCategoryCountLabel(comp)}
               </div>
             </div>
           </div>
@@ -149,7 +145,7 @@ export function CompDrawer({
             </dd>
 
             <dt>장소</dt>
-            <dd>{comp.venue}, {comp.region}</dd>
+            <dd>{locationLabel}</dd>
 
             <dt>주최</dt>
             <dd>{comp.org}</dd>
@@ -157,14 +153,18 @@ export function CompDrawer({
             <dt>종목</dt>
             <dd>
               <div className="cat-pill-row">
-                {comp.categories.map((c, i) => (
-                  <span key={i} className="cat-pill">{c}</span>
-                ))}
+                {comp.categories.length > 0 ? (
+                  comp.categories.map((c, i) => (
+                    <span key={i} className="cat-pill">{c}</span>
+                  ))
+                ) : (
+                  <span>공식 소스 기준 정보 확인 필요</span>
+                )}
               </div>
             </dd>
 
             <dt>체급 구분</dt>
-            <dd>{comp.classes}</dd>
+            <dd>{getCompetitionClassLabel(comp)}</dd>
 
             <dt>분류</dt>
             <dd>
@@ -178,18 +178,12 @@ export function CompDrawer({
             </dd>
 
             <dt>참가비</dt>
-            <dd className="mono">{comp.fee > 0 ? `₩ ${comp.fee.toLocaleString()}` : "확인 필요"}</dd>
-
-            <dt>대회 이력</dt>
-            <dd>
-              {comp.historyYears}회 개최 · {comp.scale} 규모 ·{" "}
-              {comp.natural ? "내추럴 도핑테스트 있음" : "오픈"}
-            </dd>
+            <dd className="mono">{getCompetitionFeeLabel(comp)}</dd>
 
             <dt>특징</dt>
             <dd>
               <div className="cat-pill-row">
-                {comp.tags.map((t, i) => (
+                {featureTags.map((t, i) => (
                   <span
                     key={i}
                     className="cat-pill"

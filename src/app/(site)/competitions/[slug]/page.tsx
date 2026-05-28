@@ -1,11 +1,23 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { PageHeader, PageMain, PageSection } from "@/components/PageLayout";
 import { ShareButton } from "@/components/ShareButton";
-import { fmtDate } from "@/lib/data";
 import type { Competition } from "@/lib/data";
-import { getCompetitionPath } from "@/lib/competition-slug";
+import {
+  getCompetitionClassificationTags,
+  getCompetitionClassLabel,
+  getCompetitionDateLabel,
+  getCompetitionFeatureTags,
+  getCompetitionFeeLabel,
+  getCompetitionLocationLabel,
+  getCompetitionRegistrationLabel,
+} from "@/lib/competition-display";
+import {
+  getCompetitionPath,
+  getCompetitionSlug,
+  normalizeCompetitionRouteSlug,
+} from "@/lib/competition-slug";
 import {
   getCompetitionBySlug,
   getCompetitionIndexingMetaById,
@@ -83,9 +95,18 @@ export default async function CompetitionDetailPage({
     notFound();
   }
 
+  if (
+    normalizeCompetitionRouteSlug(decodeURIComponent(slug)) !==
+    normalizeCompetitionRouteSlug(getCompetitionSlug(competition))
+  ) {
+    redirect(getCompetitionPath(competition));
+  }
+
   const officialUrl = competition.sourceUrl || competition.registrationUrl;
   const eventJsonLd = getEventJsonLd(competition);
   const breadcrumbJsonLd = getBreadcrumbJsonLd(competition);
+  const classificationTags = getCompetitionClassificationTags(competition);
+  const featureTags = getCompetitionFeatureTags(competition);
 
   return (
     <PageMain>
@@ -94,7 +115,7 @@ export default async function CompetitionDetailPage({
 
       <PageHeader
         title={competition.title}
-        subtitle={`${competition.org} · ${getDateLabel(competition)} · ${competition.venue}`}
+        subtitle={`${competition.org} · ${getCompetitionDateLabel(competition)} · ${getCompetitionLocationLabel(competition)}`}
         actions={
           <>
             <ShareButton
@@ -117,13 +138,13 @@ export default async function CompetitionDetailPage({
 
           <dl className="kv-grid competition-detail-grid">
             <dt>개최일</dt>
-            <dd>{getDateLabel(competition)}</dd>
+            <dd>{getCompetitionDateLabel(competition)}</dd>
 
             <dt>접수 기간</dt>
-            <dd>{getRegistrationLabel(competition)}</dd>
+            <dd>{getCompetitionRegistrationLabel(competition)}</dd>
 
             <dt>장소</dt>
-            <dd>{competition.venue}, {competition.region}</dd>
+            <dd>{getCompetitionLocationLabel(competition)}</dd>
 
             <dt>주최</dt>
             <dd>{competition.org}</dd>
@@ -131,29 +152,43 @@ export default async function CompetitionDetailPage({
             <dt>종목</dt>
             <dd>
               <div className="cat-pill-row">
-                {competition.categories.map((category) => (
-                  <span className="cat-pill" key={category}>
-                    {category}
+                {competition.categories.length > 0 ? (
+                  competition.categories.map((category) => (
+                    <span className="cat-pill" key={category}>
+                      {category}
+                    </span>
+                  ))
+                ) : (
+                  <span>공식 소스 기준 정보 확인 필요</span>
+                )}
+              </div>
+            </dd>
+
+            <dt>체급 구분</dt>
+            <dd>{getCompetitionClassLabel(competition)}</dd>
+
+            <dt>분류</dt>
+            <dd>
+              <div className="cat-pill-row">
+                {classificationTags.map((tag) => (
+                  <span className="cat-pill" key={tag}>
+                    {tag}
                   </span>
                 ))}
               </div>
             </dd>
 
             <dt>참가비</dt>
-            <dd>{competition.fee > 0 ? `₩ ${competition.fee.toLocaleString()}` : "확인 필요"}</dd>
+            <dd>{getCompetitionFeeLabel(competition)}</dd>
 
             <dt>특징</dt>
             <dd>
               <div className="cat-pill-row">
-                {competition.tags.length > 0 ? (
-                  competition.tags.map((tag) => (
-                    <span className="cat-pill" key={tag}>
-                      {tag}
-                    </span>
-                  ))
-                ) : (
-                  <span>공식 소스 기준 정보 확인 필요</span>
-                )}
+                {featureTags.map((tag) => (
+                  <span className="cat-pill" key={tag}>
+                    {tag}
+                  </span>
+                ))}
               </div>
             </dd>
 
@@ -186,25 +221,12 @@ function StructuredData({ data }: { data: Record<string, unknown> }) {
 }
 
 function getDescription(competition: Competition) {
-  return `${competition.org} 주최 ${competition.title}은 ${getDateLabel(competition)}에 ${competition.venue}, ${competition.region}에서 열립니다. 접수 정보: ${getRegistrationLabel(competition)}.`;
-}
+  const locationLabel = getCompetitionLocationLabel(competition);
+  const locationPhrase = /확인 필요/.test(locationLabel)
+    ? "장소는 공식 채널에서 확인이 필요합니다"
+    : `${locationLabel}에서 열립니다`;
 
-function getDateLabel(competition: Competition) {
-  if (competition.dateEnd) {
-    return `${fmtDate(competition.date, { style: "long" })} - ${fmtDate(competition.dateEnd, { style: "long" })}`;
-  }
-
-  return fmtDate(competition.date, { style: "long" });
-}
-
-function getRegistrationLabel(competition: Competition) {
-  if (competition.registrationStatus === "unknown") {
-    return competition.regClose === competition.date
-      ? "공식 접수 정보 확인 필요"
-      : `마감 ${fmtDate(competition.regClose, { style: "long" })}`;
-  }
-
-  return `${fmtDate(competition.regOpen, { style: "long" })} - ${fmtDate(competition.regClose, { style: "long" })}`;
+  return `${competition.org} 주최 ${competition.title}은 ${getCompetitionDateLabel(competition)}에 ${locationPhrase}. 접수 정보: ${getCompetitionRegistrationLabel(competition)}.`;
 }
 
 function getBreadcrumbJsonLd(competition: Competition) {
@@ -252,7 +274,7 @@ function getEventJsonLd(competition: Competition) {
     location: {
       "@type": "Place",
       name: competition.venue,
-      address: `${competition.venue}, ${competition.region}`,
+      address: getCompetitionLocationLabel(competition),
     },
     organizer: {
       "@type": "Organization",

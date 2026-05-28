@@ -95,7 +95,7 @@ export const getCompetitionBySlug = cache(async (value: string) => {
   const year = Number(normalizedSlug.match(/^(\d{4})-/)?.[1]);
 
   if (!Number.isInteger(year)) {
-    return null;
+    return getCompetitionByLegacyId(decoded);
   }
 
   const records = await prisma.competitionSchedule.findMany({
@@ -114,6 +114,14 @@ export const getCompetitionBySlug = cache(async (value: string) => {
 
   return match ?? null;
 });
+
+async function getCompetitionByLegacyId(id: string) {
+  const record = await prisma.competitionSchedule.findUnique({
+    where: { id },
+  });
+
+  return record ? toCompetition(serializePublicCompetitionListItem(record)) : null;
+}
 
 export const getCompetitionIndexingMetaById = cache(async (id: string) => {
   const record = await prisma.competitionSchedule.findUnique({
