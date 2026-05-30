@@ -1,6 +1,7 @@
 import "server-only";
 
 import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import type { CompetitionSchedule } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { getKoreaDateParam } from "@/lib/date";
@@ -18,6 +19,10 @@ import {
 } from "@/lib/competition-taxonomy";
 import { KOREAN_REGION_ORDER } from "@/lib/location";
 import type { Competition } from "@/lib/data";
+import {
+  COMPETITIONS_CACHE_TAG,
+  PUBLIC_DATA_REVALIDATE_SECONDS,
+} from "@/lib/public-cache";
 
 const GLOBAL_MAJOR_LIMIT = 3;
 
@@ -64,6 +69,14 @@ export interface HomeHubData {
 export const getHomeHubData = cache(async (): Promise<HomeHubData> => {
   const today = getKoreaDateParam();
   const seasonYear = Number(today.slice(0, 4));
+
+  return getCachedHomeHubData(today, seasonYear);
+});
+
+const getCachedHomeHubData = unstable_cache(async (
+  today: string,
+  seasonYear: number,
+): Promise<HomeHubData> => {
   const todayDate = new Date(`${today}T00:00:00+09:00`);
 
   const [
@@ -276,6 +289,9 @@ export const getHomeHubData = cache(async (): Promise<HomeHubData> => {
       (item) => item.name,
     ),
   };
+}, ["home-hub-data"], {
+  revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
+  tags: [COMPETITIONS_CACHE_TAG],
 });
 
 function getHomeCategoryGroups(

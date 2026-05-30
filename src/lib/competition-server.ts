@@ -1,6 +1,7 @@
 import "server-only";
 
 import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import type { CompetitionSchedule } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { getKoreaDateParam } from "@/lib/date";
@@ -40,6 +41,10 @@ import {
   type CompetitionListPage,
   type CompetitionPageOptions,
 } from "@/lib/competition-public";
+import {
+  COMPETITIONS_CACHE_TAG,
+  PUBLIC_DATA_REVALIDATE_SECONDS,
+} from "@/lib/public-cache";
 
 interface UpcomingCompetitionContextOptions {
   includeFilters?: boolean;
@@ -63,15 +68,40 @@ export interface CompetitionLandingContext {
   isIndexable: boolean;
 }
 
-export async function getCompetitionSeasonPage(
+type CompetitionListQueryCacheKey = Omit<
+  CompetitionListQuery,
+  "startsFrom" | "startsTo"
+> & {
+  startsFrom?: string;
+  startsTo?: string;
+};
+
+const competitionCacheOptions = {
+  revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
+  tags: [COMPETITIONS_CACHE_TAG],
+};
+
+export const getCompetitionSeasonPage = cache(async (
   seasonYear: number,
   options: Pick<CompetitionPageOptions, "sort" | "startsFrom"> = {},
-): Promise<CompetitionListPage> {
+): Promise<CompetitionListPage> => {
+  const sort = options.sort ?? "date-asc";
+  const startsFrom = options.startsFrom ?? "";
+
+  return getCachedCompetitionSeasonPage(seasonYear, startsFrom, sort);
+});
+
+const getCachedCompetitionSeasonPage = unstable_cache(
+  async (
+    seasonYear: number,
+    startsFrom: string,
+    sort: NonNullable<CompetitionPageOptions["sort"]>,
+  ): Promise<CompetitionListPage> => {
   const query = toCompetitionListQuery(seasonYear, {
     page: 1,
     pageSize: 1,
-    startsFrom: options.startsFrom,
-    sort: options.sort ?? "date-asc",
+    startsFrom: startsFrom || undefined,
+    sort,
   });
   const where = buildCompetitionWhere(query);
   const items = await prisma.competitionSchedule.findMany({
@@ -87,15 +117,26 @@ export async function getCompetitionSeasonPage(
     totalPages: items.length > 0 ? 1 : 0,
     hasNextPage: false,
   };
-}
+  },
+  ["competition-season-page"],
+  competitionCacheOptions,
+);
 
-export const getCompetitionBySlug = cache(async (value: string) => {
+export const getCompetitionBySlug = cache(async (value: string) =>
+  getCachedCompetitionBySlug(value),
+);
+
+const getCachedCompetitionBySlug = unstable_cache(async (value: string) => {
   const decoded = decodeURIComponent(value);
   const normalizedSlug = normalizeCompetitionRouteSlug(decoded);
   const year = Number(normalizedSlug.match(/^(\d{4})-/)?.[1]);
 
   if (!Number.isInteger(year)) {
-    return getCompetitionByLegacyId(decoded);
+    const record = await prisma.competitionSchedule.findUnique({
+      where: { id: decoded },
+    });
+
+    return record ? toCompetition(serializePublicCompetitionListItem(record)) : null;
   }
 
   const records = await prisma.competitionSchedule.findMany({
@@ -113,17 +154,16 @@ export const getCompetitionBySlug = cache(async (value: string) => {
     );
 
   return match ?? null;
-});
+}, ["competition-by-slug"], competitionCacheOptions);
 
-async function getCompetitionByLegacyId(id: string) {
-  const record = await prisma.competitionSchedule.findUnique({
-    where: { id },
-  });
+export const getCompetitionIndexingMetaById = cache(async (id: string) =>
+  getCachedCompetitionIndexingMetaById(id, getKoreaDateParam()),
+);
 
-  return record ? toCompetition(serializePublicCompetitionListItem(record)) : null;
-}
-
-export const getCompetitionIndexingMetaById = cache(async (id: string) => {
+const getCachedCompetitionIndexingMetaById = unstable_cache(async (
+  id: string,
+  today: string,
+) => {
   const record = await prisma.competitionSchedule.findUnique({
     where: { id },
     select: {
@@ -138,11 +178,11 @@ export const getCompetitionIndexingMetaById = cache(async (id: string) => {
 
   return {
     isIndexable: Boolean(
-      record.dateStartsOn && record.dateStartsOn >= getKoreaTodayStart(),
+      record.dateStartsOn && record.dateStartsOn >= getKoreaDayStart(today),
     ),
     lastModified: record.updatedAt,
   };
-});
+}, ["competition-indexing-meta"], competitionCacheOptions);
 
 export async function getUpcomingCompetitionContext(
   options: UpcomingCompetitionContextOptions = {},
@@ -205,17 +245,26 @@ export async function getIndexableCompetitionLandingTaxons() {
 const getUpcomingCompetitionBase = cache(async () => {
   const today = getKoreaDateParam();
   const seasonYear = Number(today.slice(0, 4));
-  const competitionPage = await getCompetitionSeasonPage(seasonYear, {
-    startsFrom: today,
-    sort: "date-asc",
-  });
 
-  return {
-    today,
-    seasonYear,
-    competitionPage,
-  };
+  return getCachedUpcomingCompetitionBase(today, seasonYear);
 });
+
+const getCachedUpcomingCompetitionBase = unstable_cache(
+  async (today: string, seasonYear: number) => {
+    const competitionPage = await getCompetitionSeasonPage(seasonYear, {
+      startsFrom: today,
+      sort: "date-asc",
+    });
+
+    return {
+      today,
+      seasonYear,
+      competitionPage,
+    };
+  },
+  ["upcoming-competition-base"],
+  competitionCacheOptions,
+);
 
 const getUpcomingCompetitionFilters = cache(
   async (seasonYear: number, startsFrom: string) =>
@@ -229,13 +278,21 @@ const getUpcomingCompetitionFilters = cache(
     ),
 );
 
-function getKoreaTodayStart() {
-  return new Date(`${getKoreaDateParam()}T00:00:00+09:00`);
+function getKoreaDayStart(value: string) {
+  return new Date(`${value}T00:00:00+09:00`);
 }
 
-export async function getCompetitionFiltersPayload(
+export const getCompetitionFiltersPayload = cache(async (
   query: CompetitionListQuery,
-): Promise<ApiCompetitionFiltersResponse> {
+): Promise<ApiCompetitionFiltersResponse> =>
+  getCachedCompetitionFiltersPayload(toCompetitionListQueryCacheKey(query)),
+);
+
+const getCachedCompetitionFiltersPayload = unstable_cache(
+  async (
+    queryKey: CompetitionListQueryCacheKey,
+  ): Promise<ApiCompetitionFiltersResponse> => {
+  const query = fromCompetitionListQueryCacheKey(queryKey);
   const baseWhere = buildCompetitionWhere(query);
   const [organizations, registrationStatuses, filterRecords] =
     await Promise.all([
@@ -417,6 +474,29 @@ export async function getCompetitionFiltersPayload(
     flags: flagCounts,
     tiers: tierCounts,
     attributes: attributeCounts,
+  };
+  },
+  ["competition-filters"],
+  competitionCacheOptions,
+);
+
+function toCompetitionListQueryCacheKey(
+  query: CompetitionListQuery,
+): CompetitionListQueryCacheKey {
+  return {
+    ...query,
+    startsFrom: query.startsFrom?.toISOString(),
+    startsTo: query.startsTo?.toISOString(),
+  };
+}
+
+function fromCompetitionListQueryCacheKey(
+  query: CompetitionListQueryCacheKey,
+): CompetitionListQuery {
+  return {
+    ...query,
+    startsFrom: query.startsFrom ? new Date(query.startsFrom) : undefined,
+    startsTo: query.startsTo ? new Date(query.startsTo) : undefined,
   };
 }
 

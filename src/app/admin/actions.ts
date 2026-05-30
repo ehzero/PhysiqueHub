@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import {
   clearAdminSessionCookie,
@@ -10,6 +10,7 @@ import {
   setAdminSessionCookie,
 } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
+import { COMPETITIONS_CACHE_TAG } from "@/lib/public-cache";
 
 export async function loginAdmin(formData: FormData) {
   if (!isAdminPasswordConfigured()) {
@@ -79,6 +80,7 @@ export async function updateCompetitionReview(formData: FormData) {
   });
 
   revalidatePath("/admin");
+  updateTag(COMPETITIONS_CACHE_TAG);
   redirect(getSafeAdminRedirect(formData, intent === "approve-next" ? "nextRedirectTo" : "redirectTo"));
 }
 
