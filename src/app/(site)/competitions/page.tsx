@@ -13,7 +13,7 @@ import { getKoreaYear } from "@/lib/date";
 export const revalidate = 86_400;
 
 function getCompetitionListDescription(seasonYear: number) {
-  return `${seasonYear}년 국내외 보디빌딩·피트니스 대회 일정을 한곳에서 확인하세요. 주최 단체, 지역, 종목, 대회 유형별로 대회를 탐색할 수 있습니다.`;
+  return `${seasonYear}년 국내·해외 단체의 일정을 한곳에서 비교하세요. 종목·유형·지역·단체로 좁히고, 접수 상태를 확인하며 마감일 기준으로 정렬할 수 있습니다.`;
 }
 
 interface CompetitionsPageProps {

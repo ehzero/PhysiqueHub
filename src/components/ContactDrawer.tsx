@@ -1,10 +1,9 @@
 "use client";
 
 import { upload } from "@vercel/blob/client";
-import { ChangeEvent, FormEvent, useEffect, useId, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useId, useRef, useState } from "react";
 import {
   CONTACT_ATTACHMENT_ACCEPT,
-  CONTACT_CATEGORIES,
   MAX_CONTACT_ATTACHMENT_COUNT,
   MAX_CONTACT_ATTACHMENT_SIZE,
   getContactAttachmentContentType,
@@ -15,356 +14,378 @@ import {
 import { SUPPORT_EMAIL } from "@/lib/site";
 import { Icons } from "./Icons";
 
+// Categories shown by the redesigned inquiry form.
+const CATEGORIES = [
+  "대회 등록 요청",
+  "정정 문의",
+  "버그 제보",
+  "광고 문의",
+  "기타 문의",
+] as const;
+
+type Category = (typeof CATEGORIES)[number];
+
+// Comp-related categories that reveal the "관련 대회명" field
+const COMP_CATEGORIES: Category[] = ["대회 등록 요청", "정정 문의"];
+
 interface ContactDrawerProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-type UploadedContactAttachment = {
-  originalName: string;
-  pathname: string;
-  url: string;
-  downloadUrl?: string;
-  contentType: string;
-  size: number;
-  access: "private" | "public";
+type AttachmentPreview = {
+  id: string;
+  file: File;
+  previewUrl: string;
 };
 
-export function ContactDrawer({ isOpen, onClose }: ContactDrawerProps) {
-  const [category, setCategory] = useState<string>(CONTACT_CATEGORIES[0]);
-  const [attachments, setAttachments] = useState<File[]>([]);
-  const [attachmentError, setAttachmentError] = useState("");
-  const [submitMessage, setSubmitMessage] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const attachmentInputId = useId();
-  const formId = useId();
+type SubmitState = "idle" | "submitting" | "done" | "error";
 
+export function ContactDrawer({ isOpen, onClose }: ContactDrawerProps) {
+  const [category, setCategory] = useState<Category>("기타 문의");
+  const [competitionName, setCompetitionName] = useState("");
+  const [attachments, setAttachments] = useState<AttachmentPreview[]>([]);
+  const [submitState, setSubmitState] = useState<SubmitState>("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+  const fileInputId = useId();
+  const formId = useId();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const MAX = Math.min(MAX_CONTACT_ATTACHMENT_COUNT, 6);
+
+  // Close on Escape
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape" && !isSubmitting) onClose();
+      if (e.key === "Escape" && submitState !== "submitting") onClose();
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [isSubmitting, onClose]);
+  }, [onClose, submitState]);
 
-  function handleAttachmentChange(event: ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(event.target.files ?? []);
+  // Lock body scroll when open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [isOpen]);
 
-    if (files.length === 0) return;
+  function handleAttachmentChange(e: ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files ?? []);
+    e.target.value = "";
+    if (!files.length) return;
 
-    const validFiles = files.filter((file) => {
+    const newPreviews: AttachmentPreview[] = [];
+    for (const file of files) {
+      if (attachments.length + newPreviews.length >= MAX) break;
       const contentType = getContactAttachmentContentType(file);
-
-      return (
+      if (
         file.size <= MAX_CONTACT_ATTACHMENT_SIZE &&
         isAllowedContactAttachmentName(file.name) &&
         isAllowedContactAttachmentContentType(contentType)
-      );
+      ) {
+        newPreviews.push({
+          id: Math.random().toString(36).slice(2),
+          file,
+          previewUrl: URL.createObjectURL(file),
+        });
+      }
+    }
+    setAttachments((prev) => [...prev, ...newPreviews]);
+  }
+
+  function removeAttachment(id: string) {
+    setAttachments((prev) => {
+      const item = prev.find((a) => a.id === id);
+      if (item) URL.revokeObjectURL(item.previewUrl);
+      return prev.filter((a) => a.id !== id);
     });
-    const hasOversizedFile = files.some(
-      (file) => file.size > MAX_CONTACT_ATTACHMENT_SIZE,
-    );
-    const hasUnsupportedFile = validFiles.length !== files.length && !hasOversizedFile;
-
-    const nextAttachments = [...attachments, ...validFiles].reduce<File[]>(
-      (uniqueFiles, file) => {
-        const exists = uniqueFiles.some(
-          (item) =>
-            item.name === file.name &&
-            item.size === file.size &&
-            item.lastModified === file.lastModified,
-        );
-
-        return exists ? uniqueFiles : [...uniqueFiles, file];
-      },
-      [],
-    );
-
-    const limitedAttachments = nextAttachments.slice(0, MAX_CONTACT_ATTACHMENT_COUNT);
-    const isOverCount = nextAttachments.length > MAX_CONTACT_ATTACHMENT_COUNT;
-
-    setAttachments(limitedAttachments);
-    setAttachmentError(
-      [
-        hasOversizedFile ? "10MB를 초과한 파일은 제외했어요." : "",
-        hasUnsupportedFile ? "지원하지 않는 형식의 파일은 제외했어요." : "",
-        isOverCount ? "첨부 파일은 최대 5개까지 등록할 수 있어요." : "",
-      ]
-        .filter(Boolean)
-        .join(" "),
-    );
-
-    event.target.value = "";
   }
 
-  function removeAttachment(fileToRemove: File) {
-    setAttachments((current) =>
-      current.filter((file) => file !== fileToRemove),
-    );
-    setAttachmentError("");
+  function resetForm() {
+    setCategory("기타 문의");
+    setCompetitionName("");
+    attachments.forEach((a) => URL.revokeObjectURL(a.previewUrl));
+    setAttachments([]);
+    setSubmitState("idle");
+    setErrorMessage("");
   }
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = event.currentTarget;
-    setAttachmentError("");
-    setSubmitMessage("");
-    setIsSubmitting(true);
-
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
     const formData = new FormData(form);
-    const name = String(formData.get("name") ?? "").trim();
     const email = String(formData.get("email") ?? "").trim();
     const message = String(formData.get("message") ?? "").trim();
     const website = String(formData.get("website") ?? "").trim();
 
+    if (!email || !/.+@.+\..+/.test(email)) return;
+    if (!message) return;
+
+    setSubmitState("submitting");
+    setErrorMessage("");
+
     try {
-      setSubmitMessage(
-        attachments.length > 0 ? "첨부 파일을 업로드하고 있어요." : "문의 내용을 보내고 있어요.",
+      const access = getContactBlobAccess();
+      const uploadedAttachments = await Promise.all(
+        attachments.map(async (a) => {
+          const contentType = getContactAttachmentContentType(a.file);
+          const month = new Date().toISOString().slice(0, 7);
+          const ext = a.file.name.match(/\.[^.]+$/)?.[0]?.toLowerCase() ?? "";
+          const base = a.file.name
+            .slice(0, ext ? -ext.length : undefined)
+            .replace(/[^a-zA-Z0-9._-]/g, "-").replace(/-+/g, "-")
+            .replace(/^-|-$/g, "").slice(0, 80) || "attachment";
+          const pathname = `contact/${month}/${crypto.randomUUID()}-${base}${ext}`;
+          const blob = await upload(pathname, a.file, {
+            access,
+            contentType,
+            handleUploadUrl: "/api/contact/upload",
+            clientPayload: JSON.stringify({ originalName: a.file.name }),
+            multipart: a.file.size > 4 * 1024 * 1024,
+          });
+          return {
+            originalName: a.file.name,
+            pathname: blob.pathname,
+            url: blob.url,
+            downloadUrl: blob.downloadUrl,
+            contentType,
+            size: a.file.size,
+            access,
+          };
+        }),
       );
 
-      const uploadedAttachments = await uploadAttachments(attachments);
       const response = await fetch("/api/contact", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           category,
-          name,
+          name: competitionName || undefined,
           email,
           message,
           website,
           attachments: uploadedAttachments,
         }),
       });
-      const result = (await response.json().catch(() => ({}))) as {
-        error?: string;
-      };
-
-      if (!response.ok) {
-        throw new Error(result.error || "문의 전송에 실패했어요.");
-      }
-
-      form.reset();
-      setAttachments([]);
-      setCategory(CONTACT_CATEGORIES[0]);
-      setSubmitMessage("문의가 접수되었습니다. 확인 후 답변드릴게요.");
-    } catch (error) {
-      setSubmitMessage(
-        error instanceof Error ? error.message : "문의 전송에 실패했어요.",
-      );
-    } finally {
-      setIsSubmitting(false);
+      const result = (await response.json().catch(() => ({}))) as { error?: string };
+      if (!response.ok) throw new Error(result.error || "문의 전송에 실패했어요.");
+      setSubmitState("done");
+    } catch (err) {
+      setSubmitState("error");
+      setErrorMessage(err instanceof Error ? err.message : "문의 전송에 실패했어요.");
     }
   }
 
+  function handleClose() {
+    if (submitState === "submitting") return;
+    onClose();
+    setTimeout(resetForm, 280);
+  }
+
+  const showCompField = COMP_CATEGORIES.includes(category);
+  const isSubmitting = submitState === "submitting";
+  const isDone = submitState === "done";
+
   return (
-    <>
+    <div
+      className={`inq-backdrop${isOpen ? " is-open" : ""}`}
+      onClick={(e) => { if (e.target === e.currentTarget) handleClose(); }}
+      aria-hidden={!isOpen}
+    >
       <div
-        className={`drawer-back ${isOpen ? "open" : ""}`}
-        onClick={isSubmitting ? undefined : onClose}
-      />
-      <aside className={`drawer ${isOpen ? "open" : ""}`}>
-        <div className="drawer-head">
-          <span className="crumb">문의</span>
-          <div className="drawer-actions">
-            <button className="icon-btn" onClick={onClose} aria-label="close">
-              {Icons.close}
-            </button>
-          </div>
-        </div>
-
-        <div className="drawer-body contact-body">
-          <div className="contact-intro">
-            <h2 className="page-title">문의하기</h2>
-            <p className="page-subtitle">
-              대회 정보 등록, 일정 정정, 서비스 오류, 기타 문의를 남겨주세요.
-              확인 후 필요한 내용을 반영하겠습니다. 이메일 문의는{" "}
-              <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>로 보내주세요.
-            </p>
-          </div>
-
-          <form className="contact-form" id={formId} onSubmit={handleSubmit}>
-            <input type="hidden" name="category" value={category} />
-            <label className="contact-honeypot">
-              <span>웹사이트</span>
-              <input
-                name="website"
-                tabIndex={-1}
-                autoComplete="off"
-              />
-            </label>
-
-            <fieldset className="contact-fieldset">
-              <legend>문의 유형</legend>
-              <div className="contact-category-grid">
-                {CONTACT_CATEGORIES.map((item) => (
-                  <button
-                    key={item}
-                    type="button"
-                    className={`contact-category ${category === item ? "on" : ""}`}
-                    onClick={() => setCategory(item)}
-                    disabled={isSubmitting}
-                  >
-                    {item}
-                  </button>
-                ))}
-              </div>
-            </fieldset>
-
-            <label className="contact-field">
-              <span>이름</span>
-              <input
-                name="name"
-                placeholder="성함 또는 단체명"
-                required
-                minLength={2}
-                maxLength={80}
-                disabled={isSubmitting}
-              />
-            </label>
-
-            <label className="contact-field">
-              <span>이메일</span>
-              <input
-                name="email"
-                type="email"
-                placeholder="reply@example.com"
-                required
-                disabled={isSubmitting}
-              />
-            </label>
-
-            <label className="contact-field">
-              <span>문의 내용</span>
-              <textarea
-                name="message"
-                placeholder={`${category} 내용을 입력해주세요.`}
-                rows={7}
-                required
-                minLength={10}
-                maxLength={5000}
-                disabled={isSubmitting}
-              />
-            </label>
-
-            <div className="contact-attachments">
-              <input
-                id={attachmentInputId}
-                className="contact-file-input"
-                type="file"
-                name="attachments"
-                accept={CONTACT_ATTACHMENT_ACCEPT}
-                multiple
-                onChange={handleAttachmentChange}
-                disabled={isSubmitting}
-              />
-              <label className="contact-file-button" htmlFor={attachmentInputId}>
-                {Icons.paperclip}
-                <span>파일 첨부</span>
-              </label>
-              <p className="contact-file-help">
-                이미지, PDF, 문서 파일을 최대 5개까지 첨부할 수 있어요. 파일당
-                최대 10MB까지 지원합니다.
-              </p>
-
-              {attachmentError && (
-                <p className="contact-file-error">{attachmentError}</p>
-              )}
-
-              {attachments.length > 0 && (
-                <ul className="contact-file-list">
-                  {attachments.map((file) => (
-                    <li
-                      key={`${file.name}-${file.size}-${file.lastModified}`}
-                      className="contact-file-item"
-                    >
-                      <span className="contact-file-name">{file.name}</span>
-                      <span className="contact-file-size">
-                        {formatFileSize(file.size)}
-                      </span>
-                      <button
-                        type="button"
-                        className="contact-file-remove"
-                        onClick={() => removeAttachment(file)}
-                        aria-label={`${file.name} 첨부 삭제`}
-                        disabled={isSubmitting}
-                      >
-                        {Icons.trash}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
+        className="inq-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-label="문의하기"
+      >
+        {/* Header */}
+        <div className="inq-head">
+          <div>
+            <div className="inq-title">문의하기</div>
+            <div className="inq-subtitle">
+              대회 등록·정정부터 버그·광고까지, 무엇이든 알려주세요.
+              영업일 기준 1–2일 내 회신드립니다.
             </div>
-
-            {submitMessage && (
-              <p className="contact-submit-message" aria-live="polite">
-                {submitMessage}
-              </p>
-            )}
-          </form>
-        </div>
-
-        <div className="drawer-actions-row">
-          <button
-            className="cta-btn accent"
-            disabled={isSubmitting}
-            form={formId}
-            type="submit"
-          >
-            {isSubmitting ? "전송 중..." : "문의 보내기 →"}
+          </div>
+          <button className="inq-x" onClick={handleClose} aria-label="닫기" type="button">
+            {Icons.close}
           </button>
         </div>
-      </aside>
-    </>
+
+        {/* Body */}
+        <div className="inq-body">
+          {!isDone ? (
+            <form id={formId} onSubmit={handleSubmit} autoComplete="off">
+              {/* Honeypot */}
+              <label style={{ position: "absolute", opacity: 0, pointerEvents: "none" }}>
+                <span>웹사이트</span>
+                <input name="website" tabIndex={-1} autoComplete="off" />
+              </label>
+
+              {/* Category chips */}
+              <div className="inq-field">
+                <label className="inq-label">
+                  문의 유형<span className="inq-req">*</span>
+                </label>
+                <div className="inq-cats">
+                  {CATEGORIES.map((c) => (
+                    <button
+                      key={c}
+                      type="button"
+                      className={`inq-chip${category === c ? " is-active" : ""}`}
+                      onClick={() => setCategory(c)}
+                      disabled={isSubmitting}
+                    >
+                      {c}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Competition name (conditional) */}
+              <div className={`inq-field inq-comp-field${showCompField ? " visible" : ""}`}>
+                <label className="inq-label" htmlFor="inq-comp-name">관련 대회명</label>
+                <input
+                  className="inq-input"
+                  id="inq-comp-name"
+                  placeholder="예: 2026 서울 피트니스 챔피언십"
+                  value={competitionName}
+                  onChange={(e) => setCompetitionName(e.target.value)}
+                  disabled={isSubmitting}
+                />
+              </div>
+
+              {/* Email */}
+              <div className="inq-field">
+                <label className="inq-label" htmlFor="inq-email">
+                  회신 이메일<span className="inq-req">*</span>
+                </label>
+                <input
+                  className="inq-input"
+                  id="inq-email"
+                  name="email"
+                  type="email"
+                  placeholder={SUPPORT_EMAIL}
+                  required
+                  disabled={isSubmitting}
+                />
+              </div>
+
+              {/* Message */}
+              <div className="inq-field">
+                <label className="inq-label" htmlFor="inq-msg">
+                  문의 내용<span className="inq-req">*</span>
+                </label>
+                <textarea
+                  className="inq-textarea"
+                  id="inq-msg"
+                  name="message"
+                  placeholder="문의 내용을 자세히 적어주세요. 대회 등록·정정 요청 시 일정·장소·단체 정보를 함께 적어주시면 빠르게 처리됩니다."
+                  required
+                  minLength={10}
+                  maxLength={5000}
+                  disabled={isSubmitting}
+                />
+              </div>
+
+              {/* Image attachments */}
+              <div className="inq-field">
+                <label className="inq-label">이미지 첨부</label>
+                <div className="inq-attach">
+                  {attachments.map((a) => (
+                    <div key={a.id} className="inq-thumb">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={a.previewUrl} alt="" />
+                      <button
+                        type="button"
+                        className="inq-rm"
+                        onClick={() => removeAttachment(a.id)}
+                        aria-label="삭제"
+                        disabled={isSubmitting}
+                      >
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                      </button>
+                    </div>
+                  ))}
+                  {attachments.length < MAX && (
+                    <button
+                      type="button"
+                      className="inq-add"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={isSubmitting}
+                    >
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+                      <span>사진 추가</span>
+                    </button>
+                  )}
+                </div>
+                <div className="inq-hint">
+                  {attachments.length > 0
+                    ? `${attachments.length} / ${MAX}장 첨부됨`
+                    : `스크린샷·포스터·정정 근거 등 최대 ${MAX}장 (JPG·PNG)`}
+                </div>
+                <input
+                  ref={fileInputRef}
+                  id={fileInputId}
+                  type="file"
+                  accept={CONTACT_ATTACHMENT_ACCEPT}
+                  multiple
+                  hidden
+                  onChange={handleAttachmentChange}
+                  disabled={isSubmitting}
+                />
+              </div>
+
+              {submitState === "error" && errorMessage && (
+                <p className="inq-error">{errorMessage}</p>
+              )}
+            </form>
+          ) : (
+            /* Success state */
+            <div className="inq-success">
+              <div className="inq-success-ico">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 6 9 17l-5-5"/>
+                </svg>
+              </div>
+              <div className="inq-tag">
+                {category}
+                {attachments.length > 0 ? ` · 이미지 ${attachments.length}장` : ""}
+              </div>
+              <h3>문의가 접수되었습니다</h3>
+              <p>
+                입력하신 이메일로 영업일 기준 1–2일 내<br />
+                답변드리겠습니다. 감사합니다.
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="inq-foot">
+          {!isDone ? (
+            <>
+              <button className="inq-cancel" type="button" onClick={handleClose} disabled={isSubmitting}>
+                취소
+              </button>
+              <button
+                className="inq-submit"
+                type="submit"
+                form={formId}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "전송 중…" : "문의 보내기"}
+              </button>
+            </>
+          ) : (
+            <button className="inq-submit" type="button" onClick={handleClose}>
+              확인
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
   );
-}
-
-async function uploadAttachments(files: File[]): Promise<UploadedContactAttachment[]> {
-  const access = getContactBlobAccess();
-
-  return Promise.all(
-    files.map(async (file) => {
-      const contentType = getContactAttachmentContentType(file);
-      const blob = await upload(createContactPathname(file), file, {
-        access,
-        contentType,
-        handleUploadUrl: "/api/contact/upload",
-        clientPayload: JSON.stringify({ originalName: file.name }),
-        multipart: file.size > 4 * 1024 * 1024,
-      });
-
-      return {
-        originalName: file.name,
-        pathname: blob.pathname,
-        url: blob.url,
-        downloadUrl: blob.downloadUrl,
-        contentType,
-        size: file.size,
-        access,
-      };
-    }),
-  );
-}
-
-function createContactPathname(file: File) {
-  const month = new Date().toISOString().slice(0, 7);
-  const extension = file.name.match(/\.[^.]+$/)?.[0]?.toLowerCase() ?? "";
-  const basename = file.name
-    .slice(0, extension ? -extension.length : undefined)
-    .replace(/[^a-zA-Z0-9._-]/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "")
-    .slice(0, 80);
-  const safeBasename = basename || "attachment";
-
-  return `contact/${month}/${crypto.randomUUID()}-${safeBasename}${extension}`;
-}
-
-function formatFileSize(bytes: number) {
-  if (bytes < 1024) return `${bytes}B`;
-  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)}KB`;
-
-  return `${(bytes / 1024 / 1024).toFixed(1)}MB`;
 }

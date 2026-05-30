@@ -1,7 +1,9 @@
 export const CONTACT_CATEGORIES = [
   "대회 등록 요청",
   "정정 요청",
+  "정정 문의",
   "버그 제보",
+  "광고 문의",
   "기타 문의",
 ] as const;
 

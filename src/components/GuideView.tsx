@@ -1,11 +1,10 @@
-import Link from "next/link";
+"use client";
+
+import { useState, useEffect, useRef } from "react";
 import { CATEGORY_GUIDE } from "@/lib/data";
 import { Icons } from "./Icons";
 
 const A = "#B85C3C";
-const MUTE = "#86827C";
-const FAINT = "#E8E5DE";
-const PAPER = "#F7F5F0";
 
 const ORGANIZATION_GUIDE = [
   {
@@ -60,165 +59,235 @@ const ORGANIZATION_GUIDE = [
   },
 ];
 
-export function GuideView() {
-  return (
-    <main className="hub-page guide-hub-page">
-      <CategoriesSection />
-      <OrganizationsSection />
-    </main>
-  );
-}
+const CAUTION_SVG = (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+    <path d="M12 9v4"/><path d="M12 17h.01"/>
+  </svg>
+);
 
-function CategoriesSection() {
-  return (
-    <section
-      id="divisions"
-      className="hub-section guide-hub-anchor"
-      style={{ background: "#fff" }}
-    >
-      <span id="categories" className="guide-hub-legacy-anchor" aria-hidden="true" />
-      <div className="container">
-        <SectionHead
-          eyebrow="Guide 01 · By Division"
-          title="종목은 이름보다 기준으로 비교하세요."
-          body="같은 종목명이라도 단체별로 체급, 복장, 포즈, 평가 비중이 달라질 수 있습니다. 각 항목을 열어 평가 핵심과 확인 포인트를 비교하세요."
-          titleTag="h1"
-        />
-        <div className="guide-hub-accordion">
-          {CATEGORY_GUIDE.map((guide, index) => (
-            <details className="guide-hub-item" key={guide.key}>
-              <summary>
-                <span className="guide-hub-item-num mono">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <span className="guide-hub-item-copy">
-                  <h2>{guide.key}</h2>
-                  <span>{guide.desc}</span>
-                </span>
-                <span className="guide-hub-item-icon">{Icons.chevronDown}</span>
-              </summary>
-              <div className="guide-hub-item-panel">
-                <div className="guide-hub-meta">
-                  <div>
-                    <span>분류</span>
-                    <strong>{guide.scope}</strong>
-                  </div>
-                  <div>
-                    <span>주요 운영 단체</span>
-                    <strong>{guide.organizations}</strong>
-                  </div>
-                </div>
-                <div className="guide-hub-detail-grid">
-                  <GuidePointList title="평가 핵심" items={guide.judgingPoints} />
-                  <GuidePointList title="출전 전 확인" items={guide.checkpoints} />
-                </div>
-                <p className="guide-hub-caution">{guide.caution}</p>
-              </div>
-            </details>
-          ))}
-        </div>
-        <GuideCta href="/competitions" label="종목별 보디빌딩·피트니스 대회 목록" />
-      </div>
-    </section>
-  );
-}
-
-function OrganizationsSection() {
-  return (
-    <section
-      id="federations"
-      className="hub-section hub-section-last guide-hub-anchor"
-      style={{ background: PAPER, borderTop: `1px solid ${FAINT}` }}
-    >
-      <span id="organizations" className="guide-hub-legacy-anchor" aria-hidden="true" />
-      <div className="container">
-        <SectionHead
-          eyebrow="Guide 02 · By Federation"
-          title="단체를 고르면 출전 루트가 보입니다."
-          body="단체마다 종목명, 심사 기준, 도핑 정책, 프로카드 또는 국가대표 루트가 다릅니다. 같은 대회처럼 보여도 준비 전략은 달라질 수 있습니다."
-        />
-        <div className="guide-hub-org-grid">
-          {ORGANIZATION_GUIDE.map((org) => (
-            <article className="guide-hub-org-card hub-lift-card" key={org.name}>
-              <div className="guide-hub-org-scope">{org.scope}</div>
-              <h3>{org.name}</h3>
-              <p>{org.desc}</p>
-              <ul>
-                {org.points.map((point) => (
-                  <li key={point}>{point}</li>
-                ))}
-              </ul>
-            </article>
-          ))}
-        </div>
-
-        <div className="guide-hub-band">
-          <div>
-            <div className="hub-eyebrow" style={{ color: A }}>
-              Practical Rule
-            </div>
-            <h3 className="hub-h2">단체 선택은 목표 역산입니다.</h3>
-          </div>
-          <p>
-            프로카드가 목표인지, 내추럴 인증이 중요한지, 전국체전·국가대표
-            루트가 필요한지에 따라 같은 종목도 적합한 단체가 달라집니다.
-            접수 전에는 공식 룰북, 출전 자격, 도핑 정책, 종목 운영 여부를
-            반드시 함께 확인하세요.
-          </p>
-        </div>
-        <GuideCta href="/competitions" label="단체별 보디빌딩·피트니스 대회 목록" />
-      </div>
-    </section>
-  );
-}
-
-function SectionHead({
-  eyebrow,
+function AccordionItem({
   title,
+  scope,
   body,
-  titleTag = "h2",
+  open,
+  onToggle,
 }: {
-  eyebrow: string;
   title: string;
-  body: string;
-  titleTag?: "h1" | "h2";
+  scope: string;
+  body: React.ReactNode;
+  open: boolean;
+  onToggle: () => void;
 }) {
-  const TitleTag = titleTag;
+  return (
+    <div className={`acc-item${open ? " is-open" : ""}`}>
+      <button
+        className="acc-head"
+        aria-expanded={open}
+        onClick={onToggle}
+      >
+        <span className="acc-head-main">
+          <div className="acc-title">{title}</div>
+          <div className="acc-scope">{scope}</div>
+        </span>
+        <span className="acc-chev">{Icons.chevronDown}</span>
+      </button>
+      <div className={`acc-body${open ? "" : " is-collapsed"}`} aria-hidden={!open}>
+        {body}
+      </div>
+    </div>
+  );
+}
+
+function DivisionBody({ guide }: { guide: typeof CATEGORY_GUIDE[0] }) {
+  return (
+    <>
+      <p className="g-lead">{guide.desc}</p>
+      <div className="g-meta">
+        <span className="g-meta-chip"><b>구분</b> · {guide.scope}</span>
+        <span className="g-meta-chip"><b>주요 단체</b> · {guide.organizations}</span>
+      </div>
+      <div className="g-cols">
+        <div>
+          <div className="g-block-head">심사 포인트</div>
+          <ul className="g-list">
+            {guide.judgingPoints.map((p) => <li key={p}>{p}</li>)}
+          </ul>
+        </div>
+        <div>
+          <div className="g-block-head">준비 체크리스트</div>
+          <ul className="g-list is-check">
+            {guide.checkpoints.map((p) => <li key={p}>{p}</li>)}
+          </ul>
+        </div>
+      </div>
+      <div className="g-caution">
+        {CAUTION_SVG}
+        <span><b>주의</b> · {guide.caution}</span>
+      </div>
+    </>
+  );
+}
+
+function OrgBody({ org }: { org: typeof ORGANIZATION_GUIDE[0] }) {
+  return (
+    <>
+      <p className="g-lead">{org.desc}</p>
+      <div className="g-cols-1">
+        <div>
+          <div className="g-block-head">출전 전 확인 포인트</div>
+          <ul className="g-list">
+            {org.points.map((p) => <li key={p}>{p}</li>)}
+          </ul>
+        </div>
+      </div>
+    </>
+  );
+}
+
+export function GuideView() {
+  const allAccordionKeys = [
+    ...CATEGORY_GUIDE.map((_, i) => `division:${i}`),
+    ...ORGANIZATION_GUIDE.map((_, i) => `organization:${i}`),
+  ];
+  const initialOpenKeys = ["division:0", "organization:0"];
+  const [openKeys, setOpenKeys] = useState<Set<string>>(
+    () => new Set(initialOpenKeys),
+  );
+  const allOpen = openKeys.size === allAccordionKeys.length;
+  const divRef = useRef<HTMLElement>(null);
+  const orgRef = useRef<HTMLElement>(null);
+  const tabDivRef = useRef<HTMLAnchorElement>(null);
+  const tabOrgRef = useRef<HTMLAnchorElement>(null);
+
+  // Sync active tab on scroll
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY + 150;
+      const orgTop = orgRef.current?.offsetTop ?? 0;
+      const isOrg = orgTop <= y;
+      tabDivRef.current?.classList.toggle("is-active", !isOrg);
+      tabOrgRef.current?.classList.toggle("is-active", isOrg);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  function toggleAccordion(key: string) {
+    setOpenKeys((current) => {
+      const next = new Set(current);
+
+      if (next.has(key)) {
+        next.delete(key);
+      } else {
+        next.add(key);
+      }
+
+      return next;
+    });
+  }
+
+  function toggleAll() {
+    setOpenKeys(() =>
+      allOpen ? new Set() : new Set(allAccordionKeys),
+    );
+  }
 
   return (
-    <div className="hub-section-head">
-      <div>
-        <div className="hub-eyebrow" style={{ color: A }}>
-          {eyebrow}
-        </div>
-        <TitleTag className="hub-h2">{title}</TitleTag>
-        <p className="hub-section-body" style={{ color: MUTE }}>
-          {body}
+    <main>
+      {/* Page head */}
+      <div className="g-page-container g-head">
+        <span className="hub-eyebrow g-eyebrow" style={{ color: A }}>가이드 · Guide</span>
+        <h1 className="g-title">대회를 준비하기 전에.</h1>
+        <p className="g-sub">
+          종목과 단체에 따라 복장·포징·심사 기준과 출전 자격이 다릅니다.
+          종목별·단체별 핵심 차이를 먼저 확인하고, 세부 규정과 일정은 각 단체·주최측 공식 공지를 함께 확인하세요.
         </p>
       </div>
-    </div>
-  );
-}
 
-function GuidePointList({ title, items }: { title: string; items: string[] }) {
-  return (
-    <section>
-      <h3>{title}</h3>
-      <ul>
-        {items.map((item) => (
-          <li key={item}>{item}</li>
-        ))}
-      </ul>
-    </section>
-  );
-}
+      {/* Sticky tabs */}
+      <div className="g-tabs">
+        <div className="g-tabs-row">
+          <a
+            ref={tabDivRef}
+            className="g-tab is-active"
+            href="#division"
+          >
+            종목별 가이드
+          </a>
+          <a
+            ref={tabOrgRef}
+            className="g-tab"
+            href="#organization"
+          >
+            단체별 가이드
+          </a>
+          <button
+            className="g-expand-btn"
+            onClick={toggleAll}
+          >
+            {allOpen ? "모두 접기" : "모두 펼치기"}
+          </button>
+        </div>
+      </div>
 
-function GuideCta({ href, label }: { href: string; label: string }) {
-  return (
-    <div className="guide-hub-actions">
-      <Link href={href} className="hub-btn-dark" prefetch={false}>
-        {label} {Icons.arrow}
-      </Link>
-    </div>
+      {/* Content */}
+      <div className="g-page-container g-foot-pad">
+        {/* Division section */}
+        <span id="divisions" className="guide-hub-legacy-anchor" aria-hidden="true" />
+        <span id="categories" className="guide-hub-legacy-anchor" aria-hidden="true" />
+        <section
+          ref={divRef}
+          id="division"
+          className="g-section"
+        >
+          <div className="g-section-eyebrow">By Division</div>
+          <h2 className="g-section-title">종목별 가이드</h2>
+          <p className="g-section-desc">
+            맨즈 피지크·클래식 피지크·비키니·웰니스 등 주요 종목의 심사 포인트와 준비 체크리스트를 정리했습니다.
+          </p>
+          <div>
+            {CATEGORY_GUIDE.map((guide, i) => (
+              <AccordionItem
+                key={guide.key}
+                title={guide.key}
+                scope={guide.scope}
+                open={openKeys.has(`division:${i}`)}
+                onToggle={() => toggleAccordion(`division:${i}`)}
+                body={<DivisionBody guide={guide} />}
+              />
+            ))}
+          </div>
+        </section>
+
+        {/* Organization section */}
+        <span id="federations" className="guide-hub-legacy-anchor" aria-hidden="true" />
+        <span id="organizations" className="guide-hub-legacy-anchor" aria-hidden="true" />
+        <section
+          ref={orgRef}
+          id="organization"
+          className="g-section"
+        >
+          <div className="g-section-eyebrow">By Organization</div>
+          <h2 className="g-section-title">단체별 가이드</h2>
+          <p className="g-section-desc">
+            KBBF·IFBB Pro·NABBA·내추럴 단체 등 단체별 출전 루트와 규정 차이를 비교해보세요. 같은 종목명이라도 단체별로 기준이 다를 수 있습니다.
+          </p>
+          <div>
+            {ORGANIZATION_GUIDE.map((org, i) => (
+              <AccordionItem
+                key={org.name}
+                title={org.name}
+                scope={org.scope}
+                open={openKeys.has(`organization:${i}`)}
+                onToggle={() => toggleAccordion(`organization:${i}`)}
+                body={<OrgBody org={org} />}
+              />
+            ))}
+          </div>
+        </section>
+      </div>
+    </main>
   );
 }

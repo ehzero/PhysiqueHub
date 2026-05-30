@@ -31,6 +31,14 @@ export function getCompetitionLocationLabel(competition: Competition) {
   return `${region} · ${venue}`;
 }
 
+export function hasReliableCompetitionLocation(
+  competition: Pick<Competition, "region" | "venue">,
+) {
+  const locationText = `${competition.venue || ""} ${competition.region || ""}`.trim();
+
+  return Boolean(locationText) && !isUncertainText(locationText);
+}
+
 export function getCompetitionRegistrationLabel(
   competition: Competition,
   today?: Date | null,

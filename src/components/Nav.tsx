@@ -77,14 +77,16 @@ export function Nav({ route, savedCount, onOpenContact }: NavProps) {
         </div>
       </div>
 
-      {/* Mobile tabbar */}
+      {/* Mobile tabbar — 4 tabs: 홈 · 대회 목록 · 가이드 · 내 대회 (문의는 헤더 아이콘으로) */}
       <nav className="mobile-tabbar" aria-label="주요 메뉴">
         <Link
           className={`mobile-tab ${route === "home" ? "active" : ""}`}
           href="/"
           prefetch
         >
-          {Icons.home}
+          <svg className="mt-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5"/><path d="M9.5 21v-6h5v6"/>
+          </svg>
           <span>홈</span>
         </Link>
         <Link
@@ -92,7 +94,9 @@ export function Nav({ route, savedCount, onOpenContact }: NavProps) {
           href="/competitions"
           prefetch
         >
-          {Icons.list}
+          <svg className="mt-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/>
+          </svg>
           <span>대회 목록</span>
         </Link>
         <Link
@@ -100,17 +104,11 @@ export function Nav({ route, savedCount, onOpenContact }: NavProps) {
           href="/guide"
           prefetch={false}
         >
-          {Icons.book}
+          <svg className="mt-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          </svg>
           <span>가이드</span>
         </Link>
-        <button
-          className="mobile-tab mobile-tab-button"
-          type="button"
-          onClick={onOpenContact}
-        >
-          {Icons.contact}
-          <span>문의</span>
-        </button>
         <Link
           className={`mobile-tab ${route === "saved" ? "active" : ""}`}
           href="/saved"
@@ -121,7 +119,9 @@ export function Nav({ route, savedCount, onOpenContact }: NavProps) {
             {savedCount > 0 && (
               <span className="mobile-tab-badge mono">{savedCount}</span>
             )}
-            {Icons.bookmark}
+            <svg className="mt-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+            </svg>
           </span>
           <span>내 대회</span>
         </Link>

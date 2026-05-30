@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useRef, useEffect } from "react";
 import { Competition, Filters } from "@/lib/data";
 import { COMPETITION_TIER_LABELS } from "@/lib/competition-classification";
 import type { CompetitionFilterOptions } from "@/lib/competition-public";
@@ -12,7 +12,6 @@ import { FilterRail } from "./FilterRail";
 import { EmptyState, PageMain } from "./PageLayout";
 
 const ACCENT = "#B85C3C";
-const MUTE = "#86827C";
 
 const MONTH_KR = [
   "1월", "2월", "3월", "4월", "5월", "6월",
@@ -61,6 +60,34 @@ export function ListView({
 
   const [sortKey, setSortKey] = useState<SortKey>("date");
   const [viewMode, setViewMode] = useState<ViewMode>("list");
+  const [sortOpen, setSortOpen] = useState(false);
+  const [filterSheetOpen, setFilterSheetOpen] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const sortDropRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (sortDropRef.current && !sortDropRef.current.contains(e.target as Node)) {
+        setSortOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  useEffect(() => {
+    function handleSearchShortcut(event: KeyboardEvent) {
+      if (event.defaultPrevented || event.key.toLowerCase() !== "k") return;
+      if (!event.metaKey && !event.ctrlKey) return;
+
+      event.preventDefault();
+      searchInputRef.current?.focus();
+      searchInputRef.current?.select();
+    }
+
+    window.addEventListener("keydown", handleSearchShortcut);
+    return () => window.removeEventListener("keydown", handleSearchShortcut);
+  }, []);
 
   const segmented = useMemo(() => {
     if (scope === "domestic") return comps.filter((c) => c.country === "KR");
@@ -81,13 +108,17 @@ export function ListView({
   }, [segmented, sortKey]);
 
   const byMonth = useMemo(() => {
-    const groups = new Map<number, Competition[]>();
+    const groups = new Map<string, Competition[]>();
     for (const c of sorted) {
-      const m = new Date(c.date).getMonth();
-      if (!groups.has(m)) groups.set(m, []);
-      groups.get(m)!.push(c);
+      const d = new Date(c.date + "T00:00:00");
+      const key = `${d.getFullYear()}-${d.getMonth()}`;
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key)!.push(c);
     }
-    return Array.from(groups.entries()).sort(([a], [b]) => a - b);
+    return Array.from(groups.entries()).map(([key, items]) => {
+      const [year, month] = key.split("-").map(Number);
+      return { year, month, items };
+    });
   }, [sorted]);
 
   const domesticCount = useMemo(
@@ -219,230 +250,300 @@ export function ListView({
     { id: "overseas", label: "해외 대회", count: overseasCount },
   ];
 
+  const sortOptions: { key: SortKey; label: string }[] = [
+    { key: "date", label: "빠른 일정순" },
+    { key: "deadline", label: "접수 마감순" },
+  ];
+  const currentSortLabel = sortOptions.find((o) => o.key === sortKey)?.label ?? sortOptions[0].label;
+
   return (
     <PageMain className="competition-index">
-      {/* ── Page intro ─────────────────────────────────────────────── */}
-      <section className="comp-intro-section">
+      {/* ── Page head ─────────────────────────────────────── */}
+      <div className="lv-head">
         <div className="container">
-          <div className="comp-intro-grid">
-            <div className="comp-intro-left">
-              <div className="hub-eyebrow" style={{ color: ACCENT, marginBottom: 14 }}>
-                ● Competitions · 대회 목록
-              </div>
-              <h1 className="comp-intro-h1">
-                대회 일정을{" "}
-                <span style={{ color: ACCENT }}>조건별로</span>{" "}
-                찾아보세요.
-              </h1>
-              <p className="comp-intro-body">{description}</p>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* ── Search bar ─────────────────────────────────────────────── */}
-      <section className="comp-search-section">
-        <div className="container">
-          <label className="comp-search-bar">
-            <span className="comp-search-icon">{Icons.search}</span>
-            <input
-              className="comp-search-input"
-              placeholder="대회명·단체·지역으로 검색 (예: IFBB Pro, KBBF, 서울)"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            {search && (
-              <button className="comp-search-clear" onClick={() => setSearch("")}>
-                {Icons.close}
-              </button>
-            )}
-            <kbd className="comp-search-kbd">⌘ K</kbd>
-          </label>
-        </div>
-      </section>
-
-      {/* ── Segment tabs ───────────────────────────────────────────── */}
-      <div className="comp-segment-tabs-wrap">
-        <div className="container">
-          <div className="comp-segment-tabs">
-            {segmentTabs.map((t) => (
-              <button
-                key={t.id}
-                className={`comp-segment-tab${scope === t.id ? " active" : ""}`}
-                onClick={() => setScope(t.id)}
-              >
-                {t.label}
-                <span className="comp-segment-count mono">{t.count}</span>
-              </button>
-            ))}
-          </div>
+          <span className="hub-eyebrow lv-eyebrow">전체 대회 · By Schedule</span>
+          <h1 className="lv-title">
+            보디빌딩·피트니스 대회 목록을{" "}
+            <span style={{ color: ACCENT }}>한눈에.</span>
+          </h1>
+          <p className="lv-sub">{description}</p>
         </div>
       </div>
 
-      {/* ── Body: sidebar + list ────────────────────────────────────── */}
-      <section className="comp-body-section">
-        <div className="container">
-          <div className="list-layout">
-            <FilterRail
-              filters={filters}
-              setFilters={setFilters}
-              allComps={allComps}
-              today={today}
-              filterOptions={filterOptions}
-            />
+      {/* ── Sticky segment bar ─────────────────────────────── */}
+      <div className="lv-segbar">
+        <div className="container lv-segrow">
+          <div className="lv-segs">
+            {segmentTabs.map((t) => (
+              <button
+                key={t.id}
+                className={`lv-seg${scope === t.id ? " is-active" : ""}`}
+                onClick={() => setScope(t.id)}
+              >
+                {t.label}
+                <span className="cnt mono">{t.count}</span>
+              </button>
+            ))}
+          </div>
+          <span className="lv-segcount mono">
+            결과 <b>{sorted.length.toLocaleString("ko-KR")}</b>개
+          </span>
+        </div>
+      </div>
 
-            <div>
-              {/* Active chips */}
-              {hasActiveFilters && (
-                <div className="comp-active-chips">
-                  <span className="comp-chips-label mono">
-                    적용 중 {activeFilterChips.length}
-                  </span>
-                  {activeFilterChips.map((chip) => (
-                    <span key={chip.key} className="comp-chip">
-                      {chip.label}
-                      <button
-                        className="comp-chip-remove"
-                        onClick={chip.onRemove}
-                        aria-label={`${chip.label} 필터 제거`}
-                      >
-                        {Icons.close}
-                      </button>
-                    </span>
-                  ))}
-                  <span className="comp-chips-sep" />
+      {/* ── Body: filter rail + main content ───────────────── */}
+      <div className="lv-body-wrap">
+        <div className="container lv-body-grid">
+          <FilterRail
+            filters={filters}
+            setFilters={setFilters}
+            allComps={allComps}
+            today={today}
+            filterOptions={filterOptions}
+          />
+
+          <div className="lv-main">
+            {/* Toolbar: search + sort controls */}
+            <div className="lv-toolbar">
+              {/* Search bar */}
+              <label className="lv-search">
+                <span className="lv-search-ico">{Icons.search}</span>
+                <input
+                  ref={searchInputRef}
+                  className="lv-search-input"
+                  placeholder="대회명·단체·지역으로 검색 (예: IFBB Pro, KBBF, 서울)"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+                {search && (
                   <button
-                    className="comp-chips-reset"
+                    className="lv-search-clear"
+                    type="button"
+                    onClick={() => setSearch("")}
+                  >
+                    {Icons.close}
+                  </button>
+                )}
+                <kbd className="lv-search-kbd">⌘ K</kbd>
+              </label>
+
+              {/* Sort + view toggle */}
+              <div className="lv-sort">
+                {/* Mobile filter button */}
+                <button
+                  className="lv-filter-btn"
+                  type="button"
+                  onClick={() => setFilterSheetOpen(true)}
+                  aria-label="필터 열기"
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+                  필터
+                  {activeFilterChips.length > 0 && (
+                    <span className="fb-count mono">{activeFilterChips.length}</span>
+                  )}
+                </button>
+                <span className="lv-sort-spacer" />
+
+                {/* Sort dropdown */}
+                <div className="lv-sortdrop" ref={sortDropRef}>
+                  <button
+                    className="lv-sortdrop-btn"
+                    onClick={() => setSortOpen((o) => !o)}
+                    aria-haspopup="listbox"
+                    aria-expanded={sortOpen}
+                  >
+                    <span className="lv-sortdrop-ico">{Icons.sort}</span>
+                    <span>{currentSortLabel}</span>
+                    <span className={`lv-sortdrop-chev${sortOpen ? " open" : ""}`}>
+                      {Icons.chevronDown}
+                    </span>
+                  </button>
+                  {sortOpen && (
+                    <div className="lv-sortdrop-menu" role="listbox">
+                      {sortOptions.map((opt) => (
+                        <button
+                          key={opt.key}
+                          className={`lv-sortopt${sortKey === opt.key ? " is-active" : ""}`}
+                          role="option"
+                          aria-selected={sortKey === opt.key}
+                          onClick={() => {
+                            setSortKey(opt.key);
+                            setSortOpen(false);
+                          }}
+                        >
+                          <span>{opt.label}</span>
+                          {sortKey === opt.key && (
+                            <span className="lv-sortopt-check">{Icons.check}</span>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* View toggle */}
+                <div className="lv-view">
+                  <button
+                    className={viewMode === "list" ? "is-active" : ""}
+                    onClick={() => setViewMode("list")}
+                    aria-label="리스트 뷰"
+                    title="리스트 뷰"
+                  >
+                    {Icons.list}
+                  </button>
+                  <button
+                    className={viewMode === "grid" ? "is-active" : ""}
+                    onClick={() => setViewMode("grid")}
+                    aria-label="그리드 뷰"
+                    title="그리드 뷰"
+                  >
+                    {Icons.grid}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Active filter chips */}
+            {hasActiveFilters && (
+              <div className="lv-active-chips">
+                {activeFilterChips.map((chip) => (
+                  <span key={chip.key} className="lv-chip">
+                    {chip.label}
+                    <button
+                      className="lv-chip-remove"
+                      onClick={chip.onRemove}
+                      aria-label={`${chip.label} 필터 제거`}
+                    >
+                      {Icons.close}
+                    </button>
+                  </span>
+                ))}
+                <button
+                  className="lv-chips-reset"
+                  onClick={() => {
+                    setFilters(() => ({}));
+                    setSearch("");
+                  }}
+                >
+                  모두 지우기
+                </button>
+              </div>
+            )}
+
+            {/* Results */}
+            {sorted.length === 0 ? (
+              <EmptyState
+                eyebrow="NO RESULTS"
+                title="조건에 맞는 대회가 없습니다."
+                action={
+                  <button
+                    className="cta-btn"
                     onClick={() => {
                       setFilters(() => ({}));
                       setSearch("");
+                      setScope("all");
                     }}
                   >
-                    모두 지우기
+                    필터 초기화
                   </button>
-                </div>
-              )}
-
-              {/* Sort row */}
-              <div className="comp-sort-row">
-                <div className="comp-result-count">
-                  결과{" "}
-                  <span className="comp-result-num" style={{ color: ACCENT }}>
-                    {sorted.length.toLocaleString("ko-KR")}
-                  </span>
-                  <span style={{ color: MUTE, fontWeight: 500 }}>개</span>
-                </div>
-                <div className="comp-sort-controls">
-                  <span className="comp-sort-label mono">정렬</span>
-                  <div className="comp-sort-pills">
-                    {(
-                      [
-                        { key: "date", label: "빠른 일정순" },
-                        { key: "deadline", label: "접수 마감순" },
-                      ] as { key: SortKey; label: string }[]
-                    ).map((opt) => (
-                      <button
-                        key={opt.key}
-                        className={`comp-sort-pill${sortKey === opt.key ? " active" : ""}`}
-                        onClick={() => setSortKey(opt.key)}
-                      >
-                        {opt.label}
-                      </button>
-                    ))}
-                  </div>
-                  <span className="comp-sort-divider" />
-                  <div className="comp-view-toggle">
-                    <button
-                      className={`comp-view-btn${viewMode === "list" ? " active" : ""}`}
-                      onClick={() => setViewMode("list")}
-                      aria-label="리스트 뷰"
-                      title="리스트 뷰"
-                    >
-                      {Icons.list}
-                    </button>
-                    <button
-                      className={`comp-view-btn${viewMode === "grid" ? " active" : ""}`}
-                      onClick={() => setViewMode("grid")}
-                      aria-label="그리드 뷰"
-                      title="그리드 뷰"
-                    >
-                      {Icons.grid}
-                    </button>
-                  </div>
-                </div>
+                }
+              />
+            ) : viewMode === "grid" ? (
+              <div className="comp-grid">
+                {sorted.map((c) => (
+                  <CompetitionGridCard
+                    key={c.id}
+                    competition={c}
+                    today={today}
+                    onClick={(e) => {
+                      if (
+                        e.defaultPrevented ||
+                        e.button !== 0 ||
+                        e.metaKey ||
+                        e.ctrlKey ||
+                        e.shiftKey ||
+                        e.altKey
+                      ) return;
+                      e.preventDefault();
+                      openComp(c);
+                    }}
+                  />
+                ))}
               </div>
-
-              {/* Competition list / grid */}
-              {sorted.length === 0 ? (
-                <EmptyState
-                  eyebrow="NO RESULTS"
-                  title="조건에 맞는 대회가 없습니다."
-                  action={
-                    <button
-                      className="cta-btn"
-                      onClick={() => {
-                        setFilters(() => ({}));
-                        setSearch("");
-                        setScope("all");
-                      }}
-                    >
-                      필터 초기화
-                    </button>
-                  }
-                />
-              ) : viewMode === "grid" ? (
-                <div className="comp-grid">
-                  {sorted.map((c) => (
-                    <CompetitionGridCard
-                      key={c.id}
-                      competition={c}
-                      today={today}
-                      onClick={(e) => {
-                        if (
-                          e.defaultPrevented ||
-                          e.button !== 0 ||
-                          e.metaKey ||
-                          e.ctrlKey ||
-                          e.shiftKey ||
-                          e.altKey
-                        ) return;
-                        e.preventDefault();
-                        openComp(c);
-                      }}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <div className="comp-month-list">
-                  {byMonth.map(([month, items]) => (
-                    <div key={month} className="comp-month-group">
-                      <div className="comp-month-header">
-                        <span className="comp-month-name">{MONTH_KR[month]}</span>
-                        <span className="comp-month-meta mono">
-                          {new Date(items[0].date).getFullYear()} · {items.length}개
+            ) : (
+              <div className="comp-month-list">
+                {byMonth.map(({ year, month, items }) => (
+                  <div key={`${year}-${month}`} className="mo-group">
+                    <div className="mo-head">
+                      <span className="mo-name">
+                        {year}년 {MONTH_KR[month]}
+                        <span className="mono mo-name-sub">
+                          {" "}{year}.{String(month + 1).padStart(2, "0")}
                         </span>
-                      </div>
-                      <div className="comp-list">
-                        {items.map((c) => (
-                          <CompRow
-                            key={c.id}
-                            comp={c}
-                            onOpen={openComp}
-                            isSaved={saved.includes(c.id)}
-                            onToggleSave={toggleSave}
-                            today={today}
-                          />
-                        ))}
-                      </div>
+                      </span>
+                      <span className="mo-cnt mono">{items.length}개</span>
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
+                    <div className="lv-list">
+                      {items.map((c) => (
+                        <CompRow
+                          key={c.id}
+                          comp={c}
+                          onOpen={openComp}
+                          isSaved={saved.includes(c.id)}
+                          onToggleSave={toggleSave}
+                          today={today}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
-      </section>
+      </div>
+      {/* Mobile filter bottom sheet */}
+      <div
+        className={`lv-sheet-backdrop${filterSheetOpen ? " is-open" : ""}`}
+        onClick={() => setFilterSheetOpen(false)}
+        aria-hidden="true"
+      />
+      <div
+        className={`lv-sheet${filterSheetOpen ? " is-open" : ""}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="필터"
+      >
+        <div className="lv-sheet-grip">
+          <span className="lv-sheet-bar" />
+          <button
+            className="lv-sheet-x"
+            type="button"
+            onClick={() => setFilterSheetOpen(false)}
+            aria-label="필터 닫기"
+          >
+            {Icons.close}
+          </button>
+        </div>
+        <div className="lv-sheet-body">
+          <FilterRail
+            filters={filters}
+            setFilters={setFilters}
+            allComps={allComps}
+            today={today}
+            filterOptions={filterOptions}
+          />
+        </div>
+        <div className="lv-sheet-foot">
+          <button
+            className="lv-sheet-apply"
+            type="button"
+            onClick={() => setFilterSheetOpen(false)}
+          >
+            결과 <b>{sorted.length.toLocaleString("ko-KR")}</b>개 보기
+          </button>
+        </div>
+      </div>
     </PageMain>
   );
 }

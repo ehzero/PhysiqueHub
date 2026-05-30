@@ -39,7 +39,7 @@ export async function POST(request: Request) {
   }
 
   const category = getString(payload.category);
-  const name = getString(payload.name);
+  const rawName = getString(payload.name);
   const email = getString(payload.email).toLowerCase();
   const message = getString(payload.message);
 
@@ -47,9 +47,11 @@ export async function POST(request: Request) {
     return badRequest("문의 유형을 선택해주세요.");
   }
 
-  if (name.length < 2 || name.length > 80) {
-    return badRequest("이름 또는 단체명을 2자 이상 입력해주세요.");
+  if (rawName.length > 80) {
+    return badRequest("관련 대회명은 80자 이하로 입력해주세요.");
   }
+
+  const name = rawName || "문의자 미입력";
 
   if (!isValidEmail(email)) {
     return badRequest("답변을 받을 이메일 주소를 확인해주세요.");

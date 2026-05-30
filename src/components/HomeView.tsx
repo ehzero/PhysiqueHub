@@ -9,9 +9,9 @@ import {
 } from "react";
 import { getCompetitionPath } from "@/lib/competition-slug";
 import type { Competition } from "@/lib/data";
+import { regStatusAt, CATEGORY_GUIDE } from "@/lib/data";
 import type { HomeHubData, HomeExploreType } from "@/lib/home-hub";
 import { getOrganizationDisplayName } from "@/lib/organization-display";
-import { CompetitionListItem } from "./CompetitionListItem";
 
 // ── Design tokens ─────────────────────────────────────────────────
 const A = "#B85C3C"; // warm terracotta accent
@@ -185,7 +185,7 @@ function HeroSection({
                 전체 보디빌딩·피트니스 대회 목록 →
               </Link>
               <Link
-                href="/guide#divisions"
+                href="/guide#division"
                 className="hub-btn-outline"
                 prefetch={false}
               >
@@ -677,6 +677,14 @@ function MajorCard({ comp, today }: { comp: Competition; today: Date }) {
   );
 }
 
+const STATUS_INFO: Record<string, { label: string; color: string; bg: string }> = {
+  open:    { label: "접수 중",    color: "#2D7A3E", bg: "rgba(45,122,62,.08)" },
+  urgent:  { label: "마감 임박", color: "#B85C3C", bg: "rgba(184,92,60,.10)" },
+  soon:    { label: "접수 예정", color: "#54514C", bg: "#F7F5F0" },
+  closed:  { label: "마감",      color: "#9C9890", bg: "#F7F5F0" },
+  unknown: { label: "확인 필요", color: "#C0A04A", bg: "rgba(192,160,74,.10)" },
+};
+
 // ── Upcoming ────────────────────────────────────────────────────────
 function UpcomingSection({
   items,
@@ -708,19 +716,57 @@ function UpcomingSection({
           </Link>
         </div>
 
-        <div className="hub-upcoming-list">
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
           {items.length === 0 ? (
             <div style={{ padding: "40px 0", color: MUTE, fontSize: 14 }}>
               예정된 대회가 없습니다.
             </div>
           ) : (
-            items.map((item) => (
-              <CompetitionListItem
-                key={item.id}
-                competition={item}
-                today={today}
-              />
-            ))
+            items.map((item) => {
+              const d = parseDateStr(item.date);
+              const days = daysUntil(item.date, today);
+              const status = regStatusAt(item, today);
+              const info = STATUS_INFO[status.kind] ?? STATUS_INFO.unknown;
+              const isUrgent = status.kind === "urgent";
+              const dd = String(d.day).padStart(2, "0");
+              return (
+                <Link
+                  key={item.id}
+                  href={getCompetitionPath(item)}
+                  className="ph-upcoming-row"
+                  prefetch={false}
+                >
+                  <div>
+                    <div className="ph-upcoming-day">{dd}</div>
+                    <div className="ph-upcoming-month mono">{d.monthKo}</div>
+                  </div>
+                  <div style={{ minWidth: 0 }}>
+                    <div className="ph-upcoming-name">{item.title}</div>
+                    <div className="ph-upcoming-org-region">
+                      {item.orgShort} · {item.region}
+                    </div>
+                  </div>
+                  <div className="ph-upcoming-cats">
+                    {item.categories.slice(0, 3).map((c) => (
+                      <span key={c} className="comp-card-cat">{c}</span>
+                    ))}
+                  </div>
+                  <div
+                    className="ph-upcoming-dday"
+                    style={{ color: isUrgent ? A : INK }}
+                  >
+                    D−{days}
+                  </div>
+                  <div
+                    className="ph-upcoming-status"
+                    style={{ background: info.bg, color: info.color }}
+                  >
+                    <span className="ph-upcoming-status-dot" style={{ background: info.color }} />
+                    <span className="ph-upcoming-status-label">{info.label}</span>
+                  </div>
+                </Link>
+              );
+            })
           )}
         </div>
       </div>
@@ -853,26 +899,19 @@ function RookieCard({ item, today }: { item: Competition; today: Date }) {
   );
 }
 
+const ORGANIZATION_GUIDE_ROWS = [
+  { name: "KBBF / IFBB International", scope: "국내 협회·아마추어 국제 루트" },
+  { name: "NPC Worldwide / IFBB Pro",  scope: "프로카드·글로벌 프로 리그 루트" },
+  { name: "NABBA / PCA / WFF 계열",    scope: "민간 피트니스·모델형 종목" },
+  { name: "WNBF / ICN / OCB 등 내추럴", scope: "내추럴·도핑 테스트 중심" },
+];
+
 // ── Guide CTA ───────────────────────────────────────────────────────
 function GuideSection() {
-  const cards = [
-    {
-      eyebrow: "GUIDE 01",
-      title: "종목별 가이드",
-      body: "보디빌딩, 클래식 피지크, 맨즈 피지크, 비키니, 웰니스 등 주요 종목의 특징과 평가 포인트를 비교합니다.",
-      cta: "보디빌딩·피트니스 종목별 차이 비교하기 →",
-      href: "/guide#divisions",
-      dark: true,
-    },
-    {
-      eyebrow: "GUIDE 02",
-      title: "단체별 가이드",
-      body: "KBBF, IFBB International, IFBB Pro/NPC, NABBA, WNBF 등 주요 단체의 대회 성격, 출전 기준, 프로카드 흐름을 비교합니다.",
-      cta: "보디빌딩·피트니스 대회 단체별 차이 비교하기 →",
-      href: "/guide#federations",
-      dark: false,
-    },
-  ];
+  const divisionRows = CATEGORY_GUIDE.slice(0, 4).map((g) => ({
+    name: g.key,
+    scope: g.scope,
+  }));
 
   return (
     <section
@@ -880,69 +919,57 @@ function GuideSection() {
       style={{ background: "#fff" }}
     >
       <div className="container">
-        <div style={{ marginBottom: 28 }}>
-          <div className="hub-eyebrow" style={{ color: A }}>
-            06 · 가이드
+        <div className="hub-section-head" style={{ marginBottom: 32 }}>
+          <div>
+            <div className="hub-eyebrow" style={{ color: A }}>
+              06 · 가이드
+            </div>
+            <h2 className="hub-h2">대회를 준비하기 전에.</h2>
+            <p className="hub-section-body" style={{ color: MUTE }}>
+              종목과 단체에 따라 복장·포징·심사 기준과 출전 자격이 다릅니다.
+              종목별·단체별 핵심 차이를 먼저 확인하고, 세부 규정은 공식 공지를 함께 확인하세요.
+            </p>
           </div>
-          <h2 className="hub-h2">대회를 준비하기 전에.</h2>
-          <p className="hub-section-body" style={{ color: MUTE }}>
-            처음 출전하는 선수부터 단체와 종목을 비교하려는 사용자까지, 대회
-            선택에 필요한 기본 정보를 정리했습니다.
-          </p>
+          <Link href="/guide" className="hub-link-more" style={{ color: INK }} prefetch={false}>
+            전체 가이드 보기 →
+          </Link>
         </div>
-        <div className="hub-3col">
-          {cards.map((c) => (
-            <Link
-              key={c.eyebrow}
-              href={c.href}
-              className="hub-lift-card"
-              prefetch={false}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                background: c.dark ? INK : "#fff",
-                color: c.dark ? "#fff" : INK,
-                border: c.dark ? "1px solid transparent" : `1px solid ${FAINT}`,
-                borderRadius: 14,
-                padding: 28,
-                textDecoration: "none",
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 11,
-                  fontWeight: 700,
-                  color: c.dark ? "#C8A961" : A,
-                  letterSpacing: "1.4px",
-                  marginBottom: 16,
-                  textTransform: "uppercase",
-                }}
-              >
-                {c.eyebrow}
-              </div>
-              <h3 className="hub-guide-name">{c.title}</h3>
-              <p
-                style={{
-                  fontSize: 14,
-                  lineHeight: 1.5,
-                  margin: "0 0 24px",
-                  color: c.dark ? "rgba(255,255,255,.75)" : "#3A3833",
-                }}
-              >
-                {c.body}
-              </p>
-              <span
-                style={{
-                  marginTop: "auto",
-                  fontSize: 14,
-                  fontWeight: 600,
-                  color: c.dark ? "#fff" : INK,
-                }}
-              >
-                {c.cta}
-              </span>
-            </Link>
-          ))}
+        <div className="ph-guide-grid">
+          {/* Division card */}
+          <Link href="/guide#division" className="ph-guide-card" prefetch={false}>
+            <div className="ph-guide-card-sub">By Division</div>
+            <h3 className="ph-guide-card-title">종목별 가이드</h3>
+            <p className="ph-guide-card-body">
+              맨즈 피지크·클래식 피지크·비키니·웰니스 등 종목별 심사 포인트와 체크리스트를 정리했습니다.
+            </p>
+            <div className="ph-guide-rows">
+              {divisionRows.map((r) => (
+                <div key={r.name} className="ph-guide-row">
+                  <span className="ph-guide-row-name">{r.name}</span>
+                  <span className="ph-guide-row-scope">{r.scope}</span>
+                </div>
+              ))}
+            </div>
+            <span className="ph-guide-cta">종목별 가이드 보기 →</span>
+          </Link>
+
+          {/* Organization card */}
+          <Link href="/guide#organization" className="ph-guide-card" prefetch={false}>
+            <div className="ph-guide-card-sub">By Organization</div>
+            <h3 className="ph-guide-card-title">단체별 가이드</h3>
+            <p className="ph-guide-card-body">
+              KBBF·IFBB Pro·NABBA·내추럴 단체 등 단체별 출전 루트와 규정 차이를 비교해보세요.
+            </p>
+            <div className="ph-guide-rows">
+              {ORGANIZATION_GUIDE_ROWS.map((r) => (
+                <div key={r.name} className="ph-guide-row">
+                  <span className="ph-guide-row-name">{r.name}</span>
+                  <span className="ph-guide-row-scope">{r.scope}</span>
+                </div>
+              ))}
+            </div>
+            <span className="ph-guide-cta outline">단체별 가이드 보기 →</span>
+          </Link>
         </div>
       </div>
     </section>

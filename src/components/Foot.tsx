@@ -40,7 +40,7 @@ export function Foot({
                   </Link>
                 </li>
                 <li>
-                  <Link href="/guide#divisions">
+                  <Link href="/guide#division">
                     종목별 가이드 보기
                   </Link>
                 </li>

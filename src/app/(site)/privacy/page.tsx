@@ -42,7 +42,7 @@ export default function PrivacyPage() {
       <article>
         <h2>2. 개인정보 처리 목적</h2>
         <ul>
-          <li>대회 등록 요청, 정정 요청, 서비스 문의 응대</li>
+          <li>대회 등록 요청, 정정 문의, 광고 문의, 서비스 문의 응대</li>
           <li>서비스 장애 확인, 보안 점검, 비정상 접근 방지</li>
           <li>이용자가 선택한 관심 대회 표시</li>
         </ul>
