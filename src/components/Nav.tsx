@@ -1,25 +1,88 @@
 "use client";
 
 import Link from "next/link";
+import { useCallback, useSyncExternalStore } from "react";
 import { Icons } from "./Icons";
-
-const INK = "#0E0E0C";
-const MUTE = "#86827C";
 
 const NAV_LINKS = [
   { label: "홈", href: "/", key: "home" },
-  { label: "대회 목록", href: "/competitions", key: "list" },
+  { label: "대회 일정", href: "/competitions", key: "list" },
   { label: "가이드", href: "/guide", key: "guide" },
 ];
 
+type ThemePreference = "dark" | "light";
+
+const THEME_STORAGE_KEY = "ph-theme";
 interface NavProps {
   route: string;
   savedCount: number;
   onOpenContact: () => void;
 }
 
+function isThemePreference(value: string | null): value is ThemePreference {
+  return value === "dark" || value === "light";
+}
+
+function applyThemePreference(theme: ThemePreference) {
+  document.documentElement.setAttribute("data-theme", theme);
+  document.documentElement.style.colorScheme = theme;
+}
+
+function readThemePreference(): ThemePreference {
+  if (typeof document === "undefined") return "light";
+  return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+}
+
+function getServerThemePreference(): ThemePreference {
+  return "light";
+}
+
+function subscribeThemePreference(onStoreChange: () => void) {
+  if (typeof document === "undefined") return () => {};
+
+  const observer = new MutationObserver(onStoreChange);
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["data-theme"],
+  });
+
+  const handleStorage = (event: StorageEvent) => {
+    if (event.key !== THEME_STORAGE_KEY || !isThemePreference(event.newValue)) return;
+    applyThemePreference(event.newValue);
+    onStoreChange();
+  };
+
+  window.addEventListener("storage", handleStorage);
+
+  return () => {
+    observer.disconnect();
+    window.removeEventListener("storage", handleStorage);
+  };
+}
+
+function useTheme() {
+  const theme = useSyncExternalStore(
+    subscribeThemePreference,
+    readThemePreference,
+    getServerThemePreference,
+  );
+
+  const toggle = useCallback(() => {
+    const next = theme === "dark" ? "light" : "dark";
+    applyThemePreference(next);
+
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, next);
+      document.cookie = `${THEME_STORAGE_KEY}=${next};path=/;max-age=31536000;SameSite=Lax`;
+    } catch { /* noop */ }
+  }, [theme]);
+
+  return { isDark: theme === "dark", toggle };
+}
+
 export function Nav({ route, savedCount, onOpenContact }: NavProps) {
   const savedLabel = savedCount > 0 ? `내 대회 (${savedCount})` : "내 대회";
+  const { isDark, toggle } = useTheme();
 
   return (
     <header className="nav">
@@ -36,12 +99,8 @@ export function Nav({ route, savedCount, onOpenContact }: NavProps) {
                 <Link
                   key={key}
                   href={href}
-                  className="nav-link-item"
+                  className={`nav-link-item${route === key ? " is-active" : ""}`}
                   prefetch={href === "/competitions"}
-                  style={{
-                    fontWeight: route === key ? 600 : 500,
-                    color: route === key ? INK : MUTE,
-                  }}
                 >
                   {label}
                 </Link>
@@ -49,6 +108,16 @@ export function Nav({ route, savedCount, onOpenContact }: NavProps) {
             </nav>
           </div>
           <div className="nav-right">
+            <button
+              className="nav-contact-btn"
+              type="button"
+              onClick={toggle}
+              aria-label={isDark ? "라이트 모드로 전환" : "다크 모드로 전환"}
+              title={isDark ? "라이트 모드" : "다크 모드"}
+            >
+              <span className="theme-sun">{Icons.sun}</span>
+              <span className="theme-moon">{Icons.moon}</span>
+            </button>
             <button
               className="nav-contact-btn"
               type="button"
@@ -77,7 +146,7 @@ export function Nav({ route, savedCount, onOpenContact }: NavProps) {
         </div>
       </div>
 
-      {/* Mobile tabbar — 4 tabs: 홈 · 대회 목록 · 가이드 · 내 대회 (문의는 헤더 아이콘으로) */}
+      {/* Mobile tabbar — 4 tabs: 홈 · 대회 일정 · 가이드 · 내 대회 (문의는 헤더 아이콘으로) */}
       <nav className="mobile-tabbar" aria-label="주요 메뉴">
         <Link
           className={`mobile-tab ${route === "home" ? "active" : ""}`}
@@ -97,7 +166,7 @@ export function Nav({ route, savedCount, onOpenContact }: NavProps) {
           <svg className="mt-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/>
           </svg>
-          <span>대회 목록</span>
+          <span>대회 일정</span>
         </Link>
         <Link
           className={`mobile-tab ${route === "guide" ? "active" : ""}`}

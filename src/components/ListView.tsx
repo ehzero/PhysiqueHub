@@ -10,8 +10,7 @@ import { CompRow } from "./CompRow";
 import { CompetitionGridCard } from "./CompetitionListItem";
 import { FilterRail } from "./FilterRail";
 import { EmptyState, PageMain } from "./PageLayout";
-
-const ACCENT = "#B85C3C";
+import { Intro, SegmentButton, StickyControlBar } from "./UIPrimitives";
 
 const MONTH_KR = [
   "1월", "2월", "3월", "4월", "5월", "6월",
@@ -326,37 +325,47 @@ export function ListView({
   return (
     <PageMain className="competition-index">
       {/* ── Page head ─────────────────────────────────────── */}
-      <div className="lv-head">
+      <div className="ph-page-surface lv-head">
         <div className="container">
-          <span className="hub-eyebrow lv-eyebrow">전체 대회 · By Schedule</span>
-          <h1 className="lv-title">
-            보디빌딩·피트니스 대회 목록을{" "}
-            <span style={{ color: ACCENT }}>한눈에.</span>
-          </h1>
-          <p className="lv-sub">{description}</p>
+          <Intro
+            eyebrow="전체 대회 · By Schedule"
+            title={
+              <>
+                보디빌딩·피트니스 대회 일정을{" "}
+                <span className="ph-accent-text">한눈에.</span>
+              </>
+            }
+            description={description}
+            level={1}
+            variant="page"
+            classNames={{
+              eyebrow: "lv-eyebrow",
+              title: "lv-title",
+              description: "lv-sub",
+            }}
+          />
         </div>
       </div>
 
       {/* ── Sticky segment bar ─────────────────────────────── */}
-      <div className="lv-segbar">
-        <div className="container lv-segrow">
+      <StickyControlBar className="lv-segbar" containerClassName="container lv-segrow">
           <div className="lv-segs">
             {segmentTabs.map((t) => (
-              <button
+              <SegmentButton
                 key={t.id}
-                className={`lv-seg${scope === t.id ? " is-active" : ""}`}
+                active={scope === t.id}
+                className="lv-seg"
                 onClick={() => setScope(t.id)}
               >
                 {t.label}
                 <span className="cnt mono">{t.count}</span>
-              </button>
+              </SegmentButton>
             ))}
           </div>
           <span className="lv-segcount mono">
             결과 <b>{sorted.length.toLocaleString("ko-KR")}</b>개
           </span>
-        </div>
-      </div>
+      </StickyControlBar>
 
       {/* ── Body: filter rail + main content ───────────────── */}
       <div className="lv-body-wrap">

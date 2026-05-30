@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
 import Link from "next/link";
 import { getCompetitionPath } from "@/lib/competition-slug";
 import {
@@ -13,19 +19,29 @@ import { COMPETITION_TIER_LABELS } from "@/lib/competition-classification";
 import { Icons } from "./Icons";
 import { PosterFigure, posterFigureColor } from "./PosterFigure";
 import { ShareButton } from "./ShareButton";
+import { StatusPill } from "./UIPrimitives";
 
 const STATUS_INFO: Record<string, { label: string; color: string; bg: string }> = {
-  open:    { label: "접수 중",    color: "#2D7A3E", bg: "rgba(45,122,62,.08)" },
-  urgent:  { label: "마감 임박", color: "#B85C3C", bg: "rgba(184,92,60,.10)" },
-  soon:    { label: "접수 예정", color: "#54514C", bg: "#F7F5F0" },
-  closed:  { label: "마감",      color: "#9C9890", bg: "#F7F5F0" },
-  unknown: { label: "확인 필요", color: "#C0A04A", bg: "rgba(192,160,74,.10)" },
+  open:    { label: "접수 중",    color: "var(--ph-success)", bg: "var(--ph-success-bg)" },
+  urgent:  { label: "마감 임박", color: "var(--ph-accent)", bg: "var(--ph-accent-soft)" },
+  soon:    { label: "접수 예정", color: "var(--ph-ink-3)", bg: "var(--ph-sub)" },
+  closed:  { label: "마감",      color: "var(--ph-ink-5)", bg: "var(--ph-sub)" },
+  unknown: { label: "확인 필요", color: "var(--ph-warn)", bg: "var(--ph-warn-bg)" },
 };
 
 const SWIPE_INTENT_PX = 6;
 const SWIPE_CLOSE_PX = 56;
 const SWIPE_FAST_CLOSE_PX = 24;
 const SWIPE_FAST_VELOCITY = 0.45;
+
+type CSSVars = CSSProperties & Record<`--${string}`, string | number>;
+
+function statusVars(info: { color: string; bg: string }): CSSVars {
+  return {
+    "--status-color": info.color,
+    "--status-bg": info.bg,
+  };
+}
 
 function posterVariant(id: string): number {
   return Array.from(id).reduce((h, ch) => (h + ch.charCodeAt(0)) % 6, 0);
@@ -275,18 +291,17 @@ export function CompDrawer({
           <div className="drawer-section">
             <div className="drawer-section-status">
               <div className="drawer-section-status-left">
-                <div
+                <StatusPill
                   className="drawer-status-pill"
-                  style={{ background: statusInfo.bg, color: statusInfo.color }}
-                >
-                  <span className="drawer-status-dot" style={{ background: statusInfo.color }} />
-                  <span className="drawer-status-pill-label">{statusInfo.label}</span>
-                </div>
+                  dotClassName="drawer-status-dot"
+                  label={statusInfo.label}
+                  labelClassName="drawer-status-pill-label"
+                  style={statusVars(statusInfo)}
+                />
                 <div className="drawer-section-status-sub">{dateMonthSub}</div>
               </div>
               <div
-                className="drawer-dday mono"
-                style={{ color: isUrgent ? "#B85C3C" : "#0E0E0C" }}
+                className={`drawer-dday mono${isUrgent ? " is-urgent" : ""}`}
               >
                 {ddayTxt}
               </div>
@@ -326,7 +341,7 @@ export function CompDrawer({
           )}
 
           {/* Disclaimer note */}
-          <div className="drawer-section" style={{ borderBottom: 0 }}>
+          <div className="drawer-section is-last">
             <div className="drawer-note">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="10"/>

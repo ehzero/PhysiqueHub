@@ -1,18 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import type { MouseEventHandler } from "react";
+import type { CSSProperties, MouseEventHandler } from "react";
 import { getCompetitionPath } from "@/lib/competition-slug";
 import { getCompetitionLocationLabel } from "@/lib/competition-display";
 import { regStatusAt, type Competition } from "@/lib/data";
 import { COMPETITION_TIER_LABELS } from "@/lib/competition-classification";
 import { Icons } from "./Icons";
+import { StatusPill } from "./UIPrimitives";
 
-const ACCENT = "#B85C3C";
-const INK = "#0E0E0C";
-const SOFT = "#54514C";
-const PAPER = "#F7F5F0";
-const OK = "#2D7A3E";
+const ACCENT = "var(--ph-accent)";
+const SOFT = "var(--ph-ink-3)";
+const PAPER = "var(--ph-sub)";
+const OK = "var(--ph-success)";
+
+type CSSVars = CSSProperties & Record<`--${string}`, string | number>;
+
+function toneVars({ color, bg }: { color: string; bg: string }): CSSVars {
+  return {
+    "--tone-color": color,
+    "--tone-bg": bg,
+  };
+}
 
 interface CompetitionListItemProps {
   competition: Competition;
@@ -50,15 +59,15 @@ interface StatusInfo {
 function getStatusInfo(kind: string): StatusInfo {
   switch (kind) {
     case "open":
-      return { label: "접수중", color: OK, bg: "rgba(45,122,62,.08)" };
+      return { label: "접수중", color: OK, bg: "var(--ph-success-bg)" };
     case "urgent":
-      return { label: "마감 임박", color: ACCENT, bg: "rgba(184,92,60,.10)" };
+      return { label: "마감 임박", color: ACCENT, bg: "var(--ph-accent-soft)" };
     case "soon":
       return { label: "접수 예정", color: SOFT, bg: PAPER };
     case "closed":
-      return { label: "마감", color: "#9C9890", bg: PAPER };
+      return { label: "마감", color: "var(--ph-ink-5)", bg: PAPER };
     default:
-      return { label: "확인 필요", color: "#C0A04A", bg: "rgba(192,160,74,.10)" };
+      return { label: "확인 필요", color: "var(--ph-warn)", bg: "var(--ph-warn-bg)" };
   }
 }
 
@@ -101,12 +110,15 @@ function buildFlags(competition: Competition): string[] {
   return flags;
 }
 
-export function CompetitionGridCard({
+type CompetitionCardVariant = "grid" | "list";
+
+function CompetitionCard({
   competition,
+  variant,
   today,
   href = getCompetitionPath(competition),
   onClick,
-}: CompetitionListItemProps) {
+}: CompetitionListItemProps & { variant: CompetitionCardVariant }) {
   const date = parseDateParts(competition.date);
   const days = today ? daysUntil(competition.date, today) : null;
   const registrationStatus = today ? regStatusAt(competition, today) : null;
@@ -119,30 +131,110 @@ export function CompetitionGridCard({
   const mm = String(date.month).padStart(2, "0");
   const dd = String(date.day).padStart(2, "0");
 
+  if (variant === "list") {
+    return (
+      <Link
+        href={href}
+        className="ph-surface-card ph-lift-card comp-card"
+        prefetch={false}
+        onClick={onClick}
+      >
+        <div className="comp-card-date">
+          <div className="comp-card-year mono">{date.year}</div>
+          <div className="comp-card-monthday">
+            {mm}.{dd}
+          </div>
+          <div className="comp-card-weekday">{date.weekday}요일</div>
+        </div>
+
+        <div className="comp-card-info">
+          <div className="comp-card-badges">
+            <span className="comp-card-org-pill">{competition.orgShort}</span>
+            <span className="comp-card-divider" />
+            <span className="comp-card-tier-label">{tierLabel}</span>
+            {flags.map((f) => {
+              const s = getFlagStyle(f);
+              return (
+                <span
+                  key={f}
+                  className="comp-card-flag"
+                  style={toneVars(s)}
+                >
+                  {f}
+                </span>
+              );
+            })}
+          </div>
+
+          <div className="comp-card-title">
+            {competition.title}
+          </div>
+
+          <div className="comp-card-location">
+            {Icons.pin}
+            {locationLabel}
+          </div>
+
+          <div className="comp-card-cats">
+            {competition.categories.slice(0, 5).map((c) => (
+              <span key={c} className="comp-card-cat">
+                {c}
+              </span>
+            ))}
+            {competition.categories.length > 5 && (
+              <span className="comp-card-cat-more mono">
+                +{competition.categories.length - 5}
+              </span>
+            )}
+          </div>
+        </div>
+
+        <div className="comp-card-status-col">
+          {statusInfo && (
+            <StatusPill
+              className="comp-card-status-pill"
+              dotClassName="comp-card-status-dot"
+              label={statusInfo.label}
+              style={toneVars(statusInfo)}
+            />
+          )}
+          {days !== null && days >= 0 && (
+            <div
+              className={`comp-card-dday${isUrgent ? " is-urgent" : ""}`}
+            >
+              D−{days}
+            </div>
+          )}
+          <div className="comp-card-arrow mono">상세 보기 →</div>
+        </div>
+      </Link>
+    );
+  }
+
   return (
     <Link
       href={href}
-      className="comp-grid-card hub-lift-card"
+      className="ph-surface-card ph-lift-card comp-grid-card"
       prefetch={false}
       onClick={onClick}
     >
       {/* Top: status pill + D-day */}
       <div className="comp-grid-top">
         {statusInfo ? (
-          <div className="comp-grid-status-pill" style={{ background: statusInfo.bg }}>
-            <span className="comp-grid-status-dot" style={{ background: statusInfo.color }} />
-            <span style={{ fontSize: 10, fontWeight: 700, color: statusInfo.color, letterSpacing: "0.04em" }}>
-              {statusInfo.label}
-            </span>
-          </div>
+          <StatusPill
+            className="comp-grid-status-pill"
+            dotClassName="comp-grid-status-dot"
+            label={statusInfo.label}
+            labelClassName="comp-grid-status-label"
+            style={toneVars(statusInfo)}
+          />
         ) : (
           <div />
         )}
         <div className="comp-grid-dday-wrap">
           {days !== null && days >= 0 && (
             <div
-              className="comp-grid-dday mono"
-              style={{ color: isUrgent ? ACCENT : INK }}
+              className={`comp-grid-dday mono${isUrgent ? " is-urgent" : ""}`}
             >
               D−{days}
             </div>
@@ -163,7 +255,7 @@ export function CompetitionGridCard({
             <span
               key={f}
               className="comp-grid-flag"
-              style={{ color: s.color, background: s.bg }}
+              style={toneVars(s)}
             >
               {f}
             </span>
@@ -193,109 +285,10 @@ export function CompetitionGridCard({
   );
 }
 
-export function CompetitionListItem({
-  competition,
-  today,
-  href = getCompetitionPath(competition),
-  onClick,
-}: CompetitionListItemProps) {
-  const date = parseDateParts(competition.date);
-  const days = today ? daysUntil(competition.date, today) : null;
-  const registrationStatus = today ? regStatusAt(competition, today) : null;
-  const tierLabel = COMPETITION_TIER_LABELS[competition.tier];
-  const statusInfo = registrationStatus
-    ? getStatusInfo(registrationStatus.kind)
-    : null;
-  const flags = buildFlags(competition);
-  const isUrgent = registrationStatus?.kind === "urgent";
-  const locationLabel = getCompetitionLocationLabel(competition);
+export function CompetitionGridCard(props: CompetitionListItemProps) {
+  return <CompetitionCard {...props} variant="grid" />;
+}
 
-  const mm = String(date.month).padStart(2, "0");
-  const dd = String(date.day).padStart(2, "0");
-
-  return (
-    <Link
-      href={href}
-      className="comp-card hub-lift-card"
-      prefetch={false}
-      onClick={onClick}
-    >
-      {/* Date block */}
-      <div className="comp-card-date">
-        <div className="comp-card-year mono">{date.year}</div>
-        <div className="comp-card-monthday">
-          {mm}.{dd}
-        </div>
-        <div className="comp-card-weekday">{date.weekday}요일</div>
-      </div>
-
-      {/* Main info */}
-      <div className="comp-card-info">
-        <div className="comp-card-badges">
-          <span className="comp-card-org-pill">{competition.orgShort}</span>
-          <span className="comp-card-divider" />
-          <span className="comp-card-tier-label">{tierLabel}</span>
-          {flags.map((f) => {
-            const s = getFlagStyle(f);
-            return (
-              <span
-                key={f}
-                className="comp-card-flag"
-                style={{ color: s.color, background: s.bg }}
-              >
-                {f}
-              </span>
-            );
-          })}
-        </div>
-
-        <div className="comp-card-title">
-          {competition.title}
-        </div>
-
-        <div className="comp-card-location">
-          {Icons.pin}
-          {locationLabel}
-        </div>
-
-        <div className="comp-card-cats">
-          {competition.categories.slice(0, 5).map((c) => (
-            <span key={c} className="comp-card-cat">
-              {c}
-            </span>
-          ))}
-          {competition.categories.length > 5 && (
-            <span className="comp-card-cat-more mono">
-              +{competition.categories.length - 5}
-            </span>
-          )}
-        </div>
-      </div>
-
-      {/* Status + D-day */}
-      <div className="comp-card-status-col">
-        {statusInfo && (
-          <div
-            className="comp-card-status-pill"
-            style={{ background: statusInfo.bg }}
-          >
-            <span
-              className="comp-card-status-dot"
-              style={{ background: statusInfo.color }}
-            />
-            <span style={{ color: statusInfo.color }}>{statusInfo.label}</span>
-          </div>
-        )}
-        {days !== null && days >= 0 && (
-          <div
-            className="comp-card-dday"
-            style={{ color: isUrgent ? ACCENT : INK }}
-          >
-            D−{days}
-          </div>
-        )}
-        <div className="comp-card-arrow mono">상세 보기 →</div>
-      </div>
-    </Link>
-  );
+export function CompetitionListItem(props: CompetitionListItemProps) {
+  return <CompetitionCard {...props} variant="list" />;
 }

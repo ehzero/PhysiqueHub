@@ -36,7 +36,7 @@ export function Foot({
               <ul>
                 <li>
                   <Link href="/competitions">
-                    전체 보디빌딩·피트니스 대회 목록
+                    전체 보디빌딩·피트니스 대회 일정
                   </Link>
                 </li>
                 <li>

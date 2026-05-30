@@ -12,11 +12,9 @@ import { getOrganizationDisplayName } from "@/lib/organization-display";
 import type { CompetitionFilterOptions } from "@/lib/competition-public";
 import { Icons } from "./Icons";
 
-const ACCENT = "#B85C3C";
-const INK = "#0E0E0C";
-const MUTE = "#86827C";
-const SOFT = "#54514C";
-const OK = "#2D7A3E";
+const ACCENT = "var(--ph-accent)";
+const SOFT = "var(--ph-ink-3)";
+const OK = "var(--ph-success)";
 
 const KOREAN_REGION_SET = new Set<string>(KOREAN_REGION_ORDER);
 
@@ -50,15 +48,8 @@ function FilterCheckRow({
   children: ReactNode;
 }) {
   return (
-    <button className="rail-row" onClick={onClick}>
-      <span
-        className="rail-check"
-        style={{
-          background: selected ? INK : "#fff",
-          borderColor: selected ? INK : "#C9C6BF",
-          color: selected ? "#fff" : "transparent",
-        }}
-      >
+    <button className={`rail-row${selected ? " is-selected" : ""}`} onClick={onClick}>
+      <span className="rail-check">
         {selected && Icons.check}
       </span>
       {dot && (
@@ -67,10 +58,7 @@ function FilterCheckRow({
           style={{ background: dot }}
         />
       )}
-      <span
-        className="rail-row-label"
-        style={{ fontWeight: selected ? 600 : 400 }}
-      >
+      <span className="rail-row-label">
         {children}
       </span>
       {count !== undefined && (
@@ -104,13 +92,7 @@ function FilterSection({
           {hint && <span className="rail-section-hint mono">{hint}</span>}
           {count != null && <span className="rail-section-hint mono">{count}</span>}
         </span>
-        <span
-          className="rail-chevron"
-          style={{
-            color: MUTE,
-            transform: open ? "rotate(180deg)" : "rotate(0deg)",
-          }}
-        >
+        <span className={`rail-chevron${open ? " is-open" : ""}`}>
           {Icons.chevronDown}
         </span>
       </button>
@@ -163,8 +145,8 @@ export function FilterRail({
     { key: "open", label: "접수 중", dot: OK, count: statusCounts.get("open") ?? 0 },
     { key: "urgent", label: "마감 임박", dot: ACCENT, count: statusCounts.get("urgent") ?? 0 },
     { key: "soon", label: "접수 예정", dot: SOFT, count: statusCounts.get("soon") ?? 0 },
-    { key: "closed", label: "마감", dot: "#9C9890", count: statusCounts.get("closed") ?? 0 },
-    { key: "unknown", label: "확인 필요", dot: "#C0A04A", count: statusCounts.get("unknown") ?? 0 },
+    { key: "closed", label: "마감", dot: "var(--ph-ink-5)", count: statusCounts.get("closed") ?? 0 },
+    { key: "unknown", label: "확인 필요", dot: "var(--ph-warn)", count: statusCounts.get("unknown") ?? 0 },
   ];
 
   const attributeOptions: { key: TypeFlagKey; label: string; count?: number }[] = [
@@ -272,15 +254,7 @@ export function FilterRail({
                 </span>
                 <span className="rail-overseas-count">
                   +{overseasRegions.length}
-                  <span
-                    className="rail-chevron"
-                    style={{
-                      color: MUTE,
-                      transform: showOverseasRegions
-                        ? "rotate(180deg)"
-                        : "rotate(0deg)",
-                    }}
-                  >
+                  <span className={`rail-chevron${showOverseasRegions ? " is-open" : ""}`}>
                     {Icons.chevronDown}
                   </span>
                 </span>

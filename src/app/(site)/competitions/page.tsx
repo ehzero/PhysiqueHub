@@ -28,7 +28,7 @@ export async function generateMetadata({
 
   return {
     ...createPageMetadata({
-      title: "대회 목록",
+      title: "대회 일정",
       description: getCompetitionListDescription(getKoreaYear()),
       path: "/competitions",
     }),

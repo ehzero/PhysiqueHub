@@ -16,7 +16,6 @@ interface PageSectionProps {
   className?: string;
   containerClassName?: string;
   muted?: boolean;
-  style?: React.CSSProperties;
 }
 
 interface EmptyStateProps {
@@ -65,14 +64,13 @@ export function PageSection({
   className,
   containerClassName,
   muted = false,
-  style,
 }: PageSectionProps) {
   const classes = ["section", className, muted ? "section-muted" : ""]
     .filter(Boolean)
     .join(" ");
 
   return (
-    <section className={classes} style={style}>
+    <section className={classes}>
       <div className={containerClassName ?? "container"}>{children}</div>
     </section>
   );

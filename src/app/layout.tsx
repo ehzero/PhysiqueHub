@@ -113,7 +113,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: "#0E0E0C",
-  colorScheme: "light",
+  colorScheme: "light dark",
   viewportFit: "cover",
 };
 
@@ -126,8 +126,15 @@ export default function RootLayout({
     <html
       lang="ko"
       className={`${instrumentSerif.variable} ${jetbrainsMono.variable}`}
+      suppressHydrationWarning
     >
       <head>
+        {/* Apply theme before paint without making the root layout dynamic. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var d=document.documentElement;var c=document.cookie.match(/(?:^|;)\\s*ph-theme=(dark|light)(?:;|$)/);var s=c&&c[1];if(!s){try{s=localStorage.getItem('ph-theme')}catch(e){}}if(s!=='dark'&&s!=='light'){s=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}d.setAttribute('data-theme',s);d.style.colorScheme=s;}catch(e){}})();`,
+          }}
+        />
         <link rel="preconnect" href="https://cdn.jsdelivr.net" />
         <link
           rel="stylesheet"

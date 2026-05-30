@@ -219,7 +219,7 @@ export function ContactDrawer({ isOpen, onClose }: ContactDrawerProps) {
           {!isDone ? (
             <form id={formId} onSubmit={handleSubmit} autoComplete="off">
               {/* Honeypot */}
-              <label style={{ position: "absolute", opacity: 0, pointerEvents: "none" }}>
+              <label className="inq-honeypot">
                 <span>웹사이트</span>
                 <input name="website" tabIndex={-1} autoComplete="off" />
               </label>

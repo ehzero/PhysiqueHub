@@ -16,8 +16,10 @@ import {
   List,
   MapPin,
   MessageCircle,
+  Moon,
   Search,
   Share2,
+  Sun,
   Tag,
   Trash2,
   X,
@@ -53,4 +55,6 @@ export const Icons = {
   ext: <ExternalLink {...iconProps} />,
   paperclip: <Paperclip {...iconProps} />,
   trash: <Trash2 {...iconProps} />,
+  sun: <Sun {...iconProps} />,
+  moon: <Moon {...iconProps} />,
 };

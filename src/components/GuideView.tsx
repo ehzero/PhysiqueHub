@@ -3,8 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { CATEGORY_GUIDE } from "@/lib/data";
 import { Icons } from "./Icons";
-
-const A = "#B85C3C";
+import { Intro, SegmentLink, StickyControlBar } from "./UIPrimitives";
 
 const ORGANIZATION_GUIDE = [
   {
@@ -195,42 +194,54 @@ export function GuideView() {
   }
 
   return (
-    <main>
+    <main className="ph-page-surface">
       {/* Page head */}
       <div className="g-page-container g-head">
-        <span className="hub-eyebrow g-eyebrow" style={{ color: A }}>가이드 · Guide</span>
-        <h1 className="g-title">대회를 준비하기 전에.</h1>
-        <p className="g-sub">
-          종목과 단체에 따라 복장·포징·심사 기준과 출전 자격이 다릅니다.
-          종목별·단체별 핵심 차이를 먼저 확인하고, 세부 규정과 일정은 각 단체·주최측 공식 공지를 함께 확인하세요.
-        </p>
+        <Intro
+          eyebrow="가이드 · Guide"
+          title="대회를 준비하기 전에."
+          description={
+            <>
+              종목과 단체에 따라 복장·포징·심사 기준과 출전 자격이 다릅니다.
+              종목별·단체별 핵심 차이를 먼저 확인하고, 세부 규정과 일정은 각 단체·주최측 공식 공지를 함께 확인하세요.
+            </>
+          }
+          level={1}
+          variant="page"
+          classNames={{
+            eyebrow: "g-eyebrow",
+            title: "g-title",
+            description: "g-sub",
+          }}
+        />
       </div>
 
       {/* Sticky tabs */}
-      <div className="g-tabs">
-        <div className="g-tabs-row">
-          <a
+      <StickyControlBar className="g-tabs" containerClassName="g-tabs-row">
+          <SegmentLink
             ref={tabDivRef}
-            className="g-tab is-active"
+            className="g-tab"
             href="#division"
+            variant="neutral"
+            active
           >
             종목별 가이드
-          </a>
-          <a
+          </SegmentLink>
+          <SegmentLink
             ref={tabOrgRef}
             className="g-tab"
             href="#organization"
+            variant="neutral"
           >
             단체별 가이드
-          </a>
+          </SegmentLink>
           <button
             className="g-expand-btn"
             onClick={toggleAll}
           >
             {allOpen ? "모두 접기" : "모두 펼치기"}
           </button>
-        </div>
-      </div>
+      </StickyControlBar>
 
       {/* Content */}
       <div className="g-page-container g-foot-pad">

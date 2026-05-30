@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import type { CSSProperties } from "react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { ShareButton } from "@/components/ShareButton";
 import { PosterFigure, posterFigureColor } from "@/components/PosterFigure";
+import { StatusPill } from "@/components/UIPrimitives";
 import type { Competition } from "@/lib/data";
 import {
   daysBetween,
@@ -40,12 +42,21 @@ import { Icons } from "@/components/Icons";
 export const revalidate = 86_400;
 
 const STATUS_INFO: Record<string, { label: string; color: string; bg: string }> = {
-  open:    { label: "접수 중",    color: "#2D7A3E", bg: "rgba(45,122,62,.08)" },
-  urgent:  { label: "마감 임박", color: "#B85C3C", bg: "rgba(184,92,60,.10)" },
-  soon:    { label: "접수 예정", color: "#54514C", bg: "#F7F5F0" },
-  closed:  { label: "마감",      color: "#9C9890", bg: "#F7F5F0" },
-  unknown: { label: "확인 필요", color: "#C0A04A", bg: "rgba(192,160,74,.10)" },
+  open:    { label: "접수 중",    color: "var(--ph-success)", bg: "var(--ph-success-bg)" },
+  urgent:  { label: "마감 임박", color: "var(--ph-accent)", bg: "var(--ph-accent-soft)" },
+  soon:    { label: "접수 예정", color: "var(--ph-ink-3)", bg: "var(--ph-sub)" },
+  closed:  { label: "마감",      color: "var(--ph-ink-5)", bg: "var(--ph-sub)" },
+  unknown: { label: "확인 필요", color: "var(--ph-warn)", bg: "var(--ph-warn-bg)" },
 };
+
+type CSSVars = CSSProperties & Record<`--${string}`, string | number>;
+
+function statusVars(info: { color: string; bg: string }): CSSVars {
+  return {
+    "--status-color": info.color,
+    "--status-bg": info.bg,
+  };
+}
 
 const ATTR_META: Record<string, { name: string; desc: string }> = {
   global:   { name: "글로벌 무대",      desc: "Mr. Olympia·Arnold 등 세계 무대와 연결되는 국제 대회입니다." },
@@ -201,7 +212,7 @@ export default async function CompetitionDetailPage({
       <div className="det-page-container">
         {/* Breadcrumb */}
         <nav className="det-crumb" aria-label="breadcrumb">
-          <Link href="/competitions">대회 목록</Link>
+          <Link href="/competitions">대회 일정</Link>
           <span className="det-crumb-sep">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
           </span>
@@ -275,7 +286,7 @@ export default async function CompetitionDetailPage({
                     <span key={c} className="det-cat">{c}</span>
                   ))
                 ) : (
-                  <span className="det-cat" style={{ color: "#86827C" }}>공식 소스 확인 필요</span>
+                  <span className="det-cat is-muted">공식 소스 확인 필요</span>
                 )}
               </div>
             </section>
@@ -340,16 +351,15 @@ export default async function CompetitionDetailPage({
           <aside className="det-side">
             <div className="det-reg-card">
               <div className="det-reg-top">
-                <div
+                <StatusPill
                   className="det-status-pill"
-                  style={{ background: statusInfo.bg, color: statusInfo.color }}
-                >
-                  <span className="det-status-dot" style={{ background: statusInfo.color }} />
-                  <span className="det-status-label">{statusInfo.label}</span>
-                </div>
+                  dotClassName="det-status-dot"
+                  label={statusInfo.label}
+                  labelClassName="det-status-label"
+                  style={statusVars(statusInfo)}
+                />
                 <div
-                  className="det-reg-dday mono"
-                  style={{ color: isUrgent ? "#B85C3C" : "#0E0E0C" }}
+                  className={`det-reg-dday mono${isUrgent ? " is-urgent" : ""}`}
                 >
                   {ddayTxt}
                 </div>
@@ -425,15 +435,17 @@ export default async function CompetitionDetailPage({
                     <div className="det-rel-top">
                       <span className="det-rel-org">{r.orgShort}</span>
                       <span
-                        className="det-rel-dday mono"
-                        style={{ color: rStatus.kind === "urgent" ? "#B85C3C" : "#0E0E0C" }}
+                        className={`det-rel-dday mono${rStatus.kind === "urgent" ? " is-urgent" : ""}`}
                       >
                         {rd >= 0 ? `D−${rd}` : "종료"}
                       </span>
                     </div>
                     <div className="det-rel-title">{r.title}</div>
                     <div className="det-rel-meta">
-                      {fmtDate(r.date, { style: "long" })} · {r.region} · <span style={{ color: rInfo.color }}>{rInfo.label}</span>
+                      {fmtDate(r.date, { style: "long" })} · {r.region} ·{" "}
+                      <span className="det-rel-status" style={statusVars(rInfo)}>
+                        {rInfo.label}
+                      </span>
                     </div>
                   </Link>
                 );
@@ -503,7 +515,7 @@ function getBreadcrumbJsonLd(competition: Competition) {
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "홈", item: siteUrl },
-      { "@type": "ListItem", position: 2, name: "대회 목록", item: `${siteUrl}/competitions` },
+      { "@type": "ListItem", position: 2, name: "대회 일정", item: `${siteUrl}/competitions` },
       { "@type": "ListItem", position: 3, name: competition.title, item: `${siteUrl}${getCompetitionPath(competition)}` },
     ],
   };
