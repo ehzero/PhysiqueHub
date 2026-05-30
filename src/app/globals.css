@@ -1457,6 +1457,7 @@ ol {
   transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
   box-shadow: none;
   overflow: hidden;
+  overscroll-behavior: contain;
 }
 .drawer.open {
   transform: translateX(0);
@@ -1468,6 +1469,9 @@ ol {
 @media (max-width: 720px) {
   .drawer {
     touch-action: pan-y;
+  }
+  .drawer.is-dragging {
+    touch-action: none;
   }
 }
 .drawer-head {
@@ -1535,6 +1539,7 @@ ol {
 .drawer-body {
   flex: 1;
   overflow-y: auto;
+  overscroll-behavior: contain;
 }
 .drawer-status-bar {
   display: flex;

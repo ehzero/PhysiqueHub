@@ -22,6 +22,11 @@ const STATUS_INFO: Record<string, { label: string; color: string; bg: string }> 
   unknown: { label: "확인 필요", color: "#C0A04A", bg: "rgba(192,160,74,.10)" },
 };
 
+const SWIPE_INTENT_PX = 6;
+const SWIPE_CLOSE_PX = 56;
+const SWIPE_FAST_CLOSE_PX = 24;
+const SWIPE_FAST_VELOCITY = 0.45;
+
 function posterVariant(id: string): number {
   return Array.from(id).reduce((h, ch) => (h + ch.charCodeAt(0)) % 6, 0);
 }
@@ -45,10 +50,14 @@ export function CompDrawer({
 }: CompDrawerProps) {
   const [dragOffset, setDragOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const drawerRef = useRef<HTMLElement | null>(null);
   const dragStateRef = useRef<"idle" | "pending" | "dragging" | "cancelled">("idle");
   const dragStartXRef = useRef(0);
   const dragStartYRef = useRef(0);
+  const dragLastXRef = useRef(0);
+  const dragLastTimeRef = useRef(0);
   const dragOffsetRef = useRef(0);
+  const dragVelocityRef = useRef(0);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -68,6 +77,9 @@ export function CompDrawer({
   const resetDrag = () => {
     dragStateRef.current = "idle";
     dragOffsetRef.current = 0;
+    dragVelocityRef.current = 0;
+    dragLastXRef.current = 0;
+    dragLastTimeRef.current = 0;
     setDragOffset(0);
     setIsDragging(false);
   };
@@ -80,6 +92,32 @@ export function CompDrawer({
   const isMobileDrawerGesture = () =>
     typeof window !== "undefined" && window.matchMedia("(max-width: 720px)").matches;
 
+  useEffect(() => {
+    if (!isOpen) return;
+    if (typeof window === "undefined" || !window.matchMedia("(max-width: 720px)").matches) return;
+
+    const drawer = drawerRef.current;
+    if (!drawer) return;
+
+    const handleTouchMove = (event: TouchEvent) => {
+      if (dragStateRef.current === "idle" || dragStateRef.current === "cancelled") return;
+
+      const touch = event.touches[0];
+      if (!touch) return;
+
+      const deltaX = touch.clientX - dragStartXRef.current;
+      const deltaY = Math.abs(touch.clientY - dragStartYRef.current);
+      const hasHorizontalIntent = deltaX > 4 && deltaX >= deltaY * 0.35;
+
+      if (dragStateRef.current === "dragging" || hasHorizontalIntent) {
+        if (event.cancelable) event.preventDefault();
+      }
+    };
+
+    drawer.addEventListener("touchmove", handleTouchMove, { passive: false });
+    return () => drawer.removeEventListener("touchmove", handleTouchMove);
+  }, [isOpen]);
+
   const handleDragStart = (event: ReactPointerEvent<HTMLElement>) => {
     if (!isOpen || !isMobileDrawerGesture()) return;
     if ((event.target as HTMLElement).closest("button,a,input,textarea,select")) return;
@@ -87,7 +125,10 @@ export function CompDrawer({
     dragStateRef.current = "pending";
     dragStartXRef.current = event.clientX;
     dragStartYRef.current = event.clientY;
+    dragLastXRef.current = event.clientX;
+    dragLastTimeRef.current = event.timeStamp;
     dragOffsetRef.current = 0;
+    dragVelocityRef.current = 0;
     setDragOffset(0);
     event.currentTarget.setPointerCapture(event.pointerId);
   };
@@ -97,26 +138,54 @@ export function CompDrawer({
 
     const deltaX = event.clientX - dragStartXRef.current;
     const deltaY = Math.abs(event.clientY - dragStartYRef.current);
+    const absDeltaX = Math.abs(deltaX);
+    const hasHorizontalIntent = deltaX > 4 && deltaX >= deltaY * 0.35;
+
+    if (hasHorizontalIntent) event.preventDefault();
 
     if (dragStateRef.current === "pending") {
-      if (deltaY > 10 && deltaY > Math.abs(deltaX)) {
+      if (deltaY > 28 && deltaY > absDeltaX * 1.9) {
         dragStateRef.current = "cancelled";
         return;
       }
-      if (deltaX < 10 || deltaX < deltaY * 1.15) return;
+      if (deltaX < SWIPE_INTENT_PX || deltaX < deltaY * 0.45) return;
 
       dragStateRef.current = "dragging";
       setIsDragging(true);
     }
 
     event.preventDefault();
+    const elapsed = Math.max(1, event.timeStamp - dragLastTimeRef.current);
+    dragVelocityRef.current = (event.clientX - dragLastXRef.current) / elapsed;
+    dragLastXRef.current = event.clientX;
+    dragLastTimeRef.current = event.timeStamp;
+
     const nextOffset = Math.max(0, deltaX);
     dragOffsetRef.current = nextOffset;
     setDragOffset(nextOffset);
   };
 
+  const shouldCloseFromDrag = () => {
+    const velocity = Math.max(0, dragVelocityRef.current);
+
+    return (
+      dragOffsetRef.current > SWIPE_CLOSE_PX ||
+      (dragOffsetRef.current > SWIPE_FAST_CLOSE_PX && velocity > SWIPE_FAST_VELOCITY)
+    );
+  };
+
   const handleDragEnd = () => {
-    if (dragStateRef.current === "dragging" && dragOffsetRef.current > 80) {
+    if (dragStateRef.current === "dragging" && shouldCloseFromDrag()) {
+      resetDrag();
+      onClose();
+      return;
+    }
+
+    resetDrag();
+  };
+
+  const handleDragCancel = () => {
+    if (dragStateRef.current === "dragging" && shouldCloseFromDrag()) {
       resetDrag();
       onClose();
       return;
@@ -159,13 +228,14 @@ export function CompDrawer({
       <aside
         className={`drawer ${isOpen ? "open" : ""}${isOpen && isDragging ? " is-dragging" : ""}`}
         style={isOpen && dragOffset > 0 ? { transform: `translateX(${dragOffset}px)` } : undefined}
+        ref={drawerRef}
         role="dialog"
         aria-modal="true"
         aria-label="대회 상세"
         onPointerDown={handleDragStart}
         onPointerMove={handleDragMove}
         onPointerUp={handleDragEnd}
-        onPointerCancel={resetDrag}
+        onPointerCancel={handleDragCancel}
       >
 
         {/* Header */}
