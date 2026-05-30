@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useRef, useEffect } from "react";
+import { useMemo, useState, useRef, useEffect, type PointerEvent } from "react";
 import { Competition, Filters } from "@/lib/data";
 import { COMPETITION_TIER_LABELS } from "@/lib/competition-classification";
 import type { CompetitionFilterOptions } from "@/lib/competition-public";
@@ -62,6 +62,11 @@ export function ListView({
   const [viewMode, setViewMode] = useState<ViewMode>("list");
   const [sortOpen, setSortOpen] = useState(false);
   const [filterSheetOpen, setFilterSheetOpen] = useState(false);
+  const [sheetDragOffset, setSheetDragOffset] = useState(0);
+  const [sheetDragging, setSheetDragging] = useState(false);
+  const sheetDraggingRef = useRef(false);
+  const sheetDragStartYRef = useRef(0);
+  const sheetDragOffsetRef = useRef(0);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const sortDropRef = useRef<HTMLDivElement>(null);
 
@@ -88,6 +93,48 @@ export function ListView({
     window.addEventListener("keydown", handleSearchShortcut);
     return () => window.removeEventListener("keydown", handleSearchShortcut);
   }, []);
+
+  const closeFilterSheet = () => {
+    setFilterSheetOpen(false);
+    setSheetDragging(false);
+    sheetDraggingRef.current = false;
+    setSheetDragOffset(0);
+    sheetDragOffsetRef.current = 0;
+  };
+
+  const handleSheetDragStart = (event: PointerEvent<HTMLDivElement>) => {
+    if (!filterSheetOpen) return;
+    if ((event.target as HTMLElement).closest("button")) return;
+
+    sheetDragStartYRef.current = event.clientY;
+    sheetDragOffsetRef.current = 0;
+    setSheetDragOffset(0);
+    setSheetDragging(true);
+    sheetDraggingRef.current = true;
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const handleSheetDragMove = (event: PointerEvent<HTMLDivElement>) => {
+    if (!sheetDraggingRef.current) return;
+
+    const offset = Math.max(0, event.clientY - sheetDragStartYRef.current);
+    sheetDragOffsetRef.current = offset;
+    setSheetDragOffset(offset);
+  };
+
+  const handleSheetDragEnd = () => {
+    if (!sheetDraggingRef.current) return;
+
+    const shouldClose = sheetDragOffsetRef.current > 48;
+    setSheetDragging(false);
+    sheetDraggingRef.current = false;
+    setSheetDragOffset(0);
+    sheetDragOffsetRef.current = 0;
+
+    if (shouldClose) {
+      setFilterSheetOpen(false);
+    }
+  };
 
   const segmented = useMemo(() => {
     if (scope === "domestic") return comps.filter((c) => c.country === "KR");
@@ -505,21 +552,28 @@ export function ListView({
       {/* Mobile filter bottom sheet */}
       <div
         className={`lv-sheet-backdrop${filterSheetOpen ? " is-open" : ""}`}
-        onClick={() => setFilterSheetOpen(false)}
+        onClick={closeFilterSheet}
         aria-hidden="true"
       />
       <div
-        className={`lv-sheet${filterSheetOpen ? " is-open" : ""}`}
+        className={`lv-sheet${filterSheetOpen ? " is-open" : ""}${sheetDragging ? " is-dragging" : ""}`}
+        style={sheetDragOffset > 0 ? { transform: `translateY(${sheetDragOffset}px)` } : undefined}
         role="dialog"
         aria-modal="true"
         aria-label="필터"
       >
-        <div className="lv-sheet-grip">
+        <div
+          className="lv-sheet-grip"
+          onPointerDown={handleSheetDragStart}
+          onPointerMove={handleSheetDragMove}
+          onPointerUp={handleSheetDragEnd}
+          onPointerCancel={handleSheetDragEnd}
+        >
           <span className="lv-sheet-bar" />
           <button
             className="lv-sheet-x"
             type="button"
-            onClick={() => setFilterSheetOpen(false)}
+            onClick={closeFilterSheet}
             aria-label="필터 닫기"
           >
             {Icons.close}
@@ -538,7 +592,7 @@ export function ListView({
           <button
             className="lv-sheet-apply"
             type="button"
-            onClick={() => setFilterSheetOpen(false)}
+            onClick={closeFilterSheet}
           >
             결과 <b>{sorted.length.toLocaleString("ko-KR")}</b>개 보기
           </button>

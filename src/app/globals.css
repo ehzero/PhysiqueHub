@@ -7130,18 +7130,26 @@ ol {
   box-shadow: 0 -16px 48px rgba(10, 10, 10, 0.2);
 }
 .lv-sheet.is-open { transform: translateY(0); }
+.lv-sheet.is-dragging { transition: none; }
 .lv-sheet-grip {
   position: relative;
   display: flex;
   justify-content: center;
   padding: 11px 0 4px;
   flex-shrink: 0;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.lv-sheet-grip:active {
+  cursor: grabbing;
 }
 .lv-sheet-bar {
   width: 38px;
   height: 4px;
   border-radius: 2px;
   background: #E8E5DE;
+  pointer-events: none;
 }
 .lv-sheet-x {
   position: absolute;
