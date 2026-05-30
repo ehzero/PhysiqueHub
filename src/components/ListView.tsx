@@ -94,6 +94,24 @@ export function ListView({
     return () => window.removeEventListener("keydown", handleSearchShortcut);
   }, []);
 
+  useEffect(() => {
+    if (!filterSheetOpen) return;
+
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousBodyOverscroll = document.body.style.overscrollBehavior;
+    const previousRootOverscroll = document.documentElement.style.overscrollBehavior;
+
+    document.body.style.overflow = "hidden";
+    document.body.style.overscrollBehavior = "none";
+    document.documentElement.style.overscrollBehavior = "none";
+
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      document.body.style.overscrollBehavior = previousBodyOverscroll;
+      document.documentElement.style.overscrollBehavior = previousRootOverscroll;
+    };
+  }, [filterSheetOpen]);
+
   const closeFilterSheet = () => {
     setFilterSheetOpen(false);
     setSheetDragging(false);
@@ -106,6 +124,7 @@ export function ListView({
     if (!filterSheetOpen) return;
     if ((event.target as HTMLElement).closest("button")) return;
 
+    event.preventDefault();
     sheetDragStartYRef.current = event.clientY;
     sheetDragOffsetRef.current = 0;
     setSheetDragOffset(0);
@@ -117,6 +136,7 @@ export function ListView({
   const handleSheetDragMove = (event: PointerEvent<HTMLDivElement>) => {
     if (!sheetDraggingRef.current) return;
 
+    event.preventDefault();
     const offset = Math.max(0, event.clientY - sheetDragStartYRef.current);
     sheetDragOffsetRef.current = offset;
     setSheetDragOffset(offset);

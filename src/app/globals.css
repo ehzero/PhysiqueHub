@@ -7139,6 +7139,7 @@ ol {
   flex-direction: column;
   max-height: 86vh;
   box-shadow: none;
+  overscroll-behavior: contain;
 }
 .lv-sheet.is-open {
   transform: translateY(0);
@@ -7181,6 +7182,7 @@ ol {
 .lv-sheet-body {
   flex: 1;
   overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 6px 20px 14px;
 }
 .lv-sheet-foot {
