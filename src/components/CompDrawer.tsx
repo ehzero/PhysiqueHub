@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import Link from "next/link";
 import { getCompetitionPath } from "@/lib/competition-slug";
 import {
@@ -43,6 +43,13 @@ export function CompDrawer({
   onToggleSave,
   today,
 }: CompDrawerProps) {
+  const [dragOffset, setDragOffset] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStateRef = useRef<"idle" | "pending" | "dragging" | "cancelled">("idle");
+  const dragStartXRef = useRef(0);
+  const dragStartYRef = useRef(0);
+  const dragOffsetRef = useRef(0);
+
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") onClose();
@@ -57,6 +64,66 @@ export function CompDrawer({
     else document.body.style.overflow = "";
     return () => { document.body.style.overflow = ""; };
   }, [isOpen]);
+
+  const resetDrag = () => {
+    dragStateRef.current = "idle";
+    dragOffsetRef.current = 0;
+    setDragOffset(0);
+    setIsDragging(false);
+  };
+
+  const closeDrawer = () => {
+    resetDrag();
+    onClose();
+  };
+
+  const isMobileDrawerGesture = () =>
+    typeof window !== "undefined" && window.matchMedia("(max-width: 720px)").matches;
+
+  const handleDragStart = (event: ReactPointerEvent<HTMLElement>) => {
+    if (!isOpen || !isMobileDrawerGesture()) return;
+    if ((event.target as HTMLElement).closest("button,a,input,textarea,select")) return;
+
+    dragStateRef.current = "pending";
+    dragStartXRef.current = event.clientX;
+    dragStartYRef.current = event.clientY;
+    dragOffsetRef.current = 0;
+    setDragOffset(0);
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const handleDragMove = (event: ReactPointerEvent<HTMLElement>) => {
+    if (dragStateRef.current === "idle" || dragStateRef.current === "cancelled") return;
+
+    const deltaX = event.clientX - dragStartXRef.current;
+    const deltaY = Math.abs(event.clientY - dragStartYRef.current);
+
+    if (dragStateRef.current === "pending") {
+      if (deltaY > 10 && deltaY > Math.abs(deltaX)) {
+        dragStateRef.current = "cancelled";
+        return;
+      }
+      if (deltaX < 10 || deltaX < deltaY * 1.15) return;
+
+      dragStateRef.current = "dragging";
+      setIsDragging(true);
+    }
+
+    event.preventDefault();
+    const nextOffset = Math.max(0, deltaX);
+    dragOffsetRef.current = nextOffset;
+    setDragOffset(nextOffset);
+  };
+
+  const handleDragEnd = () => {
+    if (dragStateRef.current === "dragging" && dragOffsetRef.current > 80) {
+      resetDrag();
+      onClose();
+      return;
+    }
+
+    resetDrag();
+  };
 
   if (!comp) {
     return (
@@ -88,8 +155,18 @@ export function CompDrawer({
 
   return (
     <>
-      <div className={`drawer-back ${isOpen ? "open" : ""}`} onClick={onClose} />
-      <aside className={`drawer ${isOpen ? "open" : ""}`} role="dialog" aria-modal="true" aria-label="대회 상세">
+      <div className={`drawer-back ${isOpen ? "open" : ""}`} onClick={closeDrawer} />
+      <aside
+        className={`drawer ${isOpen ? "open" : ""}${isOpen && isDragging ? " is-dragging" : ""}`}
+        style={isOpen && dragOffset > 0 ? { transform: `translateX(${dragOffset}px)` } : undefined}
+        role="dialog"
+        aria-modal="true"
+        aria-label="대회 상세"
+        onPointerDown={handleDragStart}
+        onPointerMove={handleDragMove}
+        onPointerUp={handleDragEnd}
+        onPointerCancel={resetDrag}
+      >
 
         {/* Header */}
         <div className="drawer-head">
@@ -104,7 +181,7 @@ export function CompDrawer({
               {isSaved ? Icons.bookmarkFilled : Icons.bookmark}
             </button>
             <ShareButton iconOnly path={getCompetitionPath(comp)} />
-            <button className="icon-btn" onClick={onClose} aria-label="닫기" type="button">
+            <button className="icon-btn" onClick={closeDrawer} aria-label="닫기" type="button">
               {Icons.close}
             </button>
           </div>
@@ -197,7 +274,7 @@ export function CompDrawer({
           <Link
             href={getCompetitionPath(comp)}
             className="cta-ghost"
-            onClick={onClose}
+            onClick={closeDrawer}
             prefetch={false}
           >
             상세 페이지

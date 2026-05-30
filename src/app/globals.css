@@ -1455,11 +1455,20 @@ ol {
   flex-direction: column;
   transform: translateX(100%);
   transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
-  box-shadow: -24px 0 64px rgba(10, 10, 10, 0.22);
+  box-shadow: none;
   overflow: hidden;
 }
 .drawer.open {
   transform: translateX(0);
+  box-shadow: -24px 0 64px rgba(10, 10, 10, 0.22);
+}
+.drawer.is-dragging {
+  transition: none;
+}
+@media (max-width: 720px) {
+  .drawer {
+    touch-action: pan-y;
+  }
 }
 .drawer-head {
   display: flex;
@@ -5511,6 +5520,7 @@ ol {
   display: block;
   line-height: 1;
   margin-bottom: 14px;
+  color: #B85C3C;
 }
 .lv-title {
   font-size: clamp(28px, 3vw, 40px);
@@ -6566,6 +6576,7 @@ ol {
 
 @media (max-width: 720px) {
   .g-page-container { padding: 0 20px; }
+  .g-page-container.g-head { padding-top: 40px; }
   .g-tabs-row { padding: 0 20px; }
   .g-cols { grid-template-columns: 1fr; gap: 22px; }
 }
@@ -7127,9 +7138,12 @@ ol {
   transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1);
   flex-direction: column;
   max-height: 86vh;
+  box-shadow: none;
+}
+.lv-sheet.is-open {
+  transform: translateY(0);
   box-shadow: 0 -16px 48px rgba(10, 10, 10, 0.2);
 }
-.lv-sheet.is-open { transform: translateY(0); }
 .lv-sheet.is-dragging { transition: none; }
 .lv-sheet-grip {
   position: relative;
