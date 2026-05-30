@@ -4065,6 +4065,7 @@ ol {
 .hub-explore-more {
   width: 100%;
   border: 0;
+  border-top: 1px solid var(--ph-line-soft);
   color: var(--ph-ink);
   cursor: pointer;
   justify-content: center;
