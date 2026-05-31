@@ -4,7 +4,12 @@ export type ArticleBodyBlock =
   | { t: "p"; x: string }
   | { t: "h"; x: string }
   | { t: "quote"; x: string }
-  | { t: "list"; items: string[] };
+  | { t: "list"; items: string[] }
+  | { t: "summary"; items: string[] }
+  | { t: "checklist"; items: string[] }
+  | { t: "table"; columns: string[]; rows: string[][] }
+  | { t: "faq"; items: { q: string; a: string }[] }
+  | { t: "links"; items: { label: string; href: string; note?: string }[] };
 
 export interface Article {
   id: string;
@@ -12,6 +17,7 @@ export interface Article {
   tag: string;
   title: string;
   dek: string;
+  metaDescription?: string;
   author: string;
   date: string;
   read: number;
@@ -24,7 +30,7 @@ export interface Article {
   updatedAt?: string;
 }
 
-export const ARTICLE_CATS = ["전체", "대회 결과", "트레이닝", "영양", "인터뷰"] as const;
+export const ARTICLE_CATS = ["전체", "가이드", "대회 결과", "트레이닝", "영양", "인터뷰"] as const;
 export type ArticleCat = (typeof ARTICLE_CATS)[number];
 
 export function getArticlePath(article: Pick<Article, "id">): string {

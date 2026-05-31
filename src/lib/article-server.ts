@@ -128,6 +128,7 @@ function serializeArticle(record: Awaited<ReturnType<typeof prisma.article.findM
     tag: record.tag,
     title: record.title,
     dek: record.excerpt,
+    metaDescription: record.subtitle ?? undefined,
     author: record.authorName,
     date: formatArticleDate(publishedAt),
     read: record.readMinutes,
@@ -165,11 +166,59 @@ function toBodyBlock(value: unknown): ArticleBodyBlock[] {
     return [{ t: block.t, x: block.x }];
   }
 
-  if (block.t === "list" && Array.isArray(block.items)) {
+  if (
+    (block.t === "list" || block.t === "summary" || block.t === "checklist") &&
+    Array.isArray(block.items)
+  ) {
     return [{
-      t: "list",
+      t: block.t,
       items: block.items.filter((item): item is string => typeof item === "string"),
     }];
+  }
+
+  if (block.t === "table" && Array.isArray(block.columns) && Array.isArray(block.rows)) {
+    const columns = block.columns.filter((item): item is string => typeof item === "string");
+    const rows = block.rows
+      .filter((row): row is unknown[] => Array.isArray(row))
+      .map((row) => row.filter((item): item is string => typeof item === "string"));
+
+    if (columns.length > 0 && rows.length > 0) {
+      return [{ t: "table", columns, rows }];
+    }
+  }
+
+  if (block.t === "faq" && Array.isArray(block.items)) {
+    const items = block.items.flatMap((item) => {
+      if (!item || typeof item !== "object") return [];
+      const faq = item as Record<string, unknown>;
+
+      return typeof faq.q === "string" && typeof faq.a === "string"
+        ? [{ q: faq.q, a: faq.a }]
+        : [];
+    });
+
+    if (items.length > 0) {
+      return [{ t: "faq", items }];
+    }
+  }
+
+  if (block.t === "links" && Array.isArray(block.items)) {
+    const items = block.items.flatMap((item) => {
+      if (!item || typeof item !== "object") return [];
+      const link = item as Record<string, unknown>;
+
+      return typeof link.label === "string" && typeof link.href === "string"
+        ? [{
+          label: link.label,
+          href: link.href,
+          note: typeof link.note === "string" ? link.note : undefined,
+        }]
+        : [];
+    });
+
+    if (items.length > 0) {
+      return [{ t: "links", items }];
+    }
   }
 
   return [];

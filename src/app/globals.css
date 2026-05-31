@@ -8203,6 +8203,106 @@ ol {
   border-radius: 50%;
   background: var(--ph-accent);
 }
+.rd-body-summary,
+.rd-body-checklist {
+  padding: 16px 18px;
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+  background: var(--ph-elev);
+}
+.rd-body-summary li,
+.rd-body-checklist li {
+  padding-left: 24px;
+}
+.rd-body-summary li::before {
+  width: 7px;
+  height: 7px;
+  background: var(--ph-sub);
+}
+.rd-body-checklist li::before {
+  content: "✓";
+  top: 0;
+  left: 0;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ph-accent);
+  font-weight: 800;
+}
+.rd-table-wrap {
+  overflow-x: auto;
+  margin: 10px 0 28px;
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+}
+.rd-table {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+  font-size: 14px;
+  line-height: 1.55;
+}
+.rd-table th,
+.rd-table td {
+  padding: 12px 14px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--line-soft);
+  color: var(--ph-ink-2);
+  word-break: keep-all;
+}
+.rd-table th {
+  color: var(--ph-ink);
+  font-weight: 700;
+  background: var(--ph-elev);
+}
+.rd-table tr:last-child td {
+  border-bottom: 0;
+}
+.rd-faq-list {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 26px;
+}
+.rd-faq-item {
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+  background: var(--ph-elev);
+}
+.rd-faq-item summary {
+  cursor: pointer;
+  padding: 14px 16px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ph-ink);
+  word-break: keep-all;
+}
+.rd-faq-item summary::-webkit-details-marker {
+  display: none;
+}
+.rd-faq-item p {
+  margin: 0;
+  padding: 0 16px 15px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--ph-ink-2);
+  word-break: keep-all;
+}
+.rd-link-list a {
+  color: var(--ph-accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+.rd-link-list a:hover {
+  text-decoration: underline;
+}
+.rd-link-list span {
+  display: block;
+  margin-top: 3px;
+  font-size: 13px;
+  color: var(--ph-ink-4);
+}
 .rd-quote {
   margin: 32px 0;
   padding: 4px 0 4px 24px;

@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!article) return { title: "아티클 · PhysiqueHub" };
   return createPageMetadata({
     title: article.title,
-    description: article.dek,
+    description: article.metaDescription ?? article.dek,
     path: getArticlePath(article),
   });
 }

@@ -16,9 +16,59 @@ interface ArticleDetailViewProps {
 function BodyBlock({ block }: { block: ArticleBodyBlock }) {
   if (block.t === "h") return <h2 className="rd-body-h2">{block.x}</h2>;
   if (block.t === "quote") return <blockquote className="rd-quote">{block.x}</blockquote>;
-  if (block.t === "list") return (
-    <ul className="rd-body-list">
+  if (block.t === "list" || block.t === "summary" || block.t === "checklist") return (
+    <ul className={`rd-body-list rd-body-${block.t}`}>
       {block.items.map((item, i) => <li key={i}>{item}</li>)}
+    </ul>
+  );
+  if (block.t === "table") return (
+    <div className="rd-table-wrap">
+      <table className="rd-table">
+        <thead>
+          <tr>
+            {block.columns.map((column) => <th key={column}>{column}</th>)}
+          </tr>
+        </thead>
+        <tbody>
+          {block.rows.map((row, rowIndex) => (
+            <tr key={rowIndex}>
+              {block.columns.map((column, columnIndex) => (
+                <td key={`${column}-${columnIndex}`}>{row[columnIndex] ?? ""}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+  if (block.t === "faq") return (
+    <div className="rd-faq-list">
+      {block.items.map((item) => (
+        <details key={item.q} className="rd-faq-item">
+          <summary>{item.q}</summary>
+          <p>{item.a}</p>
+        </details>
+      ))}
+    </div>
+  );
+  if (block.t === "links") return (
+    <ul className="rd-body-list rd-link-list">
+      {block.items.map((item) => {
+        const external = /^https?:\/\//.test(item.href);
+
+        return (
+          <li key={`${item.href}-${item.label}`}>
+            {external ? (
+              <a href={item.href} target="_blank" rel="noreferrer">
+                {item.label}
+              </a>
+            ) : (
+              <Link href={item.href}>{item.label}</Link>
+            )}
+            {item.note && <span>{item.note}</span>}
+          </li>
+        );
+      })}
     </ul>
   );
   return <p className="rd-body-p">{block.x}</p>;
