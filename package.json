@@ -10,6 +10,7 @@
     "crawl:sync": "tsx scripts/crawl-sync.ts",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
+    "db:migrate:new-supabase": "tsx scripts/migrate-db-to-new-supabase.ts",
     "db:studio": "prisma studio"
   },
   "dependencies": {
