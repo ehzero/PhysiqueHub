@@ -38,8 +38,8 @@ export interface ArticleData2Draft {
   title: string;
   metaDescription: string;
   excerpt: string;
-  category: "가이드";
-  categorySlug: "guide";
+  category: "가이드" | "대회 결과";
+  categorySlug: "guide" | "competition-result";
   tag: string;
   authorName: string;
   readMinutes: number;
@@ -1493,6 +1493,371 @@ export const articlesData2: ArticleData2Draft[] = [
     additionalChecks: [
       "루키·노비스 기준은 단체별로 다르므로 구체 기준을 넣을 경우 해당 대회 요강으로 확인한다.",
       "프로 퀄리파이어 자격 문장은 NPC Worldwide와 IFBB PRO KOREA 규정을 기준으로 한정한다.",
+    ],
+  },
+  {
+    id: "article2_2026-new-york-pro-results",
+    slug: "2026-new-york-pro-results",
+    recommendedTitles: [
+      "2026 New York Pro 결과 정리: Tonio Burton, Niall Darwen, Maria Acosta 우승",
+      "2026 New York Pro 결과와 올림피아 퀄리파이 포인트 해석",
+      "IFBB Pro League 2026 New York Pro 주요 부문 TOP 3 정리",
+    ],
+    title: "2026 New York Pro 결과 정리: 공식 페이지 기준 주요 부문 TOP 3",
+    metaDescription:
+      "2026 New York Pro 결과를 IFBB Pro League 공식 페이지 기준으로 정리했습니다. Tonio Burton 우승, Jaehun Park 3위, 주요 부문 TOP 3와 올림피아 퀄리파이 해석 주의를 확인하세요.",
+    excerpt:
+      "2026 New York Pro는 5월 8일부터 9일까지 뉴저지 티넥에서 열린 IFBB Pro League PRO 대회입니다. 공식 결과 기준 주요 부문 TOP 3와 한국 선수 순위를 정리했습니다.",
+    category: "대회 결과",
+    categorySlug: "competition-result",
+    tag: "IFBB Pro League",
+    authorName: "PhysiqueHub 편집부",
+    readMinutes: 7,
+    posterTheme: "navy",
+    posterFigure: 4,
+    targetReaders: [
+      "2026 New York Pro 결과를 빠르게 확인하려는 독자",
+      "IFBB Pro League 시즌 흐름과 보디빌딩 대회 결과를 비교하는 팬",
+      "올림피아 퀄리파이 기준과 포인트 해석이 궁금한 독자",
+    ],
+    mainKeyword: "2026 New York Pro 결과",
+    relatedKeywords: [
+      "IFBB Pro League",
+      "보디빌딩 대회 결과",
+      "피지크 대회 결과",
+      "올림피아 퀄리파이",
+      "New York Pro",
+      "2026 보디빌딩 결과",
+    ],
+    writingStandardDate: "2026-05-31",
+    body: [
+      {
+        t: "p",
+        x: "2026 New York Pro 결과는 IFBB Pro League 공식 대회 페이지 기준으로 정리했습니다. 대회는 2026년 5월 8일부터 5월 9일까지 미국 뉴저지주 티넥에서 열렸고, Competition Level은 IFBB Pro League PRO로 안내되었습니다.",
+        sourceIds: ["ifbbpro-new-york-2026"],
+      },
+      {
+        t: "summary",
+        items: [
+          "Men’s Bodybuilding Open은 Tonio Burton이 1위, Michal Krizanek이 2위, Rafael Brandao가 3위를 기록했습니다.",
+          "Men’s Classic Physique는 Niall Darwen이 우승했고, 한국의 Jaehun Park은 3위에 올랐습니다.",
+          "Women’s Physique에서는 Paula Ranta가 1위였고, Ji Hye Lee는 7위, Yuna Kim은 10위로 기록되었습니다.",
+          "Women’s Fit Model에서는 Gabriela Queiroz가 1위였고, Yeseul Lee는 16위로 확인됩니다.",
+          "Olympia qualification은 OQS 규정 기준으로 조심스럽게 해석해야 하며, 공식 qualified athletes 목록은 대회 후 업데이트될 수 있어 최종 확인이 필요합니다.",
+        ],
+      },
+      { t: "h", x: "대회 기본 정보" },
+      {
+        t: "table",
+        columns: ["항목", "내용"],
+        rows: [
+          ["대회명", "2026 New York Pro"],
+          ["일정", "2026년 5월 8일-5월 9일"],
+          ["장소", "Teaneck, New Jersey"],
+          ["Competition Level", "IFBB Pro League PRO"],
+          ["결과 기준", "IFBB Pro League 공식 대회 페이지, 확인일 2026-05-31"],
+        ],
+        sourceIds: ["ifbbpro-new-york-2026"],
+      },
+      { t: "h", x: "2026 New York Pro 결과표" },
+      {
+        t: "table",
+        columns: ["Division", "1위", "2위", "3위", "한국 선수 순위"],
+        rows: [
+          ["Men’s Bodybuilding Open", "Tonio Burton (USA)", "Michal Krizanek (Slovakia)", "Rafael Brandao (Brazil)", "-"],
+          ["Men’s 212", "Michael Condell (USA)", "Noel Adame (USA)", "Jury Kruber (Germany)", "-"],
+          ["Men’s Classic Physique", "Niall Darwen (UK)", "Diego Alejandro Galindo Garavito (Colombia)", "Jaehun Park (South Korea)", "Jaehun Park 3위"],
+          ["Men’s Physique", "Ali Bilal (Afghanistan)", "Edvan Palmeira (Brazil)", "Isai Kesek (Indonesia)", "-"],
+          ["Women’s Figure", "Jeanne Kassel (Germany)", "Vanessa Happle (Germany)", "Mariela Merced (Puerto Rico)", "-"],
+          ["Women’s Bikini", "Maria Acosta (USA)", "Phoebe Hagan (UK)", "Kate Carroll (New Zealand)", "-"],
+          ["Women’s Physique", "Paula Ranta (Finland)", "Julia Glazycheva (Russia)", "Susan Mathison (USA)", "Ji Hye Lee 7위, Yuna Kim 10위"],
+          ["Women’s Wellness", "Daniele Mendonca (Brazil)", "Giselle Machado (Brazil)", "Tatiane Farkas (Brazil)", "-"],
+          ["Women’s Fit Model", "Gabriela Queiroz (USA)", "Carla Andrea Reyes Vargas (Bolivia)", "Aisha Mian (Canada)", "Yeseul Lee 16위"],
+        ],
+        sourceIds: ["ifbbpro-new-york-2026"],
+      },
+      { t: "h", x: "한국 선수 순위" },
+      {
+        t: "list",
+        items: [
+          "Men’s Classic Physique에서는 Jaehun Park이 3위에 올라, 2026 New York Pro 결과에서 가장 눈에 띄는 한국 선수 성과로 볼 수 있습니다.",
+          "Women’s Physique에서는 Ji Hye Lee가 7위, Yuna Kim이 10위로 공식 결과에 기록되었습니다.",
+          "Women’s Fit Model에서는 Yeseul Lee가 16위로 확인됩니다.",
+          "순위와 표기는 IFBB Pro League 공식 페이지 기준이며, 동명이인이나 표기 변형 가능성이 있는 경우 공식 페이지 원문을 함께 확인하는 편이 안전합니다.",
+        ],
+        sourceIds: ["ifbbpro-new-york-2026"],
+      },
+      { t: "h", x: "Olympia qualification 해석 주의" },
+      {
+        t: "p",
+        x: "공식 Olympia Qualification System 안내에 따르면 2026 OQS 기간은 2025년 9월 15일부터 2026년 8월 30일까지입니다. Classic Physique, Men’s Physique, Bikini, Wellness의 경우 New York Pro는 1위 자동 자격, 2위 14점, 3위 11점 등으로 안내됩니다. Men’s Open Bodybuilding, Men’s 212, Figure, Women’s Physique, Fit Model 등은 qualification period 중 open contest winner가 자격을 얻는 방식으로 안내됩니다.",
+        sourceIds: ["ifbbpro-oqs-2026"],
+      },
+      {
+        t: "p",
+        x: "다만 이 글은 2026 New York Pro 결과와 OQS 규정의 연결을 설명하는 정리입니다. 공식 qualified athletes 목록은 대회 후 업데이트될 수 있으므로, 올림피아 출전 확정 여부는 IFBB Pro League와 Olympia의 공식 qualified athletes 목록에서 최종 확인해야 합니다.",
+        sourceIds: ["ifbbpro-oqs-2026"],
+      },
+    ],
+    faq: [
+      {
+        q: "2026 New York Pro 결과는 어떤 출처 기준인가요?",
+        a: "IFBB Pro League 공식 2026 New York Pro 대회 페이지를 기준으로 정리했습니다. 확인일은 2026년 5월 31일입니다.",
+      },
+      {
+        q: "2026 New York Pro에서 한국 선수는 어떤 결과를 냈나요?",
+        a: "공식 결과 기준 Men’s Classic Physique에서 Jaehun Park이 3위, Women’s Physique에서 Ji Hye Lee가 7위와 Yuna Kim이 10위, Women’s Fit Model에서 Yeseul Lee가 16위로 확인됩니다.",
+      },
+      {
+        q: "New York Pro 우승자는 바로 올림피아에 진출하나요?",
+        a: "OQS 규정상 여러 부문에서 우승 또는 포인트가 올림피아 자격과 연결됩니다. 다만 공식 qualified athletes 목록은 대회 후 업데이트될 수 있으므로 최종 확정 여부는 공식 목록으로 확인해야 합니다.",
+      },
+    ],
+    sources: [
+      {
+        id: "ifbbpro-new-york-2026",
+        label: "IFBB Pro League 2026 New York Pro",
+        url: "https://www.ifbbpro.com/competition/2026-new-york-pro/",
+        sourceType: "official",
+        checkedAt: "2026-05-31",
+      },
+      {
+        id: "ifbbpro-oqs-2026",
+        label: "IFBB Pro League Olympia Qualification Rules",
+        url: "https://www.ifbbpro.com/olympia-qualification-rules/",
+        sourceType: "official",
+        checkedAt: "2026-05-31",
+      },
+      {
+        id: "domain-context",
+        label: "피트니스·보디빌딩 대회와 단체 컨텍스트",
+        path: "docs/fitness-bodybuilding-competition-context.md",
+        sourceType: "local",
+        checkedAt: "2026-05-31",
+      },
+    ],
+    internalLinks: [
+      {
+        anchor: "IFBB Pro · NPC 대회 일정",
+        href: "/competitions/organizations/ifbb",
+        placement: "대회 기본 정보 표 아래",
+      },
+      {
+        anchor: "전체 아티클",
+        href: "/articles",
+        placement: "결과표 아래",
+      },
+      {
+        anchor: "2026 Pittsburgh Pro 결과",
+        href: "/articles/2026-pittsburgh-pro-results",
+        placement: "Olympia qualification 설명 뒤",
+      },
+      {
+        anchor: "클래식 피지크 대회 일정",
+        href: "/competitions/categories/classic-physique",
+        placement: "한국 선수 순위 문단 뒤",
+      },
+      {
+        anchor: "맨즈 피지크 대회 일정",
+        href: "/competitions/categories/mens-physique",
+        placement: "Olympia qualification 설명 뒤",
+      },
+    ],
+    additionalChecks: [
+      "게시 직전 IFBB Pro League 공식 대회 페이지의 순위 표기와 선수 국적 표기를 다시 확인한다.",
+      "Olympia qualified athletes 공식 목록이 업데이트되면 자동 자격 또는 포인트 관련 문장을 최신 상태로 재검토한다.",
+      "Men’s 212 등 Pittsburgh Pro와 division 구성이 다른 부문을 혼동하지 않았는지 편집 단계에서 확인한다.",
+    ],
+  },
+  {
+    id: "article2_2026-pittsburgh-pro-results",
+    slug: "2026-pittsburgh-pro-results",
+    recommendedTitles: [
+      "2026 Pittsburgh Pro 결과 정리: Michal Krizanek, Niall Darwen, Lauralie Chapados 우승",
+      "2026 Pittsburgh Pro 결과와 올림피아 퀄리파이 포인트 해석",
+      "Pittsburgh Power & Fitness Festival 2026 IFBB Pro League 결과 정리",
+    ],
+    title: "2026 Pittsburgh Pro 결과 정리: 공식 페이지 기준 주요 부문 TOP 3",
+    metaDescription:
+      "2026 Pittsburgh Pro 결과를 공식 페이지 기준으로 정리했습니다. Michal Krizanek 우승, Jaehun Park 4위, Yuna Kim 6위와 주요 부문 TOP 3를 확인하세요.",
+    excerpt:
+      "2026 Pittsburgh Power & Fitness Festival은 5월 16일부터 17일까지 펜실베이니아 피츠버그에서 열린 IFBB Pro League PRO 대회입니다. 공식 결과 기준 주요 부문 TOP 3와 한국 선수 순위를 정리했습니다.",
+    category: "대회 결과",
+    categorySlug: "competition-result",
+    tag: "IFBB Pro League",
+    authorName: "PhysiqueHub 편집부",
+    readMinutes: 7,
+    posterTheme: "deep",
+    posterFigure: 5,
+    targetReaders: [
+      "2026 Pittsburgh Pro 결과를 확인하려는 독자",
+      "New York Pro 이후 IFBB Pro League 시즌 흐름을 비교하는 팬",
+      "올림피아 퀄리파이와 주요 피지크 대회 결과를 함께 보는 독자",
+    ],
+    mainKeyword: "2026 Pittsburgh Pro 결과",
+    relatedKeywords: [
+      "IFBB Pro League",
+      "보디빌딩 대회 결과",
+      "피지크 대회 결과",
+      "올림피아 퀄리파이",
+      "Pittsburgh Pro",
+      "2026 보디빌딩 결과",
+    ],
+    writingStandardDate: "2026-05-31",
+    body: [
+      {
+        t: "p",
+        x: "2026 Pittsburgh Pro 결과는 IFBB Pro League 공식 2026 Pittsburgh Power & Fitness Festival 페이지 기준으로 정리했습니다. 대회는 2026년 5월 16일부터 5월 17일까지 미국 펜실베이니아주 피츠버그에서 열렸고, Competition Level은 IFBB Pro League PRO로 안내되었습니다.",
+        sourceIds: ["ifbbpro-pittsburgh-2026"],
+      },
+      {
+        t: "summary",
+        items: [
+          "Men’s Bodybuilding Open에서는 Michal Krizanek이 1위, Tonio Burton이 2위, Brandon Curry가 3위를 기록했습니다.",
+          "Men’s Classic Physique에서는 Niall Darwen이 우승했고, Jaehun Park은 4위로 확인됩니다.",
+          "Women’s Physique에서는 Paula Ranta가 1위, Yuna Kim이 6위를 기록했습니다.",
+          "Women’s Fit Model에서는 Shealynn Burnett이 1위였고, Yeseul Lee는 16위로 확인됩니다.",
+          "Pittsburgh 2026 공식 division 목록에는 Men’s 212가 없으므로, New York Pro 결과표와 비교할 때 부문 구성을 구분해야 합니다.",
+        ],
+      },
+      { t: "h", x: "대회 기본 정보" },
+      {
+        t: "table",
+        columns: ["항목", "내용"],
+        rows: [
+          ["대회명", "2026 Pittsburgh Power & Fitness Festival"],
+          ["프로 대회명", "Jim Manion’s Pittsburgh Power & Fitness Pro"],
+          ["일정", "2026년 5월 16일-5월 17일"],
+          ["장소", "Pittsburgh, Pennsylvania"],
+          ["Competition Level", "IFBB Pro League PRO"],
+          ["결과 기준", "IFBB Pro League 공식 대회 페이지, 확인일 2026-05-31"],
+        ],
+        sourceIds: ["ifbbpro-pittsburgh-2026"],
+      },
+      { t: "h", x: "2026 Pittsburgh Pro 결과표" },
+      {
+        t: "table",
+        columns: ["Division", "1위", "2위", "3위", "한국 선수 순위"],
+        rows: [
+          ["Men’s Bodybuilding Open", "Michal Krizanek (Slovakia)", "Tonio Burton (USA)", "Brandon Curry (USA)", "-"],
+          ["Men’s Classic Physique", "Niall Darwen (UK)", "Diego Alejandro Galindo Garavito (Colombia)", "Chen Kang (China)", "Jaehun Park 4위"],
+          ["Men’s Physique", "Kyron Holden (USA)", "Ali Bilal (Afghanistan)", "Edvan Palmeira (Brazil)", "-"],
+          ["Women’s Figure", "Natalia Soltero (Mexico)", "Jeanne Kassel (Germany)", "Vanessa Happle (Germany)", "-"],
+          ["Women’s Bikini", "Lauralie Chapados (USA)", "Aimee Delgado (USA)", "Maria Acosta (USA)", "-"],
+          ["Women’s Physique", "Paula Ranta (Finland)", "Marika Jones (USA)", "Julia Glazycheva (Russia)", "Yuna Kim 6위"],
+          ["Women’s Wellness", "Daniele Mendonca (Brazil)", "Giselle Machado (Brazil)", "Bruna Seredich (USA)", "-"],
+          ["Women’s Fit Model", "Shealynn Burnett (USA)", "Elizabeth Hunter (USA)", "Carla Andrea Reyes Vargas (Bolivia)", "Yeseul Lee 16위"],
+        ],
+        sourceIds: ["ifbbpro-pittsburgh-2026"],
+      },
+      { t: "h", x: "New York Pro와 비교할 때 볼 점" },
+      {
+        t: "list",
+        items: [
+          "Men’s Bodybuilding Open에서는 New York Pro 2위였던 Michal Krizanek이 Pittsburgh Pro에서 1위로 올라섰고, New York Pro 우승자 Tonio Burton은 2위를 기록했습니다.",
+          "Men’s Classic Physique에서는 Niall Darwen이 New York Pro에 이어 Pittsburgh Pro에서도 1위를 기록했습니다.",
+          "Men’s Physique에서는 New York Pro 우승자 Ali Bilal이 Pittsburgh Pro에서는 2위였고, Kyron Holden이 1위를 차지했습니다.",
+          "Pittsburgh 2026 공식 division 목록에는 Men’s 212가 없으므로, 2026 New York Pro 결과와 부문 수를 단순 비교하지 않는 것이 좋습니다.",
+        ],
+        sourceIds: ["ifbbpro-pittsburgh-2026", "ifbbpro-new-york-2026"],
+      },
+      { t: "h", x: "한국 선수 순위" },
+      {
+        t: "list",
+        items: [
+          "Men’s Classic Physique에서는 Jaehun Park이 4위로 기록되었습니다. New York Pro 3위에 이어 같은 시즌 주요 IFBB Pro League 무대에서 다시 상위권에 이름을 올린 결과입니다.",
+          "Women’s Physique에서는 Yuna Kim이 6위로 확인됩니다.",
+          "Women’s Fit Model에서는 Yeseul Lee가 16위로 기록되었습니다.",
+          "이 순위는 공식 Pittsburgh Power & Fitness Festival 페이지 기준이며, 선수명 표기와 국적은 공식 페이지 원문을 우선합니다.",
+        ],
+        sourceIds: ["ifbbpro-pittsburgh-2026"],
+      },
+      { t: "h", x: "Olympia qualification 해석 주의" },
+      {
+        t: "p",
+        x: "공식 Olympia Qualification System 안내에 따르면 2026 OQS 기간은 2025년 9월 15일부터 2026년 8월 30일까지입니다. Classic Physique, Men’s Physique, Bikini, Wellness의 경우 Pittsburgh Pro는 1위 자동 자격, 2위 14점, 3위 11점 등으로 안내됩니다. Men’s Open Bodybuilding, Figure, Women’s Physique, Fit Model 등은 qualification period 중 open contest winner가 자격을 얻는 방식으로 안내됩니다.",
+        sourceIds: ["ifbbpro-oqs-2026"],
+      },
+      {
+        t: "p",
+        x: "다만 자격과 포인트는 OQS 기준을 결과에 대입해 읽는 영역입니다. 공식 qualified athletes 목록은 대회 후 업데이트될 수 있으므로, 올림피아 출전 확정 여부는 IFBB Pro League와 Olympia의 공식 qualified athletes 목록에서 최종 확인해야 합니다.",
+        sourceIds: ["ifbbpro-oqs-2026"],
+      },
+    ],
+    faq: [
+      {
+        q: "2026 Pittsburgh Pro 결과는 어떤 출처 기준인가요?",
+        a: "IFBB Pro League 공식 2026 Pittsburgh Power & Fitness Festival 대회 페이지를 기준으로 정리했습니다. 확인일은 2026년 5월 31일입니다.",
+      },
+      {
+        q: "2026 Pittsburgh Pro에 Men’s 212 결과가 있나요?",
+        a: "사용한 공식 Pittsburgh 2026 division 목록에는 Men’s 212가 없습니다. 따라서 이 글의 결과표에도 Men’s 212를 별도 부문으로 넣지 않았습니다.",
+      },
+      {
+        q: "2026 Pittsburgh Pro에서 한국 선수는 어떤 결과를 냈나요?",
+        a: "공식 결과 기준 Jaehun Park이 Men’s Classic Physique 4위, Yuna Kim이 Women’s Physique 6위, Yeseul Lee가 Women’s Fit Model 16위로 확인됩니다.",
+      },
+      {
+        q: "Pittsburgh Pro 우승자는 바로 올림피아에 진출하나요?",
+        a: "OQS 규정상 여러 부문에서 우승 또는 포인트가 올림피아 자격과 연결됩니다. 다만 공식 qualified athletes 목록은 대회 후 업데이트될 수 있어 최종 확정 여부는 공식 목록으로 확인해야 합니다.",
+      },
+    ],
+    sources: [
+      {
+        id: "ifbbpro-pittsburgh-2026",
+        label: "IFBB Pro League 2026 Pittsburgh Power & Fitness Festival",
+        url: "https://www.ifbbpro.com/competition/2026-pittsburgh-power-fitness-festival/",
+        sourceType: "official",
+        checkedAt: "2026-05-31",
+      },
+      {
+        id: "ifbbpro-new-york-2026",
+        label: "IFBB Pro League 2026 New York Pro",
+        url: "https://www.ifbbpro.com/competition/2026-new-york-pro/",
+        sourceType: "official",
+        checkedAt: "2026-05-31",
+      },
+      {
+        id: "ifbbpro-oqs-2026",
+        label: "IFBB Pro League Olympia Qualification Rules",
+        url: "https://www.ifbbpro.com/olympia-qualification-rules/",
+        sourceType: "official",
+        checkedAt: "2026-05-31",
+      },
+      {
+        id: "domain-context",
+        label: "피트니스·보디빌딩 대회와 단체 컨텍스트",
+        path: "docs/fitness-bodybuilding-competition-context.md",
+        sourceType: "local",
+        checkedAt: "2026-05-31",
+      },
+    ],
+    internalLinks: [
+      {
+        anchor: "IFBB Pro · NPC 대회 일정",
+        href: "/competitions/organizations/ifbb",
+        placement: "대회 기본 정보 표 아래",
+      },
+      {
+        anchor: "2026 New York Pro 결과",
+        href: "/articles/2026-new-york-pro-results",
+        placement: "New York Pro 비교 문단 뒤",
+      },
+      {
+        anchor: "전체 아티클",
+        href: "/articles",
+        placement: "결과표 아래",
+      },
+      {
+        anchor: "비키니 대회 일정",
+        href: "/competitions/categories/bikini",
+        placement: "Olympia qualification 설명 뒤",
+      },
+    ],
+    additionalChecks: [
+      "게시 직전 IFBB Pro League 공식 대회 페이지의 순위 표기와 division 목록을 다시 확인한다.",
+      "공식 qualified athletes 목록이 업데이트되면 OQS 관련 문장을 최신 상태로 재검토한다.",
+      "Pittsburgh Pro에는 Men’s 212를 추가하지 않는다는 편집 메모를 유지한다.",
     ],
   },
 ];
