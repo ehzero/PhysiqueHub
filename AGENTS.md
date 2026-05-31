@@ -21,6 +21,17 @@ stable browsing experience for athletes comparing events.
 - SEO baseline: review metadata and landing-page behavior against
   [`src/lib/metadata.ts`](src/lib/metadata.ts) and
   [`src/lib/competition-taxonomy.ts`](src/lib/competition-taxonomy.ts).
+- UI baseline: before adding page-specific CSS or components, inspect existing
+  shared page/layout primitives in `src/components` and global utility classes
+  in [`src/app/globals.css`](src/app/globals.css). Prefer reusing existing
+  components such as page shells, cards, empty states, sticky controls, action
+  buttons, segment controls, icons, and share behavior.
+- Data/cache baseline: public pages should follow the existing server-first
+  data flow. Fetch Prisma data in `server-only` modules, serialize it before
+  passing to client components, and cache public DB reads with
+  `unstable_cache`, [`src/lib/public-cache.ts`](src/lib/public-cache.ts), and
+  route-level revalidation/static generation patterns used by competition and
+  article pages.
 
 ## Sub-Agent Roster
 
@@ -39,6 +50,9 @@ Use exactly these three sub-agent roles for this project:
 - Use `seo-review` for any change that affects public pages, metadata,
   canonical URLs, sitemap/robots behavior, internal linking, taxonomy pages, or
   search-facing Korean copy.
+- Use `implementation` to confirm public page changes reuse existing CSS,
+  component, server-data, and cache patterns before introducing new local
+  equivalents.
 - Use `domain-review` for any change that mentions competitions, federations,
   divisions, natural status, doping/testing policy, pro cards, qualification
   routes, venues, dates, or official source claims.

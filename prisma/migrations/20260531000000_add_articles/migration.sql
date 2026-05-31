@@ -1,0 +1,2 @@
+-- This migration directory was created without SQL.
+-- Keep a no-op file so Prisma can preserve migration ordering.

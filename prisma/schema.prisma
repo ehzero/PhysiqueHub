@@ -9,20 +9,20 @@ datasource db {
 }
 
 model CompetitionSchedule {
-  id                    String    @id
+  id                    String  @id
   organizationId        String
   organizationName      String
   organizationShortName String?
   title                 String
   subtitle              String?
-  aliasesJson           String    @default("[]")
+  aliasesJson           String  @default("[]")
   seasonYear            Int?
 
-  dateStartsOn          DateTime?
-  dateEndsOn            DateTime?
-  dateTimezone          String    @default("Asia/Seoul")
-  dateRawText           String?
-  dateConfidence        String    @default("low")
+  dateStartsOn   DateTime?
+  dateEndsOn     DateTime?
+  dateTimezone   String    @default("Asia/Seoul")
+  dateRawText    String?
+  dateConfidence String    @default("low")
 
   registrationOpensAt    DateTime?
   registrationClosesAt   DateTime?
@@ -47,9 +47,9 @@ model CompetitionSchedule {
   tagsJson      String @default("[]")
   flagsJson     String @default("{}")
 
-  posterImageUrl  String?
-  thumbnailUrl    String?
-  imageSourceUrl  String?
+  posterImageUrl String?
+  thumbnailUrl   String?
+  imageSourceUrl String?
 
   sourceType          String
   sourceUrl           String
@@ -66,11 +66,11 @@ model CompetitionSchedule {
   rawLocationText     String?
   rawRegistrationText String?
 
-  crawlStatus      String @default("not-started")
-  reviewStatus     String @default("pending")
-  confidence       String @default("low")
-  qualityIssuesJson String @default("[]")
-  notes            String?
+  crawlStatus       String  @default("not-started")
+  reviewStatus      String  @default("pending")
+  confidence        String  @default("low")
+  qualityIssuesJson String  @default("[]")
+  notes             String?
 
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
@@ -86,17 +86,50 @@ model CompetitionSchedule {
 }
 
 model CompetitionSourceProgress {
-  organizationId    String  @id
+  organizationId    String   @id
   organizationName  String
-  status            String  @default("not-started")
-  sourceConfirmed   Boolean @default(false)
-  parserImplemented Boolean @default(false)
-  sampleCollected   Boolean @default(false)
-  reviewed          Boolean @default(false)
-  sourceUrlsJson    String  @default("[]")
+  status            String   @default("not-started")
+  sourceConfirmed   Boolean  @default(false)
+  parserImplemented Boolean  @default(false)
+  sampleCollected   Boolean  @default(false)
+  reviewed          Boolean  @default(false)
+  sourceUrlsJson    String   @default("[]")
   note              String?
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+}
+
+model Article {
+  id             String    @id @default(cuid())
+  slug           String    @unique
+  title          String
+  subtitle       String?
+  excerpt        String
+  category       String    @default("대회 결과")
+  categorySlug   String    @default("competition-result")
+  tag            String    @default("")
+  status         String    @default("draft")
+  language       String    @default("ko")
+  authorName     String    @default("PhysiqueHub 편집부")
+  heroImageUrl   String?
+  readMinutes    Int       @default(5)
+  posterTheme    String    @default("navy")
+  posterFigure   Int       @default(0)
+  isFeatured     Boolean   @default(false)
+  sortOrder      Int       @default(0)
+  bodyMarkdown   String
+  bodyBlocksJson String    @default("[]")
+  sourceUrlsJson String    @default("[]")
+  tagsJson       String    @default("[]")
+  publishedAt    DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([status, publishedAt])
+  @@index([category])
+  @@index([categorySlug])
+  @@index([isFeatured, publishedAt])
+  @@index([createdAt])
 }
 
 model ContactInquiry {

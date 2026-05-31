@@ -28,6 +28,11 @@ fix.
 - Canonical URL correctness and duplicate-page risk.
 - Open Graph and Twitter metadata consistency.
 - Sitemap and robots behavior when route visibility changes.
+- Static generation, route revalidation, and sitemap `lastModified` behavior
+  for public pages whose visibility or source data changes.
+- Public DB data caching when search-facing pages depend on Prisma reads. Check
+  that cached server functions, cache tags, and revalidation expectations match
+  the page's freshness needs.
 - Internal links between home, competition lists, taxonomy landing pages, guide
   pages, and detail pages.
 - Landing-page structure, heading hierarchy, and whether visible content matches
@@ -44,6 +49,9 @@ fix.
   to public routes.
 - Metadata changes should use existing helpers and site constants unless there is
   a clear reason not to.
+- Search-facing pages backed by database content should not accidentally become
+  uncached dynamic pages unless the implementation documents the freshness
+  requirement.
 
 ## Forbidden
 
@@ -66,6 +74,7 @@ End every review with this checklist:
 - [ ] Required fixes:
 - [ ] Search intent gaps:
 - [ ] Metadata issues:
+- [ ] Page/cache issues:
 - [ ] Internal link issues:
 - [ ] Remaining risks:
 ```

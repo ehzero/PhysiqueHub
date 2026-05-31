@@ -78,6 +78,7 @@ function getActiveRoute(pathname: string | null) {
   if (pathname?.startsWith("/competitions/organizations")) return "organizations";
   if (pathname?.startsWith("/competitions")) return "list";
   if (pathname === "/guide" || pathname?.startsWith("/guides")) return "guide";
+  if (pathname?.startsWith("/articles")) return "articles";
   if (pathname === "/saved") return "saved";
 
   return "";

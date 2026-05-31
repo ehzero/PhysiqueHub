@@ -2,6 +2,7 @@ import Link from "next/link";
 import type {
   ButtonHTMLAttributes,
   CSSProperties,
+  HTMLAttributes,
   ReactNode,
 } from "react";
 import { forwardRef } from "react";
@@ -184,15 +185,16 @@ type StickyControlBarProps = {
   children: ReactNode;
   className?: string;
   containerClassName?: string;
-};
+} & Pick<HTMLAttributes<HTMLDivElement>, "aria-label" | "role">;
 
 export function StickyControlBar({
   children,
   className,
   containerClassName = "container",
+  ...props
 }: StickyControlBarProps) {
   return (
-    <div className={cx("ph-sticky-bar", className)}>
+    <div className={cx("ph-sticky-bar", className)} {...props}>
       <div className={containerClassName}>{children}</div>
     </div>
   );

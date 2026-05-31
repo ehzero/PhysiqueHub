@@ -318,6 +318,40 @@ async function copyContactInquiries(
   };
 }
 
+async function copyArticles(
+  source: PrismaClient,
+  target: PrismaClient,
+): Promise<CopyResult> {
+  const sourceCount = await source.article.count();
+  const targetBefore = await target.article.count();
+  let skip = 0;
+
+  while (skip < sourceCount) {
+    const rows = await source.article.findMany({
+      orderBy: { id: "asc" },
+      skip,
+      take: BATCH_SIZE,
+    });
+
+    for (const row of rows) {
+      await target.article.upsert({
+        where: { id: row.id },
+        create: row,
+        update: row,
+      });
+    }
+
+    skip += rows.length;
+  }
+
+  return {
+    model: "Article",
+    sourceCount,
+    targetBefore,
+    targetAfter: await target.article.count(),
+  };
+}
+
 async function copyContactAttachments(
   source: PrismaClient,
   target: PrismaClient,
@@ -385,6 +419,7 @@ async function main() {
     const results = [
       await copyCompetitionSourceProgress(source, target),
       await copyCompetitionSchedules(source, target),
+      await copyArticles(source, target),
       await copyContactInquiries(source, target),
       await copyContactAttachments(source, target),
     ];

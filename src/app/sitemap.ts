@@ -8,20 +8,25 @@ import {
   getCompetitionLandingPath,
 } from "@/lib/competition-taxonomy";
 import { getCompetitionPath } from "@/lib/competition-slug";
+import { getArticlePath } from "@/lib/articles-data";
+import { getArticleSitemapEntries } from "@/lib/article-server";
 import { getSiteUrl } from "@/lib/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = getSiteUrl();
-  const [{ competitionPage }, landingTaxons] = await Promise.all([
+  const [{ competitionPage }, landingTaxons, articleEntries] = await Promise.all([
     getUpcomingCompetitionContext(),
     getIndexableCompetitionLandingTaxons(),
+    getArticleSitemapEntries(),
   ]);
   const latestCompetitionUpdate = getLatestUpdate(competitionPage.items);
+  const latestArticleUpdate = getLatestArticleUpdate(articleEntries);
 
   const staticRoutes = [
     toSitemapEntry(siteUrl, "", latestCompetitionUpdate),
     toSitemapEntry(siteUrl, "/competitions", latestCompetitionUpdate),
     toSitemapEntry(siteUrl, "/guide"),
+    toSitemapEntry(siteUrl, "/articles", latestArticleUpdate),
     toSitemapEntry(siteUrl, "/about"),
     toSitemapEntry(siteUrl, "/terms"),
     toSitemapEntry(siteUrl, "/privacy"),
@@ -43,8 +48,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ) ?? latestCompetitionUpdate,
     ),
   );
+  const articleRoutes = articleEntries.map(({ article, lastModified }) =>
+    toSitemapEntry(siteUrl, getArticlePath(article), lastModified),
+  );
 
-  return [...staticRoutes, ...landingRoutes, ...competitionRoutes];
+  return [...staticRoutes, ...landingRoutes, ...competitionRoutes, ...articleRoutes];
 }
 
 function toSitemapEntry(
@@ -73,5 +81,17 @@ function getLatestUpdate(
     }
 
     return !latest || updatedAt > latest ? updatedAt : latest;
+  }, undefined);
+}
+
+function getLatestArticleUpdate(
+  entries: Awaited<ReturnType<typeof getArticleSitemapEntries>>,
+): Date | undefined {
+  return entries.reduce<Date | undefined>((latest, entry) => {
+    if (!entry.lastModified) {
+      return latest;
+    }
+
+    return !latest || entry.lastModified > latest ? entry.lastModified : latest;
   }, undefined);
 }

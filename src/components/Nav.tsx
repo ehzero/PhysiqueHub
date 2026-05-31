@@ -8,6 +8,7 @@ const NAV_LINKS = [
   { label: "홈", href: "/", key: "home" },
   { label: "대회 일정", href: "/competitions", key: "list" },
   { label: "가이드", href: "/guide", key: "guide" },
+  { label: "아티클", href: "/articles", key: "articles" },
 ];
 
 type ThemePreference = "dark" | "light";
@@ -177,6 +178,18 @@ export function Nav({ route, savedCount, onOpenContact }: NavProps) {
             <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
           </svg>
           <span>가이드</span>
+        </Link>
+        <Link
+          className={`mobile-tab ${route === "articles" ? "active" : ""}`}
+          href="/articles"
+          prefetch={false}
+        >
+          <svg className="mt-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M4 4h11a2 2 0 0 1 2 2v14H6a2 2 0 0 1-2-2z"/>
+            <path d="M17 7h2a1 1 0 0 1 1 1v10a2 2 0 0 1-2 2"/>
+            <path d="M8 8h5M8 12h5"/>
+          </svg>
+          <span>아티클</span>
         </Link>
         <Link
           className={`mobile-tab ${route === "saved" ? "active" : ""}`}
