@@ -39,7 +39,7 @@ export interface ArticleSitemapEntry {
 }
 
 export const getArticleListContext = cache(async (): Promise<ArticleListContext> => {
-  const articles = await getPublishedArticles();
+  const articles = await getVisibleArticles();
   const featured = articles.find((article) => article.feat) ?? articles[0] ?? null;
   const pool = featured
     ? articles.filter((article) => article.id !== featured.id)
@@ -53,7 +53,7 @@ export const getArticleListContext = cache(async (): Promise<ArticleListContext>
 });
 
 export const getArticleBySlug = cache(async (slug: string) => {
-  const articles = await getPublishedArticles();
+  const articles = await getVisibleArticles();
   const normalizedSlug = decodeURIComponent(slug);
 
   return articles.find((article) => article.id === normalizedSlug) ?? null;
@@ -63,7 +63,7 @@ export const getRelatedArticles = cache(async (
   article: Article,
   count = 3,
 ): Promise<Article[]> => {
-  const articles = await getPublishedArticles();
+  const articles = await getVisibleArticles();
 
   return articles
     .filter((item) => item.id !== article.id)
@@ -80,13 +80,13 @@ export const getRelatedArticles = cache(async (
 });
 
 export const getArticleStaticParams = cache(async () => {
-  const articles = await getPublishedArticles();
+  const articles = await getVisibleArticles();
 
   return articles.map((article) => ({ slug: article.id }));
 });
 
 export const getArticleSitemapEntries = cache(async (): Promise<ArticleSitemapEntry[]> => {
-  const articles = await getPublishedArticles();
+  const articles = await getVisibleArticles();
 
   return articles.map((article) => ({
     article,
@@ -94,16 +94,11 @@ export const getArticleSitemapEntries = cache(async (): Promise<ArticleSitemapEn
   }));
 });
 
-const getPublishedArticles = unstable_cache(
+const getCachedPublishedArticles = unstable_cache(
   async (): Promise<Article[]> => {
-    const now = new Date();
     const records = await prisma.article.findMany({
       where: {
         status: "published",
-        OR: [
-          { publishedAt: null },
-          { publishedAt: { lte: now } },
-        ],
       },
       orderBy: [
         { isFeatured: "desc" },
@@ -118,6 +113,13 @@ const getPublishedArticles = unstable_cache(
   ["published-articles"],
   articleCacheOptions,
 );
+
+const getVisibleArticles = cache(async (): Promise<Article[]> => {
+  const now = new Date();
+  const articles = await getCachedPublishedArticles();
+
+  return articles.filter((article) => isArticleVisible(article, now));
+});
 
 function serializeArticle(record: Awaited<ReturnType<typeof prisma.article.findMany>>[number]): Article {
   const publishedAt = record.publishedAt ?? record.createdAt;
@@ -309,6 +311,16 @@ function getArticleTime(article: Article) {
   const value = article.publishedAt ?? article.updatedAt;
 
   return value ? new Date(value).getTime() : 0;
+}
+
+function isArticleVisible(article: Article, now: Date) {
+  if (!article.publishedAt) {
+    return true;
+  }
+
+  const publishedAt = new Date(article.publishedAt);
+
+  return !Number.isNaN(publishedAt.getTime()) && publishedAt <= now;
 }
 
 function formatArticleDate(value: Date): string {

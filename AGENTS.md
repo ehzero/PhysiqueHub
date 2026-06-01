@@ -31,7 +31,9 @@ stable browsing experience for athletes comparing events.
   passing to client components, and cache public DB reads with
   `unstable_cache`, [`src/lib/public-cache.ts`](src/lib/public-cache.ts), and
   route-level revalidation/static generation patterns used by competition and
-  article pages.
+  article pages. Use [`docs/public-cache-policy.md`](docs/public-cache-policy.md)
+  for the current public page ISR, season data cache, article data cache, and
+  invalidation policy.
 
 ## Sub-Agent Roster
 

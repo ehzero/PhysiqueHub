@@ -10,6 +10,7 @@ PhysiqueHub는 피트니스·보디빌딩 대회 일정을 수집하고 탐색�
 | --- | --- |
 | [`docs/fitness-bodybuilding-competition-context.md`](docs/fitness-bodybuilding-competition-context.md) | 피트니스·보디빌딩 대회와 단체에 대한 핵심 도메인 맥락. IFBB Pro League, NPC Worldwide, KBBF, NABBA, PCA, 내추럴 단체, 한국 로컬 대회 축을 구분하는 기준 문서입니다. |
 | [`docs/competition-schedule-crawling-sources.md`](docs/competition-schedule-crawling-sources.md) | 대회 일정 수집 대상 공식 소스와 크롤링 가능성 조사 메모입니다. |
+| [`docs/public-cache-policy.md`](docs/public-cache-policy.md) | 공개 페이지 ISR, 대회 시즌 데이터 캐시, 아티클 데이터 캐시의 역할과 무효화 기준입니다. |
 
 ## 문서 운영 원칙
 
