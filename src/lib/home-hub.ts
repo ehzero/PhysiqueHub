@@ -1,14 +1,11 @@
 import "server-only";
 
 import { cache } from "react";
-import { unstable_cache } from "next/cache";
-import type { CompetitionSchedule } from "@prisma/client";
-import { prisma } from "@/lib/prisma";
 import { getKoreaDateParam } from "@/lib/date";
-import { serializePublicCompetitionListItem } from "@/lib/competition-api";
-import { normalizeCompetitionDivision } from "@/lib/competition-division";
-import { toCompetition } from "@/lib/competition-public";
-import { getCompetitionFiltersPayload } from "@/lib/competition-server";
+import {
+  getCompetitionFiltersPayload,
+  getCompetitionSeasonPage,
+} from "@/lib/competition-server";
 import {
   getCategoryTaxonForName,
   getCompetitionLandingPath,
@@ -19,10 +16,6 @@ import {
 } from "@/lib/competition-taxonomy";
 import { KOREAN_REGION_ORDER } from "@/lib/location";
 import type { Competition } from "@/lib/data";
-import {
-  COMPETITIONS_CACHE_TAG,
-  PUBLIC_DATA_REVALIDATE_SECONDS,
-} from "@/lib/public-cache";
 
 const GLOBAL_MAJOR_LIMIT = 3;
 
@@ -69,49 +62,14 @@ export interface HomeHubData {
 export const getHomeHubData = cache(async (): Promise<HomeHubData> => {
   const today = getKoreaDateParam();
   const seasonYear = Number(today.slice(0, 4));
-
-  return getCachedHomeHubData(today, seasonYear);
-});
-
-const getCachedHomeHubData = unstable_cache(async (
-  today: string,
-  seasonYear: number,
-): Promise<HomeHubData> => {
   const todayDate = new Date(`${today}T00:00:00+09:00`);
 
-  const [
-    totalShows,
-    upcomingShows,
-    domesticShows,
-    upcomingCandidateRecords,
-    upcomingRecords,
-    filterOptions,
-    categoryGroupRecords,
-  ] = await Promise.all([
-    prisma.competitionSchedule.count({ where: { seasonYear } }),
-
-    prisma.competitionSchedule.count({
-      where: { seasonYear, dateStartsOn: { gte: todayDate } },
+  const [seasonPage, upcomingPage, filterOptions] = await Promise.all([
+    getCompetitionSeasonPage(seasonYear),
+    getCompetitionSeasonPage(seasonYear, {
+      startsFrom: today,
+      sort: "date-asc",
     }),
-
-    prisma.competitionSchedule.count({
-      where: { seasonYear, country: "KR", dateStartsOn: { gte: todayDate } },
-    }),
-
-    prisma.competitionSchedule.findMany({
-      where: {
-        seasonYear,
-        dateStartsOn: { gte: todayDate },
-      },
-      orderBy: [{ dateStartsOn: "asc" }, { title: "asc" }],
-    }),
-
-    prisma.competitionSchedule.findMany({
-      where: { seasonYear, country: "KR", dateStartsOn: { gte: todayDate } },
-      orderBy: [{ dateStartsOn: "asc" }, { title: "asc" }],
-      take: 5,
-    }),
-
     getCompetitionFiltersPayload({
       seasonYear,
       page: 1,
@@ -126,19 +84,16 @@ const getCachedHomeHubData = unstable_cache(async (
       tiers: [],
       sort: "date-asc",
     }),
-
-    prisma.competitionSchedule.findMany({
-      where: { seasonYear, dateStartsOn: { gte: todayDate } },
-      select: {
-        divisionsJson: true,
-      },
-    }),
   ]);
 
-  const globalMajors = getGlobalMajorCompetitions(upcomingCandidateRecords);
+  const upcomingCompetitions = upcomingPage.items;
+  const domesticUpcoming = upcomingCompetitions.filter(
+    (competition) => competition.country === "KR",
+  );
+  const upcomingRecords = domesticUpcoming.slice(0, 5);
+  const globalMajors = getGlobalMajorCompetitions(upcomingCompetitions);
   const { flags } = filterOptions;
-  const rookieFriendly = upcomingCandidateRecords
-    .map((record) => toCompetition(serializePublicCompetitionListItem(record)))
+  const rookieFriendly = upcomingCompetitions
     .filter((competition) => competition.attributes.beginner)
     .slice(0, 3);
   const koreaRegionNames = new Set<string>(KOREAN_REGION_ORDER);
@@ -247,27 +202,25 @@ const getCachedHomeHubData = unstable_cache(async (
     ],
     (item) => item.kr,
   );
-  const exploreCategories = getHomeCategoryGroups(categoryGroupRecords);
+  const exploreCategories = getHomeCategoryGroups(upcomingCompetitions);
 
   return {
     seasonYear,
     today,
     stats: {
-      totalShows,
-      upcomingShows,
-      domesticShows,
+      totalShows: seasonPage.total,
+      upcomingShows: upcomingPage.total,
+      domesticShows: domesticUpcoming.length,
       majorShows: globalMajors.length,
       nextShow: upcomingRecords[0]
         ? {
             title: upcomingRecords[0].title,
-            date: toKoreaDateStr(upcomingRecords[0].dateStartsOn),
+            date: upcomingRecords[0].date,
           }
         : null,
     },
     globalMajors,
-    upcoming: upcomingRecords.map((r) =>
-      toCompetition(serializePublicCompetitionListItem(r)),
-    ),
+    upcoming: upcomingRecords,
     rookieFriendly,
     exploreCategories,
     exploreTypes,
@@ -289,22 +242,15 @@ const getCachedHomeHubData = unstable_cache(async (
       (item) => item.name,
     ),
   };
-}, ["home-hub-data"], {
-  revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
-  tags: [COMPETITIONS_CACHE_TAG],
 });
 
-function getHomeCategoryGroups(
-  records: Array<{
-    divisionsJson: string;
-  }>,
-) {
+function getHomeCategoryGroups(records: Competition[]) {
   const countBySlug = new Map<string, number>();
 
   for (const record of records) {
     const slugs = new Set<string>();
 
-    for (const value of getNormalizedCategoryTexts(record)) {
+    for (const value of record.categories) {
       const taxon = getCategoryTaxonForName(value);
 
       if (taxon) {
@@ -329,9 +275,8 @@ function getHomeCategoryGroups(
   );
 }
 
-function getGlobalMajorCompetitions(records: CompetitionSchedule[]) {
+function getGlobalMajorCompetitions(records: Competition[]) {
   return records
-    .map((record) => toCompetition(serializePublicCompetitionListItem(record)))
     .filter(isGlobalMajorCompetition)
     .sort(compareGlobalMajorCompetitions)
     .slice(0, GLOBAL_MAJOR_LIMIT);
@@ -408,33 +353,6 @@ function getHomeOrganizationGroups(
 
   return Array.from(grouped.values());
 }
-
-function getNormalizedCategoryTexts(record: {
-  divisionsJson: string;
-}) {
-  return parseJsonArray(record.divisionsJson).flatMap((division) => {
-    if (!isRecord(division) && typeof division !== "string") return [];
-
-    const normalized = normalizeCompetitionDivision(division);
-
-    return normalized.baseDivision === "unknown" ? [] : [normalized.name];
-  });
-}
-
-function parseJsonArray(value: string): unknown[] {
-  try {
-    const parsed = JSON.parse(value);
-
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null;
-}
-
 function sortByCountThenName<T extends { count: number }>(
   items: T[],
   getName: (item: T) => string,
@@ -442,14 +360,4 @@ function sortByCountThenName<T extends { count: number }>(
   return [...items].sort(
     (a, b) => b.count - a.count || getName(a).localeCompare(getName(b), "ko-KR"),
   );
-}
-
-function toKoreaDateStr(date: Date | null): string {
-  if (!date) return "";
-  return new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Asia/Seoul",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(date);
 }

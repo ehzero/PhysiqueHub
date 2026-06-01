@@ -25,7 +25,6 @@ import {
 } from "@/lib/competition-slug";
 import {
   getCompetitionBySlug,
-  getCompetitionIndexingMetaById,
   getCompetitionSeasonPage,
 } from "@/lib/competition-server";
 import { getKoreaDateParam, getKoreaYear } from "@/lib/date";
@@ -110,7 +109,6 @@ export async function generateMetadata({
   const competition = await getCompetitionBySlug(slug);
   if (!competition) notFound();
 
-  const indexingMeta = await getCompetitionIndexingMetaById(competition.id);
   const path = getCompetitionPath(competition);
   const description = getDescription(competition);
 
@@ -119,7 +117,7 @@ export async function generateMetadata({
     description,
     alternates: { canonical: path },
     robots: {
-      index: indexingMeta?.isIndexable ?? false,
+      index: true,
       follow: true,
     },
     openGraph: {

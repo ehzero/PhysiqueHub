@@ -2,30 +2,23 @@ import "server-only";
 
 import { cache } from "react";
 import { unstable_cache } from "next/cache";
-import type { CompetitionSchedule } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { getKoreaDateParam } from "@/lib/date";
 import {
   getCompetitionSlug,
   normalizeCompetitionRouteSlug,
 } from "@/lib/competition-slug";
-import { compareRegionNames, normalizeCompetitionRegion } from "@/lib/location";
+import { compareRegionNames } from "@/lib/location";
 import {
-  buildCompetitionWhere,
-  getCompetitionOrderBy,
-  parseJsonArray,
-  parseJsonObject,
   serializePublicCompetitionListItem,
   type CompetitionListQuery,
 } from "@/lib/competition-api";
 import { getOrganizationPriority } from "@/lib/organization-priority";
 import {
   COMPETITION_TIERS,
-  classifyCompetition,
   type CompetitionAttributes,
   type CompetitionTier,
 } from "@/lib/competition-classification";
-import { normalizeCompetitionDivision } from "@/lib/competition-division";
 import {
   competitionMatchesTaxon,
   getAllCompetitionLandingTaxons,
@@ -41,6 +34,7 @@ import {
   type CompetitionListPage,
   type CompetitionPageOptions,
 } from "@/lib/competition-public";
+import type { Competition } from "@/lib/data";
 import {
   COMPETITIONS_CACHE_TAG,
   PUBLIC_DATA_REVALIDATE_SECONDS,
@@ -68,13 +62,22 @@ export interface CompetitionLandingContext {
   isIndexable: boolean;
 }
 
-type CompetitionListQueryCacheKey = Omit<
-  CompetitionListQuery,
-  "startsFrom" | "startsTo"
-> & {
-  startsFrom?: string;
-  startsTo?: string;
-};
+interface CachedCompetitionItem extends Competition {
+  sourceFlags: SourceFlags;
+}
+
+type SourceFlags = Record<
+  | "natural"
+  | "beginnerFriendly"
+  | "rookieClass"
+  | "proQualifier"
+  | "proCard"
+  | "international"
+  | "nationalTeamRoute"
+  | "nationalTeamEvent"
+  | "nationalSportsFestival",
+  boolean
+>;
 
 const competitionCacheOptions = {
   revalidate: PUBLIC_DATA_REVALIDATE_SECONDS,
@@ -87,40 +90,75 @@ export const getCompetitionSeasonPage = cache(async (
 ): Promise<CompetitionListPage> => {
   const sort = options.sort ?? "date-asc";
   const startsFrom = options.startsFrom ?? "";
-
-  return getCachedCompetitionSeasonPage(seasonYear, startsFrom, sort);
-});
-
-const getCachedCompetitionSeasonPage = unstable_cache(
-  async (
-    seasonYear: number,
-    startsFrom: string,
-    sort: NonNullable<CompetitionPageOptions["sort"]>,
-  ): Promise<CompetitionListPage> => {
   const query = toCompetitionListQuery(seasonYear, {
     page: 1,
     pageSize: 1,
     startsFrom: startsFrom || undefined,
     sort,
   });
-  const where = buildCompetitionWhere(query);
-  const items = await prisma.competitionSchedule.findMany({
-    where,
-    orderBy: getCompetitionOrderBy(query.sort),
-  });
+  const items = sortPublicCompetitionItems(
+    filterPublicCompetitionItems(
+      await getCompetitionSeasonItems(seasonYear),
+      query,
+    ),
+    sort,
+  );
 
   return {
-    items: items.map(serializePublicCompetitionListItem).map(toCompetition),
+    items: items.map(stripCachedCompetitionItem),
     page: 1,
     pageSize: items.length,
     total: items.length,
     totalPages: items.length > 0 ? 1 : 0,
     hasNextPage: false,
   };
+});
+
+const getCompetitionSeasonItems = cache(async (
+  seasonYear: number,
+): Promise<CachedCompetitionItem[]> => getCachedCompetitionSeasonItems(seasonYear));
+
+const getCachedCompetitionSeasonItems = unstable_cache(
+  async (seasonYear: number): Promise<CachedCompetitionItem[]> => {
+    const items = await prisma.competitionSchedule.findMany({
+      where: { seasonYear },
+      orderBy: [{ dateStartsOn: "asc" }, { title: "asc" }],
+    });
+
+    return items.map((item) => {
+      const publicItem = serializePublicCompetitionListItem(item);
+
+      return {
+        ...toCompetition(publicItem),
+        sourceFlags: getSourceFlags(publicItem.flags),
+      };
+    });
   },
-  ["competition-season-page"],
+  ["competition-season-items"],
   competitionCacheOptions,
 );
+
+function getSourceFlags(flags: Record<string, unknown>): SourceFlags {
+  return {
+    natural: flags.natural === true,
+    beginnerFriendly: flags.beginnerFriendly === true,
+    rookieClass: flags.rookieClass === true,
+    proQualifier: flags.proQualifier === true,
+    proCard: flags.proCard === true,
+    international: flags.international === true,
+    nationalTeamRoute: flags.nationalTeamRoute === true,
+    nationalTeamEvent: flags.nationalTeamEvent === true,
+    nationalSportsFestival: flags.nationalSportsFestival === true,
+  };
+}
+
+function stripCachedCompetitionItem({
+  sourceFlags: _sourceFlags,
+  ...competition
+}: CachedCompetitionItem): Competition {
+  void _sourceFlags;
+  return competition;
+}
 
 export const getCompetitionBySlug = cache(async (value: string) =>
   getCachedCompetitionBySlug(value),
@@ -139,50 +177,15 @@ const getCachedCompetitionBySlug = unstable_cache(async (value: string) => {
     return record ? toCompetition(serializePublicCompetitionListItem(record)) : null;
   }
 
-  const records = await prisma.competitionSchedule.findMany({
-    where: { seasonYear: year },
-    orderBy: [{ dateStartsOn: "asc" }, { title: "asc" }],
-  });
-
-  const match = records
-    .map(serializePublicCompetitionListItem)
-    .map(toCompetition)
+  const match = (await getCompetitionSeasonItems(year))
     .find(
       (competition) =>
         normalizeCompetitionRouteSlug(getCompetitionSlug(competition)) ===
         normalizedSlug,
     );
 
-  return match ?? null;
+  return match ? stripCachedCompetitionItem(match) : null;
 }, ["competition-by-slug"], competitionCacheOptions);
-
-export const getCompetitionIndexingMetaById = cache(async (id: string) =>
-  getCachedCompetitionIndexingMetaById(id, getKoreaDateParam()),
-);
-
-const getCachedCompetitionIndexingMetaById = unstable_cache(async (
-  id: string,
-  today: string,
-) => {
-  const record = await prisma.competitionSchedule.findUnique({
-    where: { id },
-    select: {
-      dateStartsOn: true,
-      updatedAt: true,
-    },
-  });
-
-  if (!record) {
-    return null;
-  }
-
-  return {
-    isIndexable: Boolean(
-      record.dateStartsOn && record.dateStartsOn >= getKoreaDayStart(today),
-    ),
-    lastModified: record.updatedAt,
-  };
-}, ["competition-indexing-meta"], competitionCacheOptions);
 
 export async function getUpcomingCompetitionContext(
   options: UpcomingCompetitionContextOptions = {},
@@ -245,26 +248,17 @@ export async function getIndexableCompetitionLandingTaxons() {
 const getUpcomingCompetitionBase = cache(async () => {
   const today = getKoreaDateParam();
   const seasonYear = Number(today.slice(0, 4));
+  const competitionPage = await getCompetitionSeasonPage(seasonYear, {
+    startsFrom: today,
+    sort: "date-asc",
+  });
 
-  return getCachedUpcomingCompetitionBase(today, seasonYear);
+  return {
+    today,
+    seasonYear,
+    competitionPage,
+  };
 });
-
-const getCachedUpcomingCompetitionBase = unstable_cache(
-  async (today: string, seasonYear: number) => {
-    const competitionPage = await getCompetitionSeasonPage(seasonYear, {
-      startsFrom: today,
-      sort: "date-asc",
-    });
-
-    return {
-      today,
-      seasonYear,
-      competitionPage,
-    };
-  },
-  ["upcoming-competition-base"],
-  competitionCacheOptions,
-);
 
 const getUpcomingCompetitionFilters = cache(
   async (seasonYear: number, startsFrom: string) =>
@@ -278,53 +272,18 @@ const getUpcomingCompetitionFilters = cache(
     ),
 );
 
-function getKoreaDayStart(value: string) {
-  return new Date(`${value}T00:00:00+09:00`);
-}
-
 export const getCompetitionFiltersPayload = cache(async (
   query: CompetitionListQuery,
-): Promise<ApiCompetitionFiltersResponse> =>
-  getCachedCompetitionFiltersPayload(toCompetitionListQueryCacheKey(query)),
-);
-
-const getCachedCompetitionFiltersPayload = unstable_cache(
-  async (
-    queryKey: CompetitionListQueryCacheKey,
-  ): Promise<ApiCompetitionFiltersResponse> => {
-  const query = fromCompetitionListQueryCacheKey(queryKey);
-  const baseWhere = buildCompetitionWhere(query);
-  const [organizations, registrationStatuses, filterRecords] =
-    await Promise.all([
-      prisma.competitionSchedule.groupBy({
-        by: ["organizationId", "organizationName", "organizationShortName"],
-        where: baseWhere,
-        _count: { _all: true },
-        orderBy: { organizationName: "asc" },
-      }),
-      prisma.competitionSchedule.groupBy({
-        by: ["registrationStatus"],
-        where: baseWhere,
-        _count: { _all: true },
-        orderBy: { registrationStatus: "asc" },
-      }),
-      prisma.competitionSchedule.findMany({
-        where: baseWhere,
-        select: {
-          dateStartsOn: true,
-          title: true,
-          organizationId: true,
-          organizationName: true,
-          organizationShortName: true,
-          region: true,
-          city: true,
-          country: true,
-          divisionsJson: true,
-          tagsJson: true,
-          flagsJson: true,
-        },
-      }),
-    ]);
+): Promise<ApiCompetitionFiltersResponse> => {
+  const filterRecords = filterPublicCompetitionItems(
+    await getCompetitionSeasonItems(query.seasonYear),
+    query,
+  );
+  const organizationCounts = new Map<
+    string,
+    { id: string; name: string; shortName?: string | null; count: number }
+  >();
+  const registrationStatusCounts = new Map<string, number>();
 
   const monthCounts = new Map<string, number>();
   const flagCounts = {
@@ -361,32 +320,33 @@ const getCachedCompetitionFiltersPayload = unstable_cache(
   const classTextCounts = new Map<string, number>();
 
   for (const item of filterRecords) {
-    const month = toKoreaMonthString(item.dateStartsOn);
+    const orgKey = item.organizationId ?? item.org;
+    const organization = organizationCounts.get(orgKey);
+    organizationCounts.set(orgKey, {
+      id: item.organizationId ?? item.org,
+      name: item.org,
+      shortName: item.orgShort,
+      count: (organization?.count ?? 0) + 1,
+    });
+    registrationStatusCounts.set(
+      item.registrationStatus ?? "unknown",
+      (registrationStatusCounts.get(item.registrationStatus ?? "unknown") ?? 0) + 1,
+    );
+
+    const month = toKoreaMonthString(item.date);
     if (month) {
       monthCounts.set(month, (monthCounts.get(month) ?? 0) + 1);
     }
 
-    const flags = parseJsonObject(item.flagsJson);
-    const tags = parseJsonArray(item.tagsJson);
-    const divisions = parseJsonArray(item.divisionsJson);
-    const classification = classifyCompetition({
-      title: item.title,
-      organizationId: item.organizationId,
-      organizationName: item.organizationName,
-      organizationShortName: item.organizationShortName,
-      country: item.country,
-      divisions,
-      tags,
-      flags,
-    });
-    const isRegional = classification.tier === "regional";
-    const isBeginner = classification.attributes.beginner;
-    const isProPath = classification.tier === "pro_qualifier";
+    const flags = item.sourceFlags;
+    const isRegional = item.tier === "regional";
+    const isBeginner = item.attributes.beginner;
+    const isProPath = item.tier === "pro_qualifier";
     const isInternationalRoute =
-      classification.attributes.global ||
-      classification.attributes.nationalSelection ||
-      classification.attributes.nationalTeamEvent ||
-      classification.attributes.nationalSportsFestival;
+      item.attributes.global ||
+      item.attributes.nationalSelection ||
+      item.attributes.nationalTeamEvent ||
+      item.attributes.nationalSportsFestival;
 
     for (const key of ["natural", "beginnerFriendly", "rookieClass", "proQualifier", "proCard", "international", "nationalTeamRoute", "nationalTeamEvent", "nationalSportsFestival"] as const) {
       if (flags[key] === true) flagCounts[key] += 1;
@@ -395,56 +355,37 @@ const getCachedCompetitionFiltersPayload = unstable_cache(
     if (isProPath) flagCounts.proPath += 1;
     if (isInternationalRoute) flagCounts.internationalRoute += 1;
     if (isRegional) flagCounts.regional += 1;
-    tierCounts[classification.tier] += 1;
+    tierCounts[item.tier] += 1;
     for (const key of ["global", "major", "nationalSelection", "nationalTeamEvent", "nationalSportsFestival", "beginner"] as const) {
-      if (classification.attributes[key]) attributeCounts[key] += 1;
+      if (item.attributes[key]) attributeCounts[key] += 1;
     }
 
-    const region = normalizeCompetitionRegion(item);
+    const region = item.region;
     if (region) {
       regionCounts.set(region, (regionCounts.get(region) ?? 0) + 1);
     }
 
-    for (const category of getRecordCategories(item.divisionsJson)) {
+    for (const category of item.categories) {
       categoryCounts.set(category, (categoryCounts.get(category) ?? 0) + 1);
     }
 
-    const classTexts = new Set<string>();
-    const ageGroups = new Set<string>();
-    const experienceClasses = new Set<string>();
-    const measurementClasses = new Set<string>();
-    for (const division of divisions) {
-      for (const classText of getDivisionClassTexts(division)) {
-        classTexts.add(classText);
-      }
-      for (const facet of getDivisionClassFacets(division)) {
-        if (facet.type === "age") ageGroups.add(facet.value);
-        if (facet.type === "experience") experienceClasses.add(facet.value);
-        if (facet.type === "measurement") measurementClasses.add(facet.value);
-      }
-    }
-    for (const value of ageGroups) {
+    for (const value of new Set(item.classFacets.filter((facet) => facet.type === "age").map((facet) => facet.value))) {
       ageGroupCounts.set(value, (ageGroupCounts.get(value) ?? 0) + 1);
     }
-    for (const value of experienceClasses) {
+    for (const value of new Set(item.classFacets.filter((facet) => facet.type === "experience").map((facet) => facet.value))) {
       experienceClassCounts.set(value, (experienceClassCounts.get(value) ?? 0) + 1);
     }
-    for (const value of measurementClasses) {
+    for (const value of new Set(item.classFacets.filter((facet) => facet.type === "measurement").map((facet) => facet.value))) {
       measurementClassCounts.set(value, (measurementClassCounts.get(value) ?? 0) + 1);
     }
-    for (const value of classTexts) {
+    for (const value of new Set(item.classTexts)) {
       classTextCounts.set(value, (classTextCounts.get(value) ?? 0) + 1);
     }
   }
 
   return {
     seasonYear: query.seasonYear,
-    organizations: organizations.map((organization) => ({
-      id: organization.organizationId,
-      name: organization.organizationName,
-      shortName: organization.organizationShortName,
-      count: organization._count._all,
-    })).sort((a, b) =>
+    organizations: Array.from(organizationCounts.values()).sort((a, b) =>
       getOrganizationPriority(a.name) - getOrganizationPriority(b.name) ||
       b.count - a.count ||
       a.name.localeCompare(b.name),
@@ -463,10 +404,9 @@ const getCachedCompetitionFiltersPayload = unstable_cache(
       ),
       classTexts: mapCounts(classTextCounts).slice(0, 24),
     },
-    registrationStatuses: registrationStatuses.map((status) => ({
-      status: status.registrationStatus,
-      count: status._count._all,
-    })),
+    registrationStatuses: Array.from(registrationStatusCounts.entries())
+      .map(([status, count]) => ({ status, count }))
+      .sort((a, b) => a.status.localeCompare(b.status)),
     months: Array.from(monthCounts.entries()).map(([month, count]) => ({
       month,
       count,
@@ -475,30 +415,7 @@ const getCachedCompetitionFiltersPayload = unstable_cache(
     tiers: tierCounts,
     attributes: attributeCounts,
   };
-  },
-  ["competition-filters"],
-  competitionCacheOptions,
-);
-
-function toCompetitionListQueryCacheKey(
-  query: CompetitionListQuery,
-): CompetitionListQueryCacheKey {
-  return {
-    ...query,
-    startsFrom: query.startsFrom?.toISOString(),
-    startsTo: query.startsTo?.toISOString(),
-  };
-}
-
-function fromCompetitionListQueryCacheKey(
-  query: CompetitionListQueryCacheKey,
-): CompetitionListQuery {
-  return {
-    ...query,
-    startsFrom: query.startsFrom ? new Date(query.startsFrom) : undefined,
-    startsTo: query.startsTo ? new Date(query.startsTo) : undefined,
-  };
-}
+});
 
 function toCompetitionListQuery(
   seasonYear: number,
@@ -548,70 +465,6 @@ function parseKoreaDateParam(value: string | undefined): Date | undefined {
   const parsed = new Date(`${value}T00:00:00+09:00`);
 
   return Number.isNaN(parsed.getTime()) ? undefined : parsed;
-}
-
-function getRecordCategories(divisionsJson: string): string[] {
-  const divisions = parseJsonArray(divisionsJson)
-    .map((division) => getDivisionName(division))
-    .filter((name): name is string => Boolean(name));
-
-  if (divisions.length > 0) {
-    return Array.from(new Set(divisions));
-  }
-
-  return [];
-}
-
-function getDivisionName(value: unknown): string | undefined {
-  if (typeof value === "string") {
-    const division = normalizeCompetitionDivision(value);
-
-    return division.baseDivision === "unknown" ? undefined : division.name;
-  }
-
-  if (!value || typeof value !== "object") {
-    return undefined;
-  }
-
-  const division = normalizeCompetitionDivision(
-    value as Parameters<typeof normalizeCompetitionDivision>[0],
-  );
-
-  return division.baseDivision === "unknown" ? undefined : division.name;
-}
-
-function getDivisionClassTexts(value: unknown): string[] {
-  if (!value || (typeof value !== "string" && typeof value !== "object")) {
-    return [];
-  }
-
-  const division = normalizeCompetitionDivision(
-    typeof value === "string"
-      ? value
-      : (value as Parameters<typeof normalizeCompetitionDivision>[0]),
-  );
-
-  return division.classText ? [division.classText] : [];
-}
-
-function getDivisionClassFacets(value: unknown) {
-  if (!value || (typeof value !== "string" && typeof value !== "object")) {
-    return [];
-  }
-
-  const division = normalizeCompetitionDivision(
-    typeof value === "string"
-      ? value
-      : (value as Parameters<typeof normalizeCompetitionDivision>[0]),
-  );
-
-  return (division.classFacets ?? []).flatMap((facet) => {
-    if (!["age", "experience", "measurement"].includes(facet.type)) {
-      return [];
-    }
-
-    return [{ type: facet.type, value: String(facet.value) }];
-  });
 }
 
 function mapCounts(
@@ -675,10 +528,12 @@ function getMeasurementClassLabel(value: string) {
   );
 }
 
-function toKoreaMonthString(value: CompetitionSchedule["dateStartsOn"]): string | undefined {
+function toKoreaMonthString(value: Date | string | null | undefined): string | undefined {
   if (!value) {
     return undefined;
   }
+
+  const date = typeof value === "string" ? getKoreaDate(value) : value;
 
   const formatter = new Intl.DateTimeFormat("en-CA", {
     timeZone: "Asia/Seoul",
@@ -686,5 +541,175 @@ function toKoreaMonthString(value: CompetitionSchedule["dateStartsOn"]): string 
     month: "2-digit",
   });
 
-  return formatter.format(value);
+  return Number.isNaN(date.getTime()) ? undefined : formatter.format(date);
+}
+
+function filterPublicCompetitionItems(
+  items: CachedCompetitionItem[],
+  query: CompetitionListQuery,
+): CachedCompetitionItem[] {
+  return items.filter((item) => {
+    if (item.historyYears !== query.seasonYear) {
+      return false;
+    }
+
+    if (
+      query.organizationIds.length > 0 &&
+      !query.organizationIds.includes(item.organizationId ?? "")
+    ) {
+      return false;
+    }
+
+    if (
+      query.registrationStatuses.length > 0 &&
+      !query.registrationStatuses.includes(item.registrationStatus ?? "unknown")
+    ) {
+      return false;
+    }
+
+    const startsOn = item.date ? getKoreaDate(item.date) : null;
+
+    if (query.startsFrom && (!startsOn || startsOn < query.startsFrom)) {
+      return false;
+    }
+
+    if (query.startsTo && (!startsOn || startsOn > query.startsTo)) {
+      return false;
+    }
+
+    if (query.hasDate !== undefined && Boolean(item.date) !== query.hasDate) {
+      return false;
+    }
+
+    if (query.keyword && !publicCompetitionMatchesKeyword(item, query.keyword)) {
+      return false;
+    }
+
+    for (const [flag, value] of [
+      ["natural", query.natural],
+      ["beginnerFriendly", query.beginnerFriendly],
+      ["rookieClass", query.rookieClass],
+      ["proQualifier", query.proQualifier],
+    ] as const) {
+      if (value !== undefined && item.sourceFlags[flag] !== value) {
+        return false;
+      }
+    }
+
+    if (
+      query.beginnerAny !== undefined ||
+      query.tiers.length > 0 ||
+      query.global !== undefined ||
+      query.nationalSelection !== undefined ||
+      query.nationalTeamEvent !== undefined ||
+      query.nationalSportsFestival !== undefined
+    ) {
+      if (
+        query.beginnerAny !== undefined &&
+        item.attributes.beginner !== query.beginnerAny
+      ) {
+        return false;
+      }
+
+      if (query.tiers.length > 0 && !query.tiers.includes(item.tier)) {
+        return false;
+      }
+
+      for (const [attribute, value] of [
+        ["global", query.global],
+        ["nationalSelection", query.nationalSelection],
+        ["nationalTeamEvent", query.nationalTeamEvent],
+        ["nationalSportsFestival", query.nationalSportsFestival],
+      ] as const) {
+        if (value !== undefined && item.attributes[attribute] !== value) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  });
+}
+
+function sortPublicCompetitionItems(
+  items: CachedCompetitionItem[],
+  sort: NonNullable<CompetitionPageOptions["sort"]>,
+): CachedCompetitionItem[] {
+  return [...items].sort((a, b) => {
+    switch (sort) {
+      case "date-desc":
+        return compareNullableTime(
+          getKoreaDateTime(b.date),
+          getKoreaDateTime(a.date),
+        ) || a.title.localeCompare(b.title, "ko-KR");
+      case "deadline-asc":
+        return compareNullableTime(
+          getKoreaDateTime(a.regClose),
+          getKoreaDateTime(b.regClose),
+        ) || compareNullableTime(
+          getKoreaDateTime(a.date),
+          getKoreaDateTime(b.date),
+        ) || a.title.localeCompare(b.title, "ko-KR");
+      case "updated-desc":
+        return compareNullableTime(
+          getDateTime(b.updatedAt),
+          getDateTime(a.updatedAt),
+        ) || compareNullableTime(
+          getKoreaDateTime(a.date),
+          getKoreaDateTime(b.date),
+        );
+      case "date-asc":
+      default:
+        return compareNullableTime(
+          getKoreaDateTime(a.date),
+          getKoreaDateTime(b.date),
+        ) || a.title.localeCompare(b.title, "ko-KR");
+    }
+  });
+}
+
+function publicCompetitionMatchesKeyword(
+  item: CachedCompetitionItem,
+  keyword: string,
+) {
+  const normalized = keyword.trim().toLowerCase();
+  const haystack = [
+    item.title,
+    item.org,
+    item.orgShort,
+    item.region,
+    item.venue,
+    JSON.stringify(item.tags),
+    JSON.stringify(item.categories),
+    JSON.stringify(item.classTexts),
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  return haystack.includes(normalized);
+}
+
+function getKoreaDate(value: string) {
+  return new Date(`${value}T00:00:00+09:00`);
+}
+
+function getKoreaDateTime(value: string | null | undefined) {
+  return value ? getKoreaDate(value).getTime() : null;
+}
+
+function getDateTime(value: string | null | undefined) {
+  if (!value) {
+    return null;
+  }
+
+  const time = new Date(value).getTime();
+  return Number.isNaN(time) ? null : time;
+}
+
+function compareNullableTime(a: number | null, b: number | null) {
+  if (a == null && b == null) return 0;
+  if (a == null) return 1;
+  if (b == null) return -1;
+  return a - b;
 }
