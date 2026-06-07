@@ -16,7 +16,7 @@ export default function AboutPage() {
     >
       <article>
         <p>
-          PhysiqueHub는 피트니스·보디빌딩 대회 일정을 더 쉽게 찾고 비교할 수
+          피지크허브는 피트니스·보디빌딩 대회 일정을 더 쉽게 찾고 비교할 수
           있도록 돕는 대회 정보 허브입니다.
         </p>
         <p>
@@ -25,7 +25,7 @@ export default function AboutPage() {
           많습니다.
         </p>
         <p>
-          PhysiqueHub는 흩어져 있는 대회 정보를 한눈에 볼 수 있게 정리해 선수들이 더 쉽게
+          피지크허브는 흩어져 있는 대회 정보를 한눈에 볼 수 있게 정리해 선수들이 더 쉽게
           대회를 탐색하고, 출전 계획을 세울 수 있도록 돕습니다.
         </p>
       </article>
@@ -33,7 +33,7 @@ export default function AboutPage() {
       <article>
         <h2>서비스 목적</h2>
         <p>
-          PhysiqueHub는 대회명, 일정, 접수 기간, 지역, 장소, 종목, 참가비,
+          피지크허브는 대회명, 일정, 접수 기간, 지역, 장소, 종목, 참가비,
           내추럴 여부, 입문자 친화 정보 등을 정리하여 제공합니다.
         </p>
         <p>
@@ -57,7 +57,7 @@ export default function AboutPage() {
       <article>
         <h2>정보 기준</h2>
         <p>
-          PhysiqueHub의 대회 정보는 공식 웹사이트, 주관 단체 공지, 접수
+          피지크허브의 대회 정보는 공식 웹사이트, 주관 단체 공지, 접수
           페이지, 공개 소셜 채널 등 공개 자료를 기준으로 정리합니다.
         </p>
         <p>
@@ -70,7 +70,7 @@ export default function AboutPage() {
       <article>
         <h2>주의 사항</h2>
         <p>
-          PhysiqueHub는 대회 정보 탐색을 돕는 서비스입니다.
+          피지크허브는 대회 정보 탐색을 돕는 서비스입니다.
         </p>
         <p>
           의료·운동 처방, 도핑 관련 판단, 대회 참가 자격 보증을 제공하지

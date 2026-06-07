@@ -1,4 +1,5 @@
-export const SITE_NAME = "PhysiqueHub";
+export const SITE_NAME = "피지크허브";
+export const SITE_NAME_EN = "PhysiqueHub";
 export const SITE_TAGLINE = "2026 피트니스·보디빌딩 대회 일정";
 export const SITE_DESCRIPTION =
   "국내 피트니스·보디빌딩 대회 일정을 한곳에서 확인하고, 종목·지역·단체별 탐색과 주요 해외 대회 일정까지 살펴보세요.";

@@ -3058,7 +3058,7 @@ ol {
   display: block;
   font-size: clamp(42px, 6vw, 64px);
   font-weight: 900;
-  letter-spacing: -0.045em;
+  letter-spacing: 0;
   line-height: 0.9;
   color: #fff;
 }

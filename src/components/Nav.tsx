@@ -93,7 +93,7 @@ export function Nav({ route, savedCount, onOpenContact }: NavProps) {
           <div className="nav-left">
             <Link href="/" className="nav-brand" prefetch={false}>
               <span className="nav-brand-logo">P</span>
-              <span className="nav-brand-name">PhysiqueHub</span>
+              <span className="nav-brand-name">피지크허브</span>
             </Link>
             <nav className="nav-links">
               {NAV_LINKS.map(({ label, href, key }) => (

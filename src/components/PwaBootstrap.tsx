@@ -160,7 +160,7 @@ export function PwaBootstrap() {
         >
           <div className="pwa-ico" aria-hidden="true">P</div>
           <div className="pwa-text">
-            <div className="pwa-banner-title">PhysiqueHub 바로 열기</div>
+            <div className="pwa-banner-title">피지크허브 바로 열기</div>
             <div className="pwa-banner-sub">
               {isIOS
                 ? "Safari 공유 메뉴 > 더보기 > 홈 화면에 추가"

@@ -21,10 +21,10 @@ export function Foot({
       <div className="container">
         <div className="foot-row">
           <div className="foot-brand">
-            <div className="foot-brand-mark" aria-label="PhysiqueHub">
-              PHYSIQUE
+            <div className="foot-brand-mark" aria-label="피지크허브">
+              피지크
               <br />
-              HUB.
+              허브.
             </div>
             <p className="foot-brand-desc">
               국내 피트니스·보디빌딩 대회 일정을 공식 단체 소스 우선으로 모읍니다.
@@ -86,7 +86,7 @@ export function Foot({
           </div>
         </div>
         <div className="foot-bottom">
-          <span>© {seasonYear} PhysiqueHub. All rights reserved.</span>
+          <span>© {seasonYear} 피지크허브. All rights reserved.</span>
           <span>v{packageJson.version}</span>
         </div>
       </div>

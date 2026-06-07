@@ -22,7 +22,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const article = await getArticleBySlug(slug);
-  if (!article) return { title: "아티클 · PhysiqueHub" };
+  if (!article) return { title: "아티클 | 피지크허브" };
   return createPageMetadata({
     title: article.title,
     description: article.metaDescription ?? article.dek,

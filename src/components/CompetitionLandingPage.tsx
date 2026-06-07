@@ -35,7 +35,7 @@ export async function generateCompetitionLandingMetadata({
   }
 
   const { taxon, path, isIndexable } = context;
-  const fullTitle = `${taxon.title} - ${SITE_NAME}`;
+  const fullTitle = `${taxon.title} | ${SITE_NAME}`;
 
   return {
     title: taxon.title,

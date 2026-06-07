@@ -7,6 +7,7 @@ import {
   SHARE_IMAGE_ALT,
   SITE_DESCRIPTION,
   SITE_NAME,
+  SITE_NAME_EN,
   SITE_TAGLINE,
   TWITTER_IMAGE_URL,
 } from "@/lib/site";
@@ -32,8 +33,8 @@ export const metadata: Metadata = {
   applicationName: SITE_NAME,
   manifest: "/manifest.webmanifest",
   title: {
-    default: `${SITE_NAME} - ${SITE_TAGLINE}`,
-    template: `%s - ${SITE_NAME}`,
+    default: `${SITE_TAGLINE} | ${SITE_NAME}`,
+    template: `%s | ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
   keywords: [
@@ -56,7 +57,7 @@ export const metadata: Metadata = {
     locale: "ko_KR",
     url: "/",
     siteName: SITE_NAME,
-    title: `${SITE_NAME} - ${SITE_TAGLINE}`,
+    title: `${SITE_TAGLINE} | ${SITE_NAME}`,
     description: SITE_DESCRIPTION,
     images: [
       {
@@ -69,7 +70,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE_NAME} - ${SITE_TAGLINE}`,
+    title: `${SITE_TAGLINE} | ${SITE_NAME}`,
     description: SITE_DESCRIPTION,
     images: [TWITTER_IMAGE_URL],
   },
@@ -117,6 +118,14 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: SITE_NAME,
+  alternateName: SITE_NAME_EN,
+  url: `${getSiteUrl()}/`,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -133,6 +142,12 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var d=document.documentElement;var c=document.cookie.match(/(?:^|;)\\s*ph-theme=(dark|light)(?:;|$)/);var s=c&&c[1];if(!s){try{s=localStorage.getItem('ph-theme')}catch(e){}}if(s!=='dark'&&s!=='light'){s=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}d.setAttribute('data-theme',s);d.style.colorScheme=s;}catch(e){}})();`,
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteJsonLd),
           }}
         />
         <link rel="preconnect" href="https://cdn.jsdelivr.net" />

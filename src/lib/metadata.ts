@@ -18,7 +18,7 @@ export function createPageMetadata({
   description = SITE_DESCRIPTION,
   path,
 }: PageMetadataInput): Metadata {
-  const fullTitle = `${title} - ${SITE_NAME}`;
+  const fullTitle = `${title} | ${SITE_NAME}`;
 
   return {
     title,

@@ -10,7 +10,7 @@ import { prisma } from "@/lib/prisma";
 import { loginAdmin, logoutAdmin, updateCompetitionReview } from "./actions";
 
 export const metadata: Metadata = {
-  title: "Admin | PhysiqueHub",
+  title: "Admin | 피지크허브",
   robots: {
     index: false,
     follow: false,
@@ -57,7 +57,7 @@ function AdminLogin({ error }: { error?: string }) {
       <section className="admin-login-panel" aria-labelledby="admin-login-title">
         <div>
           <p className="eyebrow">Restricted</p>
-          <h1 id="admin-login-title">PhysiqueHub Admin</h1>
+          <h1 id="admin-login-title">피지크허브 Admin</h1>
         </div>
 
         <form action={loginAdmin} className="admin-login-form">

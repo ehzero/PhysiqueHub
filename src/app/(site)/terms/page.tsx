@@ -5,7 +5,7 @@ import { SUPPORT_EMAIL } from "@/lib/site";
 export const metadata = createPageMetadata({
   title: "이용약관",
   description:
-    "PhysiqueHub 서비스 이용 조건, 정보 제공 범위, 이용자 의무, 면책 사항을 안내합니다.",
+    "피지크허브 서비스 이용 조건, 정보 제공 범위, 이용자 의무, 면책 사항을 안내합니다.",
   path: "/terms",
 });
 
@@ -13,12 +13,12 @@ export default function TermsPage() {
   return (
     <StaticPageShell
       title="이용약관"
-      description="PhysiqueHub 이용 조건과 서비스 제공 범위를 안내합니다. 본 문서는 베타 운영을 위한 초안입니다."
+      description="피지크허브 이용 조건과 서비스 제공 범위를 안내합니다. 본 문서는 베타 운영을 위한 초안입니다."
     >
       <article>
         <p className="policy-date">시행일: 2026년 5월 22일</p>
         <p>
-          본 약관은 PhysiqueHub가 제공하는 피트니스·보디빌딩 대회 일정
+          본 약관은 피지크허브가 제공하는 피트니스·보디빌딩 대회 일정
           탐색 서비스의 이용과 관련하여 서비스와 이용자 사이의 권리, 의무 및
           책임 사항을 정합니다.
         </p>
@@ -27,7 +27,7 @@ export default function TermsPage() {
       <article>
         <h2>1. 서비스의 내용</h2>
         <p>
-          PhysiqueHub는 국내외 피트니스·보디빌딩 대회의 일정, 접수 기간,
+          피지크허브는 국내외 피트니스·보디빌딩 대회의 일정, 접수 기간,
           장소, 종목, 주관 단체, 참가비 등 공개 정보를 정리하여 제공합니다.
           서비스는 베타 단계이며, 기능과 제공 범위는 운영 상황에 따라 변경될
           수 있습니다.
@@ -76,7 +76,7 @@ export default function TermsPage() {
       <article>
         <h2>6. 면책</h2>
         <p>
-          PhysiqueHub는 대회 정보 탐색을 돕는 서비스이며, 특정 대회의 개최,
+          피지크허브는 대회 정보 탐색을 돕는 서비스이며, 특정 대회의 개최,
           접수 가능 여부, 심사 결과, 참가 자격, 건강 상태, 운동 성과를
           보증하지 않습니다. 이용자의 출전 준비와 신청은 이용자 본인의 판단과
           책임으로 진행됩니다.
