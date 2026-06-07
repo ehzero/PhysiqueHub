@@ -22,12 +22,13 @@ export function Foot({
         <div className="foot-row">
           <div className="foot-brand">
             <div className="foot-brand-mark" aria-label="피지크허브">
-              피지크
-              <br />
-              허브.
+              피지크허브
             </div>
             <p className="foot-brand-desc">
-              국내 피트니스·보디빌딩 대회 일정을 공식 단체 소스 우선으로 모읍니다.
+              피지크허브는 국내 피트니스·보디빌딩 대회 일정을 중심으로 공식
+              공지와 접수 정보를 모아, 종목·지역·단체·접수 상태별 탐색을
+              돕습니다. 주요 해외 대회 일정, 출전 가이드, 대회 준비 아티클까지
+              함께 확인할 수 있습니다.
             </p>
           </div>
           <div className="foot-cols">
