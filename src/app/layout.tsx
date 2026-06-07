@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   applicationName: SITE_NAME,
   manifest: "/manifest.webmanifest",
   title: {
-    default: `${SITE_TAGLINE} | ${SITE_NAME}`,
+    default: `${SITE_NAME} | ${SITE_TAGLINE}`,
     template: `%s | ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     locale: "ko_KR",
     url: "/",
     siteName: SITE_NAME,
-    title: `${SITE_TAGLINE} | ${SITE_NAME}`,
+    title: `${SITE_NAME} | ${SITE_TAGLINE}`,
     description: SITE_DESCRIPTION,
     images: [
       {
@@ -70,7 +70,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE_TAGLINE} | ${SITE_NAME}`,
+    title: `${SITE_NAME} | ${SITE_TAGLINE}`,
     description: SITE_DESCRIPTION,
     images: [TWITTER_IMAGE_URL],
   },
