@@ -27,7 +27,7 @@ export function Foot({
               HUB.
             </div>
             <p className="foot-brand-desc">
-              국내 보디빌딩·피트니스 대회 일정을 공식 단체 소스 우선으로 모읍니다.
+              국내 피트니스·보디빌딩 대회 일정을 공식 단체 소스 우선으로 모읍니다.
             </p>
           </div>
           <div className="foot-cols">
@@ -36,7 +36,7 @@ export function Foot({
               <ul>
                 <li>
                   <Link href="/competitions">
-                    전체 보디빌딩·피트니스 대회 일정
+                    전체 피트니스·보디빌딩 대회 일정
                   </Link>
                 </li>
                 <li>

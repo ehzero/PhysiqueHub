@@ -160,9 +160,9 @@ const REGION_TAXONS: CompetitionLandingTaxon[] = KOREAN_REGION_ORDER.map(
     slug: REGION_SLUGS[region],
     label: region,
     title: `${region} 보디빌딩 대회 일정`,
-    description: `${region}에서 열리는 국내 보디빌딩·피트니스 예정 대회를 날짜, 단체, 종목별로 확인하세요.`,
+    description: `${region}에서 열리는 국내 피트니스·보디빌딩 예정 대회를 날짜, 단체, 종목별로 확인하세요.`,
     h1: `${region} 보디빌딩 대회 일정`,
-    intro: `${region} 지역에서 열리는 국내 보디빌딩·피트니스 예정 대회를 모았습니다. 대회장, 접수 일정, 세부 종목은 공식 안내에서 확인하세요.`,
+    intro: `${region} 지역에서 열리는 국내 피트니스·보디빌딩 예정 대회를 모았습니다. 대회장, 접수 일정, 세부 종목은 공식 안내에서 확인하세요.`,
     filterHref: `/competitions?region=${encodeURIComponent(region)}`,
     keywords: [`${region} 보디빌딩 대회`, `${region} 피트니스 대회`],
   }),
@@ -176,7 +176,7 @@ const ORGANIZATION_TAXONS: CompetitionLandingTaxon[] = [
     title: "IFBB Pro · NPC 대회 일정",
     description:
       "IFBB Pro와 NPC/NPC Worldwide 계열 대회 일정을 날짜와 지역별로 비교하세요.",
-    h1: "IFBB Pro · NPC 보디빌딩·피트니스 대회 일정",
+    h1: "IFBB Pro · NPC 피트니스·보디빌딩 대회 일정",
     intro:
       "IFBB Pro와 NPC/NPC Worldwide 계열 대회 일정을 모았습니다. 리저널, 프로 퀄리파이어, 프로전 등 세부 성격은 대회별 공식 요강에서 확인하세요.",
     filterHref: "/competitions?q=IFBB%20Pro",
@@ -292,7 +292,7 @@ const TYPE_TAXONS: CompetitionLandingTaxon[] = [
     label: "내추럴",
     title: "내추럴 대회 일정",
     description:
-      "내추럴 성격의 보디빌딩·피트니스 대회 일정을 모아 비교하세요.",
+      "내추럴 성격의 피트니스·보디빌딩 대회 일정을 모아 비교하세요.",
     h1: "내추럴 대회 일정",
     intro:
       "내추럴 성격의 예정 대회를 모았습니다. 금지 약물 기준, 검사 방식, 출전 자격은 단체와 대회별 공식 안내에서 확인하세요.",
@@ -305,7 +305,7 @@ const TYPE_TAXONS: CompetitionLandingTaxon[] = [
     label: "루키·입문",
     title: "루키 대회 일정",
     description:
-      "루키·입문 성격의 보디빌딩·피트니스 대회 일정을 확인하세요.",
+      "루키·입문 성격의 피트니스·보디빌딩 대회 일정을 확인하세요.",
     h1: "루키·입문 대회 일정",
     intro:
       "루키, 노비스, 입문 친화 성격의 예정 대회를 모았습니다. 출전 가능 여부는 경력, 입상 이력, 나이 기준 등 대회별 요강에 따라 달라질 수 있습니다.",
@@ -318,7 +318,7 @@ const TYPE_TAXONS: CompetitionLandingTaxon[] = [
     label: "리저널",
     title: "리저널 대회 일정",
     description:
-      "리저널 성격의 보디빌딩·피트니스 대회 일정을 날짜와 지역 기준으로 확인하세요.",
+      "리저널 성격의 피트니스·보디빌딩 대회 일정을 날짜와 지역 기준으로 확인하세요.",
     h1: "리저널 대회 일정",
     intro:
       "리저널 성격의 예정 대회를 모았습니다. 상위 대회와의 관계, 출전 조건, 중복 출전 가능 여부는 공식 안내에서 확인하세요.",

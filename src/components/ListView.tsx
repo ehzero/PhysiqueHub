@@ -331,8 +331,8 @@ export function ListView({
             eyebrow="전체 대회 · By Schedule"
             title={
               <>
-                보디빌딩·피트니스 대회 일정을{" "}
-                <span className="ph-accent-text">한눈에.</span>
+                2026 피트니스·보디빌딩{" "}
+                <span className="ph-accent-text">대회 일정</span>
               </>
             }
             description={description}

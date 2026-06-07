@@ -18,7 +18,7 @@ export default function TermsPage() {
       <article>
         <p className="policy-date">시행일: 2026년 5월 22일</p>
         <p>
-          본 약관은 PhysiqueHub가 제공하는 보디빌딩·피트니스 대회 일정
+          본 약관은 PhysiqueHub가 제공하는 피트니스·보디빌딩 대회 일정
           탐색 서비스의 이용과 관련하여 서비스와 이용자 사이의 권리, 의무 및
           책임 사항을 정합니다.
         </p>

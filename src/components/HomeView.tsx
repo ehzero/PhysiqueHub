@@ -13,12 +13,7 @@ import type { Competition } from "@/lib/data";
 import { regStatusAt, CATEGORY_GUIDE } from "@/lib/data";
 import type { HomeHubData, HomeExploreType } from "@/lib/home-hub";
 import { getOrganizationDisplayName } from "@/lib/organization-display";
-import {
-  ActionButton,
-  Intro,
-  SectionBlock,
-  StatusPill,
-} from "./UIPrimitives";
+import { ActionButton, Intro, SectionBlock, StatusPill } from "./UIPrimitives";
 
 const EXPLORE_AXIS_VISIBLE_COUNT = 8;
 const COUNT_UP_DURATION_MS = 900;
@@ -174,15 +169,13 @@ function HeroSection({
               ● {year} 시즌 · Asia/Seoul
             </div>
             <h1 className="hub-h1">
-              국내 보디빌딩·피트니스
+              피트니스·보디빌딩
               <br />
-              대회 일정을 <span className="ph-accent-text">한눈에.</span>
+              대회 일정을 <span className="ph-accent-text">한눈에</span>
             </h1>
             <p className="hub-body hub-hero-body">
-              국내 대회를 중심으로, 주요 단체의 보디빌딩·피트니스 대회 일정을
-              한곳에 모았습니다. 종목·유형·지역·단체별로 빠르게 탐색하고, Mr.
-              Olympia와 Arnold Classic 등 주요 해외 무대 일정도 함께 확인할 수
-              있습니다.
+              국내 피트니스·보디빌딩 대회 일정을 한곳에서 확인하고,
+              종목·지역·단체별 탐색과 주요 해외 대회 일정까지 살펴보세요.
             </p>
             <div className="hub-hero-actions">
               <ActionButton
@@ -190,7 +183,7 @@ function HeroSection({
                 variant="primary"
                 prefetch={false}
               >
-                전체 보디빌딩·피트니스 대회 일정 →
+                전체 피트니스·보디빌딩 대회 일정 →
               </ActionButton>
               <ActionButton
                 href="/guide#division"
@@ -204,9 +197,7 @@ function HeroSection({
 
           {/* Stat card */}
           <div className="hub-stat-card">
-            <div className="hub-stat-label">
-              This Season · 한눈에
-            </div>
+            <div className="hub-stat-label">This Season · 한눈에</div>
             <div className="hub-stat-grid">
               {[
                 {
@@ -236,16 +227,12 @@ function HeroSection({
             </div>
             {nd && days !== null && (
               <div className="hub-stat-next">
-                <div className="hub-stat-cell-label">
-                  다음 대회
-                </div>
+                <div className="hub-stat-cell-label">다음 대회</div>
                 <div className="hub-stat-next-stack">
                   <div className="hub-stat-next-title">
                     {stats.nextShow?.title} · {nd.monthKo} {nd.day}일
                   </div>
-                  <div className="hub-stat-countdown mono">
-                    D−{days}
-                  </div>
+                  <div className="hub-stat-countdown mono">D−{days}</div>
                 </div>
               </div>
             )}
@@ -285,7 +272,7 @@ function ExploreSection({
           description="종목, 유형, 지역, 단체별로 대회 일정을 빠르게 탐색할 수 있습니다."
           action={{
             href: "/competitions",
-            label: "전체 보디빌딩·피트니스 대회 일정 →",
+            label: "전체 피트니스·보디빌딩 대회 일정 →",
           }}
         />
 
@@ -394,12 +381,8 @@ function ExploreAxis({
   return (
     <div>
       <div className="hub-axis-head">
-        <div className="hub-axis-sub">
-          {subtitle}
-        </div>
-        <h3 className="hub-axis-title">
-          {title}
-        </h3>
+        <div className="hub-axis-sub">{subtitle}</div>
+        <h3 className="hub-axis-title">{title}</h3>
       </div>
       <div className="hub-axis-list">
         {visibleItems}
@@ -437,9 +420,9 @@ function MajorsSection({
           title="글로벌 주요 대회 일정."
           description={
             <>
-              Mr. Olympia, Arnold Classic 등 세계적으로 주목받는
-              보디빌딩·피트니스 주요 대회 일정을 정리했습니다. 국내 대회와 함께
-              주요 해외 무대를 한곳에서 확인해보세요.
+              Mr. Olympia, Arnold Classic 등 세계적으로 주목받는 주요
+              피트니스·보디빌딩 대회 일정을 정리했습니다. 국내 대회와 함께 주요
+              해외 무대를 한곳에서 확인해보세요.
             </>
           }
           action={{
@@ -487,8 +470,7 @@ function MajorHeroCard({ comp, today }: { comp: Competition; today: Date }) {
           <div className="hub-major-hero-name">{comp.title}</div>
           <div className="hub-major-hero-meta">
             <MajorMeta label="일정">
-              {d.monthKo} {d.day}일
-              {dEnd ? `–${dEnd.day}일` : ""}
+              {d.monthKo} {d.day}일{dEnd ? `–${dEnd.day}일` : ""}
             </MajorMeta>
             <MajorMeta label="장소">
               {comp.venue !== "장소 확인 필요" ? comp.venue : comp.region}
@@ -496,9 +478,7 @@ function MajorHeroCard({ comp, today }: { comp: Competition; today: Date }) {
           </div>
         </div>
         <div className="hub-major-count-panel">
-          <div className="hub-major-meta-label">
-            Countdown
-          </div>
+          <div className="hub-major-meta-label">Countdown</div>
           <div className="hub-major-countdown mono">D−{days}</div>
         </div>
       </div>
@@ -532,28 +512,38 @@ function MajorCard({ comp, today }: { comp: Competition; today: Date }) {
       prefetch={false}
     >
       <div className="hub-major-card-top">
-        <span className="hub-major-card-org">
-          {comp.org}
-        </span>
-        <span className="hub-major-card-dday mono">
-          D−{days}
-        </span>
+        <span className="hub-major-card-org">{comp.org}</span>
+        <span className="hub-major-card-dday mono">D−{days}</span>
       </div>
       <h3 className="hub-major-card-name">{comp.title}</h3>
       <div className="hub-major-card-meta">
-        {d.monthKo} {d.day}일
-        {dEnd ? `–${dEnd.day}` : ""} · {comp.region}
+        {d.monthKo} {d.day}일{dEnd ? `–${dEnd.day}` : ""} · {comp.region}
       </div>
     </Link>
   );
 }
 
-const STATUS_INFO: Record<string, { label: string; color: string; bg: string }> = {
-  open:    { label: "접수 중",    color: "var(--ph-success)", bg: "var(--ph-success-bg)" },
-  urgent:  { label: "마감 임박", color: "var(--ph-accent)", bg: "var(--ph-accent-soft)" },
-  soon:    { label: "접수 예정", color: "var(--ph-ink-3)", bg: "var(--ph-sub)" },
-  closed:  { label: "마감",      color: "var(--ph-ink-5)", bg: "var(--ph-sub)" },
-  unknown: { label: "확인 필요", color: "var(--ph-warn)", bg: "var(--ph-warn-bg)" },
+const STATUS_INFO: Record<
+  string,
+  { label: string; color: string; bg: string }
+> = {
+  open: {
+    label: "접수 중",
+    color: "var(--ph-success)",
+    bg: "var(--ph-success-bg)",
+  },
+  urgent: {
+    label: "마감 임박",
+    color: "var(--ph-accent)",
+    bg: "var(--ph-accent-soft)",
+  },
+  soon: { label: "접수 예정", color: "var(--ph-ink-3)", bg: "var(--ph-sub)" },
+  closed: { label: "마감", color: "var(--ph-ink-5)", bg: "var(--ph-sub)" },
+  unknown: {
+    label: "확인 필요",
+    color: "var(--ph-warn)",
+    bg: "var(--ph-warn-bg)",
+  },
 };
 
 function statusVars(info: { color: string; bg: string }) {
@@ -573,9 +563,7 @@ function DdayText({
   className: string;
 }) {
   return (
-    <div className={`${className}${urgent ? " is-urgent" : ""}`}>
-      D−{days}
-    </div>
+    <div className={`${className}${urgent ? " is-urgent" : ""}`}>D−{days}</div>
   );
 }
 
@@ -618,7 +606,7 @@ function UpcomingSection({
           description="가까운 날짜순으로 예정된 대회를 확인해보세요."
           action={{
             href: "/competitions",
-            label: "전체 보디빌딩·피트니스 대회 일정 →",
+            label: "전체 피트니스·보디빌딩 대회 일정 →",
           }}
         />
 
@@ -662,14 +650,12 @@ function UpcomingRow({ item, today }: { item: Competition; today: Date }) {
       </div>
       <div className="ph-upcoming-cats">
         {item.categories.slice(0, 3).map((c) => (
-          <span key={c} className="comp-card-cat">{c}</span>
+          <span key={c} className="comp-card-cat">
+            {c}
+          </span>
         ))}
       </div>
-      <DdayText
-        days={days}
-        urgent={isUrgent}
-        className="ph-upcoming-dday"
-      />
+      <DdayText days={days} urgent={isUrgent} className="ph-upcoming-dday" />
       <StatusBadge
         info={info}
         className="ph-upcoming-status"
@@ -702,7 +688,7 @@ function RookieSection({
           }
           action={{
             href: "/competitions/types/rookie",
-            label: "루키·노비스 보디빌딩·피트니스 대회 일정 →",
+            label: "루키·노비스 피트니스·보디빌딩 대회 일정 →",
           }}
         />
 
@@ -732,21 +718,15 @@ function RookieCard({ item, today }: { item: Competition; today: Date }) {
       prefetch={false}
     >
       <div className="hub-rookie-tags">
-        <span className="hub-tag hub-tag-accent">
-          루키·노비스
-        </span>
-        <span className="hub-tag hub-tag-muted">
-          {item.orgShort}
-        </span>
+        <span className="hub-tag hub-tag-accent">루키·노비스</span>
+        <span className="hub-tag hub-tag-muted">{item.orgShort}</span>
       </div>
       <h3 className="hub-rookie-name">{item.title}</h3>
       <div className="hub-rookie-meta">
         <span className="hub-rookie-date">
           {d.monthKo} {d.day}일 · {item.region}
         </span>
-        <span className="hub-rookie-dday mono">
-          D−{days}
-        </span>
+        <span className="hub-rookie-dday mono">D−{days}</span>
       </div>
       <div className="hub-rookie-note">
         루키·노비스 부문 포함. 세부 참가 기준은 공식 공지를 확인하세요.
@@ -757,8 +737,8 @@ function RookieCard({ item, today }: { item: Competition; today: Date }) {
 
 const ORGANIZATION_GUIDE_ROWS = [
   { name: "KBBF / IFBB International", scope: "국내 협회·아마추어 국제 루트" },
-  { name: "NPC Worldwide / IFBB Pro",  scope: "프로카드·글로벌 프로 리그 루트" },
-  { name: "NABBA / PCA / WFF 계열",    scope: "민간 피트니스·모델형 종목" },
+  { name: "NPC Worldwide / IFBB Pro", scope: "프로카드·글로벌 프로 리그 루트" },
+  { name: "NABBA / PCA / WFF 계열", scope: "민간 피트니스·모델형 종목" },
   { name: "WNBF / ICN / OCB 등 내추럴", scope: "내추럴·도핑 테스트 중심" },
 ];
 
@@ -778,7 +758,8 @@ function GuideSection() {
           description={
             <>
               종목과 단체에 따라 복장·포징·심사 기준과 출전 자격이 다릅니다.
-              종목별·단체별 핵심 차이를 먼저 확인하고, 세부 규정은 공식 공지를 함께 확인하세요.
+              종목별·단체별 핵심 차이를 먼저 확인하고, 세부 규정은 공식 공지를
+              함께 확인하세요.
             </>
           }
           action={{ href: "/guide", label: "전체 가이드 보기 →" }}
@@ -786,39 +767,63 @@ function GuideSection() {
         />
         <div className="ph-guide-grid">
           {/* Division card */}
-          <Link href="/guide#division" className="ph-surface-card ph-lift-card ph-guide-card" prefetch={false}>
+          <Link
+            href="/guide#division"
+            className="ph-surface-card ph-lift-card ph-guide-card"
+            prefetch={false}
+          >
             <div className="ph-kicker-text ph-guide-card-sub">By Division</div>
             <h3 className="ph-card-title ph-guide-card-title">종목별 가이드</h3>
             <p className="ph-card-body ph-guide-card-body">
-              맨즈 피지크·클래식 피지크·비키니·웰니스 등 종목별 심사 포인트와 체크리스트를 정리했습니다.
+              맨즈 피지크·클래식 피지크·비키니·웰니스 등 종목별 심사 포인트와
+              체크리스트를 정리했습니다.
             </p>
             <div className="ph-guide-rows">
               {divisionRows.map((r) => (
                 <div key={r.name} className="ph-row-divider ph-guide-row">
-                  <span className="ph-card-title ph-guide-row-name">{r.name}</span>
-                  <span className="ph-meta-text ph-guide-row-scope">{r.scope}</span>
+                  <span className="ph-card-title ph-guide-row-name">
+                    {r.name}
+                  </span>
+                  <span className="ph-meta-text ph-guide-row-scope">
+                    {r.scope}
+                  </span>
                 </div>
               ))}
             </div>
-            <span className="ph-action-pill ph-action-pill-primary ph-guide-cta">종목별 가이드 보기 →</span>
+            <span className="ph-action-pill ph-action-pill-primary ph-guide-cta">
+              종목별 가이드 보기 →
+            </span>
           </Link>
 
           {/* Organization card */}
-          <Link href="/guide#organization" className="ph-surface-card ph-lift-card ph-guide-card" prefetch={false}>
-            <div className="ph-kicker-text ph-guide-card-sub">By Organization</div>
+          <Link
+            href="/guide#organization"
+            className="ph-surface-card ph-lift-card ph-guide-card"
+            prefetch={false}
+          >
+            <div className="ph-kicker-text ph-guide-card-sub">
+              By Organization
+            </div>
             <h3 className="ph-card-title ph-guide-card-title">단체별 가이드</h3>
             <p className="ph-card-body ph-guide-card-body">
-              KBBF·IFBB Pro·NABBA·내추럴 단체 등 단체별 출전 루트와 규정 차이를 비교해보세요.
+              KBBF·IFBB Pro·NABBA·내추럴 단체 등 단체별 출전 루트와 규정 차이를
+              비교해보세요.
             </p>
             <div className="ph-guide-rows">
               {ORGANIZATION_GUIDE_ROWS.map((r) => (
                 <div key={r.name} className="ph-row-divider ph-guide-row">
-                  <span className="ph-card-title ph-guide-row-name">{r.name}</span>
-                  <span className="ph-meta-text ph-guide-row-scope">{r.scope}</span>
+                  <span className="ph-card-title ph-guide-row-name">
+                    {r.name}
+                  </span>
+                  <span className="ph-meta-text ph-guide-row-scope">
+                    {r.scope}
+                  </span>
                 </div>
               ))}
             </div>
-            <span className="ph-action-pill ph-action-pill-outline ph-guide-cta">단체별 가이드 보기 →</span>
+            <span className="ph-action-pill ph-action-pill-outline ph-guide-cta">
+              단체별 가이드 보기 →
+            </span>
           </Link>
         </div>
       </div>

@@ -224,7 +224,7 @@ function getListIntro(context: CompetitionLandingContext) {
   }
 
   if (taxon.axis === "region") {
-    return `${taxon.label}에서 가까운 날짜순으로 예정된 보디빌딩·피트니스 대회를 확인해보세요.`;
+    return `${taxon.label}에서 가까운 날짜순으로 예정된 피트니스·보디빌딩 대회를 확인해보세요.`;
   }
 
   if (taxon.axis === "type") {

@@ -78,11 +78,11 @@ export function GET() {
             }}
           >
             <div style={{ display: "flex", whiteSpace: "nowrap" }}>
-              국내 보디빌딩·피트니스
+              피트니스·보디빌딩
             </div>
             <div style={{ display: "flex", gap: 18 }}>
               <span>대회 일정을</span>
-              <span style={{ color: ACCENT }}>한눈에.</span>
+              <span style={{ color: ACCENT }}>한눈에</span>
             </div>
           </div>
           <p
