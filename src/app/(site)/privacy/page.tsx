@@ -337,11 +337,7 @@ export default function PrivacyPage() {
           공개합니다.
         </p>
         <ul>
-          <li>v1.0: 2026년 5월 22일, 개인정보 처리방침 공개</li>
-          <li>
-            v1.1: 2026년 6월 8일, 문의·첨부파일·위탁·국외 이전·로컬 저장
-            항목 보강
-          </li>
+          <li>2026-06-08: 개인정보 처리방침 제정</li>
         </ul>
       </article>
     </StaticPageShell>

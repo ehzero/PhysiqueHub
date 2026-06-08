@@ -553,7 +553,7 @@ export default function TermsPage() {
         <h2>제22조 약관의 시행</h2>
         <p>이 약관은 2026년 6월 8일부터 시행합니다.</p>
         <ul>
-          <li>v1.0: 2026년 6월 8일, 피지크허브 이용약관 제정</li>
+          <li>2026-06-08: 피지크허브 이용약관 제정</li>
         </ul>
       </article>
     </StaticPageShell>
