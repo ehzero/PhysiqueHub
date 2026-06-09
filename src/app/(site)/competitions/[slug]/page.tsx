@@ -3,9 +3,12 @@ import type { CSSProperties } from "react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { ShareButton } from "@/components/ShareButton";
+import { CompetitionDetailAnalytics } from "@/components/CompetitionDetailAnalytics";
 import { KakaoAd } from "@/components/KakaoAd";
 import { PosterFigure, posterFigureColor } from "@/components/PosterFigure";
 import { StatusPill } from "@/components/UIPrimitives";
+import { TrackedExternalLink } from "@/components/TrackedExternalLink";
+import { TrackedLink } from "@/components/TrackedLink";
 import type { Competition } from "@/lib/data";
 import {
   daysBetween,
@@ -203,6 +206,15 @@ export default async function CompetitionDetailPage({
   const actionUrl = competition.registrationUrl || competition.sourceUrl;
   const actionLabel = competition.registrationUrl ? "접수 페이지로 →" : "공식 공지 확인 →";
   const disabledActionLabel = eventPassed ? "대회 종료" : "접수 마감";
+  const analyticsProperties = {
+    organizationId: competition.organizationId ?? null,
+    tier: competition.tier,
+    region: competition.region,
+    dateStartsOn: competition.date,
+    registrationStatus: competition.registrationStatus ?? null,
+    hadRegistrationUrl: Boolean(competition.registrationUrl),
+    source: "detail_page",
+  };
 
   const eventJsonLd = getEventJsonLd(competition);
   const breadcrumbJsonLd = getBreadcrumbJsonLd(competition);
@@ -211,6 +223,10 @@ export default async function CompetitionDetailPage({
     <main>
       <StructuredData data={breadcrumbJsonLd} />
       {eventJsonLd && <StructuredData data={eventJsonLd} />}
+      <CompetitionDetailAnalytics
+        competitionId={competition.id}
+        properties={analyticsProperties}
+      />
 
       <div className="det-page-container">
         {/* Breadcrumb */}
@@ -398,14 +414,17 @@ export default async function CompetitionDetailPage({
               </div>
 
               {actionUrl ? (
-                <a
+                <TrackedExternalLink
                   href={actionUrl}
                   target="_blank"
                   rel="noreferrer noopener"
                   className={`det-reg-cta${isClosed ? " disabled" : ""}`}
+                  eventName={competition.registrationUrl ? "registration_link_click" : "source_link_click"}
+                  competitionId={competition.id}
+                  analyticsProperties={analyticsProperties}
                 >
                   {isClosed ? disabledActionLabel : actionLabel}
-                </a>
+                </TrackedExternalLink>
               ) : (
                 <button className={`det-reg-cta${isClosed ? " disabled" : ""}`} disabled={isClosed}>
                   {isClosed ? disabledActionLabel : "접수 정보 확인 필요"}
@@ -453,11 +472,21 @@ export default async function CompetitionDetailPage({
                 const rStatus = regStatusAt(r, today);
                 const rInfo = STATUS_INFO[rStatus.kind] ?? STATUS_INFO.unknown;
                 return (
-                  <Link
+                  <TrackedLink
                     key={r.id}
                     href={getCompetitionPath(r)}
                     className="det-rel-card"
                     prefetch={false}
+                    eventName="related_competition_click"
+                    competitionId={r.id}
+                    analyticsProperties={{
+                      organizationId: r.organizationId ?? null,
+                      tier: r.tier,
+                      region: r.region,
+                      dateStartsOn: r.date,
+                      registrationStatus: r.registrationStatus ?? null,
+                      source: "detail_related",
+                    }}
                   >
                     <div className="det-rel-top">
                       <span className="det-rel-org">{r.orgShort}</span>
@@ -474,7 +503,7 @@ export default async function CompetitionDetailPage({
                         {rInfo.label}
                       </span>
                     </div>
-                  </Link>
+                  </TrackedLink>
                 );
               })}
             </div>

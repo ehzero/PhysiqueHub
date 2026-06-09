@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { regStatusAt } from "@/lib/data";
 import { useCompetitionDrawer } from "@/hooks/use-competition-drawer";
 import { useListFilterQueryState } from "@/hooks/use-filter-query-state";
@@ -13,6 +13,7 @@ import { useClientToday } from "@/hooks/use-client-today";
 import { useSiteShell } from "@/components/SiteShell";
 import { ListView } from "@/components/ListView";
 import { CompDrawer } from "@/components/CompDrawer";
+import { trackAnalyticsEvent } from "@/lib/analytics-client";
 
 interface ListShellProps {
   initialCompetitionPage: CompetitionListPage;
@@ -44,6 +45,16 @@ export function ListShell({
       closePath: currentPath,
       initialCompetition: initialOpenedCompetition,
     });
+  const openTrackedCompetition = useCallback(
+    (competition: CompetitionListPage["items"][number]) => {
+      trackAnalyticsEvent("competition_open", {
+        competitionId: competition.id,
+        properties: getCompetitionAnalyticsProperties(competition),
+      });
+      openComp(competition);
+    },
+    [openComp],
+  );
 
   const competitions = initialCompetitionPage.items;
   const filtered = useMemo(
@@ -165,7 +176,7 @@ export function ListShell({
         allComps={competitions}
         saved={saved}
         toggleSave={toggleSave}
-        openComp={openComp}
+        openComp={openTrackedCompetition}
         filters={filters}
         setFilters={setFilters}
         filterOptions={initialFilterOptions}
@@ -187,4 +198,16 @@ export function ListShell({
       />
     </>
   );
+}
+
+function getCompetitionAnalyticsProperties(
+  competition: CompetitionListPage["items"][number],
+) {
+  return {
+    organizationId: competition.organizationId ?? null,
+    tier: competition.tier,
+    region: competition.region,
+    dateStartsOn: competition.date,
+    registrationStatus: competition.registrationStatus ?? null,
+  };
 }

@@ -3,6 +3,8 @@
 import { createContext, useContext, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useSavedCompetitions } from "@/hooks/use-saved-competitions";
+import { trackAnalyticsEvent } from "@/lib/analytics-client";
+import { AnalyticsTracker } from "@/components/AnalyticsTracker";
 import { Nav } from "@/components/Nav";
 import { Foot } from "@/components/Foot";
 import { ContactDrawer } from "@/components/ContactDrawer";
@@ -24,6 +26,14 @@ export function SiteShell({ seasonYear, children }: SiteShellProps) {
   const pathname = usePathname();
   const [contactOpen, setContactOpen] = useState(false);
   const { saved, toggleSave } = useSavedCompetitions();
+  const openContact = () => {
+    trackAnalyticsEvent("contact_open", {
+      properties: {
+        source: "site_shell",
+      },
+    });
+    setContactOpen(true);
+  };
 
   const value = useMemo<SiteShellContextValue>(
     () => ({
@@ -36,17 +46,18 @@ export function SiteShell({ seasonYear, children }: SiteShellProps) {
   return (
     <SiteShellContext.Provider value={value}>
       <div className="shell">
+        <AnalyticsTracker pathname={pathname} />
         <Nav
           route={getActiveRoute(pathname)}
           savedCount={saved.length}
-          onOpenContact={() => setContactOpen(true)}
+          onOpenContact={openContact}
         />
 
         {children}
 
         <Foot
           seasonYear={seasonYear}
-          onOpenContact={() => setContactOpen(true)}
+          onOpenContact={openContact}
         />
 
         <ContactDrawer

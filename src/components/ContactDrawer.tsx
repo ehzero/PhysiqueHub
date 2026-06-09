@@ -11,7 +11,9 @@ import {
   isAllowedContactAttachmentContentType,
   isAllowedContactAttachmentName,
 } from "@/lib/contact";
+import { getApiErrorMessage, apiClient } from "@/lib/http-client";
 import { SUPPORT_EMAIL } from "@/lib/site";
+import { trackAnalyticsEvent } from "@/lib/analytics-client";
 import { Icons } from "./Icons";
 
 // Categories shown by the redesigned inquiry form.
@@ -157,24 +159,23 @@ export function ContactDrawer({ isOpen, onClose }: ContactDrawerProps) {
         }),
       );
 
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          category,
-          name: competitionName || undefined,
-          email,
-          message,
-          website,
-          attachments: uploadedAttachments,
-        }),
+      await apiClient.post("/api/contact", {
+        category,
+        name: competitionName || undefined,
+        email,
+        message,
+        website,
+        attachments: uploadedAttachments,
       });
-      const result = (await response.json().catch(() => ({}))) as { error?: string };
-      if (!response.ok) throw new Error(result.error || "문의 전송에 실패했어요.");
+      trackAnalyticsEvent("contact_submit_success", {
+        properties: {
+          category,
+        },
+      });
       setSubmitState("done");
     } catch (err) {
       setSubmitState("error");
-      setErrorMessage(err instanceof Error ? err.message : "문의 전송에 실패했어요.");
+      setErrorMessage(getApiErrorMessage(err, "문의 전송에 실패했어요."));
     }
   }
 

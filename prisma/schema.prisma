@@ -162,3 +162,55 @@ model ContactAttachment {
 
   @@index([inquiryId])
 }
+
+model AnalyticsSession {
+  id             String           @id
+  visitorId      String
+  landingPath    String
+  referrer       String?
+  referrerHost   String?
+  channel        String?
+  utmSource      String?
+  utmMedium      String?
+  utmCampaign    String?
+  utmContent     String?
+  utmTerm        String?
+  ipAddress      String?
+  userAgent      String?
+  deviceCategory String?
+  browserName    String?
+  osName         String?
+  startedAt      DateTime         @default(now())
+  lastSeenAt     DateTime         @default(now())
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  events         AnalyticsEvent[]
+
+  @@index([visitorId])
+  @@index([startedAt])
+  @@index([lastSeenAt])
+  @@index([channel])
+}
+
+model AnalyticsEvent {
+  id             String           @id @default(cuid())
+  sessionId      String
+  session        AnalyticsSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  visitorId      String
+  name           String
+  path           String
+  occurredAt     DateTime         @default(now())
+  competitionId  String?
+  searchQuery    String?
+  resultCount    Int?
+  propertiesJson String           @default("{}")
+  ipAddress      String?
+  userAgent      String?
+  createdAt      DateTime         @default(now())
+
+  @@index([sessionId])
+  @@index([visitorId])
+  @@index([name, occurredAt])
+  @@index([competitionId])
+  @@index([occurredAt])
+}

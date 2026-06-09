@@ -12,6 +12,7 @@ import { CompetitionGridCard } from "./CompetitionListItem";
 import { FilterRail } from "./FilterRail";
 import { EmptyState, PageMain } from "./PageLayout";
 import { Intro, SegmentButton, StickyControlBar } from "./UIPrimitives";
+import { trackAnalyticsEvent } from "@/lib/analytics-client";
 
 const MONTH_KR = [
   "1월", "2월", "3월", "4월", "5월", "6월",
@@ -71,6 +72,14 @@ export function ListView({
   const sheetDragOffsetRef = useRef(0);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const sortDropRef = useRef<HTMLDivElement>(null);
+  const searchReadyRef = useRef(false);
+  const filterReadyRef = useRef(false);
+  const lastFilterSignatureRef = useRef("");
+  const searchAnalyticsContextRef = useRef({
+    activeFilterCount: 0,
+    resultCount: 0,
+    scope,
+  });
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -316,6 +325,82 @@ export function ListView({
   }, [filters, setFilters]);
 
   const hasActiveFilters = activeFilterChips.length > 0 || !!search;
+  const activeFilterCount = activeFilterChips.length + (scope !== "all" ? 1 : 0);
+  const filterSignature = JSON.stringify({ filters, scope });
+
+  useEffect(() => {
+    searchAnalyticsContextRef.current = {
+      activeFilterCount,
+      resultCount: sorted.length,
+      scope,
+    };
+  }, [activeFilterCount, scope, sorted.length]);
+
+  useEffect(() => {
+    if (!searchReadyRef.current) {
+      searchReadyRef.current = true;
+      return;
+    }
+
+    const query = search.trim();
+    if (!query) return;
+
+    const timer = window.setTimeout(() => {
+      const context = searchAnalyticsContextRef.current;
+      trackAnalyticsEvent("search_performed", {
+        searchQuery: query,
+        resultCount: context.resultCount,
+        properties: {
+          scope: context.scope,
+          activeFilterCount: context.activeFilterCount,
+        },
+      });
+
+      if (context.resultCount === 0) {
+        trackAnalyticsEvent("empty_search_result", {
+          searchQuery: query,
+          resultCount: 0,
+          properties: {
+            scope: context.scope,
+            activeFilterCount: context.activeFilterCount,
+          },
+        });
+      }
+    }, 500);
+
+    return () => window.clearTimeout(timer);
+  }, [search]);
+
+  useEffect(() => {
+    if (!filterReadyRef.current) {
+      filterReadyRef.current = true;
+      lastFilterSignatureRef.current = filterSignature;
+      return;
+    }
+
+    if (lastFilterSignatureRef.current === filterSignature) return;
+    lastFilterSignatureRef.current = filterSignature;
+
+    trackAnalyticsEvent(activeFilterCount > 0 ? "filter_applied" : "filter_reset", {
+      searchQuery: search || undefined,
+      resultCount: sorted.length,
+      properties: {
+        scope,
+        activeFilterCount,
+      },
+    });
+
+    if (activeFilterCount > 0 && sorted.length === 0) {
+      trackAnalyticsEvent("empty_search_result", {
+        searchQuery: search || undefined,
+        resultCount: 0,
+        properties: {
+          scope,
+          activeFilterCount,
+        },
+      });
+    }
+  }, [activeFilterCount, filterSignature, scope, search, sorted.length]);
 
   const segmentTabs: { id: CompetitionLocationScope; label: string; count: number }[] = [
     { id: "all", label: "전체", count: comps.length },
@@ -450,8 +535,18 @@ export function ListView({
                           role="option"
                           aria-selected={sortKey === opt.key}
                           onClick={() => {
+                            if (sortKey === opt.key) {
+                              setSortOpen(false);
+                              return;
+                            }
                             setSortKey(opt.key);
                             setSortOpen(false);
+                            trackAnalyticsEvent("sort_changed", {
+                              resultCount: sorted.length,
+                              properties: {
+                                sortKey: opt.key,
+                              },
+                            });
                           }}
                         >
                           <span>{opt.label}</span>
@@ -468,7 +563,16 @@ export function ListView({
                 <div className="lv-view">
                   <button
                     className={viewMode === "list" ? "is-active" : ""}
-                    onClick={() => setViewMode("list")}
+                    onClick={() => {
+                      if (viewMode === "list") return;
+                      setViewMode("list");
+                      trackAnalyticsEvent("view_mode_changed", {
+                        resultCount: sorted.length,
+                        properties: {
+                          viewMode: "list",
+                        },
+                      });
+                    }}
                     aria-label="리스트 뷰"
                     title="리스트 뷰"
                   >
@@ -476,7 +580,16 @@ export function ListView({
                   </button>
                   <button
                     className={viewMode === "grid" ? "is-active" : ""}
-                    onClick={() => setViewMode("grid")}
+                    onClick={() => {
+                      if (viewMode === "grid") return;
+                      setViewMode("grid");
+                      trackAnalyticsEvent("view_mode_changed", {
+                        resultCount: sorted.length,
+                        properties: {
+                          viewMode: "grid",
+                        },
+                      });
+                    }}
                     aria-label="그리드 뷰"
                     title="그리드 뷰"
                   >

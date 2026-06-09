@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { trackAnalyticsEvent } from "@/lib/analytics-client";
 import { Icons } from "./Icons";
 
 interface ShareButtonProps {
@@ -32,6 +33,11 @@ export function ShareButton({
       ? new URL(path, window.location.origin).toString()
       : window.location.href;
     const shareData: ShareData = { url };
+    trackAnalyticsEvent("share_click", {
+      properties: {
+        source: path ?? window.location.pathname,
+      },
+    });
 
     if (!navigator.share || navigator.canShare?.(shareData) === false) {
       await copyShareUrl(url);

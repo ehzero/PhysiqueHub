@@ -16,6 +16,7 @@ import {
 } from "@/lib/competition-display";
 import { Competition, parseDate, regStatusAt } from "@/lib/data";
 import { COMPETITION_TIER_LABELS } from "@/lib/competition-classification";
+import { trackAnalyticsEvent } from "@/lib/analytics-client";
 import { Icons } from "./Icons";
 import { KakaoAd } from "./KakaoAd";
 import { PosterFigure, posterFigureColor } from "./PosterFigure";
@@ -369,7 +370,13 @@ export function CompDrawer({
           <Link
             href={getCompetitionPath(comp)}
             className="cta-ghost"
-            onClick={closeDrawer}
+            onClick={() => {
+              trackAnalyticsEvent("competition_detail_click", {
+                competitionId: comp.id,
+                properties: getCompetitionAnalyticsProperties(comp),
+              });
+              closeDrawer();
+            }}
             prefetch={false}
           >
             상세 페이지
@@ -380,6 +387,16 @@ export function CompDrawer({
             target={actionUrl && !isClosed ? "_blank" : undefined}
             rel={actionUrl && !isClosed ? "noreferrer noopener" : undefined}
             aria-disabled={isClosed}
+            onClick={() => {
+              if (!actionUrl || isClosed) return;
+              trackAnalyticsEvent(
+                comp.registrationUrl ? "registration_link_click" : "source_link_click",
+                {
+                  competitionId: comp.id,
+                  properties: getCompetitionAnalyticsProperties(comp),
+                },
+              );
+            }}
           >
             {isClosed ? "접수 마감" : actionLabel}
           </a>
@@ -387,4 +404,16 @@ export function CompDrawer({
       </aside>
     </>
   );
+}
+
+function getCompetitionAnalyticsProperties(comp: Competition) {
+  return {
+    organizationId: comp.organizationId ?? null,
+    tier: comp.tier,
+    region: comp.region,
+    dateStartsOn: comp.date,
+    registrationStatus: comp.registrationStatus ?? null,
+    hadRegistrationUrl: Boolean(comp.registrationUrl),
+    source: "drawer",
+  };
 }

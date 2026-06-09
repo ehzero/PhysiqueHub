@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { trackAnalyticsEvent } from "@/lib/analytics-client";
 
 const SAVED_STORAGE_KEY = "ph-saved";
 
@@ -36,11 +37,21 @@ export function useSavedCompetitions() {
   }, [saved, savedReady]);
 
   const toggleSave = useCallback((id: string) => {
-    setSaved((current) =>
-      current.includes(id)
+    setSaved((current) => {
+      const alreadySaved = current.includes(id);
+      const next = alreadySaved
         ? current.filter((savedId) => savedId !== id)
-        : [...current, id],
-    );
+        : [...current, id];
+
+      trackAnalyticsEvent(alreadySaved ? "unsave_competition" : "save_competition", {
+        competitionId: id,
+        properties: {
+          savedCount: next.length,
+        },
+      });
+
+      return next;
+    });
   }, []);
 
   return {
