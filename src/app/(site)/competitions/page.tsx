@@ -12,15 +12,12 @@ function getCompetitionListDescription(seasonYear: number) {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const metadata = createPageMetadata({
-    title: "대회 일정",
-    description: getCompetitionListDescription(getKoreaYear()),
-    path: "/competitions",
-  });
-
   return {
-    ...metadata,
-    alternates: undefined,
+    ...createPageMetadata({
+      title: "대회 일정",
+      description: getCompetitionListDescription(getKoreaYear()),
+      path: "/competitions",
+    }),
     robots: {
       index: true,
       follow: true,

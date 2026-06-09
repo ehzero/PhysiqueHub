@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import {
-  getIndexableCompetitionLandingTaxons,
+  getCompetitionLandingSitemapTaxons,
+  getCompetitionSeasonPage,
   getUpcomingCompetitionContext,
 } from "@/lib/competition-server";
 import {
@@ -10,16 +11,24 @@ import {
 import { getCompetitionPath } from "@/lib/competition-slug";
 import { getArticlePath } from "@/lib/articles-data";
 import { getArticleSitemapEntries } from "@/lib/article-server";
+import { getKoreaYear } from "@/lib/date";
 import { getSiteUrl } from "@/lib/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = getSiteUrl();
-  const [{ competitionPage }, landingTaxons, articleEntries] = await Promise.all([
+  const [
+    { competitionPage: upcomingCompetitionPage },
+    competitionSitemapPage,
+    landingTaxons,
+    articleEntries,
+  ] = await Promise.all([
     getUpcomingCompetitionContext(),
-    getIndexableCompetitionLandingTaxons(),
+    getCompetitionSeasonPage(getKoreaYear(), { sort: "date-asc" }),
+    getCompetitionLandingSitemapTaxons(),
     getArticleSitemapEntries(),
   ]);
-  const latestCompetitionUpdate = getLatestUpdate(competitionPage.items);
+  const competitionSitemapItems = competitionSitemapPage.items;
+  const latestCompetitionUpdate = getLatestUpdate(competitionSitemapItems);
   const latestArticleUpdate = getLatestArticleUpdate(articleEntries);
 
   const staticRoutes = [
@@ -31,7 +40,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     toSitemapEntry(siteUrl, "/terms"),
     toSitemapEntry(siteUrl, "/privacy"),
   ];
-  const competitionRoutes = competitionPage.items.map((competition) => ({
+  const competitionRoutes = competitionSitemapItems.map((competition) => ({
     url: `${siteUrl}${getCompetitionPath(competition)}`,
     ...(competition.updatedAt
       ? { lastModified: new Date(competition.updatedAt) }
@@ -42,7 +51,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       siteUrl,
       getCompetitionLandingPath(taxon),
       getLatestUpdate(
-        competitionPage.items.filter((competition) =>
+        competitionSitemapItems.filter((competition) =>
+          competitionMatchesTaxon(competition, taxon),
+        ),
+      ) ?? getLatestUpdate(
+        upcomingCompetitionPage.items.filter((competition) =>
           competitionMatchesTaxon(competition, taxon),
         ),
       ) ?? latestCompetitionUpdate,

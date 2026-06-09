@@ -231,18 +231,12 @@ export async function getCompetitionLandingContext(
     competitions,
     total: competitions.length,
     relatedTaxons: getRelatedCompetitionTaxons(taxon),
-    isIndexable: competitions.length > 0,
+    isIndexable: true,
   };
 }
 
-export async function getIndexableCompetitionLandingTaxons() {
-  const base = await getUpcomingCompetitionBase();
-
-  return getAllCompetitionLandingTaxons().filter((taxon) =>
-    base.competitionPage.items.some((competition) =>
-      competitionMatchesTaxon(competition, taxon),
-    ),
-  );
+export function getCompetitionLandingSitemapTaxons() {
+  return getAllCompetitionLandingTaxons();
 }
 
 const getUpcomingCompetitionBase = cache(async () => {

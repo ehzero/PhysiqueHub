@@ -6521,6 +6521,17 @@ ol {
 .det-reg-dday.is-urgent {
   color: var(--ph-accent);
 }
+.det-ended-note {
+  margin: -4px 0 14px;
+  padding: 12px 13px;
+  border: 1px solid rgba(134,130,124,0.24);
+  border-radius: 8px;
+  background: #F7F5F0;
+  color: #56514A;
+  font-size: 12px;
+  line-height: 1.55;
+  word-break: keep-all;
+}
 .det-reg-divider { height: 1px; background: #EBE8E0; margin: 16px 0; }
 .det-reg-kv {
   display: flex;
@@ -7695,6 +7706,7 @@ ol {
 [data-theme="dark"] .det-note svg { color: var(--ph-warn); }
 [data-theme="dark"] .det-reg-card { background: var(--ph-elev); border-color: var(--ph-line-soft); }
 [data-theme="dark"] .det-reg-dday { color: var(--ph-ink); }
+[data-theme="dark"] .det-ended-note { background: var(--ph-sub); border-color: var(--ph-line-soft); color: var(--ph-ink-3); }
 [data-theme="dark"] .det-reg-divider { background: var(--ph-line-faint); }
 [data-theme="dark"] .det-reg-kv .k { color: var(--ph-ink-4); }
 [data-theme="dark"] .det-reg-kv .v { color: var(--ph-ink); }

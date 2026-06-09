@@ -45,6 +45,7 @@ const STATUS_INFO: Record<string, { label: string; color: string; bg: string }> 
   urgent:  { label: "마감 임박", color: "var(--ph-accent)", bg: "var(--ph-accent-soft)" },
   soon:    { label: "접수 예정", color: "var(--ph-ink-3)", bg: "var(--ph-sub)" },
   closed:  { label: "마감",      color: "var(--ph-ink-5)", bg: "var(--ph-sub)" },
+  ended:   { label: "종료된 대회", color: "var(--ph-ink-4)", bg: "var(--ph-sub)" },
   unknown: { label: "확인 필요", color: "var(--ph-warn)", bg: "var(--ph-warn-bg)" },
 };
 
@@ -172,12 +173,15 @@ export default async function CompetitionDetailPage({
     .slice(0, 3);
 
   // Derived data
-  const status = regStatusAt(competition, today);
-  const statusInfo = STATUS_INFO[status.kind] ?? STATUS_INFO.unknown;
   const daysToComp = daysBetween(today, competition.date);
+  const eventPassed = daysToComp < 0;
+  const status = regStatusAt(competition, today);
+  const statusInfo = eventPassed
+    ? STATUS_INFO.ended
+    : STATUS_INFO[status.kind] ?? STATUS_INFO.unknown;
   const ddayTxt = daysToComp > 0 ? `D−${daysToComp}` : daysToComp === 0 ? "D-DAY" : "종료";
-  const isUrgent = status.kind === "urgent";
-  const isClosed = status.kind === "closed";
+  const isUrgent = !eventPassed && status.kind === "urgent";
+  const isClosed = eventPassed || status.kind === "closed";
 
   const tierLabel = COMPETITION_TIER_LABELS[competition.tier];
   const locationLabel = getCompetitionLocationLabel(competition);
@@ -194,10 +198,10 @@ export default async function CompetitionDetailPage({
   // Timeline states
   const regOpenPassed = competition.regOpen ? daysBetween(today, competition.regOpen) <= 0 : false;
   const regClosePassed = competition.regClose ? daysBetween(today, competition.regClose) < 0 : false;
-  const eventPassed = daysToComp < 0;
 
   const actionUrl = competition.registrationUrl || competition.sourceUrl;
   const actionLabel = competition.registrationUrl ? "접수 페이지로 →" : "공식 공지 확인 →";
+  const disabledActionLabel = eventPassed ? "대회 종료" : "접수 마감";
 
   const eventJsonLd = getEventJsonLd(competition);
   const breadcrumbJsonLd = getBreadcrumbJsonLd(competition);
@@ -363,6 +367,13 @@ export default async function CompetitionDetailPage({
                 </div>
               </div>
 
+              {eventPassed && (
+                <div className="det-ended-note">
+                  이 대회는 종료되었습니다. 표시된 일정·장소·종목 정보는 기록용이며,
+                  변경 사항은 공식 공지를 확인하세요.
+                </div>
+              )}
+
               <div className="det-reg-kv">
                 <span className="k">대회일</span>
                 <span className="v">{dateLabel}</span>
@@ -383,11 +394,11 @@ export default async function CompetitionDetailPage({
                   rel="noreferrer noopener"
                   className={`det-reg-cta${isClosed ? " disabled" : ""}`}
                 >
-                  {isClosed ? "접수 마감" : actionLabel}
+                  {isClosed ? disabledActionLabel : actionLabel}
                 </a>
               ) : (
                 <button className={`det-reg-cta${isClosed ? " disabled" : ""}`} disabled={isClosed}>
-                  {isClosed ? "접수 마감" : "접수 정보 확인 필요"}
+                  {isClosed ? disabledActionLabel : "접수 정보 확인 필요"}
                 </button>
               )}
 
