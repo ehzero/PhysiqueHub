@@ -7,6 +7,7 @@ import {
   useRef,
   useSyncExternalStore,
 } from "react";
+import { KAKAO_ADS_ENABLED } from "@/lib/kakao-adfit";
 
 type KakaoAdElement = "aside" | "section" | "div";
 
@@ -81,6 +82,7 @@ export function KakaoAd({
   const adRef = useRef<HTMLModElement | null>(null);
 
   useEffect(() => {
+    if (!KAKAO_ADS_ENABLED) return;
     if (!shouldRender) return;
 
     const adElement = adRef.current;
@@ -126,7 +128,7 @@ export function KakaoAd({
     };
   }, [shouldRender, unit, width, height]);
 
-  if (!shouldRender) return null;
+  if (!KAKAO_ADS_ENABLED || !shouldRender) return null;
 
   return (
     <Component className={className} aria-label={ariaLabel}>
