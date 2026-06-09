@@ -27,6 +27,7 @@ const CONFIDENCE_LEVELS = ["high", "medium", "low"] as const;
 const REGISTRATION_STATUSES = ["unknown", "scheduled", "open", "closing-soon", "closed", "cancelled"] as const;
 const ISSUE_FILTERS = ["date", "location", "registration", "low-confidence"] as const;
 const ANALYTICS_RANGES = ["today", "7d", "30d"] as const;
+const ACTIVE_SESSION_WINDOW_MS = 2 * 60 * 1_000;
 type AnalyticsRange = (typeof ANALYTICS_RANGES)[number];
 
 function getErrorMessage(error?: string) {
@@ -690,6 +691,8 @@ function AdminTab({
 
 type AnalyticsSummary = {
   accessModeRows: AnalyticsTableRow[];
+  activeSessionCount: number;
+  activeVisitorCount: number;
   browserSessionCount: number;
   channelRows: AnalyticsTableRow[];
   competitionViewCount: number;
@@ -740,13 +743,21 @@ function AnalyticsDashboardSection({
 
       <div className="admin-analytics-note">
         {formatKoreaDateTime(analytics.start)}부터 {formatKoreaDateTime(analytics.end)}까지 ·
-        원문 IP와 전체 User-Agent는 화면에 표시하지 않습니다.
+        활성 사용자는 최근 2분 기준 · 원문 IP와 전체 User-Agent는 화면에 표시하지 않습니다.
       </div>
       {analytics.unavailableMessage && (
         <div className="admin-empty">{analytics.unavailableMessage}</div>
       )}
 
       <section className="admin-metrics admin-analytics-metrics" aria-label="이용 분석 요약">
+        <div>
+          <span className="admin-metric-value">{formatNumber(analytics.activeVisitorCount)}</span>
+          <span className="admin-metric-label">활성 사용자 (2분)</span>
+        </div>
+        <div>
+          <span className="admin-metric-value">{formatNumber(analytics.activeSessionCount)}</span>
+          <span className="admin-metric-label">활성 세션 (2분)</span>
+        </div>
         <div>
           <span className="admin-metric-value">{formatNumber(analytics.visitorCount)}</span>
           <span className="admin-metric-label">방문자</span>
@@ -939,6 +950,7 @@ type AnalyticsTableRow = {
 
 async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSummary> {
   try {
+  const activeSince = new Date(end.getTime() - ACTIVE_SESSION_WINDOW_MS);
   const eventWindow = {
     occurredAt: {
       gte: start,
@@ -965,6 +977,8 @@ async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSum
 	    channelGroupRows,
 	    eventGroupRows,
 	    sessionStartEvents,
+	    activeVisitorRows,
+	    activeSessionCount,
 	  ] = await Promise.all([
     prisma.analyticsSession.findMany({
       distinct: ["visitorId"],
@@ -1031,6 +1045,14 @@ async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSum
 	      select: { propertiesJson: true },
 	      where: { ...eventWindow, name: "session_start" },
 	    }),
+	    prisma.analyticsSession.findMany({
+	      distinct: ["visitorId"],
+	      select: { visitorId: true },
+	      where: { lastSeenAt: { gte: activeSince } },
+	    }),
+	    prisma.analyticsSession.count({
+	      where: { lastSeenAt: { gte: activeSince } },
+	    }),
 	  ]);
 	  const visitorIds = visitorRows.map((row) => row.visitorId);
 	  const returningVisitorRows =
@@ -1093,6 +1115,8 @@ async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSum
 	        count: accessModeCounts.unknown,
 	      },
 	    ].filter((row) => row.count > 0),
+	    activeSessionCount,
+	    activeVisitorCount: activeVisitorRows.length,
 	    browserSessionCount,
 	    channelRows: channelGroupRows.map((row) => ({
 	      key: `${row.channel ?? "unknown"}:${row.referrerHost ?? "none"}`,
@@ -1171,6 +1195,8 @@ function getEmptyAnalyticsSummary(
 ): AnalyticsSummary {
   return {
     accessModeRows: [],
+    activeSessionCount: 0,
+    activeVisitorCount: 0,
     browserSessionCount: 0,
     channelRows: [],
     competitionViewCount: 0,

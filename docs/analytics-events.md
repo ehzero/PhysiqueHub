@@ -88,6 +88,8 @@ PhysiqueHub는 `@vercel/analytics`를 사용하지 않고 자체 이용 행동 �
 - 드로어에서 실제 상세 페이지로 이동하려는 의도는 `competition_detail_click`으로
   본다.
 - 상세 페이지가 실제 렌더링된 조회는 `competition_view`로 본다.
+- 실시간 활성 사용자는 `AnalyticsSession.lastSeenAt`이 최근 2분 이내인 고유
+  `visitorId` 수로 추정한다. 활성 세션은 같은 기준의 세션 수로 본다.
 - 신규/재방문자는 기간 내 `AnalyticsSession.visitorId`가 기간 시작 전에도 세션을
   가진 적이 있는지로 구분한다.
 - PWA 접근은 `session_start.propertiesJson.isPwa` 또는 `displayMode`가
