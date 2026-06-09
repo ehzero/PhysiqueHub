@@ -34,6 +34,10 @@ stable browsing experience for athletes comparing events.
   article pages. Use [`docs/public-cache-policy.md`](docs/public-cache-policy.md)
   for the current public page ISR, season data cache, article data cache, and
   invalidation policy.
+- Analytics baseline: use
+  [`docs/analytics-events.md`](docs/analytics-events.md) before adding or
+  changing analytics events, session fields, event properties, retention
+  behavior, or privacy-facing tracking copy.
 
 ## Sub-Agent Roster
 
@@ -55,6 +59,10 @@ Use exactly these three sub-agent roles for this project:
 - Use `implementation` to confirm public page changes reuse existing CSS,
   component, server-data, and cache patterns before introducing new local
   equivalents.
+- Use `implementation` for analytics instrumentation, event schemas, API routes,
+  Prisma analytics models, and client tracking behavior.
+- Use `seo-review` for analytics changes that affect public-page behavior,
+  search-facing copy, privacy policy, or terms pages.
 - Use `domain-review` for any change that mentions competitions, federations,
   divisions, natural status, doping/testing policy, pro cards, qualification
   routes, venues, dates, or official source claims.
