@@ -139,6 +139,9 @@ PhysiqueHub는 `@vercel/analytics`를 사용하지 않고 자체 이용 행동 �
 
 - 원문 IP와 전체 User-Agent를 저장하므로 analytics 변경 시
   `src/app/(site)/privacy/page.tsx`의 고지 내용과 보관 기간을 함께 확인한다.
+- 어드민 분석 대시보드는 원문 IP와 전체 User-Agent를 기본 노출하지 않는다.
+  집계에는 사용할 수 있지만 화면에는 채널, 기기, 브라우저, OS 같은 요약값만
+  표시한다.
 - 검색어는 이메일과 전화번호 패턴을 redaction하지만, 민감정보가 들어올 가능성이
   있으므로 검색어를 노출하는 관리자 UI나 export를 만들 때 별도 검토한다.
 - 브라우저 저장소 키는 `ph-analytics-visitor-id`,

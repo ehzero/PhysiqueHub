@@ -26,6 +26,7 @@ type AdminPageProps = {
     confidence?: string;
     org?: string;
     issue?: string;
+    analyticsRange?: string;
   }>;
 };
 
@@ -33,6 +34,8 @@ const REVIEW_STATUSES = ["needs-review", "approved", "rejected", "pending"] as c
 const CONFIDENCE_LEVELS = ["high", "medium", "low"] as const;
 const REGISTRATION_STATUSES = ["unknown", "scheduled", "open", "closing-soon", "closed", "cancelled"] as const;
 const ISSUE_FILTERS = ["date", "location", "registration", "low-confidence"] as const;
+const ANALYTICS_RANGES = ["today", "7d", "30d"] as const;
+type AnalyticsRange = (typeof ANALYTICS_RANGES)[number];
 
 function getErrorMessage(error?: string) {
   if (error === "missing-config") {
@@ -86,14 +89,18 @@ async function AdminDashboard({
   confidenceFilter,
   organizationFilter,
   issueFilter,
+  analyticsRange,
 }: {
   selectedId?: string;
   statusFilter?: string;
   confidenceFilter?: string;
   organizationFilter?: string;
   issueFilter?: string;
+  analyticsRange?: string;
 }) {
   const seasonYear = new Date().getFullYear();
+  const selectedAnalyticsRange = toAnalyticsRange(analyticsRange);
+  const analyticsWindow = getAnalyticsWindow(selectedAnalyticsRange);
   const queueWhere = getQueueWhere(
     seasonYear,
     statusFilter,
@@ -111,6 +118,7 @@ async function AdminDashboard({
     organizationRows,
     queue,
     contactInquiries,
+    analyticsSummary,
   ] =
     await Promise.all([
       prisma.competitionSchedule.count({ where: { seasonYear } }),
@@ -153,6 +161,7 @@ async function AdminDashboard({
         orderBy: { createdAt: "desc" },
         take: 20,
       }),
+      getAnalyticsSummary(analyticsWindow.start, analyticsWindow.end),
     ]);
   const selectedCompetition =
     (selectedId
@@ -176,13 +185,20 @@ async function AdminDashboard({
     selectedQueueIndex >= 0 ? queue[selectedQueueIndex + 1] ?? null : queue[0] ?? null;
   const nextCompetitionHref = nextCompetition
     ? getAdminHref({
+        analyticsRange: selectedAnalyticsRange,
         statusFilter,
         confidenceFilter,
         organizationFilter,
         issueFilter,
         id: nextCompetition.id,
       })
-    : getAdminHref({ statusFilter, confidenceFilter, organizationFilter, issueFilter });
+    : getAdminHref({
+        analyticsRange: selectedAnalyticsRange,
+        statusFilter,
+        confidenceFilter,
+        organizationFilter,
+        issueFilter,
+      });
   const selectedHealth = selectedCompetition ? getReviewHealth(selectedCompetition) : null;
 
   return (
@@ -225,6 +241,16 @@ async function AdminDashboard({
         </div>
       </section>
 
+      <AnalyticsDashboardSection
+        analytics={analyticsSummary}
+        confidenceFilter={confidenceFilter}
+        issueFilter={issueFilter}
+        organizationFilter={organizationFilter}
+        range={selectedAnalyticsRange}
+        selectedId={selectedId}
+        statusFilter={statusFilter}
+      />
+
       <section className="admin-section" aria-labelledby="admin-contact-title">
         <div className="admin-section-head">
           <div>
@@ -253,19 +279,31 @@ async function AdminDashboard({
           </div>
           <div className="admin-tabs">
             <AdminTab
-              href={getAdminHref({ confidenceFilter, organizationFilter, issueFilter })}
+              href={getAdminHref({
+                analyticsRange: selectedAnalyticsRange,
+                confidenceFilter,
+                organizationFilter,
+                issueFilter,
+              })}
               active={!statusFilter || statusFilter === "open"}
             >
               검수 필요
             </AdminTab>
             <AdminTab
-              href={getAdminHref({ statusFilter: "all", confidenceFilter, organizationFilter, issueFilter })}
+              href={getAdminHref({
+                analyticsRange: selectedAnalyticsRange,
+                statusFilter: "all",
+                confidenceFilter,
+                organizationFilter,
+                issueFilter,
+              })}
               active={statusFilter === "all"}
             >
               전체
             </AdminTab>
             <AdminTab
               href={getAdminHref({
+                analyticsRange: selectedAnalyticsRange,
                 statusFilter: "approved",
                 confidenceFilter,
                 organizationFilter,
@@ -282,7 +320,12 @@ async function AdminDashboard({
           <span className="admin-filter-label">신뢰도</span>
           <div className="admin-tabs">
             <AdminTab
-              href={getAdminHref({ statusFilter, organizationFilter, issueFilter })}
+              href={getAdminHref({
+                analyticsRange: selectedAnalyticsRange,
+                statusFilter,
+                organizationFilter,
+                issueFilter,
+              })}
               active={!isConfidenceFilter(confidenceFilter)}
             >
               전체
@@ -291,6 +334,7 @@ async function AdminDashboard({
               <AdminTab
                 active={confidenceFilter === value}
                 href={getAdminHref({
+                  analyticsRange: selectedAnalyticsRange,
                   statusFilter,
                   confidenceFilter: value,
                   organizationFilter,
@@ -308,7 +352,12 @@ async function AdminDashboard({
           <span className="admin-filter-label">이슈</span>
           <div className="admin-tabs">
             <AdminTab
-              href={getAdminHref({ statusFilter, confidenceFilter, organizationFilter })}
+              href={getAdminHref({
+                analyticsRange: selectedAnalyticsRange,
+                statusFilter,
+                confidenceFilter,
+                organizationFilter,
+              })}
               active={!isIssueFilter(issueFilter)}
             >
               전체
@@ -317,6 +366,7 @@ async function AdminDashboard({
               <AdminTab
                 active={issueFilter === value}
                 href={getAdminHref({
+                  analyticsRange: selectedAnalyticsRange,
                   statusFilter,
                   confidenceFilter,
                   organizationFilter,
@@ -334,7 +384,12 @@ async function AdminDashboard({
           <span className="admin-filter-label">단체</span>
           <div className="admin-org-tabs">
             <AdminTab
-              href={getAdminHref({ statusFilter, confidenceFilter, issueFilter })}
+              href={getAdminHref({
+                analyticsRange: selectedAnalyticsRange,
+                statusFilter,
+                confidenceFilter,
+                issueFilter,
+              })}
               active={!organizationFilter}
             >
               전체 단체
@@ -343,6 +398,7 @@ async function AdminDashboard({
               <AdminTab
                 active={organizationFilter === summary.organizationId}
                 href={getAdminHref({
+                  analyticsRange: selectedAnalyticsRange,
                   statusFilter,
                   confidenceFilter,
                   issueFilter,
@@ -380,6 +436,7 @@ async function AdminDashboard({
                     <Link
                       className={`admin-queue-item ${isSelected ? "is-active" : ""}`}
                       href={getAdminHref({
+                        analyticsRange: selectedAnalyticsRange,
                         statusFilter,
                         confidenceFilter,
                         organizationFilter,
@@ -409,6 +466,7 @@ async function AdminDashboard({
               <form action={updateCompetitionReview} className="admin-review-form">
                 <input name="id" type="hidden" value={selectedCompetition.id} />
                 <input name="redirectTo" type="hidden" value={getAdminHref({
+                  analyticsRange: selectedAnalyticsRange,
                   statusFilter,
                   confidenceFilter,
                   organizationFilter,
@@ -621,6 +679,167 @@ function AdminTab({
   );
 }
 
+type AnalyticsSummary = {
+  channelRows: AnalyticsTableRow[];
+  competitionViewCount: number;
+  contactSubmitCount: number;
+  end: Date;
+  eventRows: AnalyticsTableRow[];
+  pageViewCount: number;
+  registrationClickCount: number;
+  sessionCount: number;
+  start: Date;
+  topCompetitions: AnalyticsTableRow[];
+  topPages: AnalyticsTableRow[];
+  topSearches: AnalyticsTableRow[];
+  unavailableMessage?: string;
+  visitorCount: number;
+};
+
+function AnalyticsDashboardSection({
+  analytics,
+  range,
+  selectedId,
+  statusFilter,
+  confidenceFilter,
+  organizationFilter,
+  issueFilter,
+}: {
+  analytics: AnalyticsSummary;
+  range: AnalyticsRange;
+  selectedId?: string;
+  statusFilter?: string;
+  confidenceFilter?: string;
+  organizationFilter?: string;
+  issueFilter?: string;
+}) {
+  return (
+    <section className="admin-section" aria-labelledby="admin-analytics-title">
+      <div className="admin-section-head">
+        <div>
+          <p className="eyebrow">Analytics</p>
+          <h2 id="admin-analytics-title">이용 분석</h2>
+        </div>
+        <div className="admin-tabs" aria-label="분석 기간">
+          {ANALYTICS_RANGES.map((value) => (
+            <AdminTab
+              active={range === value}
+              href={getAdminHref({
+                analyticsRange: value,
+                confidenceFilter,
+                id: selectedId,
+                issueFilter,
+                organizationFilter,
+                statusFilter,
+              })}
+              key={value}
+            >
+              {toAnalyticsRangeLabel(value)}
+            </AdminTab>
+          ))}
+        </div>
+      </div>
+
+      <div className="admin-analytics-note">
+        {formatKoreaDateTime(analytics.start)}부터 {formatKoreaDateTime(analytics.end)}까지 ·
+        원문 IP와 전체 User-Agent는 화면에 표시하지 않습니다.
+      </div>
+      {analytics.unavailableMessage && (
+        <div className="admin-empty">{analytics.unavailableMessage}</div>
+      )}
+
+      <section className="admin-metrics admin-analytics-metrics" aria-label="이용 분석 요약">
+        <div>
+          <span className="admin-metric-value">{formatNumber(analytics.visitorCount)}</span>
+          <span className="admin-metric-label">방문자</span>
+        </div>
+        <div>
+          <span className="admin-metric-value">{formatNumber(analytics.sessionCount)}</span>
+          <span className="admin-metric-label">세션</span>
+        </div>
+        <div>
+          <span className="admin-metric-value">{formatNumber(analytics.pageViewCount)}</span>
+          <span className="admin-metric-label">페이지뷰</span>
+        </div>
+        <div>
+          <span className="admin-metric-value">{formatNumber(analytics.competitionViewCount)}</span>
+          <span className="admin-metric-label">대회 상세 조회</span>
+        </div>
+        <div>
+          <span className="admin-metric-value">{formatNumber(analytics.registrationClickCount)}</span>
+          <span className="admin-metric-label">접수 링크 클릭</span>
+        </div>
+        <div>
+          <span className="admin-metric-value">{formatNumber(analytics.contactSubmitCount)}</span>
+          <span className="admin-metric-label">문의 전환</span>
+        </div>
+      </section>
+
+      <div className="admin-analytics-grid">
+        <AnalyticsTable
+          emptyLabel="페이지뷰 데이터가 없습니다."
+          rows={analytics.topPages}
+          title="상위 페이지"
+        />
+        <AnalyticsTable
+          emptyLabel="대회 상세 조회 데이터가 없습니다."
+          rows={analytics.topCompetitions}
+          title="상위 대회"
+        />
+        <AnalyticsTable
+          emptyLabel="검색어 데이터가 없습니다."
+          rows={analytics.topSearches}
+          title="상위 검색어"
+        />
+        <AnalyticsTable
+          emptyLabel="유입 채널 데이터가 없습니다."
+          rows={analytics.channelRows}
+          title="유입 채널"
+        />
+        <AnalyticsTable
+          emptyLabel="이벤트 데이터가 없습니다."
+          rows={analytics.eventRows}
+          title="이벤트 믹스"
+        />
+      </div>
+    </section>
+  );
+}
+
+function AnalyticsTable({
+  emptyLabel,
+  rows,
+  title,
+}: {
+  emptyLabel: string;
+  rows: AnalyticsTableRow[];
+  title: string;
+}) {
+  return (
+    <section className="admin-analytics-card">
+      <div className="admin-analytics-card-head">
+        <h3>{title}</h3>
+        <span className="admin-badge subtle">Top {rows.length}</span>
+      </div>
+      {rows.length > 0 ? (
+        <ol className="admin-analytics-list">
+          {rows.map((row) => (
+            <li key={row.key}>
+              <span>
+                <strong>{row.label}</strong>
+                {row.meta && <small>{row.meta}</small>}
+              </span>
+              <b className="mono">{formatNumber(row.count)}</b>
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <div className="admin-empty">{emptyLabel}</div>
+      )}
+    </section>
+  );
+}
+
 type ContactInquiryWithAttachments = ContactInquiry & {
   attachments: ContactAttachment[];
 };
@@ -690,6 +909,196 @@ type QualityIssue = {
   message?: string;
   severity?: string;
 };
+
+type AnalyticsTableRow = {
+  key: string;
+  label: string;
+  meta?: string;
+  count: number;
+};
+
+async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSummary> {
+  try {
+  const eventWindow = {
+    occurredAt: {
+      gte: start,
+      lte: end,
+    },
+  };
+  const sessionWindow = {
+    startedAt: {
+      gte: start,
+      lte: end,
+    },
+  };
+
+  const [
+    visitorRows,
+    sessionCount,
+    pageViewCount,
+    competitionViewCount,
+    registrationClickCount,
+    contactSubmitCount,
+    topPageRows,
+    topCompetitionRows,
+    topSearchRows,
+    channelGroupRows,
+    eventGroupRows,
+  ] = await Promise.all([
+    prisma.analyticsSession.findMany({
+      distinct: ["visitorId"],
+      select: { visitorId: true },
+      where: sessionWindow,
+    }),
+    prisma.analyticsSession.count({ where: sessionWindow }),
+    prisma.analyticsEvent.count({
+      where: { ...eventWindow, name: "page_view" },
+    }),
+    prisma.analyticsEvent.count({
+      where: { ...eventWindow, name: "competition_view" },
+    }),
+    prisma.analyticsEvent.count({
+      where: { ...eventWindow, name: "registration_link_click" },
+    }),
+    prisma.analyticsEvent.count({
+      where: { ...eventWindow, name: "contact_submit_success" },
+    }),
+    prisma.analyticsEvent.groupBy({
+      by: ["path"],
+      where: { ...eventWindow, name: "page_view" },
+      _count: { _all: true },
+      orderBy: { _count: { path: "desc" } },
+      take: 10,
+    }),
+    prisma.analyticsEvent.groupBy({
+      by: ["competitionId"],
+      where: {
+        ...eventWindow,
+        name: "competition_view",
+        competitionId: { not: null },
+      },
+      _count: { _all: true },
+      orderBy: { _count: { competitionId: "desc" } },
+      take: 10,
+    }),
+    prisma.analyticsEvent.groupBy({
+      by: ["searchQuery"],
+      where: {
+        ...eventWindow,
+        name: "search_performed",
+        searchQuery: { not: null },
+      },
+      _count: { _all: true },
+      orderBy: { _count: { searchQuery: "desc" } },
+      take: 10,
+    }),
+    prisma.analyticsSession.groupBy({
+      by: ["channel"],
+      where: sessionWindow,
+      _count: { _all: true },
+      orderBy: { _count: { channel: "desc" } },
+      take: 10,
+    }),
+    prisma.analyticsEvent.groupBy({
+      by: ["name"],
+      where: eventWindow,
+      _count: { _all: true },
+      orderBy: { _count: { name: "desc" } },
+      take: 10,
+    }),
+  ]);
+  const competitionIds = topCompetitionRows
+    .map((row) => row.competitionId)
+    .filter((id): id is string => Boolean(id));
+  const competitions =
+    competitionIds.length > 0
+      ? await prisma.competitionSchedule.findMany({
+          select: {
+            id: true,
+            organizationShortName: true,
+            organizationName: true,
+            title: true,
+          },
+          where: { id: { in: competitionIds } },
+        })
+      : [];
+  const competitionById = new Map(competitions.map((competition) => [competition.id, competition]));
+
+  return {
+    channelRows: channelGroupRows.map((row) => ({
+      key: row.channel ?? "unknown",
+      label: toAnalyticsChannelLabel(row.channel),
+      count: row._count._all,
+    })),
+    competitionViewCount,
+    contactSubmitCount,
+    end,
+    eventRows: eventGroupRows.map((row) => ({
+      key: row.name,
+      label: toAnalyticsEventLabel(row.name),
+      meta: row.name,
+      count: row._count._all,
+    })),
+    pageViewCount,
+    registrationClickCount,
+    sessionCount,
+    start,
+    topCompetitions: topCompetitionRows.map((row) => {
+      const competition = row.competitionId ? competitionById.get(row.competitionId) : null;
+      return {
+        key: row.competitionId ?? "unknown",
+        label: competition?.title ?? row.competitionId ?? "알 수 없는 대회",
+        meta:
+          competition?.organizationShortName ??
+          competition?.organizationName ??
+          row.competitionId ??
+          undefined,
+        count: row._count._all,
+      };
+    }),
+    topPages: topPageRows.map((row) => ({
+      key: row.path,
+      label: row.path,
+      count: row._count._all,
+    })),
+    topSearches: topSearchRows.map((row) => ({
+      key: row.searchQuery ?? "unknown",
+      label: row.searchQuery ?? "알 수 없는 검색어",
+      count: row._count._all,
+    })),
+    visitorCount: visitorRows.length,
+  };
+  } catch {
+    return getEmptyAnalyticsSummary(
+      start,
+      end,
+      "Analytics 테이블을 확인할 수 없습니다. Prisma migration 적용 상태를 확인하세요.",
+    );
+  }
+}
+
+function getEmptyAnalyticsSummary(
+  start: Date,
+  end: Date,
+  unavailableMessage?: string,
+): AnalyticsSummary {
+  return {
+    channelRows: [],
+    competitionViewCount: 0,
+    contactSubmitCount: 0,
+    end,
+    eventRows: [],
+    pageViewCount: 0,
+    registrationClickCount: 0,
+    sessionCount: 0,
+    start,
+    topCompetitions: [],
+    topPages: [],
+    topSearches: [],
+    unavailableMessage,
+    visitorCount: 0,
+  };
+}
 
 function getQueueWhere(
   seasonYear: number,
@@ -922,12 +1331,14 @@ function getReviewHealth(competition: CompetitionSchedule) {
 }
 
 function getAdminHref({
+  analyticsRange,
   statusFilter,
   confidenceFilter,
   organizationFilter,
   issueFilter,
   id,
 }: {
+  analyticsRange?: string;
   statusFilter?: string;
   confidenceFilter?: string;
   organizationFilter?: string;
@@ -948,6 +1359,9 @@ function getAdminHref({
   if (isIssueFilter(issueFilter)) {
     params.set("issue", issueFilter);
   }
+  if (isAnalyticsRange(analyticsRange) && analyticsRange !== "7d") {
+    params.set("analyticsRange", analyticsRange);
+  }
   if (id) {
     params.set("id", id);
   }
@@ -962,6 +1376,37 @@ function isConfidenceFilter(value: string | undefined): value is (typeof CONFIDE
 
 function isIssueFilter(value: string | undefined): value is (typeof ISSUE_FILTERS)[number] {
   return ISSUE_FILTERS.some((issue) => issue === value);
+}
+
+function isAnalyticsRange(value: string | undefined): value is AnalyticsRange {
+  return ANALYTICS_RANGES.some((range) => range === value);
+}
+
+function toAnalyticsRange(value: string | undefined): AnalyticsRange {
+  return isAnalyticsRange(value) ? value : "7d";
+}
+
+function getAnalyticsWindow(range: AnalyticsRange) {
+  const end = new Date();
+  const days = range === "today" ? 1 : range === "30d" ? 30 : 7;
+  const todayStart = getKoreaStartOfDay(end);
+  const start = new Date(todayStart.getTime() - (days - 1) * 86_400_000);
+
+  return { start, end };
+}
+
+function getKoreaStartOfDay(value: Date) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    day: "2-digit",
+    month: "2-digit",
+    timeZone: "Asia/Seoul",
+    year: "numeric",
+  }).formatToParts(value);
+  const year = Number(parts.find((part) => part.type === "year")?.value);
+  const month = Number(parts.find((part) => part.type === "month")?.value);
+  const day = Number(parts.find((part) => part.type === "day")?.value);
+
+  return new Date(Date.UTC(year, month - 1, day, -9));
 }
 
 function toReviewLabel(value: string) {
@@ -992,6 +1437,49 @@ function toIssueFilterLabel(value: string) {
   if (value === "registration") return "접수";
   if (value === "low-confidence") return "낮은 신뢰도";
   return "전체";
+}
+
+function toAnalyticsRangeLabel(value: AnalyticsRange) {
+  if (value === "today") return "오늘";
+  if (value === "30d") return "최근 30일";
+  return "최근 7일";
+}
+
+function toAnalyticsChannelLabel(value: string | null) {
+  if (value === "direct") return "직접 방문";
+  if (value === "internal") return "내부 이동";
+  if (value === "organic_search") return "검색 유입";
+  if (value === "paid") return "유료 유입";
+  if (value === "referral") return "추천 유입";
+  if (value === "social") return "소셜 유입";
+  return "알 수 없음";
+}
+
+function toAnalyticsEventLabel(value: string) {
+  const labels: Record<string, string> = {
+    contact_open: "문의 열기",
+    contact_submit_success: "문의 제출 성공",
+    competition_detail_click: "드로어 상세 클릭",
+    competition_open: "대회 드로어 열기",
+    competition_view: "대회 상세 조회",
+    empty_search_result: "0건 결과",
+    engagement_ping: "활성 ping",
+    filter_applied: "필터 적용",
+    filter_reset: "필터 초기화",
+    page_view: "페이지뷰",
+    registration_link_click: "접수 링크 클릭",
+    related_competition_click: "관련 대회 클릭",
+    save_competition: "관심 대회 저장",
+    search_performed: "검색 수행",
+    session_start: "세션 시작",
+    share_click: "공유 클릭",
+    sort_changed: "정렬 변경",
+    source_link_click: "출처 링크 클릭",
+    unsave_competition: "관심 대회 해제",
+    view_mode_changed: "보기 변경",
+  };
+
+  return labels[value] ?? value;
 }
 
 function toContactStatusLabel(value: string) {
@@ -1031,6 +1519,10 @@ function formatFileSize(bytes: number) {
   return `${(bytes / 1024 / 1024).toFixed(1)}MB`;
 }
 
+function formatNumber(value: number) {
+  return new Intl.NumberFormat("ko-KR").format(value);
+}
+
 function parseJsonArray<T>(value: string): T[] {
   try {
     const parsed = JSON.parse(value);
@@ -1044,7 +1536,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
   const paramsPromise: NonNullable<AdminPageProps["searchParams"]> =
     searchParams ?? Promise.resolve({});
 
-  const [{ error, id, status, confidence, org, issue }, isAuthed] = await Promise.all([
+  const [{ analyticsRange, error, id, status, confidence, org, issue }, isAuthed] = await Promise.all([
     paramsPromise,
     hasAdminSession(),
   ]);
@@ -1055,6 +1547,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
 
   return (
     <AdminDashboard
+      analyticsRange={analyticsRange}
       confidenceFilter={confidence}
       issueFilter={issue}
       organizationFilter={org}
