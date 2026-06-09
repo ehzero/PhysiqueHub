@@ -26,7 +26,7 @@ export function trackAnalyticsEvent(
     occurredAt?: string;
   } = {},
 ) {
-  if (typeof window === "undefined") return;
+  if (!shouldCollectAnalytics()) return;
 
   queue.push({
     ...event,
@@ -44,7 +44,7 @@ export function trackAnalyticsEvent(
 }
 
 export function trackPageView(routeType?: string) {
-  if (typeof window === "undefined") return;
+  if (!shouldCollectAnalytics()) return;
 
   const path = getCurrentPath();
   if (path === lastPageViewPath) return;
@@ -59,7 +59,7 @@ export function trackPageView(routeType?: string) {
 }
 
 export function startAnalyticsSession(routeType?: string) {
-  if (typeof window === "undefined") return;
+  if (!shouldCollectAnalytics()) return;
 
   ensureAnalyticsSession();
 
@@ -90,7 +90,7 @@ export function startAnalyticsSession(routeType?: string) {
 }
 
 export async function flushAnalyticsEvents(useBeacon = false) {
-  if (typeof window === "undefined" || queue.length === 0) return;
+  if (!shouldCollectAnalytics() || queue.length === 0) return;
 
   if (flushTimer !== null) {
     window.clearTimeout(flushTimer);
@@ -126,6 +126,13 @@ function scheduleFlush() {
   flushTimer = window.setTimeout(() => {
     void flushAnalyticsEvents();
   }, FLUSH_INTERVAL_MS);
+}
+
+function shouldCollectAnalytics() {
+  return (
+    typeof window !== "undefined" &&
+    process.env.NEXT_PUBLIC_ANALYTICS_ENABLED === "true"
+  );
 }
 
 function getAnalyticsSession() {

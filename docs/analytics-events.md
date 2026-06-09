@@ -147,6 +147,8 @@ PhysiqueHub는 `@vercel/analytics`를 사용하지 않고 자체 이용 행동 �
 - 브라우저 저장소 키는 `ph-analytics-visitor-id`,
   `ph-analytics-session-id`, `ph-analytics-session-started`,
   `ph-analytics-landing-path`다.
+- 클라이언트 analytics 수집은 `NEXT_PUBLIC_ANALYTICS_ENABLED="true"`일 때만
+  활성화한다. 로컬 개발 환경은 기본값을 `"false"`로 둔다.
 - analytics DB 모델이 바뀌면 Prisma migration을 추가하고 배포 전에 적용해야 한다.
 - `sendBeacon`은 페이지 종료 직전 전송용으로 유지한다. 일반 전송은 axios
   인스턴스를 사용한다.
