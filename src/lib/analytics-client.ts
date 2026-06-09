@@ -79,7 +79,9 @@ export function startAnalyticsSession(routeType?: string) {
         utmContent: session.utmContent,
         utmTerm: session.utmTerm,
         deviceCategory: session.deviceCategory,
+        displayMode: session.displayMode,
         browserName: session.browserName,
+        isPwa: session.isPwa,
         osName: session.osName,
         routeType,
       },
@@ -144,6 +146,7 @@ function getAnalyticsSession() {
   const referrer = document.referrer || null;
   const referrerHost = getReferrerHost(referrer);
   const url = new URL(window.location.href);
+  const displayMode = getDisplayMode();
 
   return {
     sessionId,
@@ -158,7 +161,9 @@ function getAnalyticsSession() {
     utmContent: getParam(url.searchParams, "utm_content"),
     utmTerm: getParam(url.searchParams, "utm_term"),
     deviceCategory: getDeviceCategory(),
+    displayMode,
     browserName: getBrowserName(navigator.userAgent),
+    isPwa: isPwaDisplayMode(displayMode),
     osName: getOsName(navigator.userAgent),
   };
 }
@@ -259,6 +264,24 @@ function getDeviceCategory() {
   if (width < 768) return "mobile";
   if (width < 1024) return "tablet";
   return "desktop";
+}
+
+function getDisplayMode() {
+  if (isIosStandalone()) return "standalone";
+  if (typeof window.matchMedia !== "function") return "unknown";
+  if (window.matchMedia("(display-mode: standalone)").matches) return "standalone";
+  if (window.matchMedia("(display-mode: fullscreen)").matches) return "fullscreen";
+  if (window.matchMedia("(display-mode: minimal-ui)").matches) return "minimal-ui";
+  if (window.matchMedia("(display-mode: browser)").matches) return "browser";
+  return "unknown";
+}
+
+function isPwaDisplayMode(displayMode: string) {
+  return displayMode === "standalone" || displayMode === "fullscreen" || displayMode === "minimal-ui";
+}
+
+function isIosStandalone() {
+  return Boolean((navigator as Navigator & { standalone?: boolean }).standalone);
 }
 
 function getBrowserName(userAgent: string) {

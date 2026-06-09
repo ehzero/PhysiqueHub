@@ -1013,6 +1013,15 @@ ol {
   color: var(--ink-3);
   font-weight: 600;
 }
+.admin-page-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px;
+  border: 1px solid var(--line-soft);
+  margin: 24px 0 0;
+  width: fit-content;
+}
 .admin-analytics-note {
   color: var(--ink-3);
   font-size: 12px;
@@ -1020,7 +1029,7 @@ ol {
   margin: -10px 0 18px;
 }
 .admin-analytics-metrics {
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   border-top: 1px solid var(--line);
 }
 .admin-analytics-grid {

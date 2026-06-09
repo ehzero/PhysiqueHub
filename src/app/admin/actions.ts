@@ -79,7 +79,7 @@ export async function updateCompetitionReview(formData: FormData) {
     },
   });
 
-  revalidatePath("/admin");
+  revalidatePath("/admin/review");
   updateTag(COMPETITIONS_CACHE_TAG);
   redirect(getSafeAdminRedirect(formData, intent === "approve-next" ? "nextRedirectTo" : "redirectTo"));
 }
