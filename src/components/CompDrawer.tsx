@@ -17,6 +17,7 @@ import {
 import { Competition, parseDate, regStatusAt } from "@/lib/data";
 import { COMPETITION_TIER_LABELS } from "@/lib/competition-classification";
 import { Icons } from "./Icons";
+import { KakaoAd } from "./KakaoAd";
 import { PosterFigure, posterFigureColor } from "./PosterFigure";
 import { ShareButton } from "./ShareButton";
 import { StatusPill } from "./UIPrimitives";
@@ -341,7 +342,7 @@ export function CompDrawer({
           )}
 
           {/* Disclaimer note */}
-          <div className="drawer-section is-last">
+          <div className="drawer-section">
             <div className="drawer-note">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="10"/>
@@ -351,6 +352,15 @@ export function CompDrawer({
                 표시된 일정·접수 정보는 참고용입니다. 정확한 내용은 단체·주최측 공식 공지를 확인하세요.
               </span>
             </div>
+          </div>
+
+          <div className="drawer-section is-last drawer-ad-section">
+            <KakaoAd
+              className="drawer-inline-ad"
+              unit="DAN-ZQlHGZdZbq2bw5mv"
+              width={320}
+              height={100}
+            />
           </div>
         </div>
 

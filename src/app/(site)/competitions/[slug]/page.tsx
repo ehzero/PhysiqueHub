@@ -3,6 +3,7 @@ import type { CSSProperties } from "react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { ShareButton } from "@/components/ShareButton";
+import { KakaoAd } from "@/components/KakaoAd";
 import { PosterFigure, posterFigureColor } from "@/components/PosterFigure";
 import { StatusPill } from "@/components/UIPrimitives";
 import type { Competition } from "@/lib/data";
@@ -347,6 +348,15 @@ export default async function CompetitionDetailPage({
                 <span>표시된 일정·접수·종목 정보는 참고용입니다. 체급·계측·복장·자격 등 세부 규정과 변경 사항은 <strong>{competition.org}</strong> 공식 공지를 반드시 확인하세요.</span>
               </div>
             </section>
+
+            <KakaoAd
+              as="section"
+              className="det-mobile-ad-section"
+              unit="DAN-XLTmMI7kEjqrR8QD"
+              width={320}
+              height={100}
+              maxWidth={980}
+            />
           </div>
 
           {/* Sidebar */}
@@ -422,6 +432,14 @@ export default async function CompetitionDetailPage({
                 <div className="det-reg-host-name">{competition.org}</div>
               </div>
             </div>
+
+            <KakaoAd
+              className="det-side-ad"
+              unit="DAN-Mm9wA9gi0GYtIsun"
+              width={300}
+              height={250}
+              minWidth={981}
+            />
           </aside>
         </div>
 

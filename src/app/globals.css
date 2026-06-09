@@ -1973,6 +1973,32 @@ ol {
   color: #C0A04A;
   margin-top: 1px;
 }
+.drawer-ad-section {
+  display: flex;
+  justify-content: center;
+}
+.drawer-inline-ad {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 320px;
+  max-width: 100%;
+  min-height: 100px;
+  overflow: hidden;
+  border: 1px solid var(--ph-line-soft);
+  border-radius: var(--ph-radius-md);
+  background: var(--ph-elev);
+}
+.drawer-inline-ad::before {
+  content: "광고";
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ph-ink-5);
+}
 .drawer-status-pill {
   gap: 6px;
   padding: 5px 10px;
@@ -5917,6 +5943,47 @@ ol {
 .lv-body-wrap {
   background: var(--ph-paper);
 }
+.lv-list-inline-ad,
+.lv-grid-inline-ad,
+.lv-list-mobile-ad {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--ph-line-soft);
+  border-radius: var(--ph-radius-md);
+  background: var(--ph-elev);
+}
+.lv-list-inline-ad {
+  width: 728px;
+  min-height: 90px;
+  margin: 2px auto;
+}
+.lv-grid-inline-ad {
+  grid-column: 1 / -1;
+  width: 728px;
+  min-height: 90px;
+  justify-self: center;
+  margin: 4px auto;
+}
+.lv-list-mobile-ad {
+  width: 320px;
+  min-height: 100px;
+  margin: 2px auto;
+}
+.lv-list-inline-ad::before,
+.lv-grid-inline-ad::before,
+.lv-list-mobile-ad::before {
+  content: "광고";
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ph-ink-5);
+}
 .lv-body-grid {
   display: grid;
   grid-template-columns: 264px 1fr;
@@ -5941,6 +6008,36 @@ ol {
 
 /* ── Main content column ───────────────────────────────────────── */
 .lv-main { min-width: 0; }
+
+.lv-ad-rail {
+  position: sticky;
+  top: 136px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 160px;
+  min-height: 600px;
+  overflow: hidden;
+  border: 1px solid var(--ph-line-soft);
+  border-radius: var(--ph-radius-md);
+  background: var(--ph-elev);
+}
+
+.lv-ad-rail::before {
+  content: "광고";
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ph-ink-5);
+}
+
+@media (min-width: 1440px) {
+  .lv-body-grid {
+    grid-template-columns: 264px minmax(0, 1fr) 160px;
+  }
+}
 
 /* ── Toolbar ───────────────────────────────────────────────────── */
 .lv-toolbar {
@@ -6494,6 +6591,38 @@ ol {
   word-break: keep-all;
 }
 .det-note svg { flex-shrink: 0; color: #C0A04A; margin-top: 1px; }
+.det-mobile-ad-section,
+.det-side-ad {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid var(--ph-line-soft);
+  border-radius: var(--ph-radius-md);
+  background: var(--ph-elev);
+}
+.det-mobile-ad-section {
+  width: 320px;
+  max-width: 100%;
+  min-height: 100px;
+  margin: 0 auto 28px;
+}
+.det-side-ad {
+  width: 300px;
+  min-height: 250px;
+  margin: 16px auto 0;
+}
+.det-mobile-ad-section::before,
+.det-side-ad::before {
+  content: "광고";
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ph-ink-5);
+}
 
 /* Sidebar */
 .det-side { position: sticky; top: 88px; }

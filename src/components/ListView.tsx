@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo, useState, useRef, useEffect, type PointerEvent } from "react";
+import { Fragment, useMemo, useState, useRef, useEffect, type PointerEvent } from "react";
 import { Competition, Filters } from "@/lib/data";
 import { COMPETITION_TIER_LABELS } from "@/lib/competition-classification";
 import type { CompetitionFilterOptions } from "@/lib/competition-public";
 import type { CompetitionLocationScope } from "@/lib/filter-query";
 import { Icons } from "./Icons";
+import { KakaoAd } from "./KakaoAd";
 import { CompRow } from "./CompRow";
 import { CompetitionGridCard } from "./CompetitionListItem";
 import { FilterRail } from "./FilterRail";
@@ -16,6 +17,8 @@ const MONTH_KR = [
   "1월", "2월", "3월", "4월", "5월", "6월",
   "7월", "8월", "9월", "10월", "11월", "12월",
 ];
+
+const INLINE_AD_AFTER_INDEX = 2;
 
 type SortKey = "date" | "deadline";
 type ViewMode = "list" | "grid";
@@ -172,6 +175,10 @@ export function ListView({
     }
     return [...segmented].sort((a, b) => a.date.localeCompare(b.date));
   }, [segmented, sortKey]);
+  const inlineAdAfterCompetitionId =
+    sorted.length > 0
+      ? sorted[Math.min(INLINE_AD_AFTER_INDEX, sorted.length - 1)].id
+      : null;
 
   const byMonth = useMemo(() => {
     const groups = new Map<string, Competition[]>();
@@ -527,23 +534,33 @@ export function ListView({
             ) : viewMode === "grid" ? (
               <div className="comp-grid">
                 {sorted.map((c) => (
-                  <CompetitionGridCard
-                    key={c.id}
-                    competition={c}
-                    today={today}
-                    onClick={(e) => {
-                      if (
-                        e.defaultPrevented ||
-                        e.button !== 0 ||
-                        e.metaKey ||
-                        e.ctrlKey ||
-                        e.shiftKey ||
-                        e.altKey
-                      ) return;
-                      e.preventDefault();
-                      openComp(c);
-                    }}
-                  />
+                  <Fragment key={c.id}>
+                    <CompetitionGridCard
+                      competition={c}
+                      today={today}
+                      onClick={(e) => {
+                        if (
+                          e.defaultPrevented ||
+                          e.button !== 0 ||
+                          e.metaKey ||
+                          e.ctrlKey ||
+                          e.shiftKey ||
+                          e.altKey
+                        ) return;
+                        e.preventDefault();
+                        openComp(c);
+                      }}
+                    />
+                    {inlineAdAfterCompetitionId === c.id && (
+                      <KakaoAd
+                        className="lv-grid-inline-ad"
+                        unit="DAN-xoBCxsQqNItj9WWH"
+                        width={728}
+                        height={90}
+                        minWidth={900}
+                      />
+                    )}
+                  </Fragment>
                 ))}
               </div>
             ) : (
@@ -561,14 +578,33 @@ export function ListView({
                     </div>
                     <div className="lv-list">
                       {items.map((c) => (
-                        <CompRow
-                          key={c.id}
-                          comp={c}
-                          onOpen={openComp}
-                          isSaved={saved.includes(c.id)}
-                          onToggleSave={toggleSave}
-                          today={today}
-                        />
+                        <Fragment key={c.id}>
+                          <CompRow
+                            comp={c}
+                            onOpen={openComp}
+                            isSaved={saved.includes(c.id)}
+                            onToggleSave={toggleSave}
+                            today={today}
+                          />
+                          {inlineAdAfterCompetitionId === c.id && (
+                            <>
+                              <KakaoAd
+                                className="lv-list-inline-ad"
+                                unit="DAN-xoBCxsQqNItj9WWH"
+                                width={728}
+                                height={90}
+                                minWidth={900}
+                              />
+                              <KakaoAd
+                                className="lv-list-mobile-ad"
+                                unit="DAN-trY70xn9I53nKiEc"
+                                width={320}
+                                height={100}
+                                maxWidth={899}
+                              />
+                            </>
+                          )}
+                        </Fragment>
                       ))}
                     </div>
                   </div>
@@ -576,6 +612,14 @@ export function ListView({
               </div>
             )}
           </div>
+
+          <KakaoAd
+            className="lv-ad-rail"
+            unit="DAN-yhWtUTzheMaek3PT"
+            width={160}
+            height={600}
+            minWidth={1440}
+          />
         </div>
       </div>
       {/* Mobile filter bottom sheet */}
