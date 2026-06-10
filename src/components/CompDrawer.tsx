@@ -268,7 +268,7 @@ export function CompDrawer({
             >
               {isSaved ? Icons.bookmarkFilled : Icons.bookmark}
             </button>
-            <ShareButton iconOnly path={getCompetitionPath(comp)} />
+            <ShareButton competitionId={comp.id} iconOnly path={getCompetitionPath(comp)} />
             <button className="icon-btn" onClick={closeDrawer} aria-label="닫기" type="button">
               {Icons.close}
             </button>

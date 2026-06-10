@@ -88,6 +88,9 @@ PhysiqueHub는 `@vercel/analytics`를 사용하지 않고 자체 이용 행동 �
 - 드로어에서 실제 상세 페이지로 이동하려는 의도는 `competition_detail_click`으로
   본다.
 - 상세 페이지가 실제 렌더링된 조회는 `competition_view`로 본다.
+- 대회별 공유와 저장은 각각 `share_click`, `save_competition`의
+  `competitionId`를 기준으로 본다. 과거 공유 이벤트처럼 `competitionId`가 없는
+  이벤트는 전체 공유 클릭 수에는 포함되지만 대회별 공유 순위에는 포함되지 않는다.
 - 실시간 활성 사용자는 `AnalyticsSession.lastSeenAt`이 최근 2분 이내인 고유
   `visitorId` 수로 추정한다. 활성 세션은 같은 기준의 세션 수로 본다.
 - 신규/재방문자는 기간 내 `AnalyticsSession.visitorId`가 기간 시작 전에도 세션을

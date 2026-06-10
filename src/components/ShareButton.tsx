@@ -6,6 +6,7 @@ import { Icons } from "./Icons";
 
 interface ShareButtonProps {
   path?: string;
+  competitionId?: string;
   className?: string;
   label?: string;
   iconOnly?: boolean;
@@ -13,6 +14,7 @@ interface ShareButtonProps {
 
 export function ShareButton({
   path,
+  competitionId,
   className = "icon-btn",
   label = "공유",
   iconOnly = false,
@@ -34,6 +36,7 @@ export function ShareButton({
       : window.location.href;
     const shareData: ShareData = { url };
     trackAnalyticsEvent("share_click", {
+      competitionId,
       properties: {
         source: path ?? window.location.pathname,
       },

@@ -434,6 +434,7 @@ export default async function CompetitionDetailPage({
               <div className="det-reg-actions">
                 <ShareButton
                   className="det-reg-action"
+                  competitionId={competition.id}
                   path={getCompetitionPath(competition)}
                 />
                 <Link

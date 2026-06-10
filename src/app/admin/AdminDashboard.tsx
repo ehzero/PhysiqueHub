@@ -706,12 +706,17 @@ type AnalyticsSummary = {
   pwaSessionCount: number;
   registrationClickCount: number;
   returningVisitorCount: number;
+  saveCompetitionCount: number;
   sessionCount: number;
+  shareClickCount: number;
   osRows: AnalyticsTableRow[];
   start: Date;
   topCompetitions: AnalyticsTableRow[];
+  topSavedCompetitions: AnalyticsTableRow[];
+  topSharedCompetitions: AnalyticsTableRow[];
   topPages: AnalyticsTableRow[];
   topSearches: AnalyticsTableRow[];
+  unsaveCompetitionCount: number;
   unavailableMessage?: string;
   visitorCount: number;
   visitorTypeRows: AnalyticsTableRow[];
@@ -790,6 +795,18 @@ function AnalyticsDashboardSection({
           <span className="admin-metric-label">접수 링크 클릭</span>
         </div>
         <div>
+          <span className="admin-metric-value">{formatNumber(analytics.shareClickCount)}</span>
+          <span className="admin-metric-label">공유 클릭</span>
+        </div>
+        <div>
+          <span className="admin-metric-value">{formatNumber(analytics.saveCompetitionCount)}</span>
+          <span className="admin-metric-label">내 대회 저장</span>
+        </div>
+        <div>
+          <span className="admin-metric-value">{formatNumber(analytics.unsaveCompetitionCount)}</span>
+          <span className="admin-metric-label">내 대회 해제</span>
+        </div>
+        <div>
           <span className="admin-metric-value">{formatNumber(analytics.contactSubmitCount)}</span>
           <span className="admin-metric-label">문의 전환</span>
         </div>
@@ -834,6 +851,16 @@ function AnalyticsDashboardSection({
           emptyLabel="대회 상세 조회 데이터가 없습니다."
           rows={analytics.topCompetitions}
           title="상위 대회"
+        />
+        <AnalyticsTable
+          emptyLabel="대회 공유 데이터가 없습니다."
+          rows={analytics.topSharedCompetitions}
+          title="공유된 대회"
+        />
+        <AnalyticsTable
+          emptyLabel="대회 저장 데이터가 없습니다."
+          rows={analytics.topSavedCompetitions}
+          title="저장된 대회"
         />
         <AnalyticsTable
           emptyLabel="검색어 데이터가 없습니다."
@@ -966,6 +993,20 @@ type AnalyticsTableRow = {
   count: number;
 };
 
+type CompetitionAnalyticsGroupRow = {
+  competitionId: string | null;
+  _count: {
+    _all: number;
+  };
+};
+
+type CompetitionAnalyticsSummary = {
+  id: string;
+  organizationName: string;
+  organizationShortName: string | null;
+  title: string;
+};
+
 async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSummary> {
   try {
   const activeSince = new Date(end.getTime() - ACTIVE_SESSION_WINDOW_MS);
@@ -986,11 +1027,16 @@ async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSum
     visitorRows,
     sessionCount,
     pageViewCount,
-    competitionViewCount,
-    registrationClickCount,
-    contactSubmitCount,
-    topPageRows,
-    topCompetitionRows,
+	    competitionViewCount,
+	    registrationClickCount,
+	    shareClickCount,
+	    saveCompetitionCount,
+	    unsaveCompetitionCount,
+	    contactSubmitCount,
+	    topPageRows,
+	    topCompetitionRows,
+	    topSharedCompetitionRows,
+	    topSavedCompetitionRows,
 	    topSearchRows,
 	    channelGroupRows,
 	    eventGroupRows,
@@ -1013,12 +1059,21 @@ async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSum
     prisma.analyticsEvent.count({
       where: { ...eventWindow, name: "competition_view" },
     }),
-    prisma.analyticsEvent.count({
-      where: { ...eventWindow, name: "registration_link_click" },
-    }),
-    prisma.analyticsEvent.count({
-      where: { ...eventWindow, name: "contact_submit_success" },
-    }),
+	    prisma.analyticsEvent.count({
+	      where: { ...eventWindow, name: "registration_link_click" },
+	    }),
+	    prisma.analyticsEvent.count({
+	      where: { ...eventWindow, name: "share_click" },
+	    }),
+	    prisma.analyticsEvent.count({
+	      where: { ...eventWindow, name: "save_competition" },
+	    }),
+	    prisma.analyticsEvent.count({
+	      where: { ...eventWindow, name: "unsave_competition" },
+	    }),
+	    prisma.analyticsEvent.count({
+	      where: { ...eventWindow, name: "contact_submit_success" },
+	    }),
     prisma.analyticsEvent.groupBy({
       by: ["path"],
       where: { ...eventWindow, name: "page_view" },
@@ -1034,11 +1089,33 @@ async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSum
         competitionId: { not: null },
       },
       _count: { _all: true },
-      orderBy: { _count: { competitionId: "desc" } },
-      take: 10,
-    }),
-    prisma.analyticsEvent.groupBy({
-      by: ["searchQuery"],
+	      orderBy: { _count: { competitionId: "desc" } },
+	      take: 10,
+	    }),
+	    prisma.analyticsEvent.groupBy({
+	      by: ["competitionId"],
+	      where: {
+	        ...eventWindow,
+	        name: "share_click",
+	        competitionId: { not: null },
+	      },
+	      _count: { _all: true },
+	      orderBy: { _count: { competitionId: "desc" } },
+	      take: 10,
+	    }),
+	    prisma.analyticsEvent.groupBy({
+	      by: ["competitionId"],
+	      where: {
+	        ...eventWindow,
+	        name: "save_competition",
+	        competitionId: { not: null },
+	      },
+	      _count: { _all: true },
+	      orderBy: { _count: { competitionId: "desc" } },
+	      take: 10,
+	    }),
+	    prisma.analyticsEvent.groupBy({
+	      by: ["searchQuery"],
       where: {
         ...eventWindow,
         name: "search_performed",
@@ -1119,9 +1196,13 @@ async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSum
 	  );
 	  const pwaSessionCount = accessModeCounts.pwa;
 	  const browserSessionCount = accessModeCounts.browser;
-	  const competitionIds = topCompetitionRows
-    .map((row) => row.competitionId)
-    .filter((id): id is string => Boolean(id));
+	  const competitionIds = [
+	    ...topCompetitionRows,
+	    ...topSharedCompetitionRows,
+	    ...topSavedCompetitionRows,
+	  ]
+	    .map((row) => row.competitionId)
+	    .filter((id): id is string => Boolean(id));
   const competitions =
     competitionIds.length > 0
       ? await prisma.competitionSchedule.findMany({
@@ -1192,7 +1273,9 @@ async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSum
 	    pwaSessionCount,
 	    registrationClickCount,
 	    returningVisitorCount,
+	    saveCompetitionCount,
 	    sessionCount,
+	    shareClickCount,
 	    osRows: osGroupRows.map((row) => ({
 	      key: row.osName ?? "unknown",
 	      label: row.osName ?? "알 수 없음",
@@ -1200,19 +1283,9 @@ async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSum
 	      count: row._count._all,
 	    })),
 	    start,
-    topCompetitions: topCompetitionRows.map((row) => {
-      const competition = row.competitionId ? competitionById.get(row.competitionId) : null;
-      return {
-        key: row.competitionId ?? "unknown",
-        label: competition?.title ?? row.competitionId ?? "알 수 없는 대회",
-        meta:
-          competition?.organizationShortName ??
-          competition?.organizationName ??
-          row.competitionId ??
-          undefined,
-        count: row._count._all,
-      };
-    }),
+	    topCompetitions: toCompetitionRows(topCompetitionRows, competitionById),
+	    topSavedCompetitions: toCompetitionRows(topSavedCompetitionRows, competitionById),
+	    topSharedCompetitions: toCompetitionRows(topSharedCompetitionRows, competitionById),
     topPages: topPageRows.map((row) => ({
       key: row.path,
       label: row.path,
@@ -1222,8 +1295,9 @@ async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSum
       key: row.searchQuery ?? "unknown",
       label: row.searchQuery ?? "알 수 없는 검색어",
       count: row._count._all,
-	    })),
-	    visitorCount: visitorRows.length,
+		    })),
+		    unsaveCompetitionCount,
+		    visitorCount: visitorRows.length,
 	    visitorTypeRows: [
 	      {
 	        key: "new",
@@ -1270,12 +1344,17 @@ function getEmptyAnalyticsSummary(
     pwaSessionCount: 0,
     registrationClickCount: 0,
     returningVisitorCount: 0,
+    saveCompetitionCount: 0,
     sessionCount: 0,
+    shareClickCount: 0,
     osRows: [],
     start,
     topCompetitions: [],
+    topSavedCompetitions: [],
+    topSharedCompetitions: [],
     topPages: [],
     topSearches: [],
+    unsaveCompetitionCount: 0,
     unavailableMessage,
     visitorCount: 0,
     visitorTypeRows: [],
@@ -1670,6 +1749,25 @@ function toDeviceCategoryLabel(value: string | null) {
   if (value === "desktop") return "데스크톱";
   if (value === "bot") return "봇/크롤러";
   return "알 수 없음";
+}
+
+function toCompetitionRows(
+  rows: CompetitionAnalyticsGroupRow[],
+  competitionById: Map<string, CompetitionAnalyticsSummary>,
+): AnalyticsTableRow[] {
+  return rows.map((row) => {
+    const competition = row.competitionId ? competitionById.get(row.competitionId) : null;
+    return {
+      key: row.competitionId ?? "unknown",
+      label: competition?.title ?? row.competitionId ?? "알 수 없는 대회",
+      meta:
+        competition?.organizationShortName ??
+        competition?.organizationName ??
+        row.competitionId ??
+        undefined,
+      count: row._count._all,
+    };
+  });
 }
 
 function toAnalyticsEventLabel(value: string) {
