@@ -2068,7 +2068,6 @@ ol {
   min-height: 100px;
   overflow: hidden;
   border: 1px solid var(--ph-line-soft);
-  border-radius: var(--ph-radius-md);
   background: var(--ph-elev);
 }
 .drawer-inline-ad::before {
@@ -6040,7 +6039,6 @@ ol {
   max-width: 100%;
   overflow: hidden;
   border: 1px solid var(--ph-line-soft);
-  border-radius: var(--ph-radius-md);
   background: var(--ph-elev);
 }
 .lv-list-inline-ad {
@@ -6106,7 +6104,6 @@ ol {
   min-height: 600px;
   overflow: hidden;
   border: 1px solid var(--ph-line-soft);
-  border-radius: var(--ph-radius-md);
   background: var(--ph-elev);
 }
 
@@ -6686,7 +6683,6 @@ ol {
   justify-content: center;
   overflow: hidden;
   border: 1px solid var(--ph-line-soft);
-  border-radius: var(--ph-radius-md);
   background: var(--ph-elev);
 }
 .det-mobile-ad-section {
