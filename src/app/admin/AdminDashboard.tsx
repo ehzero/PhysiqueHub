@@ -694,9 +694,11 @@ type AnalyticsSummary = {
   activeSessionCount: number;
   activeVisitorCount: number;
   browserSessionCount: number;
+  browserRows: AnalyticsTableRow[];
   channelRows: AnalyticsTableRow[];
   competitionViewCount: number;
   contactSubmitCount: number;
+  deviceRows: AnalyticsTableRow[];
   end: Date;
   eventRows: AnalyticsTableRow[];
   newVisitorCount: number;
@@ -705,6 +707,7 @@ type AnalyticsSummary = {
   registrationClickCount: number;
   returningVisitorCount: number;
   sessionCount: number;
+  osRows: AnalyticsTableRow[];
   start: Date;
   topCompetitions: AnalyticsTableRow[];
   topPages: AnalyticsTableRow[];
@@ -806,6 +809,21 @@ function AnalyticsDashboardSection({
           emptyLabel="접근 모드 데이터가 없습니다."
           rows={analytics.accessModeRows}
           title="접근 모드"
+        />
+        <AnalyticsTable
+          emptyLabel="기기 환경 데이터가 없습니다."
+          rows={analytics.deviceRows}
+          title="기기 환경"
+        />
+        <AnalyticsTable
+          emptyLabel="브라우저 데이터가 없습니다."
+          rows={analytics.browserRows}
+          title="브라우저"
+        />
+        <AnalyticsTable
+          emptyLabel="운영체제 데이터가 없습니다."
+          rows={analytics.osRows}
+          title="운영체제"
         />
         <AnalyticsTable
           emptyLabel="페이지뷰 데이터가 없습니다."
@@ -979,6 +997,9 @@ async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSum
 	    sessionStartEvents,
 	    activeVisitorRows,
 	    activeSessionCount,
+	    deviceGroupRows,
+	    browserGroupRows,
+	    osGroupRows,
 	  ] = await Promise.all([
     prisma.analyticsSession.findMany({
       distinct: ["visitorId"],
@@ -1053,6 +1074,27 @@ async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSum
 	    prisma.analyticsSession.count({
 	      where: { lastSeenAt: { gte: activeSince } },
 	    }),
+	    prisma.analyticsSession.groupBy({
+	      by: ["deviceCategory"],
+	      where: sessionWindow,
+	      _count: { _all: true },
+	      orderBy: { _count: { deviceCategory: "desc" } },
+	      take: 10,
+	    }),
+	    prisma.analyticsSession.groupBy({
+	      by: ["browserName"],
+	      where: sessionWindow,
+	      _count: { _all: true },
+	      orderBy: { _count: { browserName: "desc" } },
+	      take: 10,
+	    }),
+	    prisma.analyticsSession.groupBy({
+	      by: ["osName"],
+	      where: sessionWindow,
+	      _count: { _all: true },
+	      orderBy: { _count: { osName: "desc" } },
+	      take: 10,
+	    }),
 	  ]);
 	  const visitorIds = visitorRows.map((row) => row.visitorId);
 	  const returningVisitorRows =
@@ -1118,15 +1160,27 @@ async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSum
 	    activeSessionCount,
 	    activeVisitorCount: activeVisitorRows.length,
 	    browserSessionCount,
+	    browserRows: browserGroupRows.map((row) => ({
+	      key: row.browserName ?? "unknown",
+	      label: row.browserName ?? "알 수 없음",
+	      meta: toPercentLabel(row._count._all, sessionCount),
+	      count: row._count._all,
+	    })),
 	    channelRows: channelGroupRows.map((row) => ({
 	      key: `${row.channel ?? "unknown"}:${row.referrerHost ?? "none"}`,
       label: toAnalyticsChannelLabel(row.channel),
       meta: row.referrerHost ?? "referrer 없음",
       count: row._count._all,
     })),
-    competitionViewCount,
-    contactSubmitCount,
-    end,
+	    competitionViewCount,
+	    contactSubmitCount,
+	    deviceRows: deviceGroupRows.map((row) => ({
+	      key: row.deviceCategory ?? "unknown",
+	      label: toDeviceCategoryLabel(row.deviceCategory),
+	      meta: toPercentLabel(row._count._all, sessionCount),
+	      count: row._count._all,
+	    })),
+	    end,
 	    eventRows: eventGroupRows.map((row) => ({
 	      key: row.name,
 	      label: toAnalyticsEventLabel(row.name),
@@ -1139,6 +1193,12 @@ async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSum
 	    registrationClickCount,
 	    returningVisitorCount,
 	    sessionCount,
+	    osRows: osGroupRows.map((row) => ({
+	      key: row.osName ?? "unknown",
+	      label: row.osName ?? "알 수 없음",
+	      meta: toPercentLabel(row._count._all, sessionCount),
+	      count: row._count._all,
+	    })),
 	    start,
     topCompetitions: topCompetitionRows.map((row) => {
       const competition = row.competitionId ? competitionById.get(row.competitionId) : null;
@@ -1198,9 +1258,11 @@ function getEmptyAnalyticsSummary(
     activeSessionCount: 0,
     activeVisitorCount: 0,
     browserSessionCount: 0,
+    browserRows: [],
     channelRows: [],
     competitionViewCount: 0,
     contactSubmitCount: 0,
+    deviceRows: [],
     end,
     eventRows: [],
     newVisitorCount: 0,
@@ -1209,6 +1271,7 @@ function getEmptyAnalyticsSummary(
     registrationClickCount: 0,
     returningVisitorCount: 0,
     sessionCount: 0,
+    osRows: [],
     start,
     topCompetitions: [],
     topPages: [],
@@ -1598,6 +1661,14 @@ function toAnalyticsChannelLabel(value: string | null) {
   if (value === "paid") return "유료 유입";
   if (value === "referral") return "추천 유입";
   if (value === "social") return "소셜 유입";
+  return "알 수 없음";
+}
+
+function toDeviceCategoryLabel(value: string | null) {
+  if (value === "mobile") return "모바일";
+  if (value === "tablet") return "태블릿";
+  if (value === "desktop") return "데스크톱";
+  if (value === "bot") return "봇/크롤러";
   return "알 수 없음";
 }
 

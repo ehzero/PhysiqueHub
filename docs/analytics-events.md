@@ -95,6 +95,9 @@ PhysiqueHub는 `@vercel/analytics`를 사용하지 않고 자체 이용 행동 �
 - PWA 접근은 `session_start.propertiesJson.isPwa` 또는 `displayMode`가
   `standalone`, `fullscreen`, `minimal-ui`인지로 본다. 해당 속성이 없는 기존
   세션은 접근 모드를 `알 수 없음`으로 본다.
+- 기기 환경, 브라우저, OS 분포는 요청의 원문 User-Agent를 서버에서 파싱한
+  `AnalyticsSession.deviceCategory`, `browserName`, `osName`을 기준으로 본다.
+  User-Agent가 없거나 파싱이 어려운 경우 클라이언트가 보낸 요약값을 보조로 쓴다.
 - 검색어 기준 검색 수행은 `search_performed`로 본다. 필터 변경은
   `filter_applied` 또는 `filter_reset`으로 본다.
 - `empty_search_result`는 검색과 필터 양쪽에서 발생할 수 있으므로 원인 구분이
