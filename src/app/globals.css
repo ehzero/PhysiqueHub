@@ -6779,6 +6779,10 @@ ol {
   gap: 10px;
   margin-top: 10px;
 }
+.det-reg-actions .share-action {
+  flex: 1;
+  min-width: 0;
+}
 .det-reg-action {
   flex: 1;
   display: inline-flex;
@@ -6795,6 +6799,14 @@ ol {
   cursor: pointer;
   text-decoration: none;
   transition: background 0.12s;
+}
+.det-reg-action svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+}
+.share-action .det-reg-action {
+  width: 100%;
 }
 .det-reg-action:hover { background: #F7F5F0; }
 .det-reg-host {
