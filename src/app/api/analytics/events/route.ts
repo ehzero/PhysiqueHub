@@ -13,6 +13,8 @@ export const dynamic = "force-dynamic";
 
 const MAX_EVENTS_PER_BATCH = 20;
 const MAX_BODY_BYTES = 48_000;
+const BOT_USER_AGENT_PATTERN =
+  /bot|crawler|spider|crawling|facebookexternalhit|slurp|yeti|daumoa|bingpreview/i;
 
 type AnalyticsEventsPayload = {
   session?: Partial<AnalyticsSessionInput>;
@@ -218,7 +220,7 @@ function getClientSummary(
 
 function getDeviceCategory(userAgent: string | null) {
   if (!userAgent) return null;
-  if (/bot|crawler|spider|crawling|facebookexternalhit|slurp/i.test(userAgent)) return "bot";
+  if (BOT_USER_AGENT_PATTERN.test(userAgent)) return "bot";
   if (/Macintosh/i.test(userAgent) && /Mobile\/\w+ Safari/i.test(userAgent)) return "tablet";
   if (/iPad|Tablet|PlayBook|Kindle|Silk|Android(?!.*Mobile)/i.test(userAgent)) return "tablet";
   if (/Mobi|iPhone|iPod|Android.*Mobile|Windows Phone/i.test(userAgent)) return "mobile";
@@ -230,7 +232,7 @@ function getDeviceCategory(userAgent: string | null) {
 
 function getBrowserName(userAgent: string | null) {
   if (!userAgent) return null;
-  if (/bot|crawler|spider|crawling|facebookexternalhit|slurp/i.test(userAgent)) return "Bot";
+  if (BOT_USER_AGENT_PATTERN.test(userAgent)) return "Bot";
   if (/Whale\//i.test(userAgent)) return "Whale";
   if (/SamsungBrowser\//i.test(userAgent)) return "Samsung Internet";
   if (/Edg\//i.test(userAgent)) return "Edge";
