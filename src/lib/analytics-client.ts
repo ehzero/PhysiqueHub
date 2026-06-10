@@ -11,6 +11,7 @@ const VISITOR_STORAGE_KEY = "ph-analytics-visitor-id";
 const SESSION_STORAGE_KEY = "ph-analytics-session-id";
 const SESSION_STARTED_KEY = "ph-analytics-session-started";
 const LANDING_PATH_KEY = "ph-analytics-landing-path";
+const ANALYTICS_OPT_OUT_STORAGE_KEY = "ph-analytics-opt-out";
 const FLUSH_INTERVAL_MS = 3_000;
 const MAX_BATCH_SIZE = 10;
 
@@ -133,8 +134,14 @@ function scheduleFlush() {
 function shouldCollectAnalytics() {
   return (
     typeof window !== "undefined" &&
-    process.env.NEXT_PUBLIC_ANALYTICS_ENABLED === "true"
+    process.env.NEXT_PUBLIC_ANALYTICS_ENABLED === "true" &&
+    !isAnalyticsOptedOut()
   );
+}
+
+function isAnalyticsOptedOut() {
+  const localStorage = getBrowserStorage("local");
+  return getStorageValue(localStorage, ANALYTICS_OPT_OUT_STORAGE_KEY) === "1";
 }
 
 function getAnalyticsSession() {
