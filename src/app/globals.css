@@ -2057,6 +2057,7 @@ ol {
 .drawer-ad-section {
   display: flex;
   justify-content: center;
+  padding: 20px 0;
 }
 .drawer-inline-ad {
   position: relative;
@@ -2066,7 +2067,6 @@ ol {
   width: 320px;
   max-width: 100%;
   min-height: 100px;
-  overflow: hidden;
   border: 1px solid var(--ph-line-soft);
   background: var(--ph-elev);
 }
@@ -3603,7 +3603,7 @@ ol {
     font-size: 26px;
   }
   .drawer-body {
-    padding: 24px;
+    padding: 0;
   }
   .static-content {
     padding: 36px 0 60px;
