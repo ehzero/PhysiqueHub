@@ -104,6 +104,8 @@ PhysiqueHub는 `@vercel/analytics`를 사용하지 않고 자체 이용 행동 �
 - 검색 엔진 봇처럼 User-Agent가 봇 패턴에 해당하면 `deviceCategory`는 `bot`,
   `browserName`은 `Bot`으로 분류한다. 예: Googlebot, Bingbot, Naver Yeti,
   Applebot.
+- `/admin/analytics`의 기본 이용 분석 지표는 `deviceCategory = bot` 세션과 해당
+  세션의 이벤트를 제외한다. 봇/크롤러 접근은 같은 화면의 별도 섹션에서 본다.
 - 검색어 기준 검색 수행은 `search_performed`로 본다. 필터 변경은
   `filter_applied` 또는 `filter_reset`으로 본다.
 - `empty_search_result`는 검색과 필터 양쪽에서 발생할 수 있으므로 원인 구분이

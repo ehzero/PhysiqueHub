@@ -1038,6 +1038,17 @@ ol {
   gap: 18px;
   margin-top: 24px;
 }
+.admin-analytics-bots {
+  margin-top: 32px;
+}
+.admin-section-head.compact {
+  margin-bottom: 16px;
+}
+.admin-section-head.compact h3 {
+  font-size: 22px;
+  font-weight: 800;
+  margin-top: 8px;
+}
 .admin-analytics-card {
   border-top: 1px solid var(--line);
   min-width: 0;

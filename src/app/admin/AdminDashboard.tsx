@@ -2,6 +2,7 @@ import type {
   CompetitionSchedule,
   ContactAttachment,
   ContactInquiry,
+  Prisma,
 } from "@prisma/client";
 import Link from "next/link";
 import { hasAdminSession, isAdminPasswordConfigured } from "@/lib/admin-auth";
@@ -693,6 +694,12 @@ type AnalyticsSummary = {
   accessModeRows: AnalyticsTableRow[];
   activeSessionCount: number;
   activeVisitorCount: number;
+  botEventCount: number;
+  botPageViewCount: number;
+  botRows: AnalyticsTableRow[];
+  botSessionCount: number;
+  botTopPages: AnalyticsTableRow[];
+  botVisitorCount: number;
   browserSessionCount: number;
   browserRows: AnalyticsTableRow[];
   channelRows: AnalyticsTableRow[];
@@ -751,7 +758,8 @@ function AnalyticsDashboardSection({
 
       <div className="admin-analytics-note">
         {formatKoreaDateTime(analytics.start)}부터 {formatKoreaDateTime(analytics.end)}까지 ·
-        활성 사용자는 최근 2분 기준 · 원문 IP와 전체 User-Agent는 화면에 표시하지 않습니다.
+        기본 이용 분석은 봇/크롤러를 제외합니다 · 활성 사용자는 최근 2분 기준 · 원문 IP와
+        전체 User-Agent는 화면에 표시하지 않습니다.
       </div>
       {analytics.unavailableMessage && (
         <div className="admin-empty">{analytics.unavailableMessage}</div>
@@ -878,6 +886,45 @@ function AnalyticsDashboardSection({
           title="이벤트 믹스"
         />
       </div>
+
+      <section className="admin-analytics-bots" aria-label="봇/크롤러 접근">
+        <div className="admin-section-head compact">
+          <div>
+            <p className="eyebrow">Crawler</p>
+            <h3>봇/크롤러 접근</h3>
+          </div>
+        </div>
+        <section className="admin-metrics admin-analytics-metrics" aria-label="봇/크롤러 요약">
+          <div>
+            <span className="admin-metric-value">{formatNumber(analytics.botVisitorCount)}</span>
+            <span className="admin-metric-label">봇 방문자</span>
+          </div>
+          <div>
+            <span className="admin-metric-value">{formatNumber(analytics.botSessionCount)}</span>
+            <span className="admin-metric-label">봇 세션</span>
+          </div>
+          <div>
+            <span className="admin-metric-value">{formatNumber(analytics.botEventCount)}</span>
+            <span className="admin-metric-label">봇 이벤트</span>
+          </div>
+          <div>
+            <span className="admin-metric-value">{formatNumber(analytics.botPageViewCount)}</span>
+            <span className="admin-metric-label">봇 페이지뷰</span>
+          </div>
+        </section>
+        <div className="admin-analytics-grid">
+          <AnalyticsTable
+            emptyLabel="봇/크롤러 데이터가 없습니다."
+            rows={analytics.botRows}
+            title="봇 종류"
+          />
+          <AnalyticsTable
+            emptyLabel="봇 페이지뷰 데이터가 없습니다."
+            rows={analytics.botTopPages}
+            title="봇 상위 페이지"
+          />
+        </div>
+      </section>
     </section>
   );
 }
@@ -1009,19 +1056,37 @@ type CompetitionAnalyticsSummary = {
 
 async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSummary> {
   try {
-  const activeSince = new Date(end.getTime() - ACTIVE_SESSION_WINDOW_MS);
-  const eventWindow = {
-    occurredAt: {
-      gte: start,
-      lte: end,
-    },
-  };
-  const sessionWindow = {
-    startedAt: {
-      gte: start,
-      lte: end,
-    },
-  };
+    const activeSince = new Date(end.getTime() - ACTIVE_SESSION_WINDOW_MS);
+    const eventWindow: Prisma.AnalyticsEventWhereInput = {
+      occurredAt: {
+        gte: start,
+        lte: end,
+      },
+    };
+    const sessionWindow: Prisma.AnalyticsSessionWhereInput = {
+      startedAt: {
+        gte: start,
+        lte: end,
+      },
+    };
+    const humanSessionFilter: Prisma.AnalyticsSessionWhereInput = {
+      OR: [{ deviceCategory: { not: "bot" } }, { deviceCategory: null }],
+    };
+    const botSessionFilter: Prisma.AnalyticsSessionWhereInput = {
+      deviceCategory: "bot",
+    };
+    const humanSessionWindow: Prisma.AnalyticsSessionWhereInput = {
+      AND: [sessionWindow, humanSessionFilter],
+    };
+    const botSessionWindow: Prisma.AnalyticsSessionWhereInput = {
+      AND: [sessionWindow, botSessionFilter],
+    };
+    const humanEventWindow: Prisma.AnalyticsEventWhereInput = {
+      AND: [eventWindow, { session: { is: humanSessionFilter } }],
+    };
+    const botEventWindow: Prisma.AnalyticsEventWhereInput = {
+      AND: [eventWindow, { session: { is: botSessionFilter } }],
+    };
 
   const [
     visitorRows,
@@ -1046,37 +1111,43 @@ async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSum
 	    deviceGroupRows,
 	    browserGroupRows,
 	    osGroupRows,
+      botVisitorRows,
+      botSessionCount,
+      botEventCount,
+      botPageViewCount,
+      botUserAgentRows,
+      botTopPageRows,
 	  ] = await Promise.all([
     prisma.analyticsSession.findMany({
       distinct: ["visitorId"],
       select: { visitorId: true },
-      where: sessionWindow,
+      where: humanSessionWindow,
     }),
-    prisma.analyticsSession.count({ where: sessionWindow }),
+    prisma.analyticsSession.count({ where: humanSessionWindow }),
     prisma.analyticsEvent.count({
-      where: { ...eventWindow, name: "page_view" },
+      where: { ...humanEventWindow, name: "page_view" },
     }),
     prisma.analyticsEvent.count({
-      where: { ...eventWindow, name: "competition_view" },
+      where: { ...humanEventWindow, name: "competition_view" },
     }),
 	    prisma.analyticsEvent.count({
-	      where: { ...eventWindow, name: "registration_link_click" },
+	      where: { ...humanEventWindow, name: "registration_link_click" },
 	    }),
 	    prisma.analyticsEvent.count({
-	      where: { ...eventWindow, name: "share_click" },
+	      where: { ...humanEventWindow, name: "share_click" },
 	    }),
 	    prisma.analyticsEvent.count({
-	      where: { ...eventWindow, name: "save_competition" },
+	      where: { ...humanEventWindow, name: "save_competition" },
 	    }),
 	    prisma.analyticsEvent.count({
-	      where: { ...eventWindow, name: "unsave_competition" },
+	      where: { ...humanEventWindow, name: "unsave_competition" },
 	    }),
 	    prisma.analyticsEvent.count({
-	      where: { ...eventWindow, name: "contact_submit_success" },
+	      where: { ...humanEventWindow, name: "contact_submit_success" },
 	    }),
     prisma.analyticsEvent.groupBy({
       by: ["path"],
-      where: { ...eventWindow, name: "page_view" },
+      where: { ...humanEventWindow, name: "page_view" },
       _count: { _all: true },
       orderBy: { _count: { path: "desc" } },
       take: 10,
@@ -1084,7 +1155,7 @@ async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSum
     prisma.analyticsEvent.groupBy({
       by: ["competitionId"],
       where: {
-        ...eventWindow,
+        ...humanEventWindow,
         name: "competition_view",
         competitionId: { not: null },
       },
@@ -1095,7 +1166,7 @@ async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSum
 	    prisma.analyticsEvent.groupBy({
 	      by: ["competitionId"],
 	      where: {
-	        ...eventWindow,
+	        ...humanEventWindow,
 	        name: "share_click",
 	        competitionId: { not: null },
 	      },
@@ -1106,7 +1177,7 @@ async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSum
 	    prisma.analyticsEvent.groupBy({
 	      by: ["competitionId"],
 	      where: {
-	        ...eventWindow,
+	        ...humanEventWindow,
 	        name: "save_competition",
 	        competitionId: { not: null },
 	      },
@@ -1117,7 +1188,7 @@ async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSum
 	    prisma.analyticsEvent.groupBy({
 	      by: ["searchQuery"],
       where: {
-        ...eventWindow,
+        ...humanEventWindow,
         name: "search_performed",
         searchQuery: { not: null },
       },
@@ -1127,51 +1198,79 @@ async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSum
     }),
     prisma.analyticsSession.groupBy({
       by: ["channel", "referrerHost"],
-      where: sessionWindow,
+      where: humanSessionWindow,
       _count: { _all: true },
       orderBy: { _count: { referrerHost: "desc" } },
       take: 10,
     }),
 	    prisma.analyticsEvent.groupBy({
 	      by: ["name"],
-	      where: eventWindow,
+	      where: humanEventWindow,
 	      _count: { _all: true },
 	      orderBy: { _count: { name: "desc" } },
 	      take: 10,
 	    }),
 	    prisma.analyticsEvent.findMany({
 	      select: { propertiesJson: true },
-	      where: { ...eventWindow, name: "session_start" },
+	      where: { ...humanEventWindow, name: "session_start" },
 	    }),
 	    prisma.analyticsSession.findMany({
 	      distinct: ["visitorId"],
 	      select: { visitorId: true },
-	      where: { lastSeenAt: { gte: activeSince } },
+	      where: {
+          AND: [{ lastSeenAt: { gte: activeSince } }, humanSessionFilter],
+        },
 	    }),
 	    prisma.analyticsSession.count({
-	      where: { lastSeenAt: { gte: activeSince } },
+	      where: {
+          AND: [{ lastSeenAt: { gte: activeSince } }, humanSessionFilter],
+        },
 	    }),
 	    prisma.analyticsSession.groupBy({
 	      by: ["deviceCategory"],
-	      where: sessionWindow,
+	      where: humanSessionWindow,
 	      _count: { _all: true },
 	      orderBy: { _count: { deviceCategory: "desc" } },
 	      take: 10,
 	    }),
 	    prisma.analyticsSession.groupBy({
 	      by: ["browserName"],
-	      where: sessionWindow,
+	      where: humanSessionWindow,
 	      _count: { _all: true },
 	      orderBy: { _count: { browserName: "desc" } },
 	      take: 10,
 	    }),
 	    prisma.analyticsSession.groupBy({
 	      by: ["osName"],
-	      where: sessionWindow,
+	      where: humanSessionWindow,
 	      _count: { _all: true },
 	      orderBy: { _count: { osName: "desc" } },
 	      take: 10,
 	    }),
+      prisma.analyticsSession.findMany({
+        distinct: ["visitorId"],
+        select: { visitorId: true },
+        where: botSessionWindow,
+      }),
+      prisma.analyticsSession.count({ where: botSessionWindow }),
+      prisma.analyticsEvent.count({ where: botEventWindow }),
+      prisma.analyticsEvent.count({
+        where: { ...botEventWindow, name: "page_view" },
+      }),
+      prisma.analyticsSession.groupBy({
+        by: ["userAgent"],
+        where: botSessionWindow,
+        _count: { _all: true },
+        orderBy: { _count: { userAgent: "desc" } },
+        take: 50,
+      }),
+      prisma.analyticsEvent.groupBy({
+        by: ["path"],
+        where: { ...botEventWindow, name: "page_view" },
+        _count: { _all: true },
+        orderBy: { _count: { path: "desc" } },
+        take: 10,
+      }),
 	  ]);
 	  const visitorIds = visitorRows.map((row) => row.visitorId);
 	  const returningVisitorRows =
@@ -1180,8 +1279,10 @@ async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSum
 	          distinct: ["visitorId"],
 	          select: { visitorId: true },
 	          where: {
-	            startedAt: { lt: start },
-	            visitorId: { in: visitorIds },
+	            AND: [
+                { startedAt: { lt: start }, visitorId: { in: visitorIds } },
+                humanSessionFilter,
+              ],
 	          },
 	        })
 	      : [];
@@ -1240,6 +1341,16 @@ async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSum
 	    ].filter((row) => row.count > 0),
 	    activeSessionCount,
 	    activeVisitorCount: activeVisitorRows.length,
+      botEventCount,
+      botPageViewCount,
+      botRows: toBotRows(botUserAgentRows),
+      botSessionCount,
+      botTopPages: botTopPageRows.map((row) => ({
+        key: row.path,
+        label: row.path,
+        count: row._count._all,
+      })),
+      botVisitorCount: botVisitorRows.length,
 	    browserSessionCount,
 	    browserRows: browserGroupRows.map((row) => ({
 	      key: row.browserName ?? "unknown",
@@ -1331,6 +1442,12 @@ function getEmptyAnalyticsSummary(
     accessModeRows: [],
     activeSessionCount: 0,
     activeVisitorCount: 0,
+    botEventCount: 0,
+    botPageViewCount: 0,
+    botRows: [],
+    botSessionCount: 0,
+    botTopPages: [],
+    botVisitorCount: 0,
     browserSessionCount: 0,
     browserRows: [],
     channelRows: [],
@@ -1749,6 +1866,42 @@ function toDeviceCategoryLabel(value: string | null) {
   if (value === "desktop") return "데스크톱";
   if (value === "bot") return "봇/크롤러";
   return "알 수 없음";
+}
+
+function toBotRows(
+  rows: Array<{
+    userAgent: string | null;
+    _count: { _all: number };
+  }>,
+): AnalyticsTableRow[] {
+  const counts = new Map<string, number>();
+
+  for (const row of rows) {
+    const name = toBotName(row.userAgent);
+    counts.set(name, (counts.get(name) ?? 0) + row._count._all);
+  }
+
+  return Array.from(counts.entries())
+    .map(([name, count]) => ({
+      key: name,
+      label: name,
+      count,
+    }))
+    .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
+    .slice(0, 10);
+}
+
+function toBotName(userAgent: string | null) {
+  if (!userAgent) return "Other Bot";
+  if (/yeti/i.test(userAgent)) return "Naver Yeti";
+  if (/applebot/i.test(userAgent)) return "Applebot";
+  if (/googlebot/i.test(userAgent)) return "Googlebot";
+  if (/bingbot|bingpreview/i.test(userAgent)) return "Microsoft Bingbot";
+  if (/daumoa/i.test(userAgent)) return "Daum Daumoa";
+  if (/facebookexternalhit/i.test(userAgent)) return "Facebook Crawler";
+  if (/slurp/i.test(userAgent)) return "Yahoo Slurp";
+  if (/duckduckbot/i.test(userAgent)) return "DuckDuckBot";
+  return "Other Bot";
 }
 
 function toCompetitionRows(
