@@ -2067,6 +2067,7 @@ ol {
   width: 320px;
   max-width: 100%;
   min-height: 100px;
+  overflow: hidden;
   border: 1px solid var(--ph-line-soft);
   background: var(--ph-elev);
 }
