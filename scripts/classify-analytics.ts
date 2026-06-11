@@ -3,6 +3,7 @@ import {
   classifyAnalyticsTraffic,
   getBrowserNameFromUserAgent,
   getDeviceCategoryFromUserAgent,
+  getOsNameFromUserAgent,
   loadBotDetectionRules,
 } from "../src/lib/analytics-traffic-classifier";
 
@@ -31,6 +32,7 @@ async function main() {
       userAgent: true,
       deviceCategory: true,
       browserName: true,
+      osName: true,
       trafficType: true,
       botName: true,
       botReason: true,
@@ -66,6 +68,7 @@ async function main() {
       session.browserName === "Bot"
         ? getBrowserNameFromUserAgent(session.userAgent)
         : session.browserName;
+    const nextOsName = getOsNameFromUserAgent(session.userAgent);
 
     if (classification.trafficType === "bot") summary.bot += 1;
     else if (classification.trafficType === "suspected_bot") summary.suspectedBot += 1;
@@ -80,7 +83,8 @@ async function main() {
       session.reverseDnsHost !== classification.reverseDnsHost ||
       session.classificationVersion !== classification.classificationVersion ||
       session.deviceCategory !== nextDeviceCategory ||
-      session.browserName !== nextBrowserName;
+      session.browserName !== nextBrowserName ||
+      session.osName !== nextOsName;
 
     if (!changed) continue;
     summary.changed += 1;
@@ -98,6 +102,7 @@ async function main() {
         classificationVersion: classification.classificationVersion,
         deviceCategory: nextDeviceCategory,
         browserName: nextBrowserName,
+        osName: nextOsName,
       },
       where: { id: session.id },
     });

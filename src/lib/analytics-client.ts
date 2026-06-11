@@ -302,6 +302,7 @@ function getBrowserName(userAgent: string) {
 function getOsName(userAgent: string) {
   if (/iPhone|iPad|iPod/.test(userAgent)) return "iOS";
   if (/Android/.test(userAgent)) return "Android";
+  if (/CrOS/.test(userAgent)) return "ChromeOS";
   if (/Mac OS X|Macintosh/.test(userAgent)) return "macOS";
   if (/Windows/.test(userAgent)) return "Windows";
   if (/Linux/.test(userAgent)) return "Linux";

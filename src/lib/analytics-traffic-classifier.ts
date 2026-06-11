@@ -102,6 +102,7 @@ export function getOsNameFromUserAgent(userAgent: string | null) {
   if (!userAgent) return null;
   if (/iPhone|iPad|iPod/i.test(userAgent)) return "iOS";
   if (/Android/i.test(userAgent)) return "Android";
+  if (/CrOS/i.test(userAgent)) return "ChromeOS";
   if (/Mac OS X|Macintosh/i.test(userAgent)) return "macOS";
   if (/Windows NT|Windows/i.test(userAgent)) return "Windows";
   if (/Linux/i.test(userAgent)) return "Linux";
