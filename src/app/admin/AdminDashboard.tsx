@@ -1070,10 +1070,10 @@ async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSum
       },
     };
     const humanSessionFilter: Prisma.AnalyticsSessionWhereInput = {
-      OR: [{ deviceCategory: { not: "bot" } }, { deviceCategory: null }],
+      trafficType: "human",
     };
     const botSessionFilter: Prisma.AnalyticsSessionWhereInput = {
-      deviceCategory: "bot",
+      trafficType: { in: ["bot", "suspected_bot"] },
     };
     const humanSessionWindow: Prisma.AnalyticsSessionWhereInput = {
       AND: [sessionWindow, humanSessionFilter],
@@ -1115,7 +1115,7 @@ async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSum
       botSessionCount,
       botEventCount,
       botPageViewCount,
-      botUserAgentRows,
+      botNameRows,
       botTopPageRows,
 	  ] = await Promise.all([
     prisma.analyticsSession.findMany({
@@ -1258,10 +1258,10 @@ async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSum
         where: { ...botEventWindow, name: "page_view" },
       }),
       prisma.analyticsSession.groupBy({
-        by: ["userAgent"],
+        by: ["botName"],
         where: botSessionWindow,
         _count: { _all: true },
-        orderBy: { _count: { userAgent: "desc" } },
+        orderBy: { _count: { botName: "desc" } },
         take: 50,
       }),
       prisma.analyticsEvent.groupBy({
@@ -1343,7 +1343,7 @@ async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSum
 	    activeVisitorCount: activeVisitorRows.length,
       botEventCount,
       botPageViewCount,
-      botRows: toBotRows(botUserAgentRows),
+      botRows: toBotRows(botNameRows),
       botSessionCount,
       botTopPages: botTopPageRows.map((row) => ({
         key: row.path,
@@ -1864,44 +1864,23 @@ function toDeviceCategoryLabel(value: string | null) {
   if (value === "mobile") return "모바일";
   if (value === "tablet") return "태블릿";
   if (value === "desktop") return "데스크톱";
-  if (value === "bot") return "봇/크롤러";
   return "알 수 없음";
 }
 
 function toBotRows(
   rows: Array<{
-    userAgent: string | null;
+    botName: string | null;
     _count: { _all: number };
   }>,
 ): AnalyticsTableRow[] {
-  const counts = new Map<string, number>();
-
-  for (const row of rows) {
-    const name = toBotName(row.userAgent);
-    counts.set(name, (counts.get(name) ?? 0) + row._count._all);
-  }
-
-  return Array.from(counts.entries())
-    .map(([name, count]) => ({
-      key: name,
-      label: name,
-      count,
+  return rows
+    .map((row) => ({
+      key: row.botName ?? "unknown_bot",
+      label: row.botName ?? "알 수 없는 봇",
+      count: row._count._all,
     }))
     .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
     .slice(0, 10);
-}
-
-function toBotName(userAgent: string | null) {
-  if (!userAgent) return "Other Bot";
-  if (/yeti/i.test(userAgent)) return "Naver Yeti";
-  if (/applebot/i.test(userAgent)) return "Applebot";
-  if (/googlebot/i.test(userAgent)) return "Googlebot";
-  if (/bingbot|bingpreview/i.test(userAgent)) return "Microsoft Bingbot";
-  if (/daumoa/i.test(userAgent)) return "Daum Daumoa";
-  if (/facebookexternalhit/i.test(userAgent)) return "Facebook Crawler";
-  if (/slurp/i.test(userAgent)) return "Yahoo Slurp";
-  if (/duckduckbot/i.test(userAgent)) return "DuckDuckBot";
-  return "Other Bot";
 }
 
 function toCompetitionRows(

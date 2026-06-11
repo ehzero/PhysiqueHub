@@ -32,8 +32,21 @@ PhysiqueHub는 `@vercel/analytics`를 사용하지 않고 자체 이용 행동 �
 | `utmSource`, `utmMedium`, `utmCampaign`, `utmContent`, `utmTerm` | UTM query parameter. |
 | `ipAddress` | 요청 헤더에서 추출한 원문 IP. |
 | `userAgent` | 요청의 전체 User-Agent. |
-| `deviceCategory`, `browserName`, `osName` | 클라이언트에서 추정한 기기/브라우저/OS 요약. |
+| `deviceCategory`, `browserName`, `osName` | 요청 User-Agent에서 서버가 파싱한 기기/브라우저/OS 요약. |
+| `trafficType` | `human`, `bot`, `suspected_bot`, `unknown` 중 하나인 트래픽 분류. |
+| `botName`, `botReason`, `botVerified` | 봇으로 분류된 경우의 봇 이름, 판정 근거, 검증 여부. |
+| `reverseDnsHost` | IP reverse DNS 조회 결과. 조회하지 않았거나 실패하면 `null`. |
+| `classifiedAt`, `classificationVersion` | 트래픽 분류 시각과 분류 로직 버전. |
 | `startedAt`, `lastSeenAt` | 세션 시작/마지막 수신 시각. |
+
+### 봇 판정 규칙
+
+`BotDetectionRule`은 봇 판정 규칙을 저장한다. 초기 규칙은 User-Agent 정규식,
+IP prefix, reverse DNS suffix 기반으로 Googlebot, Bingbot, Applebot, Naver
+Yeti, Naver Web Crawler, Headless Chrome 등을 분류한다.
+
+`AnalyticsDnsCache`는 IP reverse DNS 결과를 24시간 캐시한다. DNS 조회 실패는
+로그 저장 실패로 이어지지 않는다.
 
 ### 이벤트
 
@@ -101,11 +114,14 @@ PhysiqueHub는 `@vercel/analytics`를 사용하지 않고 자체 이용 행동 �
 - 기기 환경, 브라우저, OS 분포는 요청의 원문 User-Agent를 서버에서 파싱한
   `AnalyticsSession.deviceCategory`, `browserName`, `osName`을 기준으로 본다.
   User-Agent가 없거나 파싱이 어려운 경우 클라이언트가 보낸 요약값을 보조로 쓴다.
-- 검색 엔진 봇처럼 User-Agent가 봇 패턴에 해당하면 `deviceCategory`는 `bot`,
-  `browserName`은 `Bot`으로 분류한다. 예: Googlebot, Bingbot, Naver Yeti,
-  Applebot.
-- `/admin/analytics`의 기본 이용 분석 지표는 `deviceCategory = bot` 세션과 해당
-  세션의 이벤트를 제외한다. 봇/크롤러 접근은 같은 화면의 별도 섹션에서 본다.
+- 봇/크롤러 판정은 `AnalyticsSession.trafficType`, `botName`, `botReason`,
+  `botVerified`, `reverseDnsHost`를 기준으로 본다. `deviceCategory`는 기기 유형만
+  나타내며 신규 데이터에서는 `bot` 값을 쓰지 않는다.
+- `/admin/analytics`의 기본 이용 분석 지표는 `trafficType = human` 세션과 해당
+  세션의 이벤트만 포함한다. `bot`, `suspected_bot`은 같은 화면의 별도 섹션에서
+  본다.
+- 기존 로그 재분류는 `npm run analytics:classify`로 수행한다. 기본은 최근 30일,
+  `--all`, `--since=YYYY-MM-DD`, `--dry-run` 옵션을 지원한다.
 - 검색어 기준 검색 수행은 `search_performed`로 본다. 필터 변경은
   `filter_applied` 또는 `filter_reset`으로 본다.
 - `empty_search_result`는 검색과 필터 양쪽에서 발생할 수 있으므로 원인 구분이

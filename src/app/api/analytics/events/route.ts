@@ -7,14 +7,18 @@ import {
   truncateAnalyticsString,
   type AnalyticsSessionInput,
 } from "@/lib/analytics";
+import {
+  classifyAnalyticsTraffic,
+  getBrowserNameFromUserAgent,
+  getDeviceCategoryFromUserAgent,
+  getOsNameFromUserAgent,
+} from "@/lib/analytics-traffic-classifier";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 const MAX_EVENTS_PER_BATCH = 20;
 const MAX_BODY_BYTES = 48_000;
-const BOT_USER_AGENT_PATTERN =
-  /bot|crawler|spider|crawling|facebookexternalhit|slurp|yeti|daumoa|bingpreview/i;
 
 type AnalyticsEventsPayload = {
   session?: Partial<AnalyticsSessionInput>;
@@ -57,6 +61,7 @@ export async function POST(request: Request) {
   const ipAddress = getClientIp(request);
   const userAgent = truncateAnalyticsString(request.headers.get("user-agent"), 1024);
   const client = getClientSummary(userAgent, session);
+  const classification = await classifyAnalyticsTraffic({ ipAddress, userAgent });
   const events = payload.events
     .slice(0, MAX_EVENTS_PER_BATCH)
     .map((event) => normalizeEvent(event, session, ipAddress, userAgent))
@@ -81,6 +86,13 @@ export async function POST(request: Request) {
       deviceCategory: client.deviceCategory,
       browserName: client.browserName,
       osName: client.osName,
+      trafficType: classification.trafficType,
+      botName: classification.botName,
+      botReason: classification.botReason,
+      botVerified: classification.botVerified,
+      reverseDnsHost: classification.reverseDnsHost,
+      classifiedAt: classification.classifiedAt,
+      classificationVersion: classification.classificationVersion,
       startedAt: now,
       lastSeenAt: now,
     },
@@ -99,6 +111,13 @@ export async function POST(request: Request) {
       deviceCategory: client.deviceCategory,
       browserName: client.browserName,
       osName: client.osName,
+      trafficType: classification.trafficType,
+      botName: classification.botName,
+      botReason: classification.botReason,
+      botVerified: classification.botVerified,
+      reverseDnsHost: classification.reverseDnsHost,
+      classifiedAt: classification.classifiedAt,
+      classificationVersion: classification.classificationVersion,
       lastSeenAt: now,
     },
   });
@@ -219,36 +238,13 @@ function getClientSummary(
 }
 
 function getDeviceCategory(userAgent: string | null) {
-  if (!userAgent) return null;
-  if (BOT_USER_AGENT_PATTERN.test(userAgent)) return "bot";
-  if (/Macintosh/i.test(userAgent) && /Mobile\/\w+ Safari/i.test(userAgent)) return "tablet";
-  if (/iPad|Tablet|PlayBook|Kindle|Silk|Android(?!.*Mobile)/i.test(userAgent)) return "tablet";
-  if (/Mobi|iPhone|iPod|Android.*Mobile|Windows Phone/i.test(userAgent)) return "mobile";
-  if (/Macintosh|Windows NT|X11|CrOS|Linux x86_64|Ubuntu|Fedora/i.test(userAgent)) {
-    return "desktop";
-  }
-  return null;
+  return getDeviceCategoryFromUserAgent(userAgent);
 }
 
 function getBrowserName(userAgent: string | null) {
-  if (!userAgent) return null;
-  if (BOT_USER_AGENT_PATTERN.test(userAgent)) return "Bot";
-  if (/Whale\//i.test(userAgent)) return "Whale";
-  if (/SamsungBrowser\//i.test(userAgent)) return "Samsung Internet";
-  if (/Edg\//i.test(userAgent)) return "Edge";
-  if (/CriOS\//i.test(userAgent)) return "Chrome";
-  if (/Chrome\//i.test(userAgent) && !/Chromium/i.test(userAgent)) return "Chrome";
-  if (/FxiOS\//i.test(userAgent) || /Firefox\//i.test(userAgent)) return "Firefox";
-  if (/Safari\//i.test(userAgent) && !/Chrome\//i.test(userAgent)) return "Safari";
-  return "Other";
+  return getBrowserNameFromUserAgent(userAgent);
 }
 
 function getOsName(userAgent: string | null) {
-  if (!userAgent) return null;
-  if (/iPhone|iPad|iPod/i.test(userAgent)) return "iOS";
-  if (/Android/i.test(userAgent)) return "Android";
-  if (/Mac OS X|Macintosh/i.test(userAgent)) return "macOS";
-  if (/Windows NT|Windows/i.test(userAgent)) return "Windows";
-  if (/Linux/i.test(userAgent)) return "Linux";
-  return "Other";
+  return getOsNameFromUserAgent(userAgent);
 }

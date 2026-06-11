@@ -180,6 +180,13 @@ model AnalyticsSession {
   deviceCategory String?
   browserName    String?
   osName         String?
+  trafficType    String           @default("human")
+  botName        String?
+  botReason      String?
+  botVerified    Boolean          @default(false)
+  reverseDnsHost String?
+  classifiedAt   DateTime?
+  classificationVersion String?
   startedAt      DateTime         @default(now())
   lastSeenAt     DateTime         @default(now())
   createdAt      DateTime         @default(now())
@@ -190,6 +197,9 @@ model AnalyticsSession {
   @@index([startedAt])
   @@index([lastSeenAt])
   @@index([channel])
+  @@index([trafficType])
+  @@index([botName])
+  @@index([classifiedAt])
 }
 
 model AnalyticsEvent {
@@ -213,4 +223,31 @@ model AnalyticsEvent {
   @@index([name, occurredAt])
   @@index([competitionId])
   @@index([occurredAt])
+}
+
+model BotDetectionRule {
+  id               String   @id
+  enabled          Boolean  @default(true)
+  priority         Int      @default(100)
+  matchType        String
+  pattern          String
+  trafficType      String
+  botName          String?
+  botReason        String?
+  verifyReverseDns Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([enabled, priority])
+}
+
+model AnalyticsDnsCache {
+  ipAddress String   @id
+  hostname  String?
+  lookedUpAt DateTime @default(now())
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([expiresAt])
 }
