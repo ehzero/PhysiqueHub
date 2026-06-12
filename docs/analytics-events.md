@@ -44,6 +44,8 @@ PhysiqueHub는 `@vercel/analytics`를 사용하지 않고 자체 이용 행동 �
 `BotDetectionRule`은 봇 판정 규칙을 저장한다. 초기 규칙은 User-Agent 정규식,
 IP prefix, reverse DNS suffix 기반으로 Googlebot, Bingbot, Applebot, Naver
 Yeti, Naver Web Crawler, Headless Chrome 등을 분류한다.
+`*.bc.googleusercontent.com`에서 들어오는 Linux Chrome UA는 검증된 Googlebot이
+아니므로 `Google Cloud Chrome` 이름의 `suspected_bot`으로 분류한다.
 
 `AnalyticsDnsCache`는 IP reverse DNS 결과를 24시간 캐시한다. DNS 조회 실패는
 로그 저장 실패로 이어지지 않는다.

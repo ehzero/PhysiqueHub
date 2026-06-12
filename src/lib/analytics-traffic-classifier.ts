@@ -170,6 +170,7 @@ function shouldCheckReverseDns(userAgent: string | null) {
   if (/bot|crawler|spider|crawling|facebookexternalhit|slurp|yeti|daumoa|headless/i.test(userAgent)) {
     return true;
   }
+  if (/X11; Linux x86_64/i.test(userAgent) && /Chrome\//i.test(userAgent)) return true;
   if (/\(KHTML$/i.test(userAgent)) return true;
   return !/(Chrome\/|Safari\/|Firefox\/|Edg\/|Whale\/|SamsungBrowser\/|CriOS\/|FxiOS\/)/i.test(
     userAgent,
@@ -187,12 +188,13 @@ function toClassification(
   const trafficType = normalizeTrafficType(
     rule.verifyReverseDns && !options.verified ? "suspected_bot" : rule.trafficType,
   );
+  const botVerified = trafficType === "bot" && options.verified;
 
   return {
     trafficType,
     botName: rule.botName,
     botReason: rule.botReason,
-    botVerified: options.verified,
+    botVerified,
     reverseDnsHost: options.reverseDnsHost,
     classifiedAt: options.now,
     classificationVersion: ANALYTICS_CLASSIFICATION_VERSION,
