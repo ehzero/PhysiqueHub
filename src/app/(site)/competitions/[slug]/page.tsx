@@ -3,6 +3,7 @@ import type { CSSProperties } from "react";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { ShareButton } from "@/components/ShareButton";
+import { CompetitionDetailSaveButton } from "@/components/CompetitionDetailSaveButton";
 import { CompetitionDetailAnalytics } from "@/components/CompetitionDetailAnalytics";
 import { AdInquiryBanner } from "@/components/AdInquiryBanner";
 import { PosterFigure, posterFigureColor } from "@/components/PosterFigure";
@@ -429,6 +430,7 @@ export default async function CompetitionDetailPage({
               )}
 
               <div className="det-reg-actions">
+                <CompetitionDetailSaveButton competitionId={competition.id} />
                 <ShareButton
                   className="det-reg-action"
                   competitionId={competition.id}

@@ -7094,6 +7094,10 @@ ol {
   width: 100%;
 }
 .det-reg-action:hover { background: #F7F5F0; }
+.det-reg-action.saved {
+  border-color: var(--ph-accent);
+  color: var(--ph-accent);
+}
 .det-reg-host {
   margin-top: 16px;
   padding-top: 14px;
@@ -8256,6 +8260,7 @@ ol {
 [data-theme="dark"] .det-reg-host-name { color: var(--ph-ink); }
 [data-theme="dark"] .det-reg-action { background: var(--ph-elev); border-color: var(--ph-line-soft); color: var(--ph-ink); }
 [data-theme="dark"] .det-reg-action:hover { background: var(--ph-sub); }
+[data-theme="dark"] .det-reg-action.saved { border-color: var(--ph-accent); color: var(--ph-accent); }
 [data-theme="dark"] .det-related-title { color: var(--ph-ink); }
 [data-theme="dark"] .det-rel-card { background: var(--ph-elev); border-color: var(--ph-line-soft); color: var(--ph-ink); }
 [data-theme="dark"] .det-rel-card:hover { border-color: var(--ph-ink-3); box-shadow: var(--ph-shadow-hover); }
