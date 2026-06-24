@@ -103,6 +103,8 @@ Yeti, Naver Web Crawler, Headless Chrome 등을 분류한다.
 - 드로어에서 실제 상세 페이지로 이동하려는 의도는 `competition_detail_click`으로
   본다.
 - 상세 페이지가 실제 렌더링된 조회는 `competition_view`로 본다.
+- 광고 문의 배너 클릭은 별도 이벤트를 추가하지 않고 `contact_open`의
+  `propertiesJson.source`가 `*_ad` 또는 `*_ad_rail`인 값으로 구분한다.
 - 대회별 공유와 저장은 각각 `share_click`, `save_competition`의
   `competitionId`를 기준으로 본다. 과거 공유 이벤트처럼 `competitionId`가 없는
   이벤트는 전체 공유 클릭 수에는 포함되지만 대회별 공유 순위에는 포함되지 않는다.

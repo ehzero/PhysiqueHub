@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useSavedCompetitions } from "@/hooks/use-saved-competitions";
 import { trackAnalyticsEvent } from "@/lib/analytics-client";
@@ -9,10 +9,17 @@ import { Nav } from "@/components/Nav";
 import { Foot } from "@/components/Foot";
 import { ContactDrawer } from "@/components/ContactDrawer";
 import { PwaBootstrap } from "@/components/PwaBootstrap";
+import type { ContactCategory } from "@/components/ContactDrawer";
 
 interface SiteShellContextValue {
+  openContact: (options?: OpenContactOptions) => void;
   saved: string[];
   toggleSave: (id: string) => void;
+}
+
+interface OpenContactOptions {
+  category?: ContactCategory;
+  source?: string;
 }
 
 const SiteShellContext = createContext<SiteShellContextValue | null>(null);
@@ -25,22 +32,28 @@ interface SiteShellProps {
 export function SiteShell({ seasonYear, children }: SiteShellProps) {
   const pathname = usePathname();
   const [contactOpen, setContactOpen] = useState(false);
+  const [contactInitialCategory, setContactInitialCategory] =
+    useState<ContactCategory>("기타 문의");
+  const [contactSeed, setContactSeed] = useState(0);
   const { saved, toggleSave } = useSavedCompetitions();
-  const openContact = () => {
+  const openContact = useCallback((options: OpenContactOptions = {}) => {
     trackAnalyticsEvent("contact_open", {
       properties: {
-        source: "site_shell",
+        source: options.source ?? "site_shell",
       },
     });
+    setContactInitialCategory(options.category ?? "기타 문의");
+    setContactSeed((value) => value + 1);
     setContactOpen(true);
-  };
+  }, []);
 
   const value = useMemo<SiteShellContextValue>(
     () => ({
+      openContact,
       saved,
       toggleSave,
     }),
-    [saved, toggleSave],
+    [openContact, saved, toggleSave],
   );
 
   return (
@@ -61,8 +74,10 @@ export function SiteShell({ seasonYear, children }: SiteShellProps) {
         />
 
         <ContactDrawer
+          key={contactSeed}
           isOpen={contactOpen}
           onClose={() => setContactOpen(false)}
+          initialCategory={contactInitialCategory}
         />
 
         <PwaBootstrap />

@@ -6,7 +6,7 @@ import { COMPETITION_TIER_LABELS } from "@/lib/competition-classification";
 import type { CompetitionFilterOptions } from "@/lib/competition-public";
 import type { CompetitionLocationScope } from "@/lib/filter-query";
 import { Icons } from "./Icons";
-import { KakaoAd } from "./KakaoAd";
+import { AdInquiryBanner } from "./AdInquiryBanner";
 import { CompRow } from "./CompRow";
 import { CompetitionGridCard } from "./CompetitionListItem";
 import { FilterRail } from "./FilterRail";
@@ -665,12 +665,9 @@ export function ListView({
                       }}
                     />
                     {inlineAdAfterCompetitionId === c.id && (
-                      <KakaoAd
+                      <AdInquiryBanner
                         className="lv-grid-inline-ad"
-                        unit="DAN-xoBCxsQqNItj9WWH"
-                        width={728}
-                        height={90}
-                        minWidth={900}
+                        source="competition_grid_inline_ad"
                       />
                     )}
                   </Fragment>
@@ -701,19 +698,13 @@ export function ListView({
                           />
                           {inlineAdAfterCompetitionId === c.id && (
                             <>
-                              <KakaoAd
+                              <AdInquiryBanner
                                 className="lv-list-inline-ad"
-                                unit="DAN-xoBCxsQqNItj9WWH"
-                                width={728}
-                                height={90}
-                                minWidth={900}
+                                source="competition_list_inline_ad"
                               />
-                              <KakaoAd
+                              <AdInquiryBanner
                                 className="lv-list-mobile-ad"
-                                unit="DAN-trY70xn9I53nKiEc"
-                                width={320}
-                                height={100}
-                                maxWidth={899}
+                                source="competition_list_mobile_ad"
                               />
                             </>
                           )}
@@ -726,12 +717,11 @@ export function ListView({
             )}
           </div>
 
-          <KakaoAd
+          <AdInquiryBanner
             className="lv-ad-rail"
-            unit="DAN-yhWtUTzheMaek3PT"
-            width={160}
-            height={600}
-            minWidth={1440}
+            source="competition_list_ad_rail"
+            title="광고 문의"
+            description="헬스·웨이트 트레이닝 관심층이 모이는 화면에 브랜드를 노출하세요."
           />
         </div>
       </div>

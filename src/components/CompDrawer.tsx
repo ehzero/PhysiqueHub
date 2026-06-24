@@ -18,7 +18,7 @@ import { Competition, parseDate, regStatusAt } from "@/lib/data";
 import { COMPETITION_TIER_LABELS } from "@/lib/competition-classification";
 import { trackAnalyticsEvent } from "@/lib/analytics-client";
 import { Icons } from "./Icons";
-import { KakaoAd } from "./KakaoAd";
+import { AdInquiryBanner } from "./AdInquiryBanner";
 import { PosterFigure, posterFigureColor } from "./PosterFigure";
 import { ShareButton } from "./ShareButton";
 import { StatusPill } from "./UIPrimitives";
@@ -356,11 +356,9 @@ export function CompDrawer({
           </div>
 
           <div className="drawer-section is-last drawer-ad-section">
-            <KakaoAd
+            <AdInquiryBanner
               className="drawer-inline-ad"
-              unit="DAN-ZQlHGZdZbq2bw5mv"
-              width={320}
-              height={100}
+              source="competition_drawer_ad"
             />
           </div>
         </div>

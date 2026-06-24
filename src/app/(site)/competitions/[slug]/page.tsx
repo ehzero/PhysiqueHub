@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { ShareButton } from "@/components/ShareButton";
 import { CompetitionDetailAnalytics } from "@/components/CompetitionDetailAnalytics";
-import { KakaoAd } from "@/components/KakaoAd";
+import { AdInquiryBanner } from "@/components/AdInquiryBanner";
 import { PosterFigure, posterFigureColor } from "@/components/PosterFigure";
 import { StatusPill } from "@/components/UIPrimitives";
 import { TrackedExternalLink } from "@/components/TrackedExternalLink";
@@ -365,13 +365,10 @@ export default async function CompetitionDetailPage({
               </div>
             </section>
 
-            <KakaoAd
+            <AdInquiryBanner
               as="section"
               className="det-mobile-ad-section"
-              unit="DAN-XLTmMI7kEjqrR8QD"
-              width={320}
-              height={100}
-              maxWidth={980}
+              source="competition_detail_mobile_ad"
             />
           </div>
 
@@ -453,12 +450,10 @@ export default async function CompetitionDetailPage({
               </div>
             </div>
 
-            <KakaoAd
+            <AdInquiryBanner
               className="det-side-ad"
-              unit="DAN-Mm9wA9gi0GYtIsun"
-              width={300}
-              height={250}
-              minWidth={981}
+              source="competition_detail_side_ad"
+              description="헬스·웨이트 트레이닝과 피트니스 대회에 관심 있는 사용자에게 브랜드를 소개하세요."
             />
           </aside>
         </div>

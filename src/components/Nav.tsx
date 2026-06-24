@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import { Icons } from "./Icons";
 import { VisitorStatsBadge } from "./VisitorStatsBadge";
 
@@ -85,6 +85,25 @@ function useTheme() {
 export function Nav({ route, savedCount, onOpenContact }: NavProps) {
   const savedLabel = savedCount > 0 ? `내 대회 (${savedCount})` : "내 대회";
   const { isDark, toggle } = useTheme();
+  const [moreOpen, setMoreOpen] = useState(false);
+  const isMoreRoute = route === "guide" || route === "articles";
+  const closeMore = useCallback(() => setMoreOpen(false), []);
+
+  useEffect(() => {
+    if (!moreOpen) return;
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setMoreOpen(false);
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [moreOpen]);
+
+  const openContactFromMore = () => {
+    setMoreOpen(false);
+    onOpenContact();
+  };
 
   return (
     <header className="nav">
@@ -149,7 +168,89 @@ export function Nav({ route, savedCount, onOpenContact }: NavProps) {
         </div>
       </div>
 
-      {/* Mobile tabbar — 4 tabs: 홈 · 대회 일정 · 가이드 · 내 대회 (문의는 헤더 아이콘으로) */}
+      <div
+        className={`mobile-more-backdrop${moreOpen ? " is-open" : ""}`}
+        onClick={closeMore}
+        aria-hidden="true"
+      />
+      <div
+        className={`mobile-more-sheet${moreOpen ? " is-open" : ""}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="더보기 메뉴"
+      >
+        <div className="mobile-more-grip" aria-hidden="true" />
+        <div className="mobile-more-head">
+          <div>
+            <div className="mobile-more-eyebrow">MORE</div>
+            <div className="mobile-more-title">더보기</div>
+          </div>
+          <button
+            className="mobile-more-close"
+            type="button"
+            onClick={closeMore}
+            aria-label="더보기 닫기"
+          >
+            {Icons.close}
+          </button>
+        </div>
+        <div className="mobile-more-list">
+          <Link
+            className="mobile-more-item"
+            href="/guide"
+            onClick={closeMore}
+            prefetch={false}
+          >
+            <span className="mobile-more-icon">{Icons.book}</span>
+            <span className="mobile-more-copy">
+              <span>가이드</span>
+              <small>종목·단체·첫 대회 준비</small>
+            </span>
+            <span className="mobile-more-arrow">{Icons.arrow}</span>
+          </Link>
+          <Link
+            className="mobile-more-item"
+            href="/articles"
+            onClick={closeMore}
+            prefetch={false}
+          >
+            <span className="mobile-more-icon">{Icons.article}</span>
+            <span className="mobile-more-copy">
+              <span>아티클</span>
+              <small>대회 준비와 시즌 읽을거리</small>
+            </span>
+            <span className="mobile-more-arrow">{Icons.arrow}</span>
+          </Link>
+          <button
+            className="mobile-more-item"
+            type="button"
+            onClick={openContactFromMore}
+          >
+            <span className="mobile-more-icon">{Icons.contact}</span>
+            <span className="mobile-more-copy">
+              <span>문의하기</span>
+              <small>대회 등록·정정·광고 문의</small>
+            </span>
+            <span className="mobile-more-arrow">{Icons.arrow}</span>
+          </button>
+          <button
+            className="mobile-more-item"
+            type="button"
+            onClick={toggle}
+          >
+            <span className="mobile-more-icon">
+              {isDark ? Icons.sun : Icons.moon}
+            </span>
+            <span className="mobile-more-copy">
+              <span>{isDark ? "라이트 모드" : "다크 모드"}</span>
+              <small>화면 테마 변경</small>
+            </span>
+            <span className="mobile-more-state">{isDark ? "Dark" : "Light"}</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile tabbar — 핵심 이동 + 더보기 */}
       <nav className="mobile-tabbar" aria-label="주요 메뉴">
         <Link
           className={`mobile-tab ${route === "home" ? "active" : ""}`}
@@ -172,28 +273,6 @@ export function Nav({ route, savedCount, onOpenContact }: NavProps) {
           <span>대회 일정</span>
         </Link>
         <Link
-          className={`mobile-tab ${route === "guide" ? "active" : ""}`}
-          href="/guide"
-          prefetch={false}
-        >
-          <svg className="mt-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-          </svg>
-          <span>가이드</span>
-        </Link>
-        <Link
-          className={`mobile-tab ${route === "articles" ? "active" : ""}`}
-          href="/articles"
-          prefetch={false}
-        >
-          <svg className="mt-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M4 4h11a2 2 0 0 1 2 2v14H6a2 2 0 0 1-2-2z"/>
-            <path d="M17 7h2a1 1 0 0 1 1 1v10a2 2 0 0 1-2 2"/>
-            <path d="M8 8h5M8 12h5"/>
-          </svg>
-          <span>아티클</span>
-        </Link>
-        <Link
           className={`mobile-tab ${route === "saved" ? "active" : ""}`}
           href="/saved"
           aria-label={savedLabel}
@@ -209,6 +288,16 @@ export function Nav({ route, savedCount, onOpenContact }: NavProps) {
           </span>
           <span>내 대회</span>
         </Link>
+        <button
+          className={`mobile-tab ${isMoreRoute ? "active" : ""}${moreOpen ? " is-open" : ""}`}
+          type="button"
+          onClick={() => setMoreOpen((open) => !open)}
+          aria-label="더보기 메뉴"
+          aria-expanded={moreOpen}
+        >
+          <span className="mt-ico mobile-tab-more-icon">{Icons.more}</span>
+          <span>더보기</span>
+        </button>
       </nav>
     </header>
   );

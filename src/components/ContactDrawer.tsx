@@ -25,14 +25,15 @@ const CATEGORIES = [
   "기타 문의",
 ] as const;
 
-type Category = (typeof CATEGORIES)[number];
+export type ContactCategory = (typeof CATEGORIES)[number];
 
 // Comp-related categories that reveal the "관련 대회명" field
-const COMP_CATEGORIES: Category[] = ["대회 등록 요청", "정정 문의"];
+const COMP_CATEGORIES: ContactCategory[] = ["대회 등록 요청", "정정 문의"];
 
 interface ContactDrawerProps {
   isOpen: boolean;
   onClose: () => void;
+  initialCategory?: ContactCategory;
 }
 
 type AttachmentPreview = {
@@ -43,8 +44,12 @@ type AttachmentPreview = {
 
 type SubmitState = "idle" | "submitting" | "done" | "error";
 
-export function ContactDrawer({ isOpen, onClose }: ContactDrawerProps) {
-  const [category, setCategory] = useState<Category>("기타 문의");
+export function ContactDrawer({
+  isOpen,
+  onClose,
+  initialCategory = "기타 문의",
+}: ContactDrawerProps) {
+  const [category, setCategory] = useState<ContactCategory>(initialCategory);
   const [competitionName, setCompetitionName] = useState("");
   const [attachments, setAttachments] = useState<AttachmentPreview[]>([]);
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
