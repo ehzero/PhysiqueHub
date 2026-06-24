@@ -122,6 +122,10 @@ Yeti, Naver Web Crawler, Headless Chrome 등을 분류한다.
 - `/admin/analytics`의 기본 이용 분석 지표는 `trafficType = human` 세션과 해당
   세션의 이벤트만 포함한다. `bot`, `suspected_bot`은 같은 화면의 별도 섹션에서
   본다.
+- 공개 헤더 방문자 카운터는 운영 노출용 신호로, 요청에 따라 `trafficType`을
+  필터링하지 않고 `AnalyticsSession.visitorId`의 고유 수를 표시한다. 오늘
+  방문자는 Asia/Seoul 날짜 경계의 `startedAt` 기준이며, 전체 방문자는 전체 기간의
+  고유 방문자 수다.
 - 기존 로그 재분류는 `npm run analytics:classify`로 수행한다. 기본은 최근 30일,
   `--all`, `--since=YYYY-MM-DD`, `--dry-run` 옵션을 지원한다.
 - 검색어 기준 검색 수행은 `search_performed`로 본다. 필터 변경은

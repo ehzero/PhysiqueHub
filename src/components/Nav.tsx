@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useSyncExternalStore } from "react";
 import { Icons } from "./Icons";
+import { VisitorStatsBadge } from "./VisitorStatsBadge";
 
 const NAV_LINKS = [
   { label: "홈", href: "/", key: "home" },
@@ -109,8 +110,9 @@ export function Nav({ route, savedCount, onOpenContact }: NavProps) {
             </nav>
           </div>
           <div className="nav-right">
+            <VisitorStatsBadge />
             <button
-              className="nav-contact-btn"
+              className="nav-contact-btn nav-theme-btn"
               type="button"
               onClick={toggle}
               aria-label={isDark ? "라이트 모드로 전환" : "다크 모드로 전환"}
@@ -120,7 +122,7 @@ export function Nav({ route, savedCount, onOpenContact }: NavProps) {
               <span className="theme-moon">{Icons.moon}</span>
             </button>
             <button
-              className="nav-contact-btn"
+              className="nav-contact-btn nav-contact-action"
               type="button"
               onClick={onOpenContact}
             >
@@ -129,7 +131,7 @@ export function Nav({ route, savedCount, onOpenContact }: NavProps) {
             </button>
             <Link
               href="/competitions"
-              className="nav-contact-btn"
+              className="nav-contact-btn nav-search-action"
               prefetch
             >
               {Icons.search}

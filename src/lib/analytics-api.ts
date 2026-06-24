@@ -8,6 +8,20 @@ export interface AnalyticsEventsBatch {
   events: AnalyticsEventInput[];
 }
 
+export interface VisitorStatsResponse {
+  todayVisitors: number;
+  totalVisitors: number;
+  date: string;
+}
+
 export async function postAnalyticsEventsBatch(batch: AnalyticsEventsBatch) {
   await apiClient.post("/api/analytics/events", batch);
+}
+
+export async function getVisitorStats() {
+  const response = await apiClient.get<VisitorStatsResponse>(
+    "/api/analytics/visitor-stats",
+  );
+
+  return response.data;
 }
