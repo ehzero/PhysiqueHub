@@ -2107,7 +2107,7 @@ ol {
   max-width: 100%;
   min-height: 100px;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--ph-accent) 52%, var(--ph-line-soft));
+  border: 1px solid var(--ph-line-soft);
   background: var(--ph-elev);
 }
 .drawer-status-pill {
@@ -6232,7 +6232,7 @@ ol {
   justify-content: center;
   max-width: 100%;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--ph-accent) 52%, var(--ph-line-soft));
+  border: 1px solid var(--ph-line-soft);
   background: var(--ph-elev);
 }
 .lv-list-inline-ad {
@@ -6406,7 +6406,7 @@ ol {
   width: 160px;
   min-height: 600px;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--ph-accent) 52%, var(--ph-line-soft));
+  border: 1px solid var(--ph-line-soft);
   background: var(--ph-elev);
 }
 
@@ -6978,7 +6978,7 @@ ol {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--ph-accent) 52%, var(--ph-line-soft));
+  border: 1px solid var(--ph-line-soft);
   background: var(--ph-elev);
 }
 .det-mobile-ad-section {
@@ -8172,7 +8172,7 @@ ol {
 [data-theme="dark"] .det-mobile-ad-section,
 [data-theme="dark"] .det-side-ad {
   background: var(--ph-elev);
-  border-color: color-mix(in srgb, var(--ph-accent) 58%, var(--ph-line-soft));
+  border-color: var(--ph-line-soft);
 }
 [data-theme="dark"] .ad-inquiry-banner {
   background:
