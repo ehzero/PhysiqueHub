@@ -1159,8 +1159,10 @@ function AnalyticsTable({
     <section className="ac-table">
       <table className="ac-dtable">
         <caption className="ac-dtable-cap">
-          <span className="ac-title">{title}</span>
-          <span className="ac-table-top">[{rows.length}]</span>
+          <span className="ac-dtable-caprow">
+            <span className="ac-title">{title}</span>
+            <span className="ac-table-top">[{rows.length}]</span>
+          </span>
         </caption>
         <thead>
           <tr>

@@ -591,15 +591,19 @@ dl.ac-kpis .ac-kpi-value {
 /* Data table (a11y replacement for the ranked .ac-list) */
 .ac-dtable {
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
 }
 .ac-dtable-cap {
+  display: table-caption;
+  text-align: left;
+}
+.ac-dtable-caprow {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 10px;
   height: 28px;
-  text-align: left;
   border-bottom: 1px solid var(--ac-line);
 }
 .ac-dtable th,
@@ -639,7 +643,7 @@ dl.ac-kpis .ac-kpi-value {
   white-space: nowrap;
 }
 .ac-col-num {
-  width: 1%;
+  width: 68px;
   white-space: nowrap;
   text-align: right;
   font-family: var(--ac-mono);
@@ -648,7 +652,7 @@ dl.ac-kpis .ac-kpi-value {
   color: var(--ac-ink);
 }
 .ac-col-rank {
-  width: 1%;
+  width: 36px;
   white-space: nowrap;
   text-align: right;
   padding-right: 10px;
