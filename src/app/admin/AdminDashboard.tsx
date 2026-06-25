@@ -54,14 +54,18 @@ export function AdminLogin({ error }: { error?: string }) {
     : getErrorMessage("missing-config");
 
   return (
-    <main className="admin-gate">
-      <section className="admin-login-panel" aria-labelledby="admin-login-title">
+    <main className="ac-gate">
+      <section className="ac-login" aria-labelledby="ac-login-title">
+        <div className="ac-brand">
+          <span className="ac-brand-dot" />
+          <span className="ac-brand-name">PhysiqueHub</span>
+        </div>
         <div>
-          <p className="eyebrow">Restricted</p>
-          <h1 id="admin-login-title">피지크허브 Admin</h1>
+          <p className="ac-cap">Restricted</p>
+          <h1 className="ac-login-title" id="ac-login-title">관리자 로그인</h1>
         </div>
 
-        <form action={loginAdmin} className="admin-login-form">
+        <form action={loginAdmin} className="ac-login-form">
           <label htmlFor="admin-password">Password</label>
           <input
             id="admin-password"
@@ -71,8 +75,8 @@ export function AdminLogin({ error }: { error?: string }) {
             disabled={!configured}
             required
           />
-          {message && <p className="admin-form-error">{message}</p>}
-          <button className="cta-btn accent" disabled={!configured} type="submit">
+          {message && <p className="ac-login-error">{message}</p>}
+          <button className="ac-btn primary block" disabled={!configured} type="submit">
             관리자 입장
           </button>
         </form>
@@ -202,479 +206,505 @@ async function AdminDashboard({
   const selectedHealth = selectedCompetition ? getReviewHealth(selectedCompetition) : null;
 
   return (
-    <main className="admin-shell">
-      <header className="admin-topbar">
-        <div>
-          <p className="eyebrow">Admin Console</p>
-          <h1>{toAdminSectionTitle(activeSection)}</h1>
-          <p className="admin-lead">
-            {toAdminSectionDescription(activeSection)}
-          </p>
+    <>
+      <header className="ac-bar">
+        <div className="ac-brand">
+          <span className="ac-brand-dot" />
+          <span className="ac-brand-name">PhysiqueHub</span>
         </div>
-        <form action={logoutAdmin}>
-          <button className="cta-btn" type="submit">
-            로그아웃
-          </button>
-        </form>
+
+        <nav className="ac-nav" aria-label="어드민 섹션">
+          <AdminNavItem href="/admin/analytics" active={activeSection === "analytics"}>
+            분석
+          </AdminNavItem>
+          <AdminNavItem
+            href="/admin/review"
+            active={activeSection === "review"}
+            count={needsReviewCount}
+          >
+            데이터 검수
+          </AdminNavItem>
+          <AdminNavItem
+            href="/admin/contact"
+            active={activeSection === "contact"}
+            count={newContactCount}
+          >
+            문의
+          </AdminNavItem>
+        </nav>
+
+        <div className="ac-bar-right">
+          {activeSection === "analytics" && (
+            <div className="ac-seg" role="group" aria-label="분석 기간">
+              {ANALYTICS_RANGES.map((value) => (
+                <AdminTab
+                  active={selectedAnalyticsRange === value}
+                  href={getAdminAnalyticsHref(value)}
+                  key={value}
+                >
+                  {toAnalyticsRangeLabel(value)}
+                </AdminTab>
+              ))}
+            </div>
+          )}
+          <form action={logoutAdmin}>
+            <button className="ac-btn sm" type="submit">
+              로그아웃
+            </button>
+          </form>
+        </div>
       </header>
 
-      <nav className="admin-page-tabs" aria-label="어드민 페이지">
-        <AdminTab href="/admin/analytics" active={activeSection === "analytics"}>
-          분석
-        </AdminTab>
-        <AdminTab href="/admin/review" active={activeSection === "review"}>
-          데이터 검수
-        </AdminTab>
-        <AdminTab href="/admin/contact" active={activeSection === "contact"}>
-          문의
-        </AdminTab>
-      </nav>
-
-      {activeSection === "review" && (
-      <section className="admin-metrics" aria-label="대회 운영 지표">
-        <div>
-          <span className="admin-metric-value">{totalCount}</span>
-          <span className="admin-metric-label">전체 일정</span>
-        </div>
-        <div>
-          <span className="admin-metric-value">{needsReviewCount}</span>
-          <span className="admin-metric-label">검수 대기</span>
-        </div>
-        <div>
-          <span className="admin-metric-value">{approvedCount}</span>
-          <span className="admin-metric-label">승인 완료</span>
-        </div>
-        <div>
-          <span className="admin-metric-value">{lowDateCount}</span>
-          <span className="admin-metric-label">날짜 확인 필요</span>
-        </div>
-        <div>
-          <span className="admin-metric-value">{missingCoreCount}</span>
-          <span className="admin-metric-label">핵심 누락</span>
-        </div>
-      </section>
-      )}
-
-      {activeSection === "analytics" && (
-      <AnalyticsDashboardSection
-        analytics={analyticsSummary}
-        range={selectedAnalyticsRange}
-      />
-      )}
-
-      {activeSection === "contact" && (
-      <section className="admin-section" aria-labelledby="admin-contact-title">
-        <div className="admin-section-head">
-          <div>
-            <p className="eyebrow">Contact</p>
-            <h2 id="admin-contact-title">문의 접수</h2>
-          </div>
-          <span className="admin-badge warn">신규 {newContactCount}</span>
-        </div>
-
-        {contactInquiries.length > 0 ? (
-          <div className="admin-contact-list">
-            {contactInquiries.map((inquiry) => (
-              <ContactInquiryCard inquiry={inquiry} key={inquiry.id} />
-            ))}
-          </div>
-        ) : (
-          <div className="admin-empty">접수된 문의가 없습니다.</div>
+      <main className="ac-main">
+        {activeSection === "analytics" && (
+          <AnalyticsDashboardSection analytics={analyticsSummary} />
         )}
-      </section>
-      )}
 
-      {activeSection === "review" && (
-      <section className="admin-section" aria-labelledby="admin-review-title">
-        <div className="admin-section-head">
-          <div>
-            <p className="eyebrow">Queue</p>
-            <h2 id="admin-review-title">검수 큐</h2>
-          </div>
-          <div className="admin-tabs">
-            <AdminTab
-              href={getAdminHref({
-                analyticsRange: selectedAnalyticsRange,
-                confidenceFilter,
-                organizationFilter,
-                issueFilter,
-              })}
-              active={!statusFilter || statusFilter === "open"}
-            >
-              검수 필요
-            </AdminTab>
-            <AdminTab
-              href={getAdminHref({
-                analyticsRange: selectedAnalyticsRange,
-                statusFilter: "all",
-                confidenceFilter,
-                organizationFilter,
-                issueFilter,
-              })}
-              active={statusFilter === "all"}
-            >
-              전체
-            </AdminTab>
-            <AdminTab
-              href={getAdminHref({
-                analyticsRange: selectedAnalyticsRange,
-                statusFilter: "approved",
-                confidenceFilter,
-                organizationFilter,
-                issueFilter,
-              })}
-              active={statusFilter === "approved"}
-            >
-              승인됨
-            </AdminTab>
-          </div>
-        </div>
+        {activeSection === "review" && (
+          <>
+            <section className="ac-kpis" aria-label="대회 운영 지표">
+              <div className="ac-kpi">
+                <span className="ac-kpi-value">{totalCount}</span>
+                <span className="ac-kpi-label">전체 일정</span>
+              </div>
+              <div className="ac-kpi">
+                <span className="ac-kpi-value">{needsReviewCount}</span>
+                <span className="ac-kpi-label">검수 대기</span>
+              </div>
+              <div className="ac-kpi">
+                <span className="ac-kpi-value">{approvedCount}</span>
+                <span className="ac-kpi-label">승인 완료</span>
+              </div>
+              <div className="ac-kpi">
+                <span className="ac-kpi-value">{lowDateCount}</span>
+                <span className="ac-kpi-label">날짜 확인 필요</span>
+              </div>
+              <div className="ac-kpi">
+                <span className="ac-kpi-value">{missingCoreCount}</span>
+                <span className="ac-kpi-label">핵심 누락</span>
+              </div>
+            </section>
 
-        <div className="admin-filter-row" aria-label="신뢰도 필터">
-          <span className="admin-filter-label">신뢰도</span>
-          <div className="admin-tabs">
-            <AdminTab
-              href={getAdminHref({
-                analyticsRange: selectedAnalyticsRange,
-                statusFilter,
-                organizationFilter,
-                issueFilter,
-              })}
-              active={!isConfidenceFilter(confidenceFilter)}
-            >
-              전체
-            </AdminTab>
-            {CONFIDENCE_LEVELS.map((value) => (
+            <div className="ac-filters" aria-label="검수 필터">
+              <div className="ac-seg" role="group" aria-label="검수 상태">
+                <AdminTab
+                  href={getAdminHref({
+                    analyticsRange: selectedAnalyticsRange,
+                    confidenceFilter,
+                    organizationFilter,
+                    issueFilter,
+                  })}
+                  active={!statusFilter || statusFilter === "open"}
+                >
+                  검수 필요
+                </AdminTab>
+                <AdminTab
+                  href={getAdminHref({
+                    analyticsRange: selectedAnalyticsRange,
+                    statusFilter: "all",
+                    confidenceFilter,
+                    organizationFilter,
+                    issueFilter,
+                  })}
+                  active={statusFilter === "all"}
+                >
+                  전체
+                </AdminTab>
+                <AdminTab
+                  href={getAdminHref({
+                    analyticsRange: selectedAnalyticsRange,
+                    statusFilter: "approved",
+                    confidenceFilter,
+                    organizationFilter,
+                    issueFilter,
+                  })}
+                  active={statusFilter === "approved"}
+                >
+                  승인됨
+                </AdminTab>
+              </div>
+
+              <span className="ac-divider" aria-hidden="true" />
+              <span className="ac-flabel">신뢰도</span>
+              <div className="ac-seg" role="group" aria-label="신뢰도 필터">
+                <AdminTab
+                  href={getAdminHref({
+                    analyticsRange: selectedAnalyticsRange,
+                    statusFilter,
+                    organizationFilter,
+                    issueFilter,
+                  })}
+                  active={!isConfidenceFilter(confidenceFilter)}
+                >
+                  전체
+                </AdminTab>
+                {CONFIDENCE_LEVELS.map((value) => (
+                  <AdminTab
+                    active={confidenceFilter === value}
+                    href={getAdminHref({
+                      analyticsRange: selectedAnalyticsRange,
+                      statusFilter,
+                      confidenceFilter: value,
+                      organizationFilter,
+                      issueFilter,
+                    })}
+                    key={value}
+                  >
+                    {toConfidenceShort(value)}
+                  </AdminTab>
+                ))}
+              </div>
+
+              <span className="ac-divider" aria-hidden="true" />
+              <span className="ac-flabel">이슈</span>
+              <div className="ac-seg" role="group" aria-label="문제 유형 필터">
+                <AdminTab
+                  href={getAdminHref({
+                    analyticsRange: selectedAnalyticsRange,
+                    statusFilter,
+                    confidenceFilter,
+                    organizationFilter,
+                  })}
+                  active={!isIssueFilter(issueFilter)}
+                >
+                  전체
+                </AdminTab>
+                {ISSUE_FILTERS.map((value) => (
+                  <AdminTab
+                    active={issueFilter === value}
+                    href={getAdminHref({
+                      analyticsRange: selectedAnalyticsRange,
+                      statusFilter,
+                      confidenceFilter,
+                      organizationFilter,
+                      issueFilter: value,
+                    })}
+                    key={value}
+                  >
+                    {toIssueFilterLabel(value)}
+                  </AdminTab>
+                ))}
+              </div>
+            </div>
+
+            <div className="ac-chiprow" aria-label="단체 필터">
               <AdminTab
-                active={confidenceFilter === value}
-                href={getAdminHref({
-                  analyticsRange: selectedAnalyticsRange,
-                  statusFilter,
-                  confidenceFilter: value,
-                  organizationFilter,
-                  issueFilter,
-                })}
-                key={value}
-              >
-                {toConfidenceLabel(value)}
-              </AdminTab>
-            ))}
-          </div>
-        </div>
-
-        <div className="admin-filter-row" aria-label="문제 유형 필터">
-          <span className="admin-filter-label">이슈</span>
-          <div className="admin-tabs">
-            <AdminTab
-              href={getAdminHref({
-                analyticsRange: selectedAnalyticsRange,
-                statusFilter,
-                confidenceFilter,
-                organizationFilter,
-              })}
-              active={!isIssueFilter(issueFilter)}
-            >
-              전체
-            </AdminTab>
-            {ISSUE_FILTERS.map((value) => (
-              <AdminTab
-                active={issueFilter === value}
+                variant="chip"
                 href={getAdminHref({
                   analyticsRange: selectedAnalyticsRange,
                   statusFilter,
                   confidenceFilter,
-                  organizationFilter,
-                  issueFilter: value,
-                })}
-                key={value}
-              >
-                {toIssueFilterLabel(value)}
-              </AdminTab>
-            ))}
-          </div>
-        </div>
-
-        <div className="admin-filter-row admin-org-filter-row" aria-label="단체 필터">
-          <span className="admin-filter-label">단체</span>
-          <div className="admin-org-tabs">
-            <AdminTab
-              href={getAdminHref({
-                analyticsRange: selectedAnalyticsRange,
-                statusFilter,
-                confidenceFilter,
-                issueFilter,
-              })}
-              active={!organizationFilter}
-            >
-              전체 단체
-            </AdminTab>
-            {organizationSummaries.map((summary) => (
-              <AdminTab
-                active={organizationFilter === summary.organizationId}
-                href={getAdminHref({
-                  analyticsRange: selectedAnalyticsRange,
-                  statusFilter,
-                  confidenceFilter,
                   issueFilter,
-                  organizationFilter: summary.organizationId,
                 })}
-                key={summary.organizationId}
+                active={!organizationFilter}
               >
-                {summary.organizationName} {summary.needsReviewCount}/{summary.totalCount}
+                전체 단체
               </AdminTab>
-            ))}
-          </div>
-        </div>
+              {organizationSummaries.map((summary) => (
+                <AdminTab
+                  variant="chip"
+                  active={organizationFilter === summary.organizationId}
+                  href={getAdminHref({
+                    analyticsRange: selectedAnalyticsRange,
+                    statusFilter,
+                    confidenceFilter,
+                    issueFilter,
+                    organizationFilter: summary.organizationId,
+                  })}
+                  key={summary.organizationId}
+                >
+                  {summary.organizationName} {summary.needsReviewCount}/{summary.totalCount}
+                </AdminTab>
+              ))}
+            </div>
 
-        <div className="admin-review-layout">
-          <div className="admin-queue">
-            {queueGroups.map((group) => (
-              <section className="admin-org-group" key={group.organizationId}>
-                <div className="admin-org-head">
-                  <div>
-                    <strong>{group.organizationName}</strong>
-                    <span>
-                      {group.items.length}개 · 검수 {group.needsReviewCount} · 승인 {group.approvedCount}
-                    </span>
-                  </div>
-                  <ProgressBar
-                    current={group.approvedCount}
-                    total={group.items.length}
-                  />
-                </div>
-                {group.items.map((competition) => {
-                  const fieldProblems = getMissingFields(competition);
-                  const isSelected = selectedCompetition?.id === competition.id;
-
-                  return (
-                    <Link
-                      className={`admin-queue-item ${isSelected ? "is-active" : ""}`}
-                      href={getAdminHref({
-                        analyticsRange: selectedAnalyticsRange,
-                        statusFilter,
-                        confidenceFilter,
-                        organizationFilter,
-                        issueFilter,
-                        id: competition.id,
-                      })}
-                      key={competition.id}
-                    >
-                      <span className="admin-queue-title">{competition.title}</span>
-                      <span className="admin-queue-meta">
-                        {competition.dateStartsOn ? formatKoreaDate(competition.dateStartsOn) : "날짜 없음"} · {competition.venue ?? competition.locationRawText ?? "장소 없음"}
-                      </span>
-                      <span className="admin-queue-badges">
-                        <ReviewBadge value={competition.reviewStatus} />
-                        <ConfidenceBadge value={competition.confidence} />
-                        {fieldProblems.length > 0 && <span className="admin-badge warn">{fieldProblems.length}개 확인</span>}
-                      </span>
-                    </Link>
-                  );
-                })}
-              </section>
-            ))}
-          </div>
-
-          <div className="admin-editor">
-            {selectedCompetition ? (
-              <form action={updateCompetitionReview} className="admin-review-form">
-                <input name="id" type="hidden" value={selectedCompetition.id} />
-                <input name="redirectTo" type="hidden" value={getAdminHref({
-                  analyticsRange: selectedAnalyticsRange,
-                  statusFilter,
-                  confidenceFilter,
-                  organizationFilter,
-                  issueFilter,
-                  id: selectedCompetition.id,
-                })} />
-                <input name="nextRedirectTo" type="hidden" value={nextCompetitionHref} />
-
-                <div className="admin-editor-head">
-                  <div>
-                    <p className="eyebrow">{selectedCompetition.organizationName}</p>
-                    <h3>{selectedCompetition.title}</h3>
-                  </div>
-                  <div className="admin-editor-actions">
-                    <button className="cta-btn" name="intent" type="submit" value="save">
-                      저장
-                    </button>
-                    <button className="cta-btn" name="intent" type="submit" value="approve-next">
-                      승인 후 다음
-                    </button>
-                    <button className="cta-btn accent" name="intent" type="submit" value="approve">
-                      승인
-                    </button>
-                  </div>
-                </div>
-
-                <div className="admin-source-strip">
-                  <a href={selectedCompetition.sourceUrl} rel="noreferrer" target="_blank">
-                    목록 원본
-                  </a>
-                  {selectedCompetition.detailUrl && (
-                    <a href={selectedCompetition.detailUrl} rel="noreferrer" target="_blank">
-                      상세 원본
-                    </a>
-                  )}
-                  {selectedCompetition.registrationUrl && (
-                    <a href={selectedCompetition.registrationUrl} rel="noreferrer" target="_blank">
-                      접수 URL
-                    </a>
-                  )}
-                </div>
-
-                {(missingFields.length > 0 || qualityIssues.length > 0) && (
-                  <div className="admin-review-alerts">
-                    {missingFields.map((field) => (
-                      <span className="admin-badge warn" key={field}>{field}</span>
-                    ))}
-                    {qualityIssues.map((issue, index) => (
-                      <span className="admin-badge subtle" key={`${issue.field}-${index}`}>
-                        {issue.field}: {issue.message}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                {selectedHealth && (
-                  <section className="admin-check-panel" aria-label="검수 체크리스트">
-                    <div className="admin-check-head">
+            <div className="ac-review">
+              <div className="ac-queue">
+                {queueGroups.map((group) => (
+                  <section className="ac-org" key={group.organizationId}>
+                    <div className="ac-org-head">
                       <div>
-                        <p className="eyebrow">Checklist</p>
-                        <strong>{selectedHealth.readyCount}/{selectedHealth.items.length} 핵심 항목 확인</strong>
+                        <span className="ac-org-name">{group.organizationName}</span>
+                        <span className="ac-org-meta">
+                          {group.items.length}개 · 검수 {group.needsReviewCount} · 승인 {group.approvedCount}
+                        </span>
                       </div>
-                      <ProgressBar
-                        current={selectedHealth.readyCount}
-                        total={selectedHealth.items.length}
-                      />
+                      <ProgressBar current={group.approvedCount} total={group.items.length} />
                     </div>
-                    <div className="admin-check-grid">
-                      {selectedHealth.items.map((item) => (
-                        <div className={`admin-check-card ${item.ok ? "is-ok" : "needs-work"}`} key={item.label}>
-                          <span>{item.label}</span>
-                          <strong>{item.value}</strong>
-                          <small>{item.ok ? "확인됨" : item.reason}</small>
-                        </div>
-                      ))}
-                    </div>
+                    {group.items.map((competition) => {
+                      const fieldProblems = getMissingFields(competition);
+                      const isSelected = selectedCompetition?.id === competition.id;
+
+                      return (
+                        <Link
+                          className={`ac-queue-item ${isSelected ? "is-active" : ""}`}
+                          href={getAdminHref({
+                            analyticsRange: selectedAnalyticsRange,
+                            statusFilter,
+                            confidenceFilter,
+                            organizationFilter,
+                            issueFilter,
+                            id: competition.id,
+                          })}
+                          key={competition.id}
+                        >
+                          <span className="ac-queue-title">{competition.title}</span>
+                          <span className="ac-queue-meta">
+                            {competition.dateStartsOn ? formatKoreaDate(competition.dateStartsOn) : "날짜 없음"} · {competition.venue ?? competition.locationRawText ?? "장소 없음"}
+                          </span>
+                          <span className="ac-badges">
+                            <ReviewBadge value={competition.reviewStatus} />
+                            <ConfidenceBadge value={competition.confidence} />
+                            {fieldProblems.length > 0 && <span className="ac-badge warn">{fieldProblems.length}개 확인</span>}
+                          </span>
+                        </Link>
+                      );
+                    })}
                   </section>
+                ))}
+              </div>
+
+              <div className="ac-editor">
+                {selectedCompetition ? (
+                  <form action={updateCompetitionReview} className="ac-editor-form">
+                    <input name="id" type="hidden" value={selectedCompetition.id} />
+                    <input name="redirectTo" type="hidden" value={getAdminHref({
+                      analyticsRange: selectedAnalyticsRange,
+                      statusFilter,
+                      confidenceFilter,
+                      organizationFilter,
+                      issueFilter,
+                      id: selectedCompetition.id,
+                    })} />
+                    <input name="nextRedirectTo" type="hidden" value={nextCompetitionHref} />
+
+                    <div className="ac-editor-head">
+                      <div className="ac-editor-id">
+                        <span className="ac-flabel">{selectedCompetition.organizationName}</span>
+                        <span className="ac-editor-title">{selectedCompetition.title}</span>
+                      </div>
+                      <div className="ac-actions">
+                        <button className="ac-btn" name="intent" type="submit" value="save">
+                          저장
+                        </button>
+                        <button className="ac-btn" name="intent" type="submit" value="approve-next">
+                          승인 후 다음
+                        </button>
+                        <button className="ac-btn primary" name="intent" type="submit" value="approve">
+                          승인
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="ac-source">
+                      <a href={selectedCompetition.sourceUrl} rel="noreferrer" target="_blank">
+                        목록 원본
+                      </a>
+                      {selectedCompetition.detailUrl && (
+                        <a href={selectedCompetition.detailUrl} rel="noreferrer" target="_blank">
+                          상세 원본
+                        </a>
+                      )}
+                      {selectedCompetition.registrationUrl && (
+                        <a href={selectedCompetition.registrationUrl} rel="noreferrer" target="_blank">
+                          접수 URL
+                        </a>
+                      )}
+                    </div>
+
+                    {(missingFields.length > 0 || qualityIssues.length > 0) && (
+                      <div className="ac-alerts">
+                        {missingFields.map((field) => (
+                          <span className="ac-badge warn" key={field}>{field}</span>
+                        ))}
+                        {qualityIssues.map((issue, index) => (
+                          <span className="ac-badge subtle" key={`${issue.field}-${index}`}>
+                            {issue.field}: {issue.message}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    {selectedHealth && (
+                      <section className="ac-check" aria-label="검수 체크리스트">
+                        <div className="ac-check-head">
+                          <div>
+                            <span className="ac-cap">Check</span>
+                            <strong>{selectedHealth.readyCount}/{selectedHealth.items.length} 핵심 항목 확인</strong>
+                          </div>
+                          <ProgressBar
+                            current={selectedHealth.readyCount}
+                            total={selectedHealth.items.length}
+                          />
+                        </div>
+                        <div className="ac-check-grid">
+                          {selectedHealth.items.map((item) => (
+                            <div className={`ac-check-card ${item.ok ? "is-ok" : "needs-work"}`} key={item.label}>
+                              <span>{item.label}</span>
+                              <strong>{item.value}</strong>
+                              <small>{item.ok ? "확인됨" : item.reason}</small>
+                            </div>
+                          ))}
+                        </div>
+                      </section>
+                    )}
+
+                    <div className="ac-fields">
+                      <label className="span-4">
+                        <span>대회명</span>
+                        <input name="title" defaultValue={selectedCompetition.title} />
+                      </label>
+                      <label>
+                        <span>개최일</span>
+                        <input name="dateStartsOn" type="date" defaultValue={formatInputDate(selectedCompetition.dateStartsOn)} />
+                      </label>
+                      <label>
+                        <span>종료일</span>
+                        <input name="dateEndsOn" type="date" defaultValue={formatInputDate(selectedCompetition.dateEndsOn)} />
+                      </label>
+                      <label>
+                        <span>날짜 신뢰도</span>
+                        <select name="dateConfidence" defaultValue={selectedCompetition.dateConfidence}>
+                          {CONFIDENCE_LEVELS.map((value) => <option key={value} value={value}>{toConfidenceLabel(value)}</option>)}
+                        </select>
+                      </label>
+                      <label>
+                        <span>전체 신뢰도</span>
+                        <select name="confidence" defaultValue={selectedCompetition.confidence}>
+                          {CONFIDENCE_LEVELS.map((value) => <option key={value} value={value}>{toConfidenceLabel(value)}</option>)}
+                        </select>
+                      </label>
+                      <label className="span-2">
+                        <span>원문 날짜</span>
+                        <input name="dateRawText" defaultValue={selectedCompetition.dateRawText ?? ""} />
+                      </label>
+                      <label>
+                        <span>지역</span>
+                        <input name="region" defaultValue={selectedCompetition.region ?? ""} />
+                      </label>
+                      <label>
+                        <span>도시</span>
+                        <input name="city" defaultValue={selectedCompetition.city ?? ""} />
+                      </label>
+                      <label className="span-2">
+                        <span>장소</span>
+                        <input name="venue" defaultValue={selectedCompetition.venue ?? ""} />
+                      </label>
+                      <label className="span-2">
+                        <span>장소 원문</span>
+                        <input name="locationRawText" defaultValue={selectedCompetition.locationRawText ?? ""} />
+                      </label>
+                      <label>
+                        <span>장소 신뢰도</span>
+                        <select name="locationConfidence" defaultValue={selectedCompetition.locationConfidence}>
+                          {CONFIDENCE_LEVELS.map((value) => <option key={value} value={value}>{toConfidenceLabel(value)}</option>)}
+                        </select>
+                      </label>
+                      <label>
+                        <span>접수 상태</span>
+                        <select name="registrationStatus" defaultValue={selectedCompetition.registrationStatus}>
+                          {REGISTRATION_STATUSES.map((value) => <option key={value} value={value}>{toRegistrationLabel(value)}</option>)}
+                        </select>
+                      </label>
+                      <label>
+                        <span>접수 마감</span>
+                        <input name="registrationClosesAt" type="date" defaultValue={formatInputDate(selectedCompetition.registrationClosesAt)} />
+                      </label>
+                      <label>
+                        <span>접수 신뢰도</span>
+                        <select name="registrationConfidence" defaultValue={selectedCompetition.registrationConfidence}>
+                          {CONFIDENCE_LEVELS.map((value) => <option key={value} value={value}>{toConfidenceLabel(value)}</option>)}
+                        </select>
+                      </label>
+                      <label>
+                        <span>참가비</span>
+                        <input inputMode="numeric" name="feeMinAmount" defaultValue={selectedCompetition.feeMinAmount ?? ""} />
+                      </label>
+                      <label className="span-2">
+                        <span>접수 URL</span>
+                        <input name="registrationUrl" defaultValue={selectedCompetition.registrationUrl ?? ""} />
+                      </label>
+                      <label>
+                        <span>검수 상태</span>
+                        <select name="reviewStatus" defaultValue={selectedCompetition.reviewStatus}>
+                          {REVIEW_STATUSES.map((value) => <option key={value} value={value}>{toReviewLabel(value)}</option>)}
+                        </select>
+                      </label>
+                      <label>
+                        <span>종목 수</span>
+                        <input readOnly value={`${divisions.length}개`} />
+                      </label>
+                      <label className="span-3">
+                        <span>검수 메모</span>
+                        <textarea name="notes" defaultValue={selectedCompetition.notes ?? ""} rows={3} />
+                      </label>
+                    </div>
+
+                    <details className="ac-raw">
+                      <summary>원본 파싱 값 보기</summary>
+                      <dl>
+                        <dt>Parser</dt>
+                        <dd>{selectedCompetition.parserName ?? "-"}</dd>
+                        <dt>Raw title</dt>
+                        <dd>{selectedCompetition.rawTitle ?? "-"}</dd>
+                        <dt>Raw date</dt>
+                        <dd>{selectedCompetition.rawDateText ?? "-"}</dd>
+                        <dt>Raw location</dt>
+                        <dd>{selectedCompetition.rawLocationText ?? "-"}</dd>
+                        <dt>Raw registration</dt>
+                        <dd>{selectedCompetition.rawRegistrationText ?? "-"}</dd>
+                      </dl>
+                    </details>
+                  </form>
+                ) : (
+                  <div className="ac-empty">검수할 대회 일정이 없습니다.</div>
                 )}
+              </div>
+            </div>
+          </>
+        )}
 
-                <div className="admin-form-grid">
-                  <label className="span-2">
-                    <span>대회명</span>
-                    <input name="title" defaultValue={selectedCompetition.title} />
-                  </label>
-                  <label>
-                    <span>개최일</span>
-                    <input name="dateStartsOn" type="date" defaultValue={formatInputDate(selectedCompetition.dateStartsOn)} />
-                  </label>
-                  <label>
-                    <span>종료일</span>
-                    <input name="dateEndsOn" type="date" defaultValue={formatInputDate(selectedCompetition.dateEndsOn)} />
-                  </label>
-                  <label>
-                    <span>날짜 신뢰도</span>
-                    <select name="dateConfidence" defaultValue={selectedCompetition.dateConfidence}>
-                      {CONFIDENCE_LEVELS.map((value) => <option key={value} value={value}>{toConfidenceLabel(value)}</option>)}
-                    </select>
-                  </label>
-                  <label>
-                    <span>전체 신뢰도</span>
-                    <select name="confidence" defaultValue={selectedCompetition.confidence}>
-                      {CONFIDENCE_LEVELS.map((value) => <option key={value} value={value}>{toConfidenceLabel(value)}</option>)}
-                    </select>
-                  </label>
-                  <label className="span-2">
-                    <span>원문 날짜</span>
-                    <input name="dateRawText" defaultValue={selectedCompetition.dateRawText ?? ""} />
-                  </label>
-                  <label>
-                    <span>지역</span>
-                    <input name="region" defaultValue={selectedCompetition.region ?? ""} />
-                  </label>
-                  <label>
-                    <span>도시</span>
-                    <input name="city" defaultValue={selectedCompetition.city ?? ""} />
-                  </label>
-                  <label className="span-2">
-                    <span>장소</span>
-                    <input name="venue" defaultValue={selectedCompetition.venue ?? ""} />
-                  </label>
-                  <label className="span-2">
-                    <span>장소 원문</span>
-                    <input name="locationRawText" defaultValue={selectedCompetition.locationRawText ?? ""} />
-                  </label>
-                  <label>
-                    <span>장소 신뢰도</span>
-                    <select name="locationConfidence" defaultValue={selectedCompetition.locationConfidence}>
-                      {CONFIDENCE_LEVELS.map((value) => <option key={value} value={value}>{toConfidenceLabel(value)}</option>)}
-                    </select>
-                  </label>
-                  <label>
-                    <span>접수 상태</span>
-                    <select name="registrationStatus" defaultValue={selectedCompetition.registrationStatus}>
-                      {REGISTRATION_STATUSES.map((value) => <option key={value} value={value}>{toRegistrationLabel(value)}</option>)}
-                    </select>
-                  </label>
-                  <label>
-                    <span>접수 마감</span>
-                    <input name="registrationClosesAt" type="date" defaultValue={formatInputDate(selectedCompetition.registrationClosesAt)} />
-                  </label>
-                  <label>
-                    <span>접수 신뢰도</span>
-                    <select name="registrationConfidence" defaultValue={selectedCompetition.registrationConfidence}>
-                      {CONFIDENCE_LEVELS.map((value) => <option key={value} value={value}>{toConfidenceLabel(value)}</option>)}
-                    </select>
-                  </label>
-                  <label>
-                    <span>참가비</span>
-                    <input inputMode="numeric" name="feeMinAmount" defaultValue={selectedCompetition.feeMinAmount ?? ""} />
-                  </label>
-                  <label className="span-2">
-                    <span>접수 URL</span>
-                    <input name="registrationUrl" defaultValue={selectedCompetition.registrationUrl ?? ""} />
-                  </label>
-                  <label>
-                    <span>검수 상태</span>
-                    <select name="reviewStatus" defaultValue={selectedCompetition.reviewStatus}>
-                      {REVIEW_STATUSES.map((value) => <option key={value} value={value}>{toReviewLabel(value)}</option>)}
-                    </select>
-                  </label>
-                  <label>
-                    <span>종목 수</span>
-                    <input readOnly value={`${divisions.length}개`} />
-                  </label>
-                  <label className="span-2">
-                    <span>검수 메모</span>
-                    <textarea name="notes" defaultValue={selectedCompetition.notes ?? ""} rows={4} />
-                  </label>
-                </div>
+        {activeSection === "contact" && (
+          <section aria-labelledby="ac-contact-title">
+            <div className="ac-list-head">
+              <span className="ac-cap" id="ac-contact-title">Inquiries</span>
+              <span className="ac-badge warn">신규 {newContactCount}</span>
+            </div>
 
-                <details className="admin-raw-panel">
-                  <summary>원본 파싱 값 보기</summary>
-                  <dl>
-                    <dt>Parser</dt>
-                    <dd>{selectedCompetition.parserName ?? "-"}</dd>
-                    <dt>Raw title</dt>
-                    <dd>{selectedCompetition.rawTitle ?? "-"}</dd>
-                    <dt>Raw date</dt>
-                    <dd>{selectedCompetition.rawDateText ?? "-"}</dd>
-                    <dt>Raw location</dt>
-                    <dd>{selectedCompetition.rawLocationText ?? "-"}</dd>
-                    <dt>Raw registration</dt>
-                    <dd>{selectedCompetition.rawRegistrationText ?? "-"}</dd>
-                  </dl>
-                </details>
-              </form>
+            {contactInquiries.length > 0 ? (
+              <div className="ac-contact-list">
+                {contactInquiries.map((inquiry) => (
+                  <ContactInquiryCard inquiry={inquiry} key={inquiry.id} />
+                ))}
+              </div>
             ) : (
-              <div className="admin-empty">검수할 대회 일정이 없습니다.</div>
+              <div className="ac-empty">접수된 문의가 없습니다.</div>
             )}
-          </div>
-        </div>
-      </section>
+          </section>
+        )}
+      </main>
+    </>
+  );
+}
+
+function AdminNavItem({
+  href,
+  active,
+  count,
+  children,
+}: {
+  href: string;
+  active: boolean;
+  count?: number;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link className={`ac-nav-item ${active ? "is-active" : ""}`} href={href}>
+      {children}
+      {typeof count === "number" && count > 0 && (
+        <span className="ac-nav-count">{count}</span>
       )}
-    </main>
+    </Link>
   );
 }
 
@@ -682,60 +712,40 @@ function AdminTab({
   href,
   active,
   children,
+  variant = "seg",
 }: {
   href: string;
   active: boolean;
   children: React.ReactNode;
+  variant?: "seg" | "chip";
 }) {
+  const className = variant === "chip" ? "ac-chip" : "ac-seg-item";
+
   return (
-    <Link className={`admin-tab ${active ? "is-active" : ""}`} href={href}>
+    <Link className={`${className} ${active ? "is-active" : ""}`} href={href}>
       {children}
     </Link>
   );
 }
 
-function AnalyticsDashboardSection({
-  analytics,
-  range,
-}: {
-  analytics: AnalyticsSummary;
-  range: AnalyticsRange;
-}) {
+function AnalyticsDashboardSection({ analytics }: { analytics: AnalyticsSummary }) {
   return (
-    <section className="admin-section" aria-labelledby="admin-analytics-title">
-      <div className="admin-section-head">
-        <div>
-          <p className="eyebrow">Analytics</p>
-          <h2 id="admin-analytics-title">이용 분석</h2>
-        </div>
-        <div className="admin-tabs" aria-label="분석 기간">
-          {ANALYTICS_RANGES.map((value) => (
-            <AdminTab
-              active={range === value}
-              href={getAdminAnalyticsHref(value)}
-              key={value}
-            >
-              {toAnalyticsRangeLabel(value)}
-            </AdminTab>
-          ))}
-        </div>
-      </div>
-
-      <div className="admin-analytics-note">
+    <section aria-label="이용 분석">
+      <p className="ac-note">
         {formatKoreaDateTime(analytics.start)}부터 {formatKoreaDateTime(analytics.end)}까지 ·
         기본 이용 분석은 봇/크롤러를 제외합니다 · 활성 사용자는 최근 2분 기준 · 원문 IP와
         전체 User-Agent는 화면에 표시하지 않습니다.
-      </div>
+      </p>
       {analytics.unavailableMessage && (
-        <div className="admin-empty">{analytics.unavailableMessage}</div>
+        <div className="ac-empty">{analytics.unavailableMessage}</div>
       )}
 
-      <AnalyticsBlock eyebrow="Revenue" title="광고 리드">
+      <AnalyticsBlock tag="Revenue" title="광고 리드">
         <AnalyticsMetricGrid
           ariaLabel="광고 리드 핵심 지표"
           metrics={analytics.leadMetrics}
         />
-        <div className="admin-analytics-grid">
+        <div className="ac-tables">
           <AnalyticsTable
             emptyLabel="문의 데이터가 없습니다."
             rows={analytics.leadFunnelRows}
@@ -754,31 +764,33 @@ function AnalyticsDashboardSection({
         </div>
       </AnalyticsBlock>
 
-      <AnalyticsMetricGrid
-        ariaLabel="이용 분석 핵심 지표"
-        metrics={analytics.overviewMetrics}
-      />
+      <AnalyticsBlock tag="Overview" title="이용 개요">
+        <AnalyticsMetricGrid
+          ariaLabel="이용 분석 핵심 지표"
+          metrics={analytics.overviewMetrics}
+        />
+      </AnalyticsBlock>
 
-      <AnalyticsBlock eyebrow="Funnel" title="대회 탐색 퍼널">
-        <div className="admin-analytics-grid">
+      <AnalyticsBlock tag="Funnel" title="대회 탐색 퍼널">
+        <AnalyticsMetricGrid
+          ariaLabel="전환·의도 지표"
+          metrics={analytics.conversionMetrics}
+        />
+        <div className="ac-tables">
           <AnalyticsTable
             emptyLabel="대회 탐색 퍼널 데이터가 없습니다."
             rows={analytics.funnelRows}
             title="목록에서 접수까지"
           />
-          <AnalyticsMetricGrid
-            ariaLabel="전환·의도 지표"
-            metrics={analytics.conversionMetrics}
-          />
         </div>
       </AnalyticsBlock>
 
-      <AnalyticsBlock eyebrow="Search" title="검색 품질">
+      <AnalyticsBlock tag="Search" title="검색 품질">
         <AnalyticsMetricGrid
           ariaLabel="검색 품질 지표"
           metrics={analytics.searchQualityMetrics}
         />
-        <div className="admin-analytics-grid">
+        <div className="ac-tables">
           <AnalyticsTable
             emptyLabel="검색어 데이터가 없습니다."
             rows={analytics.topSearches}
@@ -792,8 +804,8 @@ function AnalyticsDashboardSection({
         </div>
       </AnalyticsBlock>
 
-      <AnalyticsBlock eyebrow="Demand" title="콘텐츠 수요">
-        <div className="admin-analytics-grid">
+      <AnalyticsBlock tag="Demand" title="콘텐츠 수요">
+        <div className="ac-tables">
           <AnalyticsTable
             emptyLabel="대회 상세 조회 데이터가 없습니다."
             rows={analytics.topCompetitions}
@@ -827,8 +839,8 @@ function AnalyticsDashboardSection({
         </div>
       </AnalyticsBlock>
 
-      <AnalyticsBlock eyebrow="Traffic" title="유입·환경">
-        <div className="admin-analytics-grid">
+      <AnalyticsBlock tag="Traffic" title="유입·환경">
+        <div className="ac-tables">
           <AnalyticsTable
             emptyLabel="방문자 유형 데이터가 없습니다."
             rows={analytics.visitorRows}
@@ -862,18 +874,12 @@ function AnalyticsDashboardSection({
         </div>
       </AnalyticsBlock>
 
-      <section className="admin-analytics-bots" aria-label="봇/크롤러 접근">
-        <div className="admin-section-head compact">
-          <div>
-            <p className="eyebrow">Crawler</p>
-            <h3>봇/크롤러 접근</h3>
-          </div>
-        </div>
+      <AnalyticsBlock tag="Crawler" title="봇/크롤러 접근">
         <AnalyticsMetricGrid
           ariaLabel="봇/크롤러 요약"
           metrics={analytics.botMetrics}
         />
-        <div className="admin-analytics-grid">
+        <div className="ac-tables">
           <AnalyticsTable
             emptyLabel="봇/크롤러 데이터가 없습니다."
             rows={analytics.botRows}
@@ -885,27 +891,25 @@ function AnalyticsDashboardSection({
             title="봇 상위 페이지"
           />
         </div>
-      </section>
+      </AnalyticsBlock>
     </section>
   );
 }
 
 function AnalyticsBlock({
   children,
-  eyebrow,
+  tag,
   title,
 }: {
   children: React.ReactNode;
-  eyebrow: string;
+  tag: string;
   title: string;
 }) {
   return (
-    <section className="admin-analytics-block">
-      <div className="admin-section-head compact">
-        <div>
-          <p className="eyebrow">{eyebrow}</p>
-          <h3>{title}</h3>
-        </div>
+    <section className="ac-block">
+      <div className="ac-block-head">
+        <span className="ac-tag">{tag}</span>
+        <span className="ac-title">{title}</span>
       </div>
       {children}
     </section>
@@ -920,13 +924,13 @@ function AnalyticsMetricGrid({
   metrics: AnalyticsMetric[];
 }) {
   return (
-    <section className="admin-metrics admin-analytics-metrics" aria-label={ariaLabel}>
+    <section className="ac-kpis" aria-label={ariaLabel}>
       {metrics.map((metric) => (
-        <div key={metric.key}>
-          <span className="admin-metric-value">{formatAnalyticsMetricValue(metric)}</span>
-          <span className="admin-metric-copy">
-            <span className="admin-metric-label">{metric.label}</span>
-            {metric.meta && <span className="admin-metric-meta">{metric.meta}</span>}
+        <div className="ac-kpi" key={metric.key}>
+          <span className="ac-kpi-value">{formatAnalyticsMetricValue(metric)}</span>
+          <span className="ac-kpi-copy">
+            <span className="ac-kpi-label">{metric.label}</span>
+            {metric.meta && <span className="ac-kpi-meta">{metric.meta}</span>}
           </span>
         </div>
       ))}
@@ -944,25 +948,25 @@ function AnalyticsTable({
   title: string;
 }) {
   return (
-    <section className="admin-analytics-card">
-      <div className="admin-analytics-card-head">
-        <h3>{title}</h3>
-        <span className="admin-badge subtle">Top {rows.length}</span>
+    <section className="ac-table">
+      <div className="ac-table-head">
+        <span className="ac-title">{title}</span>
+        <span className="ac-table-top">[{rows.length}]</span>
       </div>
       {rows.length > 0 ? (
-        <ol className="admin-analytics-list">
+        <ol className="ac-list">
           {rows.map((row) => (
             <li key={row.key}>
-              <span>
+              <span className="ac-list-cell">
                 <strong>{row.label}</strong>
                 {row.meta && <small>{row.meta}</small>}
               </span>
-              <b className="mono">{formatNumber(row.count)}</b>
+              <b className="ac-list-count">{formatNumber(row.count)}</b>
             </li>
           ))}
         </ol>
       ) : (
-        <div className="admin-empty">{emptyLabel}</div>
+        <div className="ac-empty">{emptyLabel}</div>
       )}
     </section>
   );
@@ -978,25 +982,25 @@ function ContactInquiryCard({
   inquiry: ContactInquiryWithAttachments;
 }) {
   return (
-    <article className="admin-contact-item">
-      <div className="admin-contact-main">
-        <div className="admin-contact-head">
-          <span className="admin-badge subtle">{inquiry.category}</span>
-          <span className="admin-contact-date">
+    <article className="ac-contact">
+      <div className="ac-contact-main">
+        <div className="ac-contact-head">
+          <span className="ac-badge subtle">{inquiry.category}</span>
+          <span className="ac-contact-date">
             {formatKoreaDateTime(inquiry.createdAt)}
           </span>
+          <span className="ac-contact-name">{inquiry.name}</span>
+          <a className="ac-contact-email" href={`mailto:${inquiry.email}`}>{inquiry.email}</a>
         </div>
-        <h3>{inquiry.name}</h3>
-        <a href={`mailto:${inquiry.email}`}>{inquiry.email}</a>
-        <p>{inquiry.message}</p>
+        <p className="ac-contact-msg">{inquiry.message}</p>
       </div>
 
-      <div className="admin-contact-side">
-        <span className={`admin-badge review-${inquiry.status}`}>
+      <div className="ac-contact-side">
+        <span className={`ac-badge review-${inquiry.status}`}>
           {toContactStatusLabel(inquiry.status)}
         </span>
         {inquiry.attachments.length > 0 ? (
-          <ul className="admin-contact-attachments">
+          <ul className="ac-attach">
             {inquiry.attachments.map((attachment) => (
               <li key={attachment.id}>
                 <a href={`/api/contact/attachments/${attachment.id}`}>
@@ -1007,7 +1011,7 @@ function ContactInquiryCard({
             ))}
           </ul>
         ) : (
-          <span className="admin-contact-empty">첨부 없음</span>
+          <span className="ac-contact-empty">첨부 없음</span>
         )}
       </div>
     </article>
@@ -1015,18 +1019,18 @@ function ContactInquiryCard({
 }
 
 function ReviewBadge({ value }: { value: string }) {
-  return <span className={`admin-badge review-${value}`}>{toReviewLabel(value)}</span>;
+  return <span className={`ac-badge review-${value}`}>{toReviewLabel(value)}</span>;
 }
 
 function ConfidenceBadge({ value }: { value: string }) {
-  return <span className={`admin-badge confidence-${value}`}>{toConfidenceLabel(value)}</span>;
+  return <span className={`ac-badge confidence-${value}`}>{toConfidenceLabel(value)}</span>;
 }
 
 function ProgressBar({ current, total }: { current: number; total: number }) {
   const percent = total > 0 ? Math.round((current / total) * 100) : 0;
 
   return (
-    <span className="admin-progress" aria-label={`${percent}% 완료`}>
+    <span className="ac-progress" aria-label={`${percent}% 완료`}>
       <span style={{ width: `${percent}%` }} />
     </span>
   );
@@ -1371,6 +1375,12 @@ function toConfidenceLabel(value: string) {
   return "신뢰도 낮음";
 }
 
+function toConfidenceShort(value: string) {
+  if (value === "high") return "높음";
+  if (value === "medium") return "보통";
+  return "낮음";
+}
+
 function toRegistrationLabel(value: string) {
   if (value === "scheduled") return "접수 예정";
   if (value === "open") return "접수 중";
@@ -1390,24 +1400,8 @@ function toIssueFilterLabel(value: string) {
 
 function toAnalyticsRangeLabel(value: AnalyticsRange) {
   if (value === "today") return "오늘";
-  if (value === "30d") return "최근 30일";
-  return "최근 7일";
-}
-
-function toAdminSectionTitle(value: AdminSection) {
-  if (value === "analytics") return "분석";
-  if (value === "contact") return "문의";
-  return "데이터 검수";
-}
-
-function toAdminSectionDescription(value: AdminSection) {
-  if (value === "analytics") {
-    return "방문, 유입, 대회 조회와 주요 행동 이벤트를 확인하세요.";
-  }
-  if (value === "contact") {
-    return "사용자가 제출한 문의와 첨부파일을 확인하세요.";
-  }
-  return "원본 링크를 확인하면서 날짜, 장소, 접수 정보와 신뢰도를 보정하세요.";
+  if (value === "30d") return "30일";
+  return "7일";
 }
 
 function toContactStatusLabel(value: string) {
