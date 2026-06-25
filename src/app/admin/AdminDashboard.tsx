@@ -799,10 +799,6 @@ function AnalyticsDashboardSection({
       {competitionFunnel && (
         <CompetitionFunnelPanel backHref={clearCompHref} funnel={competitionFunnel} />
       )}
-      <p className="ac-note">
-        {formatKoreaDateTime(analytics.start)}부터 {formatKoreaDateTime(analytics.end)}까지 ·
-        활성 사용자는 최근 2분 기준 · 원문 IP와 전체 User-Agent는 화면에 표시하지 않습니다.
-      </p>
       {analytics.unavailableMessage && (
         <div className="ac-empty">{analytics.unavailableMessage}</div>
       )}
