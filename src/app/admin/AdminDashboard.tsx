@@ -26,6 +26,10 @@ export type AdminPageProps = {
     org?: string;
     issue?: string;
     analyticsRange?: string;
+    from?: string;
+    to?: string;
+    seg?: string;
+    comp?: string;
   }>;
 };
 
@@ -33,7 +37,7 @@ const REVIEW_STATUSES = ["needs-review", "approved", "rejected", "pending"] as c
 const CONFIDENCE_LEVELS = ["high", "medium", "low"] as const;
 const REGISTRATION_STATUSES = ["unknown", "scheduled", "open", "closing-soon", "closed", "cancelled"] as const;
 const ISSUE_FILTERS = ["date", "location", "registration", "low-confidence"] as const;
-const ANALYTICS_RANGES = ["today", "7d", "30d"] as const;
+const ANALYTICS_RANGES = ["today", "7d", "30d", "custom"] as const;
 type AnalyticsRange = (typeof ANALYTICS_RANGES)[number];
 
 function getErrorMessage(error?: string) {
@@ -94,6 +98,8 @@ async function AdminDashboard({
   organizationFilter,
   issueFilter,
   analyticsRange,
+  analyticsFrom,
+  analyticsTo,
 }: {
   activeSection: AdminSection;
   selectedId?: string;
@@ -102,10 +108,12 @@ async function AdminDashboard({
   organizationFilter?: string;
   issueFilter?: string;
   analyticsRange?: string;
+  analyticsFrom?: string;
+  analyticsTo?: string;
 }) {
   const seasonYear = new Date().getFullYear();
   const selectedAnalyticsRange = toAnalyticsRange(analyticsRange);
-  const analyticsWindow = getAnalyticsWindow(selectedAnalyticsRange);
+  const analyticsWindow = getAnalyticsWindow(selectedAnalyticsRange, analyticsFrom, analyticsTo);
   const queueWhere = getQueueWhere(
     seasonYear,
     statusFilter,
@@ -258,7 +266,12 @@ async function AdminDashboard({
 
       <main className="ac-main">
         {activeSection === "analytics" && (
-          <AnalyticsDashboardSection analytics={analyticsSummary} />
+          <AnalyticsDashboardSection
+            analytics={analyticsSummary}
+            from={analyticsFrom}
+            range={selectedAnalyticsRange}
+            to={analyticsTo}
+          />
         )}
 
         {activeSection === "review" && (
@@ -729,9 +742,20 @@ function AdminTab({
   );
 }
 
-function AnalyticsDashboardSection({ analytics }: { analytics: AnalyticsSummary }) {
+function AnalyticsDashboardSection({
+  analytics,
+  range,
+  from,
+  to,
+}: {
+  analytics: AnalyticsSummary;
+  range: AnalyticsRange;
+  from?: string;
+  to?: string;
+}) {
   return (
     <section aria-label="이용 분석">
+      {range === "custom" && <DateRangeForm from={from} to={to} />}
       <p className="ac-note">
         {formatKoreaDateTime(analytics.start)}부터 {formatKoreaDateTime(analytics.end)}까지 ·
         기본 이용 분석은 봇/크롤러를 제외합니다 · 활성 사용자는 최근 2분 기준 · 원문 IP와
@@ -900,6 +924,27 @@ function AnalyticsDashboardSection({ analytics }: { analytics: AnalyticsSummary 
         </div>
       </AnalyticsBlock>
     </section>
+  );
+}
+
+function DateRangeForm({ from, to }: { from?: string; to?: string }) {
+  // 서버 렌더 GET 폼(클라이언트 라우팅 불필요). 제출 시 ?analyticsRange=custom&from&to로
+  // 이동해 서버가 윈도를 다시 계산한다.
+  return (
+    <form action="/admin/analytics" className="ac-daterange" method="get">
+      <input name="analyticsRange" type="hidden" value="custom" />
+      <label>
+        <span>시작</span>
+        <input defaultValue={from ?? ""} max={to} name="from" type="date" />
+      </label>
+      <label>
+        <span>종료</span>
+        <input defaultValue={to ?? ""} min={from} name="to" type="date" />
+      </label>
+      <button className="ac-btn sm" type="submit">
+        적용
+      </button>
+    </form>
   );
 }
 
@@ -1435,11 +1480,15 @@ function getAdminHref({
   return query ? `/admin/review?${query}` : "/admin/review";
 }
 
-function getAdminAnalyticsHref(analyticsRange: AnalyticsRange) {
+function getAdminAnalyticsHref(analyticsRange: AnalyticsRange, from?: string, to?: string) {
   const params = new URLSearchParams();
 
   if (analyticsRange !== "7d") {
     params.set("analyticsRange", analyticsRange);
+  }
+  if (analyticsRange === "custom") {
+    if (isYmd(from)) params.set("from", from);
+    if (isYmd(to)) params.set("to", to);
   }
 
   const query = params.toString();
@@ -1462,13 +1511,35 @@ function toAnalyticsRange(value: string | undefined): AnalyticsRange {
   return isAnalyticsRange(value) ? value : "7d";
 }
 
-function getAnalyticsWindow(range: AnalyticsRange) {
+function getAnalyticsWindow(range: AnalyticsRange, from?: string, to?: string) {
+  if (range === "custom") {
+    const custom = getCustomWindow(from, to);
+    if (custom) return custom;
+  }
   const end = new Date();
   const days = range === "today" ? 1 : range === "30d" ? 30 : 7;
   const todayStart = getKoreaStartOfDay(end);
   const start = new Date(todayStart.getTime() - (days - 1) * 86_400_000);
 
   return { start, end };
+}
+
+function getCustomWindow(from?: string, to?: string) {
+  if (!isYmd(from) || !isYmd(to)) return null;
+  const start = koreaDayStartFromYmd(from);
+  // 종료일은 해당 일자 23:59:59(KST)까지 포함
+  const end = new Date(koreaDayStartFromYmd(to).getTime() + 86_400_000 - 1);
+  if (end <= start) return null;
+  return { start, end };
+}
+
+function isYmd(value?: string): value is string {
+  return typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value);
+}
+
+function koreaDayStartFromYmd(ymd: string) {
+  const [year, month, day] = ymd.split("-").map(Number);
+  return new Date(Date.UTC(year, month - 1, day, -9));
 }
 
 function getKoreaStartOfDay(value: Date) {
@@ -1524,6 +1595,7 @@ function toIssueFilterLabel(value: string) {
 function toAnalyticsRangeLabel(value: AnalyticsRange) {
   if (value === "today") return "오늘";
   if (value === "30d") return "30일";
+  if (value === "custom") return "직접입력";
   return "7일";
 }
 
@@ -1593,10 +1665,8 @@ export async function AdminSectionPage({
   const paramsPromise: NonNullable<AdminPageProps["searchParams"]> =
     searchParams ?? Promise.resolve({});
 
-  const [{ analyticsRange, error, id, status, confidence, org, issue }, isAuthed] = await Promise.all([
-    paramsPromise,
-    hasAdminSession(),
-  ]);
+  const [{ analyticsRange, from, to, error, id, status, confidence, org, issue }, isAuthed] =
+    await Promise.all([paramsPromise, hasAdminSession()]);
 
   if (!isAuthed) {
     return <AdminLogin error={error} />;
@@ -1605,7 +1675,9 @@ export async function AdminSectionPage({
   return (
     <AdminDashboard
       activeSection={activeSection}
+      analyticsFrom={from}
       analyticsRange={analyticsRange}
+      analyticsTo={to}
       confidenceFilter={confidence}
       issueFilter={issue}
       organizationFilter={org}

@@ -682,6 +682,39 @@ dl.ac-kpis .ac-kpi-value {
   font-weight: 700;
 }
 
+/* Custom date range form */
+.ac-daterange {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--ac-line);
+}
+.ac-daterange label {
+  display: grid;
+  gap: 4px;
+}
+.ac-daterange label > span {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ac-ink-3);
+}
+.ac-daterange input {
+  height: 30px;
+  padding: 0 8px;
+  background: var(--ac-bg);
+  color: var(--ac-ink);
+  border: 1px solid var(--ac-line);
+  border-radius: 4px;
+  font-size: 13px;
+  outline: none;
+}
+.ac-daterange input:focus {
+  border-color: var(--ac-accent);
+  box-shadow: 0 0 0 2px var(--ac-accent-soft);
+}
+
 @media (max-width: 640px) {
   .ac-hero-grid {
     grid-template-columns: 1fr;
