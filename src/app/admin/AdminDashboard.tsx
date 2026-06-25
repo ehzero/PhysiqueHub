@@ -801,8 +801,7 @@ function AnalyticsDashboardSection({
       )}
       <p className="ac-note">
         {formatKoreaDateTime(analytics.start)}부터 {formatKoreaDateTime(analytics.end)}까지 ·
-        기본 이용 분석은 봇/크롤러를 제외합니다 · 활성 사용자는 최근 2분 기준 · 원문 IP와
-        전체 User-Agent는 화면에 표시하지 않습니다.
+        활성 사용자는 최근 2분 기준 · 원문 IP와 전체 User-Agent는 화면에 표시하지 않습니다.
       </p>
       {analytics.unavailableMessage && (
         <div className="ac-empty">{analytics.unavailableMessage}</div>
@@ -815,6 +814,13 @@ function AnalyticsDashboardSection({
           ))}
         </div>
       )}
+
+      <AnalyticsBlock tag="Overview" title="이용 개요">
+        <AnalyticsMetricGrid
+          ariaLabel="이용 분석 핵심 지표"
+          metrics={analytics.overviewMetrics}
+        />
+      </AnalyticsBlock>
 
       <AnalyticsBlock tag="Revenue" title="광고 리드">
         <AnalyticsMetricGrid
@@ -839,13 +845,6 @@ function AnalyticsDashboardSection({
             title="대회별 광고 문의"
           />
         </div>
-      </AnalyticsBlock>
-
-      <AnalyticsBlock tag="Overview" title="이용 개요">
-        <AnalyticsMetricGrid
-          ariaLabel="이용 분석 핵심 지표"
-          metrics={analytics.overviewMetrics}
-        />
       </AnalyticsBlock>
 
       <AnalyticsBlock tag="Funnel" title="대회 탐색 퍼널">
