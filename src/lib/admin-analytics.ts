@@ -20,6 +20,11 @@ export type AnalyticsMetric = {
   value: number;
   format: AnalyticsMetricFormat;
   meta?: string;
+  previousValue?: number; // 직전 동일기간 값(비교 기준이 있을 때만)
+  deltaPct?: number | null; // 직전 대비 ±%. null = 직전 0(비교 불가) → UI에서 표시 안 함
+  goodWhen?: "higher" | "lower"; // 델타 색상 의미(낮을수록 좋은 지표 구분)
+  status?: "ok" | "warn"; // 임계값 평가 결과
+  spark?: number[]; // hero KPI 일별 시리즈(오래된→최신)
 };
 
 export type AnalyticsTableRow = {
@@ -43,6 +48,7 @@ export type AnalyticsSummary = {
   end: Date;
   eventRows: AnalyticsTableRow[];
   funnelRows: AnalyticsTableRow[];
+  heroMetrics: AnalyticsMetric[];
   leadCompetitionRows: AnalyticsTableRow[];
   leadFunnelRows: AnalyticsTableRow[];
   leadMetrics: AnalyticsMetric[];
@@ -565,6 +571,16 @@ export async function getAnalyticsSummary(start: Date, end: Date): Promise<Analy
       windowSessionCount,
     };
 
+    // 직전 동일기간(현재 시작점에서 같은 길이만큼 앞)과 hero 일별 시리즈. (start,end)에서
+    // 결정적으로 파생되므로 캐시 키(getAnalyticsSummaryForRange)는 그대로다.
+    const periodMs = end.getTime() - start.getTime();
+    const prevStart = new Date(start.getTime() - periodMs);
+    const prevEnd = new Date(start.getTime());
+    const [prevCounts, heroSeries] = await Promise.all([
+      getWindowCounts(prevStart, prevEnd),
+      getHeroSeries(start, end),
+    ]);
+
     return {
       accessModeRows: [
         {
@@ -611,7 +627,7 @@ export async function getAnalyticsSummary(start: Date, end: Date): Promise<Analy
         meta: row.referrerHost ?? "referrer 없음",
         count: row._count._all,
       })),
-      conversionMetrics: getConversionMetrics(counts),
+      conversionMetrics: withDeltas(getConversionMetrics(counts), getConversionMetrics(prevCounts)),
       deviceRows: deviceGroupRows.map((row) => ({
         key: row.deviceCategory ?? "unknown",
         label: toDeviceCategoryLabel(row.deviceCategory),
@@ -626,18 +642,19 @@ export async function getAnalyticsSummary(start: Date, end: Date): Promise<Analy
         count: row._count._all,
       })),
       funnelRows: getFunnelRows(counts),
+      heroMetrics: withDeltas(buildHeroMetrics(counts, heroSeries), buildHeroMetrics(prevCounts)),
       leadCompetitionRows: toLeadCompetitionRows(leadCompetitionMap, competitionById),
       leadFunnelRows: getLeadFunnelRows(counts),
-      leadMetrics: getLeadMetrics(counts),
+      leadMetrics: withDeltas(getLeadMetrics(counts), getLeadMetrics(prevCounts)),
       leadSourceRows: toLeadSourceRows(leadSourceMap),
-      overviewMetrics: getOverviewMetrics(counts),
+      overviewMetrics: withDeltas(getOverviewMetrics(counts), getOverviewMetrics(prevCounts)),
       osRows: osGroupRows.map((row) => ({
         key: row.osName ?? "unknown",
         label: row.osName ?? "알 수 없음",
         meta: toPercentLabel(row._count._all, sessionCount),
         count: row._count._all,
       })),
-      searchQualityMetrics: getSearchQualityMetrics(counts),
+      searchQualityMetrics: withDeltas(getSearchQualityMetrics(counts), getSearchQualityMetrics(prevCounts)),
       start,
       topCompetitions: toCompetitionRows(
         topCompetitionRows,
@@ -773,6 +790,7 @@ function getEmptyAnalyticsSummary(
     end,
     eventRows: [],
     funnelRows: getFunnelRows(counts),
+    heroMetrics: [],
     leadCompetitionRows: [],
     leadFunnelRows: getLeadFunnelRows(counts),
     leadMetrics: getLeadMetrics(counts),
@@ -1064,8 +1082,284 @@ function metric(
   value: number,
   format: AnalyticsMetricFormat,
   meta?: string,
+  spark?: number[],
 ): AnalyticsMetric {
-  return { key, label, value, format, meta };
+  return { key, label, value, format, meta, spark };
+}
+
+// 낮을수록 좋은 지표(상승=빨강). 그 외는 상승=초록.
+const LOWER_IS_BETTER = new Set(["zero-result-rate"]);
+
+// 선택적 임계값 → ok/warn 색상. 비율은 percent 값 기준.
+const METRIC_THRESHOLDS: Record<string, { warnBelow?: number; warnAbove?: number }> = {
+  "engaged-session-rate": { warnBelow: 30 },
+  "registration-intent-rate": { warnBelow: 5 },
+  "lead-completion-rate": { warnBelow: 40 },
+  "returning-rate": { warnBelow: 20 },
+  "zero-result-rate": { warnAbove: 15 },
+};
+
+function toDeltaPct(current: number, previous: number | undefined): number | null | undefined {
+  if (previous === undefined) return undefined; // 비교 대상 없음
+  if (previous === 0) return null; // 직전 0 → 변화율 정의 불가
+  return ((current - previous) / previous) * 100;
+}
+
+function toMetricStatus(key: string, value: number): "ok" | "warn" | undefined {
+  const threshold = METRIC_THRESHOLDS[key];
+  if (!threshold) return undefined;
+  if (threshold.warnBelow !== undefined) return value < threshold.warnBelow ? "warn" : "ok";
+  if (threshold.warnAbove !== undefined) return value > threshold.warnAbove ? "warn" : "ok";
+  return undefined;
+}
+
+// 현재/직전 동일기간 메트릭을 key로 매칭해 previousValue·deltaPct·status를 붙인다.
+function withDeltas(current: AnalyticsMetric[], previous: AnalyticsMetric[]): AnalyticsMetric[] {
+  const previousByKey = new Map(previous.map((item) => [item.key, item.value]));
+  return current.map((item) => {
+    const previousValue = previousByKey.get(item.key);
+    return {
+      ...item,
+      previousValue,
+      deltaPct: toDeltaPct(item.value, previousValue),
+      goodWhen: LOWER_IS_BETTER.has(item.key) ? "lower" : "higher",
+      status: toMetricStatus(item.key, item.value),
+    };
+  });
+}
+
+function buildHeroMetrics(counts: AnalyticsCountInputs, series?: HeroSeries): AnalyticsMetric[] {
+  return [
+    metric("visitors", "방문자", counts.visitorCount, "number", undefined, series?.visitors),
+    metric("sessions", "세션", counts.sessionCount, "number", undefined, series?.sessions),
+    metric(
+      "registration-clicks",
+      "접수 클릭",
+      counts.registrationClickCount,
+      "number",
+      undefined,
+      series?.registration,
+    ),
+    metric("leads", "광고 문의 제출", counts.contactSubmitCount, "number", undefined, series?.leads),
+  ];
+}
+
+type HeroSeries = {
+  visitors: number[];
+  sessions: number[];
+  registration: number[];
+  leads: number[];
+};
+
+function koreaDayKey(date: Date): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Seoul",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(date);
+}
+
+// 윈도를 Seoul 날짜 키(YYYY-MM-DD) 배열로. 한국은 DST가 없어 +24h가 정확히 하루.
+// 최대 92일로 제한해 스파크라인 페이로드 상한을 둔다.
+function koreaDaysBetween(start: Date, end: Date): string[] {
+  const days: string[] = [];
+  const seen = new Set<string>();
+  let cursor = start.getTime();
+  const endMs = end.getTime();
+  let guard = 0;
+  while (cursor <= endMs && guard < 92) {
+    const key = koreaDayKey(new Date(cursor));
+    if (!seen.has(key)) {
+      seen.add(key);
+      days.push(key);
+    }
+    cursor += 86_400_000;
+    guard += 1;
+  }
+  const endKey = koreaDayKey(end);
+  if (!seen.has(endKey) && days.length < 92) days.push(endKey);
+  return days;
+}
+
+// hero KPI 일별 시리즈. 컬럼은 naive UTC timestamp이므로 'UTC'→'Asia/Seoul' 이중
+// 변환으로 Seoul 날짜 버킷을 만든다(단일 변환은 9시간 어긋남). 실패해도 빈 배열로
+// 격리해 대시보드 전체를 막지 않는다.
+async function getHeroSeries(start: Date, end: Date): Promise<HeroSeries> {
+  const days = koreaDaysBetween(start, end);
+  const [sessionRows, eventRows] = await Promise.all([
+    prisma.$queryRaw<{ day: string; visitors: number; sessions: number }[]>`
+      SELECT
+        to_char(date_trunc('day', "startedAt" AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Seoul'), 'YYYY-MM-DD') AS day,
+        COUNT(DISTINCT "visitorId")::int AS visitors,
+        COUNT(DISTINCT "id")::int AS sessions
+      FROM "AnalyticsSession"
+      WHERE "trafficType" = 'human'
+        AND "startedAt" >= ${start} AND "startedAt" <= ${end}
+      GROUP BY 1
+      ORDER BY 1
+    `.catch((): { day: string; visitors: number; sessions: number }[] => []),
+    prisma.$queryRaw<{ day: string; registration: number; leads: number }[]>`
+      SELECT
+        to_char(date_trunc('day', e."occurredAt" AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Seoul'), 'YYYY-MM-DD') AS day,
+        COUNT(*) FILTER (WHERE e."name" = 'registration_link_click')::int AS registration,
+        COUNT(*) FILTER (WHERE e."name" = 'contact_submit_success')::int AS leads
+      FROM "AnalyticsEvent" e
+      JOIN "AnalyticsSession" s ON s."id" = e."sessionId"
+      WHERE s."trafficType" = 'human'
+        AND e."occurredAt" >= ${start} AND e."occurredAt" <= ${end}
+      GROUP BY 1
+      ORDER BY 1
+    `.catch((): { day: string; registration: number; leads: number }[] => []),
+  ]);
+
+  const sessionByDay = new Map(sessionRows.map((row) => [row.day, row]));
+  const eventByDay = new Map(eventRows.map((row) => [row.day, row]));
+  return {
+    visitors: days.map((day) => sessionByDay.get(day)?.visitors ?? 0),
+    sessions: days.map((day) => sessionByDay.get(day)?.sessions ?? 0),
+    registration: days.map((day) => eventByDay.get(day)?.registration ?? 0),
+    leads: days.map((day) => eventByDay.get(day)?.leads ?? 0),
+  };
+}
+
+// 직전 동일기간의 윈도 스칼라 카운트(델타 비교용). 현재 윈도 배치는 건드리지 않고
+// 여기서만 다시 계산한다. 실시간(활성) 카운트는 windowless이므로 0으로 둔다.
+async function getWindowCounts(start: Date, end: Date): Promise<AnalyticsCountInputs> {
+  const eventWindow: Prisma.AnalyticsEventWhereInput = { occurredAt: { gte: start, lte: end } };
+  const humanEventWindow: Prisma.AnalyticsEventWhereInput = {
+    AND: [eventWindow, { session: { is: { trafficType: "human" } } }],
+  };
+  const humanSessionWindow: Prisma.AnalyticsSessionWhereInput = {
+    AND: [{ startedAt: { gte: start, lte: end } }, { trafficType: "human" }],
+  };
+  const listPageViewFilter: Prisma.AnalyticsEventWhereInput = {
+    OR: [{ path: "/competitions" }, { path: { startsWith: "/competitions?" } }],
+  };
+  const eventCount = (name: string, extra: Prisma.AnalyticsEventWhereInput = {}) =>
+    prisma.analyticsEvent.count({ where: { ...humanEventWindow, ...extra, name } });
+
+  const [
+    visitorStatsRows,
+    sessionCount,
+    windowSessionRows,
+    pageViewCount,
+    listPageViewCount,
+    competitionOpenCount,
+    competitionDetailClickCount,
+    competitionViewCount,
+    registrationClickCount,
+    shareClickCount,
+    saveCompetitionCount,
+    unsaveCompetitionCount,
+    contactOpenCount,
+    contactSubmitCount,
+    searchPerformedCount,
+    filterAppliedCount,
+    emptySearchResultCount,
+    relatedCompetitionClickCount,
+    sourceLinkClickCount,
+    searchResultAverage,
+    engagementSummaryRows,
+  ] = await Promise.all([
+    prisma.$queryRaw<{ total: number; returning: number }[]>`
+      SELECT
+        COUNT(DISTINCT s."visitorId")::int AS total,
+        COUNT(DISTINCT s."visitorId") FILTER (
+          WHERE EXISTS (
+            SELECT 1 FROM "AnalyticsSession" p
+            WHERE p."visitorId" = s."visitorId" AND p."startedAt" < ${start}
+          )
+        )::int AS returning
+      FROM "AnalyticsSession" s
+      WHERE s."trafficType" = 'human'
+        AND s."startedAt" >= ${start} AND s."startedAt" <= ${end}
+    `,
+    prisma.analyticsSession.count({ where: humanSessionWindow }),
+    prisma.$queryRaw<{ count: number }[]>`
+      SELECT COUNT(DISTINCT e."sessionId")::int AS count
+      FROM "AnalyticsEvent" e
+      JOIN "AnalyticsSession" s ON s."id" = e."sessionId"
+      WHERE s."trafficType" = 'human'
+        AND e."occurredAt" >= ${start} AND e."occurredAt" <= ${end}
+    `,
+    eventCount("page_view"),
+    eventCount("page_view", listPageViewFilter),
+    eventCount("competition_open"),
+    eventCount("competition_detail_click"),
+    eventCount("competition_view"),
+    eventCount("registration_link_click"),
+    eventCount("share_click"),
+    eventCount("save_competition"),
+    eventCount("unsave_competition"),
+    eventCount("contact_open"),
+    eventCount("contact_submit_success"),
+    eventCount("search_performed"),
+    eventCount("filter_applied"),
+    eventCount("empty_search_result"),
+    eventCount("related_competition_click"),
+    eventCount("source_link_click"),
+    prisma.analyticsEvent.aggregate({
+      where: { ...humanEventWindow, name: "search_performed" },
+      _avg: { resultCount: true },
+    }),
+    prisma.$queryRaw<EngagementSummaryRow[]>`
+      WITH per_session AS (
+        SELECT
+          e."sessionId",
+          MAX(
+            CASE
+              WHEN jsonb_typeof(e."propertiesJson"::jsonb -> 'activeSeconds') = 'number'
+                THEN (e."propertiesJson"::jsonb ->> 'activeSeconds')::double precision
+              ELSE 0
+            END
+          ) AS "maxActiveSeconds"
+        FROM "AnalyticsEvent" e
+        JOIN "AnalyticsSession" s ON s."id" = e."sessionId"
+        WHERE e."name" = 'engagement_ping'
+          AND e."propertiesJson" LIKE '{%'
+          AND e."occurredAt" >= ${start} AND e."occurredAt" <= ${end}
+          AND s."trafficType" = 'human'
+        GROUP BY e."sessionId"
+      )
+      SELECT
+        COUNT(*)::bigint AS "engagedSessionCount",
+        COALESCE(AVG("maxActiveSeconds"), 0)::double precision AS "averageActiveSeconds"
+      FROM per_session
+    `.catch((): EngagementSummaryRow[] => []),
+  ]);
+
+  const visitorCount = visitorStatsRows[0]?.total ?? 0;
+  const returningVisitorCount = visitorStatsRows[0]?.returning ?? 0;
+  const engagementSummary = engagementSummaryRows[0];
+  return {
+    activeSessionCount: 0,
+    activeVisitorCount: 0,
+    averageActiveSeconds: Number(engagementSummary?.averageActiveSeconds ?? 0),
+    competitionDetailClickCount,
+    competitionOpenCount,
+    competitionViewCount,
+    contactOpenCount,
+    contactSubmitCount,
+    relatedCompetitionClickCount,
+    sourceLinkClickCount,
+    emptySearchResultCount,
+    engagedSessionCount: toCount(engagementSummary?.engagedSessionCount),
+    filterAppliedCount,
+    listPageViewCount,
+    newVisitorCount: Math.max(visitorCount - returningVisitorCount, 0),
+    pageViewCount,
+    registrationClickCount,
+    returningVisitorCount,
+    saveCompetitionCount,
+    searchPerformedCount,
+    sessionCount,
+    shareClickCount,
+    topSearchAverageResultCount: searchResultAverage._avg.resultCount ?? 0,
+    unsaveCompetitionCount,
+    visitorCount,
+    windowSessionCount: windowSessionRows[0]?.count ?? 0,
+  };
 }
 
 function toBotRows(

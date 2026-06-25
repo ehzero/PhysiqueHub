@@ -12,6 +12,7 @@ import {
   type AnalyticsTableRow,
 } from "@/lib/admin-analytics";
 import { prisma } from "@/lib/prisma";
+import { Sparkline } from "./AnalyticsCharts";
 import { loginAdmin, logoutAdmin, updateCompetitionReview } from "./actions";
 
 export type AdminSection = "analytics" | "contact" | "review";
@@ -740,17 +741,25 @@ function AnalyticsDashboardSection({ analytics }: { analytics: AnalyticsSummary 
         <div className="ac-empty">{analytics.unavailableMessage}</div>
       )}
 
+      {analytics.heroMetrics.length > 0 && (
+        <div className="ac-hero-grid">
+          {analytics.heroMetrics.map((metric) => (
+            <ChartKpiCard key={metric.key} metric={metric} />
+          ))}
+        </div>
+      )}
+
       <AnalyticsBlock tag="Revenue" title="광고 리드">
         <AnalyticsMetricGrid
           ariaLabel="광고 리드 핵심 지표"
           metrics={analytics.leadMetrics}
         />
+        <FunnelBars
+          emptyLabel="문의 데이터가 없습니다."
+          rows={analytics.leadFunnelRows}
+          title="문의 열기 → 제출"
+        />
         <div className="ac-tables">
-          <AnalyticsTable
-            emptyLabel="문의 데이터가 없습니다."
-            rows={analytics.leadFunnelRows}
-            title="문의 열기 → 제출"
-          />
           <AnalyticsTable
             emptyLabel="광고 슬롯 데이터가 없습니다."
             rows={analytics.leadSourceRows}
@@ -772,17 +781,15 @@ function AnalyticsDashboardSection({ analytics }: { analytics: AnalyticsSummary 
       </AnalyticsBlock>
 
       <AnalyticsBlock tag="Funnel" title="대회 탐색 퍼널">
+        <FunnelBars
+          emptyLabel="대회 탐색 퍼널 데이터가 없습니다."
+          rows={analytics.funnelRows}
+          title="목록에서 접수까지"
+        />
         <AnalyticsMetricGrid
           ariaLabel="전환·의도 지표"
           metrics={analytics.conversionMetrics}
         />
-        <div className="ac-tables">
-          <AnalyticsTable
-            emptyLabel="대회 탐색 퍼널 데이터가 없습니다."
-            rows={analytics.funnelRows}
-            title="목록에서 접수까지"
-          />
-        </div>
       </AnalyticsBlock>
 
       <AnalyticsBlock tag="Search" title="검색 품질">
@@ -924,17 +931,63 @@ function AnalyticsMetricGrid({
   metrics: AnalyticsMetric[];
 }) {
   return (
-    <section className="ac-kpis" aria-label={ariaLabel}>
+    <dl className="ac-kpis" aria-label={ariaLabel}>
       {metrics.map((metric) => (
-        <div className="ac-kpi" key={metric.key}>
-          <span className="ac-kpi-value">{formatAnalyticsMetricValue(metric)}</span>
-          <span className="ac-kpi-copy">
+        <div className={`ac-kpi ${metric.status ? `is-${metric.status}` : ""}`} key={metric.key}>
+          <dt className="ac-kpi-copy">
             <span className="ac-kpi-label">{metric.label}</span>
             {metric.meta && <span className="ac-kpi-meta">{metric.meta}</span>}
-          </span>
+          </dt>
+          <dd className="ac-kpi-value">
+            {formatAnalyticsMetricValue(metric)}
+            <DeltaBadge metric={metric} />
+          </dd>
         </div>
       ))}
-    </section>
+    </dl>
+  );
+}
+
+function DeltaBadge({ metric }: { metric: AnalyticsMetric }) {
+  const { deltaPct, goodWhen = "higher" } = metric;
+  if (deltaPct == null || !Number.isFinite(deltaPct)) return null;
+
+  const rounded = Math.round(deltaPct);
+  if (rounded === 0) {
+    return (
+      <span className="ac-delta is-flat" title="이전 동일기간 대비">
+        <span aria-hidden="true">–</span> 0%
+      </span>
+    );
+  }
+
+  const up = rounded > 0;
+  const good = up === (goodWhen === "higher");
+  return (
+    <span className={`ac-delta ${good ? "is-good" : "is-bad"}`} title="이전 동일기간 대비">
+      <span aria-hidden="true">{up ? "▲" : "▼"}</span>
+      {Math.abs(rounded)}%<span className="ac-sr"> {up ? "증가" : "감소"} (이전 기간 대비)</span>
+    </span>
+  );
+}
+
+function ChartKpiCard({ metric }: { metric: AnalyticsMetric }) {
+  return (
+    <article className={`ac-herokpi ${metric.status ? `is-${metric.status}` : ""}`}>
+      <div className="ac-herokpi-head">
+        <span className="ac-kpi-label">{metric.label}</span>
+        <DeltaBadge metric={metric} />
+      </div>
+      <strong className="ac-kpi-value">{formatAnalyticsMetricValue(metric)}</strong>
+      {metric.spark && metric.spark.length > 0 && (
+        <Sparkline
+          ariaLabel={`${metric.label} 일별 추이`}
+          data={metric.spark}
+          tone={metric.status === "warn" ? "warn" : "accent"}
+        />
+      )}
+      {metric.meta && <span className="ac-kpi-meta">{metric.meta}</span>}
+    </article>
   );
 }
 
@@ -947,23 +1000,93 @@ function AnalyticsTable({
   rows: AnalyticsTableRow[];
   title: string;
 }) {
+  if (rows.length === 0) {
+    return (
+      <section className="ac-table">
+        <div className="ac-table-head">
+          <span className="ac-title">{title}</span>
+        </div>
+        <div className="ac-empty">{emptyLabel}</div>
+      </section>
+    );
+  }
+
   return (
     <section className="ac-table">
+      <table className="ac-dtable">
+        <caption className="ac-dtable-cap">
+          <span className="ac-title">{title}</span>
+          <span className="ac-table-top">[{rows.length}]</span>
+        </caption>
+        <thead>
+          <tr>
+            <th className="ac-col-rank" scope="col">#</th>
+            <th scope="col">항목</th>
+            <th className="ac-col-num" scope="col">건수</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, index) => (
+            <tr key={row.key}>
+              <td className="ac-col-rank">{index + 1}</td>
+              <th className="ac-dtable-item" scope="row">
+                <span>{row.label}</span>
+                {row.meta && <small>{row.meta}</small>}
+              </th>
+              <td className="ac-col-num">{formatNumber(row.count)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+  );
+}
+
+function FunnelBars({
+  emptyLabel,
+  rows,
+  title,
+}: {
+  emptyLabel: string;
+  rows: AnalyticsTableRow[];
+  title: string;
+}) {
+  const topCount = rows[0]?.count ?? 0;
+  // 최악 단계 = 직전 단계 대비 전환율이 가장 낮은 단계(첫 단계 제외)
+  let worstIndex = -1;
+  let worstRatio = Infinity;
+  for (let i = 1; i < rows.length; i += 1) {
+    const prev = rows[i - 1].count;
+    const ratio = prev > 0 ? rows[i].count / prev : 0;
+    if (ratio < worstRatio) {
+      worstRatio = ratio;
+      worstIndex = i;
+    }
+  }
+
+  return (
+    <section className="ac-funnel" aria-label={title}>
       <div className="ac-table-head">
         <span className="ac-title">{title}</span>
-        <span className="ac-table-top">[{rows.length}]</span>
       </div>
       {rows.length > 0 ? (
-        <ol className="ac-list">
-          {rows.map((row) => (
-            <li key={row.key}>
-              <span className="ac-list-cell">
-                <strong>{row.label}</strong>
-                {row.meta && <small>{row.meta}</small>}
-              </span>
-              <b className="ac-list-count">{formatNumber(row.count)}</b>
-            </li>
-          ))}
+        <ol className="ac-funnel-list">
+          {rows.map((row, index) => {
+            const width = topCount > 0 ? Math.round((row.count / topCount) * 100) : 0;
+            const isWorst = index === worstIndex;
+            return (
+              <li className={`ac-funnel-step ${isWorst ? "is-worst" : ""}`} key={row.key}>
+                <div className="ac-funnel-meta">
+                  <span className="ac-funnel-label">{row.label}</span>
+                  <b className="ac-list-count">{formatNumber(row.count)}</b>
+                </div>
+                <span className="ac-funnel-bar" aria-hidden="true">
+                  <span style={{ width: `${width}%` }} />
+                </span>
+                {row.meta && <small className="ac-funnel-conv">{row.meta}</small>}
+              </li>
+            );
+          })}
         </ol>
       ) : (
         <div className="ac-empty">{emptyLabel}</div>

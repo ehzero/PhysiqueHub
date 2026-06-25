@@ -465,6 +465,229 @@
   color: var(--ac-ink);
 }
 
+/* ── Analytics charts / deltas / funnel / a11y tables (Phase 1) ── */
+/* Metric grid as <dl>: value(dd) on top via column-reverse, keeping dt(label) first
+   in the DOM for a11y. Scoped to dl so the review section's div-based .ac-kpis is untouched. */
+dl.ac-kpis {
+  margin: 0;
+}
+dl.ac-kpis .ac-kpi {
+  flex-direction: column-reverse;
+}
+dl.ac-kpis .ac-kpi-value {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.ac-kpi.is-warn {
+  box-shadow: inset 2px 0 0 var(--ac-warn);
+}
+.ac-kpi.is-ok {
+  box-shadow: inset 2px 0 0 var(--ac-pos);
+}
+
+/* Delta badge (semantic: good=green regardless of direction) */
+.ac-delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-family: var(--ac-mono);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.ac-delta.is-good {
+  color: var(--ac-pos);
+}
+.ac-delta.is-bad {
+  color: var(--ac-neg);
+}
+.ac-delta.is-flat {
+  color: var(--ac-ink-4);
+}
+
+.ac-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Hero KPI cards (value + delta + sparkline) */
+.ac-hero-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+.ac-herokpi {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+  padding: 12px 14px;
+  background: var(--ac-elev);
+  border: 1px solid var(--ac-line);
+  border-radius: var(--ac-radius);
+}
+.ac-herokpi.is-warn {
+  border-left: 2px solid var(--ac-warn);
+}
+.ac-herokpi.is-ok {
+  border-left: 2px solid var(--ac-pos);
+}
+.ac-herokpi-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.ac-herokpi .ac-kpi-value {
+  font-size: 24px;
+}
+.ac-spark {
+  width: 100%;
+}
+.ac-spark.is-flat {
+  border-bottom: 1px dashed var(--ac-line);
+  opacity: 0.5;
+}
+
+/* Data table (a11y replacement for the ranked .ac-list) */
+.ac-dtable {
+  width: 100%;
+  border-collapse: collapse;
+}
+.ac-dtable-cap {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  height: 28px;
+  text-align: left;
+  border-bottom: 1px solid var(--ac-line);
+}
+.ac-dtable th,
+.ac-dtable td {
+  padding: 7px 0;
+  border-bottom: 1px solid var(--ac-line-soft);
+  font-weight: 400;
+  vertical-align: baseline;
+  text-align: left;
+}
+.ac-dtable thead th {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ac-ink-4);
+}
+.ac-dtable-item {
+  min-width: 0;
+}
+.ac-dtable-item > span {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ac-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ac-dtable-item small {
+  display: block;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--ac-ink-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ac-col-num {
+  width: 1%;
+  white-space: nowrap;
+  text-align: right;
+  font-family: var(--ac-mono);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ac-ink);
+}
+.ac-col-rank {
+  width: 1%;
+  white-space: nowrap;
+  text-align: right;
+  padding-right: 10px;
+  font-family: var(--ac-mono);
+  font-size: 11px;
+  color: var(--ac-ink-4);
+}
+.ac-dtable thead .ac-col-num,
+.ac-dtable thead .ac-col-rank {
+  font-family: inherit;
+}
+
+/* Visual funnel (drop-off bars + worst-step highlight) */
+.ac-funnel {
+  min-width: 0;
+}
+.ac-funnel-list {
+  margin: 0;
+  padding: 12px 0 0;
+  display: grid;
+  gap: 12px;
+}
+.ac-funnel-step {
+  display: grid;
+  gap: 4px;
+}
+.ac-funnel-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.ac-funnel-label {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ac-ink);
+}
+.ac-funnel-bar {
+  display: block;
+  height: 8px;
+  background: var(--ac-sub);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.ac-funnel-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--ac-accent);
+  border-radius: 999px;
+}
+.ac-funnel-step.is-worst .ac-funnel-bar > span {
+  background: var(--ac-neg);
+}
+.ac-funnel-conv {
+  font-size: 11px;
+  color: var(--ac-ink-3);
+}
+.ac-funnel-step.is-worst .ac-funnel-conv {
+  color: var(--ac-neg);
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .ac-hero-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ── Review ── */
 .ac-filters {
   display: flex;
