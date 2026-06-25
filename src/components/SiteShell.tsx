@@ -20,6 +20,16 @@ interface SiteShellContextValue {
 interface OpenContactOptions {
   category?: ContactCategory;
   source?: string;
+  competitionId?: string;
+  tier?: string;
+  organizationId?: string;
+}
+
+interface ContactContext {
+  source: string;
+  competitionId?: string;
+  tier?: string;
+  organizationId?: string;
 }
 
 const SiteShellContext = createContext<SiteShellContextValue | null>(null);
@@ -35,13 +45,28 @@ export function SiteShell({ seasonYear, children }: SiteShellProps) {
   const [contactInitialCategory, setContactInitialCategory] =
     useState<ContactCategory>("기타 문의");
   const [contactSeed, setContactSeed] = useState(0);
+  const [contactContext, setContactContext] = useState<ContactContext>({
+    source: "site_shell",
+  });
   const { saved, toggleSave } = useSavedCompetitions();
   const openContact = useCallback((options: OpenContactOptions = {}) => {
+    const context: ContactContext = {
+      source: options.source ?? "site_shell",
+      competitionId: options.competitionId,
+      tier: options.tier,
+      organizationId: options.organizationId,
+    };
+    // 리드 어트리뷰션: source(슬롯)와 대회 컨텍스트를 open 이벤트에 싣고,
+    // 같은 컨텍스트를 드로어로 넘겨 submit에도 동일하게 기록한다.
     trackAnalyticsEvent("contact_open", {
+      competitionId: context.competitionId,
       properties: {
-        source: options.source ?? "site_shell",
+        source: context.source,
+        tier: context.tier,
+        organizationId: context.organizationId,
       },
     });
+    setContactContext(context);
     setContactInitialCategory(options.category ?? "기타 문의");
     setContactSeed((value) => value + 1);
     setContactOpen(true);
@@ -78,6 +103,10 @@ export function SiteShell({ seasonYear, children }: SiteShellProps) {
           isOpen={contactOpen}
           onClose={() => setContactOpen(false)}
           initialCategory={contactInitialCategory}
+          source={contactContext.source}
+          competitionId={contactContext.competitionId}
+          tier={contactContext.tier}
+          organizationId={contactContext.organizationId}
         />
 
         <PwaBootstrap />

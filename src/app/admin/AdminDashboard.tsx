@@ -730,6 +730,30 @@ function AnalyticsDashboardSection({
         <div className="admin-empty">{analytics.unavailableMessage}</div>
       )}
 
+      <AnalyticsBlock eyebrow="Revenue" title="광고 리드">
+        <AnalyticsMetricGrid
+          ariaLabel="광고 리드 핵심 지표"
+          metrics={analytics.leadMetrics}
+        />
+        <div className="admin-analytics-grid">
+          <AnalyticsTable
+            emptyLabel="문의 데이터가 없습니다."
+            rows={analytics.leadFunnelRows}
+            title="문의 열기 → 제출"
+          />
+          <AnalyticsTable
+            emptyLabel="광고 슬롯 데이터가 없습니다."
+            rows={analytics.leadSourceRows}
+            title="유입 위치(슬롯)별 문의"
+          />
+          <AnalyticsTable
+            emptyLabel="대회별 문의 데이터가 없습니다."
+            rows={analytics.leadCompetitionRows}
+            title="대회별 광고 문의"
+          />
+        </div>
+      </AnalyticsBlock>
+
       <AnalyticsMetricGrid
         ariaLabel="이용 분석 핵심 지표"
         metrics={analytics.overviewMetrics}

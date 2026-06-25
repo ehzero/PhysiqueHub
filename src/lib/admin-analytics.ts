@@ -43,6 +43,10 @@ export type AnalyticsSummary = {
   end: Date;
   eventRows: AnalyticsTableRow[];
   funnelRows: AnalyticsTableRow[];
+  leadCompetitionRows: AnalyticsTableRow[];
+  leadFunnelRows: AnalyticsTableRow[];
+  leadMetrics: AnalyticsMetric[];
+  leadSourceRows: AnalyticsTableRow[];
   overviewMetrics: AnalyticsMetric[];
   osRows: AnalyticsTableRow[];
   searchQualityMetrics: AnalyticsMetric[];
@@ -84,8 +88,11 @@ type AnalyticsCountInputs = {
   competitionDetailClickCount: number;
   competitionOpenCount: number;
   competitionViewCount: number;
+  contactOpenCount: number;
   contactSubmitCount: number;
   emptySearchResultCount: number;
+  relatedCompetitionClickCount: number;
+  sourceLinkClickCount: number;
   engagedSessionCount: number;
   filterAppliedCount: number;
   listPageViewCount: number;
@@ -183,6 +190,10 @@ export async function getAnalyticsSummary(start: Date, end: Date): Promise<Analy
       botNameRows,
       botTopPageRows,
       windowSessionCountRows,
+      contactOpenCount,
+      relatedCompetitionClickCount,
+      sourceLinkClickCount,
+      contactEventRows,
     ] = await Promise.all([
       prisma.$queryRaw<{ total: number; returning: number }[]>`
         SELECT
@@ -438,6 +449,23 @@ export async function getAnalyticsSummary(start: Date, end: Date): Promise<Analy
         WHERE s."trafficType" = 'human'
           AND e."occurredAt" >= ${start} AND e."occurredAt" <= ${end}
       `,
+      prisma.analyticsEvent.count({
+        where: { ...humanEventWindow, name: "contact_open" },
+      }),
+      prisma.analyticsEvent.count({
+        where: { ...humanEventWindow, name: "related_competition_click" },
+      }),
+      prisma.analyticsEvent.count({
+        where: { ...humanEventWindow, name: "source_link_click" },
+      }),
+      // 리드(광고 문의) 이벤트는 저빈도라 행을 fetch해 JS에서 source/대회로 묶는다.
+      prisma.analyticsEvent.findMany({
+        where: {
+          ...humanEventWindow,
+          name: { in: ["contact_open", "contact_submit_success"] },
+        },
+        select: { name: true, propertiesJson: true, competitionId: true },
+      }),
     ]);
 
     // 방문자/재방문/활성/봇/활동세션은 COUNT(DISTINCT) 스칼라로 받는다(행을 Node로
@@ -461,6 +489,17 @@ export async function getAnalyticsSummary(start: Date, end: Date): Promise<Analy
     const engagementSummary = engagementSummaryRows[0];
     const engagedSessionCount = toCount(engagementSummary?.engagedSessionCount);
     const averageActiveSeconds = Number(engagementSummary?.averageActiveSeconds ?? 0);
+    // 리드 소스/대회 집계: contact_open·contact_submit_success를 propertiesJson.source
+    // (슬롯)와 competitionId로 묶는다. JSON 필드 groupBy를 피하고 JS에서 집계한다.
+    const leadSourceMap = new Map<string, LeadCounts>();
+    const leadCompetitionMap = new Map<string, LeadCounts>();
+    for (const row of contactEventRows) {
+      const isSubmit = row.name === "contact_submit_success";
+      addLeadCount(leadSourceMap, toContactSource(row.propertiesJson), isSubmit);
+      if (row.competitionId) {
+        addLeadCount(leadCompetitionMap, row.competitionId, isSubmit);
+      }
+    }
     const competitionIds = [
       ...topCompetitionRows,
       ...topRegistrationCompetitionRows,
@@ -469,7 +508,9 @@ export async function getAnalyticsSummary(start: Date, end: Date): Promise<Analy
     ]
       .map((row) => row.competitionId)
       .filter((id): id is string => Boolean(id));
-    const uniqueCompetitionIds = Array.from(new Set(competitionIds));
+    const uniqueCompetitionIds = Array.from(
+      new Set([...competitionIds, ...leadCompetitionMap.keys()]),
+    );
     const [competitions, competitionActionRows] =
       uniqueCompetitionIds.length > 0
         ? await Promise.all([
@@ -502,7 +543,10 @@ export async function getAnalyticsSummary(start: Date, end: Date): Promise<Analy
       competitionDetailClickCount,
       competitionOpenCount,
       competitionViewCount,
+      contactOpenCount,
       contactSubmitCount,
+      relatedCompetitionClickCount,
+      sourceLinkClickCount,
       emptySearchResultCount,
       engagedSessionCount,
       filterAppliedCount,
@@ -582,6 +626,10 @@ export async function getAnalyticsSummary(start: Date, end: Date): Promise<Analy
         count: row._count._all,
       })),
       funnelRows: getFunnelRows(counts),
+      leadCompetitionRows: toLeadCompetitionRows(leadCompetitionMap, competitionById),
+      leadFunnelRows: getLeadFunnelRows(counts),
+      leadMetrics: getLeadMetrics(counts),
+      leadSourceRows: toLeadSourceRows(leadSourceMap),
       overviewMetrics: getOverviewMetrics(counts),
       osRows: osGroupRows.map((row) => ({
         key: row.osName ?? "unknown",
@@ -685,8 +733,11 @@ function getEmptyAnalyticsSummary(
     competitionDetailClickCount: 0,
     competitionOpenCount: 0,
     competitionViewCount: 0,
+    contactOpenCount: 0,
     contactSubmitCount: 0,
     emptySearchResultCount: 0,
+    relatedCompetitionClickCount: 0,
+    sourceLinkClickCount: 0,
     engagedSessionCount: 0,
     filterAppliedCount: 0,
     listPageViewCount: 0,
@@ -722,6 +773,10 @@ function getEmptyAnalyticsSummary(
     end,
     eventRows: [],
     funnelRows: getFunnelRows(counts),
+    leadCompetitionRows: [],
+    leadFunnelRows: getLeadFunnelRows(counts),
+    leadMetrics: getLeadMetrics(counts),
+    leadSourceRows: [],
     overviewMetrics: getOverviewMetrics(counts),
     osRows: [],
     searchQualityMetrics: getSearchQualityMetrics(counts),
@@ -845,6 +900,20 @@ function getConversionMetrics(counts: AnalyticsCountInputs): AnalyticsMetric[] {
       `공유 ${formatCount(counts.shareClickCount)}`,
     ),
     metric(
+      "related-ctr",
+      "관련 대회 CTR",
+      toRate(counts.relatedCompetitionClickCount, counts.competitionViewCount),
+      "percent",
+      `관련 클릭 ${formatCount(counts.relatedCompetitionClickCount)} / 상세 ${formatCount(counts.competitionViewCount)}`,
+    ),
+    metric(
+      "source-link-clicks",
+      "출처 링크 클릭",
+      counts.sourceLinkClickCount,
+      "number",
+      "접수 URL 없을 때 공식 공지 클릭",
+    ),
+    metric(
       "contact-conversion-rate",
       "문의 전환율",
       toRate(counts.contactSubmitCount, counts.windowSessionCount),
@@ -852,6 +921,117 @@ function getConversionMetrics(counts: AnalyticsCountInputs): AnalyticsMetric[] {
       `문의 제출 ${formatCount(counts.contactSubmitCount)} / 활동 세션 ${formatCount(counts.windowSessionCount)}`,
     ),
   ];
+}
+
+type LeadCounts = { opens: number; submits: number };
+
+function addLeadCount(map: Map<string, LeadCounts>, key: string, isSubmit: boolean) {
+  const bucket = map.get(key) ?? { opens: 0, submits: 0 };
+  if (isSubmit) bucket.submits += 1;
+  else bucket.opens += 1;
+  map.set(key, bucket);
+}
+
+function getLeadMetrics(counts: AnalyticsCountInputs): AnalyticsMetric[] {
+  return [
+    metric(
+      "leads",
+      "광고 문의 제출",
+      counts.contactSubmitCount,
+      "number",
+      `문의 열기 ${formatCount(counts.contactOpenCount)}`,
+    ),
+    metric(
+      "lead-completion-rate",
+      "문의 완료율",
+      toRate(counts.contactSubmitCount, counts.contactOpenCount),
+      "percent",
+      `제출 ${formatCount(counts.contactSubmitCount)} / 열기 ${formatCount(counts.contactOpenCount)}`,
+    ),
+    metric(
+      "lead-conversion-rate",
+      "문의 전환율",
+      toRate(counts.contactSubmitCount, counts.windowSessionCount),
+      "percent",
+      `활동 세션 ${formatCount(counts.windowSessionCount)} 대비`,
+    ),
+  ];
+}
+
+function getLeadFunnelRows(counts: AnalyticsCountInputs): AnalyticsTableRow[] {
+  const abandoned = Math.max(counts.contactOpenCount - counts.contactSubmitCount, 0);
+  return [
+    {
+      key: "contact-open",
+      label: "문의 열기",
+      meta: "문의 드로어 열기",
+      count: counts.contactOpenCount,
+    },
+    {
+      key: "contact-submit",
+      label: "문의 제출",
+      meta: `열기 대비 ${toPercentLabel(counts.contactSubmitCount, counts.contactOpenCount)} · 이탈 ${toPercentLabel(abandoned, counts.contactOpenCount)}`,
+      count: counts.contactSubmitCount,
+    },
+  ];
+}
+
+function toLeadSourceRows(map: Map<string, LeadCounts>): AnalyticsTableRow[] {
+  return Array.from(map.entries())
+    .map(([source, { opens, submits }]) => ({
+      key: source,
+      label: toContactSourceLabel(source),
+      meta: `제출 ${formatCount(submits)} · 완료율 ${toPercentLabel(submits, opens)}`,
+      count: opens,
+    }))
+    .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
+    .slice(0, 10);
+}
+
+function toLeadCompetitionRows(
+  map: Map<string, LeadCounts>,
+  competitionById: Map<string, CompetitionAnalyticsSummary>,
+): AnalyticsTableRow[] {
+  return Array.from(map.entries())
+    .map(([competitionId, { opens, submits }]) => {
+      const competition = competitionById.get(competitionId);
+      const metaParts = [
+        competition?.organizationShortName ?? competition?.organizationName,
+        `제출 ${formatCount(submits)}`,
+      ].filter((part): part is string => Boolean(part));
+
+      return {
+        key: competitionId,
+        label: competition?.title ?? competitionId,
+        meta: metaParts.join(" · "),
+        count: opens,
+      };
+    })
+    .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
+    .slice(0, 10);
+}
+
+function toContactSource(propertiesJson: string): string {
+  try {
+    const properties = JSON.parse(propertiesJson) as Record<string, unknown>;
+    return typeof properties.source === "string" ? properties.source : "unknown";
+  } catch {
+    return "unknown";
+  }
+}
+
+function toContactSourceLabel(source: string): string {
+  const labels: Record<string, string> = {
+    competition_detail_side_ad: "상세 사이드 광고",
+    competition_detail_mobile_ad: "상세 모바일 광고",
+    competition_drawer_ad: "드로어 광고",
+    competition_grid_inline_ad: "그리드 인라인 광고",
+    competition_list_inline_ad: "목록 인라인 광고",
+    competition_list_mobile_ad: "목록 모바일 광고",
+    competition_list_ad_rail: "목록 광고 레일",
+    site_shell: "헤더·푸터 등",
+  };
+  return labels[source] ?? source;
 }
 
 function getSearchQualityMetrics(counts: AnalyticsCountInputs): AnalyticsMetric[] {

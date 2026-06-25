@@ -108,6 +108,12 @@ Yeti, Naver Web Crawler, Headless Chrome 등을 분류한다.
 - 상세 페이지가 실제 렌더링된 조회는 `competition_view`로 본다.
 - 광고 문의 배너 클릭은 별도 이벤트를 추가하지 않고 `contact_open`의
   `propertiesJson.source`가 `*_ad` 또는 `*_ad_rail`인 값으로 구분한다.
+- 광고 리드 어트리뷰션: `contact_open`과 `contact_submit_success`는 열린 시점의
+  컨텍스트를 동일하게 싣는다 — `propertiesJson.source`(슬롯), 그리고 상세·드로어
+  배너처럼 대회 맥락이 있는 경우 `competitionId`와 `propertiesJson.tier`/
+  `organizationId`. 목록/그리드 슬롯과 헤더·푸터 문의는 대회 맥락이 없어
+  `competitionId`가 비어 있다. submit이 open과 같은 컨텍스트를 실으므로 슬롯별·
+  대회별 완료율을 집계할 수 있다.
 - 대회별 공유와 저장은 각각 `share_click`, `save_competition`의
   `competitionId`를 기준으로 본다. 과거 공유 이벤트처럼 `competitionId`가 없는
   이벤트는 전체 공유 클릭 수에는 포함되지만 대회별 공유 순위에는 포함되지 않는다.
@@ -165,6 +171,15 @@ Yeti, Naver Web Crawler, Headless Chrome 등을 분류한다.
 - 저장률과 공유율은 각각 `save_competition / competition_view`,
   `share_click / competition_view`로 본다.
 - 문의 전환율은 `contact_submit_success / 활동 세션`으로 본다.
+- 광고 리드 블록(대시보드 최상단 hero)은 매출 경로를 본다.
+  - 문의 완료율은 `contact_submit_success / contact_open`으로, 폼 이탈률은 그 여집합으로 본다.
+  - 유입 위치(슬롯)별 문의는 `contact_open`/`contact_submit_success`의
+    `propertiesJson.source`로 묶어 슬롯별 열기·제출·완료율을 본다(`*_ad`/`*_ad_rail`이
+    광고 슬롯).
+  - 대회별 광고 문의는 contact 이벤트의 `competitionId`로 묶는다. 대회 맥락이 있는
+    상세·드로어 배너에서만 채워지므로, 적용 전 과거 데이터에는 비어 있을 수 있다.
+- 관련 대회 CTR은 `related_competition_click / competition_view`로, 출처 링크 클릭은
+  `source_link_click` 수(접수 URL이 없을 때 공식 공지 클릭)로 전환 지표에 노출한다.
 - 0건 결과율은 `empty_search_result / (search_performed + filter_applied)`로
   본다. 검색·필터 두 경로를 합산한 상호작용 기준 비율이다.
 - 평균 검색 결과는 `search_performed.resultCount` 평균으로 본다.
@@ -176,6 +191,12 @@ Yeti, Naver Web Crawler, Headless Chrome 등을 분류한다.
 조합, 상세 페이지 직접 진입의 정확한 유입 단계 분해는 하지 않는다. 이런 분석이
 필요하면 새 허용 속성 또는 이벤트를 추가한 뒤 이 문서와 개인정보 고지를 함께
 검토한다.
+
+다음 이벤트는 수집하되 전용 지표 없이 진단/원시 로그 용도로만 둔다(이벤트 믹스
+표에만 나타날 수 있음): `filter_reset`, `sort_changed`, `view_mode_changed`.
+허용 속성 중 `maxScrollDepth`는 수집하지만 아직 지표로 쓰지 않는다(향후 스크롤
+깊이 분석용). 광고 노출(impression) 기반 슬롯 CTR은 아직 측정하지 않으므로 슬롯
+지표는 클릭(`contact_open`) 기준이다.
 
 ## 허용 속성
 

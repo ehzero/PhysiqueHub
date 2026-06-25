@@ -359,6 +359,9 @@ export function CompDrawer({
             <AdInquiryBanner
               className="drawer-inline-ad"
               source="competition_drawer_ad"
+              competitionId={comp.id}
+              tier={comp.tier}
+              organizationId={comp.organizationId ?? undefined}
             />
           </div>
         </div>

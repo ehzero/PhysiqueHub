@@ -34,6 +34,10 @@ interface ContactDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   initialCategory?: ContactCategory;
+  source?: string;
+  competitionId?: string;
+  tier?: string;
+  organizationId?: string;
 }
 
 type AttachmentPreview = {
@@ -48,6 +52,10 @@ export function ContactDrawer({
   isOpen,
   onClose,
   initialCategory = "기타 문의",
+  source,
+  competitionId,
+  tier,
+  organizationId,
 }: ContactDrawerProps) {
   const [category, setCategory] = useState<ContactCategory>(initialCategory);
   const [competitionName, setCompetitionName] = useState("");
@@ -172,9 +180,15 @@ export function ContactDrawer({
         website,
         attachments: uploadedAttachments,
       });
+      // open 시점의 컨텍스트(슬롯·대회)를 submit에도 동일하게 실어 슬롯별/대회별
+      // 완료율과 리드 전환을 집계할 수 있게 한다.
       trackAnalyticsEvent("contact_submit_success", {
+        competitionId,
         properties: {
           category,
+          source,
+          tier,
+          organizationId,
         },
       });
       setSubmitState("done");

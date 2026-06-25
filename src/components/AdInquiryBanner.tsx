@@ -9,6 +9,9 @@ interface AdInquiryBannerProps {
   className?: string;
   as?: AdInquiryBannerElement;
   source: string;
+  competitionId?: string;
+  tier?: string;
+  organizationId?: string;
   title?: string;
   description?: string;
 }
@@ -17,6 +20,9 @@ export function AdInquiryBanner({
   className,
   as: Component = "aside",
   source,
+  competitionId,
+  tier,
+  organizationId,
   title = "피지크허브 광고 문의",
   description = "헬스·웨이트 트레이닝과 피트니스 대회에 관심 있는 사람들에게 브랜드를 소개하세요.",
 }: AdInquiryBannerProps) {
@@ -27,7 +33,9 @@ export function AdInquiryBanner({
       <button
         className="ad-inquiry-banner"
         type="button"
-        onClick={() => openContact({ category: "광고 문의", source })}
+        onClick={() =>
+          openContact({ category: "광고 문의", source, competitionId, tier, organizationId })
+        }
       >
         <span className="ad-inquiry-kicker">AD PARTNER</span>
         <span className="ad-inquiry-title">{title}</span>
