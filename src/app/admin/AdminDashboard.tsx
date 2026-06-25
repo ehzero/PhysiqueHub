@@ -7,9 +7,11 @@ import Link from "next/link";
 import { hasAdminSession, isAdminPasswordConfigured } from "@/lib/admin-auth";
 import {
   getAnalyticsSummaryForRange,
+  getCompetitionFunnel,
   type AnalyticsMetric,
   type AnalyticsSummary,
   type AnalyticsTableRow,
+  type CompetitionFunnel,
 } from "@/lib/admin-analytics";
 import { prisma } from "@/lib/prisma";
 import { Sparkline } from "./AnalyticsCharts";
@@ -100,6 +102,7 @@ async function AdminDashboard({
   analyticsRange,
   analyticsFrom,
   analyticsTo,
+  analyticsComp,
 }: {
   activeSection: AdminSection;
   selectedId?: string;
@@ -110,10 +113,15 @@ async function AdminDashboard({
   analyticsRange?: string;
   analyticsFrom?: string;
   analyticsTo?: string;
+  analyticsComp?: string;
 }) {
   const seasonYear = new Date().getFullYear();
   const selectedAnalyticsRange = toAnalyticsRange(analyticsRange);
   const analyticsWindow = getAnalyticsWindow(selectedAnalyticsRange, analyticsFrom, analyticsTo);
+  const competitionFunnel =
+    activeSection === "analytics" && analyticsComp
+      ? await getCompetitionFunnel(analyticsComp, analyticsWindow.start, analyticsWindow.end)
+      : null;
   const queueWhere = getQueueWhere(
     seasonYear,
     statusFilter,
@@ -268,6 +276,7 @@ async function AdminDashboard({
         {activeSection === "analytics" && (
           <AnalyticsDashboardSection
             analytics={analyticsSummary}
+            competitionFunnel={competitionFunnel}
             from={analyticsFrom}
             range={selectedAnalyticsRange}
             to={analyticsTo}
@@ -747,15 +756,27 @@ function AnalyticsDashboardSection({
   range,
   from,
   to,
+  competitionFunnel,
 }: {
   analytics: AnalyticsSummary;
   range: AnalyticsRange;
   from?: string;
   to?: string;
+  competitionFunnel: CompetitionFunnel | null;
 }) {
+  // 대회 행 → 미니퍼널 드릴다운 링크(기간 유지). competitionId가 없는 행은 비활성.
+  const compHref = (row: AnalyticsTableRow) =>
+    row.key && row.key !== "unknown"
+      ? buildAnalyticsHref({ range, from, to, comp: row.key })
+      : undefined;
+  const clearCompHref = buildAnalyticsHref({ range, from, to });
+
   return (
     <section aria-label="이용 분석">
       {range === "custom" && <DateRangeForm from={from} to={to} />}
+      {competitionFunnel && (
+        <CompetitionFunnelPanel backHref={clearCompHref} funnel={competitionFunnel} />
+      )}
       <p className="ac-note">
         {formatKoreaDateTime(analytics.start)}부터 {formatKoreaDateTime(analytics.end)}까지 ·
         기본 이용 분석은 봇/크롤러를 제외합니다 · 활성 사용자는 최근 2분 기준 · 원문 IP와
@@ -791,6 +812,7 @@ function AnalyticsDashboardSection({
           />
           <AnalyticsTable
             emptyLabel="대회별 문의 데이터가 없습니다."
+            hrefForRow={compHref}
             rows={analytics.leadCompetitionRows}
             title="대회별 광고 문의"
           />
@@ -839,21 +861,25 @@ function AnalyticsDashboardSection({
         <div className="ac-tables">
           <AnalyticsTable
             emptyLabel="대회 상세 조회 데이터가 없습니다."
+            hrefForRow={compHref}
             rows={analytics.topCompetitions}
             title="상위 상세 조회 대회"
           />
           <AnalyticsTable
             emptyLabel="접수 클릭 데이터가 없습니다."
+            hrefForRow={compHref}
             rows={analytics.topRegistrationCompetitions}
             title="접수 클릭 많은 대회"
           />
           <AnalyticsTable
             emptyLabel="대회 저장 데이터가 없습니다."
+            hrefForRow={compHref}
             rows={analytics.topSavedCompetitions}
             title="저장된 대회"
           />
           <AnalyticsTable
             emptyLabel="대회 공유 데이터가 없습니다."
+            hrefForRow={compHref}
             rows={analytics.topSharedCompetitions}
             title="공유된 대회"
           />
@@ -945,6 +971,31 @@ function DateRangeForm({ from, to }: { from?: string; to?: string }) {
         적용
       </button>
     </form>
+  );
+}
+
+function CompetitionFunnelPanel({
+  funnel,
+  backHref,
+}: {
+  funnel: CompetitionFunnel;
+  backHref: string;
+}) {
+  return (
+    <section className="ac-block" aria-label="대회 드릴다운">
+      <div className="ac-block-head">
+        <span className="ac-tag">Competition</span>
+        <span className="ac-title">{funnel.title}</span>
+        <Link className="ac-drill-back" href={backHref}>
+          ← 전체로
+        </Link>
+      </div>
+      <FunnelBars
+        emptyLabel="이 대회의 행동 데이터가 없습니다."
+        rows={funnel.rows}
+        title={funnel.organizationName}
+      />
+    </section>
   );
 }
 
@@ -1040,10 +1091,12 @@ function AnalyticsTable({
   emptyLabel,
   rows,
   title,
+  hrefForRow,
 }: {
   emptyLabel: string;
   rows: AnalyticsTableRow[];
   title: string;
+  hrefForRow?: (row: AnalyticsTableRow) => string | undefined;
 }) {
   if (rows.length === 0) {
     return (
@@ -1071,16 +1124,25 @@ function AnalyticsTable({
           </tr>
         </thead>
         <tbody>
-          {rows.map((row, index) => (
-            <tr key={row.key}>
-              <td className="ac-col-rank">{index + 1}</td>
-              <th className="ac-dtable-item" scope="row">
-                <span>{row.label}</span>
-                {row.meta && <small>{row.meta}</small>}
-              </th>
-              <td className="ac-col-num">{formatNumber(row.count)}</td>
-            </tr>
-          ))}
+          {rows.map((row, index) => {
+            const href = hrefForRow?.(row);
+            return (
+              <tr key={row.key}>
+                <td className="ac-col-rank">{index + 1}</td>
+                <th className="ac-dtable-item" scope="row">
+                  {href ? (
+                    <Link className="ac-dtable-link" href={href}>
+                      {row.label}
+                    </Link>
+                  ) : (
+                    <span>{row.label}</span>
+                  )}
+                  {row.meta && <small>{row.meta}</small>}
+                </th>
+                <td className="ac-col-num">{formatNumber(row.count)}</td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </section>
@@ -1480,19 +1542,32 @@ function getAdminHref({
   return query ? `/admin/review?${query}` : "/admin/review";
 }
 
-function getAdminAnalyticsHref(analyticsRange: AnalyticsRange, from?: string, to?: string) {
+function buildAnalyticsHref(opts: {
+  range: AnalyticsRange;
+  from?: string;
+  to?: string;
+  comp?: string;
+}) {
   const params = new URLSearchParams();
 
-  if (analyticsRange !== "7d") {
-    params.set("analyticsRange", analyticsRange);
+  if (opts.range !== "7d") {
+    params.set("analyticsRange", opts.range);
   }
-  if (analyticsRange === "custom") {
-    if (isYmd(from)) params.set("from", from);
-    if (isYmd(to)) params.set("to", to);
+  if (opts.range === "custom") {
+    if (isYmd(opts.from)) params.set("from", opts.from);
+    if (isYmd(opts.to)) params.set("to", opts.to);
+  }
+  if (opts.comp) {
+    params.set("comp", opts.comp);
   }
 
   const query = params.toString();
   return query ? `/admin/analytics?${query}` : "/admin/analytics";
+}
+
+function getAdminAnalyticsHref(analyticsRange: AnalyticsRange, from?: string, to?: string) {
+  // 기간 탭은 드릴다운(comp)을 초기화한다.
+  return buildAnalyticsHref({ range: analyticsRange, from, to });
 }
 
 function isConfidenceFilter(value: string | undefined): value is (typeof CONFIDENCE_LEVELS)[number] {
@@ -1665,7 +1740,7 @@ export async function AdminSectionPage({
   const paramsPromise: NonNullable<AdminPageProps["searchParams"]> =
     searchParams ?? Promise.resolve({});
 
-  const [{ analyticsRange, from, to, error, id, status, confidence, org, issue }, isAuthed] =
+  const [{ analyticsRange, from, to, comp, error, id, status, confidence, org, issue }, isAuthed] =
     await Promise.all([paramsPromise, hasAdminSession()]);
 
   if (!isAuthed) {
@@ -1675,6 +1750,7 @@ export async function AdminSectionPage({
   return (
     <AdminDashboard
       activeSection={activeSection}
+      analyticsComp={comp}
       analyticsFrom={from}
       analyticsRange={analyticsRange}
       analyticsTo={to}

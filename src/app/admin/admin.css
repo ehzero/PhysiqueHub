@@ -631,6 +631,28 @@ dl.ac-kpis .ac-kpi-value {
 .ac-dtable thead .ac-col-rank {
   font-family: inherit;
 }
+.ac-dtable-link {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ac-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ac-dtable-link:hover {
+  color: var(--ac-accent);
+  text-decoration: underline;
+}
+.ac-drill-back {
+  margin-left: auto;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ac-accent);
+}
+.ac-drill-back:hover {
+  text-decoration: underline;
+}
 
 /* Visual funnel (drop-off bars + worst-step highlight) */
 .ac-funnel {

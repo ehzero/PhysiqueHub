@@ -738,6 +738,70 @@ export async function getAnalyticsSummaryForRange(start: Date, end: Date): Promi
   return { ...cached, start, end };
 }
 
+export type CompetitionFunnel = {
+  competitionId: string;
+  title: string;
+  organizationName: string;
+  rows: AnalyticsTableRow[];
+};
+
+// 대회 단일 드릴다운: 상세 조회 → 접수 클릭/저장/공유. 상세 조회 대비 비율을 meta에
+// 담아 FunnelBars로 렌더한다. comp 파라미터가 있을 때만(저빈도) 호출하는 단일 쿼리.
+export async function getCompetitionFunnel(
+  competitionId: string,
+  start: Date,
+  end: Date,
+): Promise<CompetitionFunnel | null> {
+  try {
+    const [competition, rows] = await Promise.all([
+      prisma.competitionSchedule.findUnique({
+        where: { id: competitionId },
+        select: { title: true, organizationName: true },
+      }),
+      prisma.$queryRaw<{ name: string; count: number }[]>`
+        SELECT e."name" AS name, COUNT(*)::int AS count
+        FROM "AnalyticsEvent" e
+        JOIN "AnalyticsSession" s ON s."id" = e."sessionId"
+        WHERE e."competitionId" = ${competitionId}
+          AND s."trafficType" = 'human'
+          AND e."occurredAt" >= ${start} AND e."occurredAt" <= ${end}
+          AND e."name" IN ('competition_view', 'registration_link_click', 'save_competition', 'share_click')
+        GROUP BY e."name"
+      `,
+    ]);
+    if (!competition) return null;
+
+    const byName = new Map(rows.map((row) => [row.name, row.count]));
+    const viewCount = byName.get("competition_view") ?? 0;
+    const step = (name: string, label: string): AnalyticsTableRow => {
+      const count = byName.get(name) ?? 0;
+      return {
+        key: name,
+        label,
+        meta:
+          name === "competition_view"
+            ? "상세 페이지 조회"
+            : `상세 대비 ${toPercentLabel(count, viewCount)}`,
+        count,
+      };
+    };
+
+    return {
+      competitionId,
+      title: competition.title,
+      organizationName: competition.organizationName,
+      rows: [
+        step("competition_view", "상세 조회"),
+        step("registration_link_click", "접수 클릭"),
+        step("save_competition", "저장"),
+        step("share_click", "공유"),
+      ],
+    };
+  } catch {
+    return null;
+  }
+}
+
 function getEmptyAnalyticsSummary(
   start: Date,
   end: Date,
