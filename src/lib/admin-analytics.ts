@@ -25,6 +25,7 @@ export type AnalyticsMetric = {
   goodWhen?: "higher" | "lower"; // 델타 색상 의미(낮을수록 좋은 지표 구분)
   status?: "ok" | "warn"; // 임계값 평가 결과
   spark?: number[]; // hero KPI 일별 시리즈(오래된→최신)
+  sparkDays?: string[]; // spark와 1:1 대응하는 Seoul 날짜 키(YYYY-MM-DD), 툴팁용
 };
 
 export type AnalyticsTableRow = {
@@ -1244,22 +1245,28 @@ function withDeltas(current: AnalyticsMetric[], previous: AnalyticsMetric[]): An
 }
 
 function buildHeroMetrics(counts: AnalyticsCountInputs, series?: HeroSeries): AnalyticsMetric[] {
+  const withDays = (m: AnalyticsMetric): AnalyticsMetric => ({ ...m, sparkDays: series?.days });
   return [
-    metric("visitors", "방문자", counts.visitorCount, "number", undefined, series?.visitors),
-    metric("sessions", "세션", counts.sessionCount, "number", undefined, series?.sessions),
-    metric(
-      "registration-clicks",
-      "접수 클릭",
-      counts.registrationClickCount,
-      "number",
-      undefined,
-      series?.registration,
+    withDays(metric("visitors", "방문자", counts.visitorCount, "number", undefined, series?.visitors)),
+    withDays(metric("sessions", "세션", counts.sessionCount, "number", undefined, series?.sessions)),
+    withDays(
+      metric(
+        "registration-clicks",
+        "접수 클릭",
+        counts.registrationClickCount,
+        "number",
+        undefined,
+        series?.registration,
+      ),
     ),
-    metric("leads", "광고 문의 제출", counts.contactSubmitCount, "number", undefined, series?.leads),
+    withDays(
+      metric("leads", "광고 문의 제출", counts.contactSubmitCount, "number", undefined, series?.leads),
+    ),
   ];
 }
 
 type HeroSeries = {
+  days: string[];
   visitors: number[];
   sessions: number[];
   registration: number[];
@@ -1331,6 +1338,7 @@ async function getHeroSeries(start: Date, end: Date): Promise<HeroSeries> {
   const sessionByDay = new Map(sessionRows.map((row) => [row.day, row]));
   const eventByDay = new Map(eventRows.map((row) => [row.day, row]));
   return {
+    days,
     visitors: days.map((day) => sessionByDay.get(day)?.visitors ?? 0),
     sessions: days.map((day) => sessionByDay.get(day)?.sessions ?? 0),
     registration: days.map((day) => eventByDay.get(day)?.registration ?? 0),

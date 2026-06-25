@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { Area, AreaChart, ResponsiveContainer, YAxis } from "recharts";
+import { Area, AreaChart, ResponsiveContainer, Tooltip, YAxis } from "recharts";
 
 // 클라이언트 마운트 감지: 서버 스냅샷 false, 클라이언트 true. 이펙트/setState 없이
 // 하이드레이션 안전하게 "마운트됨"을 얻는다(차트는 마운트 후에만 렌더).
@@ -28,14 +28,52 @@ const TONE_COLOR: Record<SparkTone, string> = {
 
 const SPARK_HEIGHT = 36;
 
+type SparkPoint = { index: number; value: number; day?: string };
+
+// "2026-06-24" → "6월 24일". 알 수 없으면 원본을 그대로 보여준다.
+function formatSparkDay(day?: string): string {
+  if (!day) return "";
+  const parts = day.split("-");
+  if (parts.length !== 3) return day;
+  return `${Number(parts[1])}월 ${Number(parts[2])}일`;
+}
+
+function SparkTooltip({
+  active,
+  payload,
+  valueLabel,
+  tone,
+}: {
+  active?: boolean;
+  payload?: { payload: SparkPoint }[];
+  valueLabel: string;
+  tone: SparkTone;
+}) {
+  if (!active || !payload?.length) return null;
+  const point = payload[0].payload;
+  return (
+    <div className="ac-spark-tip" role="presentation">
+      {point.day && <span className="ac-spark-tip-day">{formatSparkDay(point.day)}</span>}
+      <span className="ac-spark-tip-val">
+        <span className="ac-spark-tip-dot" style={{ background: TONE_COLOR[tone] }} aria-hidden="true" />
+        {valueLabel} {point.value.toLocaleString("ko-KR")}
+      </span>
+    </div>
+  );
+}
+
 export function Sparkline({
   data,
+  days,
   tone = "accent",
   ariaLabel,
+  valueLabel,
 }: {
   data: number[];
+  days?: string[];
   tone?: SparkTone;
   ariaLabel: string;
+  valueLabel?: string;
 }) {
   // ResponsiveContainer는 DOM 측정을 쓰므로 SSR에서 -1 치수 경고/CLS가 난다.
   // mount 후에만 렌더해 하이드레이션 미스매치를 피한다(어드민이라 SSR 불필요).
@@ -52,7 +90,7 @@ export function Sparkline({
 
   const color = TONE_COLOR[tone];
   const gradientId = `ac-spark-${tone}`;
-  const points = data.map((value, index) => ({ index, value }));
+  const points: SparkPoint[] = data.map((value, index) => ({ index, value, day: days?.[index] }));
 
   return (
     <div className="ac-spark" role="img" aria-label={ariaLabel}>
@@ -65,6 +103,13 @@ export function Sparkline({
             </linearGradient>
           </defs>
           <YAxis hide domain={["dataMin", "dataMax"]} />
+          <Tooltip
+            isAnimationActive={false}
+            cursor={{ stroke: color, strokeWidth: 1, strokeDasharray: "3 3" }}
+            wrapperStyle={{ outline: "none", zIndex: 20 }}
+            allowEscapeViewBox={{ x: false, y: true }}
+            content={<SparkTooltip valueLabel={valueLabel ?? ""} tone={tone} />}
+          />
           <Area
             type="monotone"
             dataKey="value"
@@ -72,6 +117,7 @@ export function Sparkline({
             strokeWidth={1.5}
             fill={`url(#${gradientId})`}
             dot={false}
+            activeDot={{ r: 2.5, stroke: color, fill: color }}
             isAnimationActive={false}
           />
         </AreaChart>

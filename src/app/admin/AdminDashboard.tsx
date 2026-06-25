@@ -1123,6 +1123,8 @@ function ChartKpiCard({ metric }: { metric: AnalyticsMetric }) {
         <Sparkline
           ariaLabel={`${metric.label} 일별 추이`}
           data={metric.spark}
+          days={metric.sparkDays}
+          valueLabel={metric.label}
           tone={metric.status === "warn" ? "warn" : "accent"}
         />
       )}
