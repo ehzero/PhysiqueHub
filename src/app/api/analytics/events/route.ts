@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import {
   isAnalyticsEventName,
@@ -10,6 +11,7 @@ import {
 import {
   classifyAnalyticsTraffic,
   getBrowserNameFromUserAgent,
+  getCachedBotDetectionRules,
   getDeviceCategoryFromUserAgent,
   getOsNameFromUserAgent,
 } from "@/lib/analytics-traffic-classifier";
@@ -63,63 +65,12 @@ export async function POST(request: Request) {
   const now = new Date();
   const ipAddress = getClientIp(request);
   const userAgent = truncateAnalyticsString(request.headers.get("user-agent"), 1024);
-  const client = getClientSummary(userAgent, session);
-  const classification = await classifyAnalyticsTraffic({ ipAddress, userAgent });
   const events = payload.events
     .slice(0, MAX_EVENTS_PER_BATCH)
     .map((event) => normalizeEvent(event, session, ipAddress, userAgent, now))
     .filter((event): event is NonNullable<typeof event> => Boolean(event));
 
-  await prisma.analyticsSession.upsert({
-    where: { id: session.sessionId },
-    create: {
-      id: session.sessionId,
-      visitorId: session.visitorId,
-      landingPath: session.landingPath,
-      referrer: session.referrer,
-      referrerHost: session.referrerHost,
-      channel: session.channel,
-      utmSource: session.utmSource,
-      utmMedium: session.utmMedium,
-      utmCampaign: session.utmCampaign,
-      utmContent: session.utmContent,
-      utmTerm: session.utmTerm,
-      ipAddress,
-      userAgent,
-      deviceCategory: client.deviceCategory,
-      browserName: client.browserName,
-      osName: client.osName,
-      trafficType: classification.trafficType,
-      botName: classification.botName,
-      botReason: classification.botReason,
-      botVerified: classification.botVerified,
-      reverseDnsHost: classification.reverseDnsHost,
-      classifiedAt: classification.classifiedAt,
-      classificationVersion: classification.classificationVersion,
-      displayMode: session.displayMode,
-      startedAt: now,
-      lastSeenAt: now,
-    },
-    update: {
-      // 유입 속성(referrer/referrerHost/channel/utm*)은 진입 시점 값이므로
-      // create에서만 기록하고 update에서는 건드리지 않는다. 매 배치마다 현재 URL
-      // 기준으로 덮어쓰면 UTM 랜딩을 벗어난 뒤 어트리뷰션이 유실된다.
-      visitorId: session.visitorId,
-      ipAddress,
-      userAgent,
-      deviceCategory: client.deviceCategory,
-      browserName: client.browserName,
-      osName: client.osName,
-      trafficType: classification.trafficType,
-      botName: classification.botName,
-      botReason: classification.botReason,
-      botVerified: classification.botVerified,
-      reverseDnsHost: classification.reverseDnsHost,
-      classifiedAt: classification.classifiedAt,
-      classificationVersion: classification.classificationVersion,
-      lastSeenAt: now,
-    },
-  });
+  await upsertAnalyticsSession(session, ipAddress, userAgent, now);
 
   if (events.length > 0) {
     // skipDuplicates: 재시도로 같은 eventId가 다시 들어오면 ON CONFLICT DO
@@ -128,6 +79,72 @@ export async function POST(request: Request) {
   }
 
   return NextResponse.json({ ok: true, count: events.length }, { status: 202 });
+}
+
+async function upsertAnalyticsSession(
+  session: NonNullable<ReturnType<typeof normalizeSession>>,
+  ipAddress: string | null,
+  userAgent: string | null,
+  now: Date,
+) {
+  // 반복 배치(이미 생성·분류된 세션)는 lastSeenAt만 갱신한다. 분류·유입·기기 속성은
+  // 세션 동안 사실상 불변이므로 다시 쓰지 않는다 → 봇 재분류와 14컬럼 UPDATE 제거.
+  const updated = await prisma.analyticsSession.updateMany({
+    where: { id: session.sessionId },
+    data: { lastSeenAt: now },
+  });
+  if (updated.count > 0) return;
+
+  // 신규 세션: 이때만 봇 분류를 1회 수행한다(규칙은 모듈 캐시 사용).
+  const client = getClientSummary(userAgent, session);
+  const classification = await classifyAnalyticsTraffic({
+    ipAddress,
+    userAgent,
+    rules: await getCachedBotDetectionRules(),
+  });
+
+  try {
+    await prisma.analyticsSession.create({
+      data: {
+        id: session.sessionId,
+        visitorId: session.visitorId,
+        landingPath: session.landingPath,
+        referrer: session.referrer,
+        referrerHost: session.referrerHost,
+        channel: session.channel,
+        utmSource: session.utmSource,
+        utmMedium: session.utmMedium,
+        utmCampaign: session.utmCampaign,
+        utmContent: session.utmContent,
+        utmTerm: session.utmTerm,
+        ipAddress,
+        userAgent,
+        deviceCategory: client.deviceCategory,
+        browserName: client.browserName,
+        osName: client.osName,
+        trafficType: classification.trafficType,
+        botName: classification.botName,
+        botReason: classification.botReason,
+        botVerified: classification.botVerified,
+        reverseDnsHost: classification.reverseDnsHost,
+        classifiedAt: classification.classifiedAt,
+        classificationVersion: classification.classificationVersion,
+        displayMode: session.displayMode,
+        startedAt: now,
+        lastSeenAt: now,
+      },
+    });
+  } catch (error) {
+    // 첫 배치 동시 도착 경합: 다른 요청이 먼저 생성(PK 충돌)했으면 lastSeenAt만 갱신.
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+      await prisma.analyticsSession.updateMany({
+        where: { id: session.sessionId },
+        data: { lastSeenAt: now },
+      });
+      return;
+    }
+    throw error;
+  }
 }
 
 function normalizeSession(value: unknown) {

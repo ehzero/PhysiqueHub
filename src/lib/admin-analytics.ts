@@ -1,6 +1,7 @@
 import "server-only";
 
 import type { Prisma } from "@prisma/client";
+import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/prisma";
 
 const ACTIVE_SESSION_WINDOW_MS = 2 * 60 * 1_000;
@@ -144,7 +145,7 @@ export async function getAnalyticsSummary(start: Date, end: Date): Promise<Analy
     };
 
     const [
-      visitorRows,
+      visitorStatsRows,
       sessionCount,
       pageViewCount,
       listPageViewCount,
@@ -169,25 +170,34 @@ export async function getAnalyticsSummary(start: Date, end: Date): Promise<Analy
       channelGroupRows,
       eventGroupRows,
       accessModeGroupRows,
-      activeVisitorRows,
+      activeVisitorCountRows,
       activeSessionCount,
       deviceGroupRows,
       browserGroupRows,
       osGroupRows,
       searchResultAverage,
       engagementSummaryRows,
-      botVisitorRows,
+      botVisitorCountRows,
       botSessionCount,
       botPageViewCount,
       botNameRows,
       botTopPageRows,
-      windowSessionRows,
+      windowSessionCountRows,
     ] = await Promise.all([
-      prisma.analyticsSession.findMany({
-        distinct: ["visitorId"],
-        select: { visitorId: true },
-        where: humanSessionWindow,
-      }),
+      prisma.$queryRaw<{ total: number; returning: number }[]>`
+        SELECT
+          COUNT(DISTINCT s."visitorId")::int AS total,
+          COUNT(DISTINCT s."visitorId") FILTER (
+            WHERE EXISTS (
+              SELECT 1 FROM "AnalyticsSession" p
+              WHERE p."visitorId" = s."visitorId" AND p."startedAt" < ${start}
+            )
+          )::int AS returning
+        FROM "AnalyticsSession" s
+        WHERE s."trafficType" = 'human'
+          AND s."startedAt" >= ${start}
+          AND s."startedAt" <= ${end}
+      `,
       prisma.analyticsSession.count({ where: humanSessionWindow }),
       prisma.analyticsEvent.count({
         where: { ...humanEventWindow, name: "page_view" },
@@ -328,13 +338,11 @@ export async function getAnalyticsSummary(start: Date, end: Date): Promise<Analy
         orderBy: { _count: { id: "desc" } },
         take: 10,
       }),
-      prisma.analyticsSession.findMany({
-        distinct: ["visitorId"],
-        select: { visitorId: true },
-        where: {
-          AND: [{ lastSeenAt: { gte: activeSince } }, humanSessionFilter],
-        },
-      }),
+      prisma.$queryRaw<{ count: number }[]>`
+        SELECT COUNT(DISTINCT "visitorId")::int AS count
+        FROM "AnalyticsSession"
+        WHERE "trafficType" = 'human' AND "lastSeenAt" >= ${activeSince}
+      `,
       prisma.analyticsSession.count({
         where: {
           AND: [{ lastSeenAt: { gte: activeSince } }, humanSessionFilter],
@@ -396,11 +404,12 @@ export async function getAnalyticsSummary(start: Date, end: Date): Promise<Analy
         console.error("Failed to compute analytics engagement summary", error);
         return [];
       }),
-      prisma.analyticsSession.findMany({
-        distinct: ["visitorId"],
-        select: { visitorId: true },
-        where: botSessionWindow,
-      }),
+      prisma.$queryRaw<{ count: number }[]>`
+        SELECT COUNT(DISTINCT "visitorId")::int AS count
+        FROM "AnalyticsSession"
+        WHERE "trafficType" IN ('bot', 'suspected_bot')
+          AND "startedAt" >= ${start} AND "startedAt" <= ${end}
+      `,
       prisma.analyticsSession.count({ where: botSessionWindow }),
       prisma.analyticsEvent.count({
         where: { ...botEventWindow, name: "page_view" },
@@ -422,29 +431,24 @@ export async function getAnalyticsSummary(start: Date, end: Date): Promise<Analy
       // 윈도 내 활동(이벤트 1건 이상) 세션. per-session 비율의 분모로 쓴다.
       // sessionCount(startedAt 기준)와 달리 이벤트 분자와 같은 모집단이라
       // 경계에서 비율이 부풀려지지 않는다.
-      prisma.analyticsEvent.findMany({
-        distinct: ["sessionId"],
-        select: { sessionId: true },
-        where: humanEventWindow,
-      }),
+      prisma.$queryRaw<{ count: number }[]>`
+        SELECT COUNT(DISTINCT e."sessionId")::int AS count
+        FROM "AnalyticsEvent" e
+        JOIN "AnalyticsSession" s ON s."id" = e."sessionId"
+        WHERE s."trafficType" = 'human'
+          AND e."occurredAt" >= ${start} AND e."occurredAt" <= ${end}
+      `,
     ]);
 
-    const visitorIds = visitorRows.map((row) => row.visitorId);
-    const returningVisitorRows =
-      visitorIds.length > 0
-        ? await prisma.analyticsSession.findMany({
-            distinct: ["visitorId"],
-            select: { visitorId: true },
-            where: {
-              // 과거에 (분류와 무관하게) 세션이 있었으면 재방문으로 본다. human
-              // 필터를 두면 재분류로 과거 세션이 봇이 될 때 재방문율이 흔들린다.
-              startedAt: { lt: start },
-              visitorId: { in: visitorIds },
-            },
-          })
-        : [];
-    const returningVisitorCount = returningVisitorRows.length;
-    const newVisitorCount = Math.max(visitorRows.length - returningVisitorCount, 0);
+    // 방문자/재방문/활성/봇/활동세션은 COUNT(DISTINCT) 스칼라로 받는다(행을 Node로
+    // 끌어와 length로 세지 않음). 재방문은 visitor 통계 쿼리에 통합되어 별도 wave가 없다.
+    // (재방문 판정은 과거 세션 존재 여부만 보고 trafficType은 따지지 않는다 — 재분류 안정성.)
+    const visitorCount = visitorStatsRows[0]?.total ?? 0;
+    const returningVisitorCount = visitorStatsRows[0]?.returning ?? 0;
+    const newVisitorCount = Math.max(visitorCount - returningVisitorCount, 0);
+    const activeVisitorCount = activeVisitorCountRows[0]?.count ?? 0;
+    const botVisitorCount = botVisitorCountRows[0]?.count ?? 0;
+    const windowSessionCount = windowSessionCountRows[0]?.count ?? 0;
     const accessModeCounts = accessModeGroupRows.reduce(
       (acc, row) => {
         acc[toAccessMode(row.displayMode)] += row._count._all;
@@ -493,7 +497,7 @@ export async function getAnalyticsSummary(start: Date, end: Date): Promise<Analy
     const competitionActionCounts = toCompetitionActionCountMap(competitionActionRows);
     const counts: AnalyticsCountInputs = {
       activeSessionCount,
-      activeVisitorCount: activeVisitorRows.length,
+      activeVisitorCount,
       averageActiveSeconds,
       competitionDetailClickCount,
       competitionOpenCount,
@@ -513,8 +517,8 @@ export async function getAnalyticsSummary(start: Date, end: Date): Promise<Analy
       shareClickCount,
       topSearchAverageResultCount: searchResultAverage._avg.resultCount ?? 0,
       unsaveCompetitionCount,
-      visitorCount: visitorRows.length,
-      windowSessionCount: windowSessionRows.length,
+      visitorCount,
+      windowSessionCount,
     };
 
     return {
@@ -539,9 +543,9 @@ export async function getAnalyticsSummary(start: Date, end: Date): Promise<Analy
         },
       ].filter((row) => row.count > 0),
       activeSessionCount,
-      activeVisitorCount: activeVisitorRows.length,
+      activeVisitorCount,
       botMetrics: [
-        metric("bot-visitors", "봇 방문자", botVisitorRows.length, "number"),
+        metric("bot-visitors", "봇 방문자", botVisitorCount, "number"),
         metric("bot-sessions", "봇 세션", botSessionCount, "number"),
         metric("bot-pageviews", "봇 페이지뷰", botPageViewCount, "number"),
       ],
@@ -625,13 +629,13 @@ export async function getAnalyticsSummary(start: Date, end: Date): Promise<Analy
         {
           key: "new",
           label: "신규 방문자",
-          meta: toPercentLabel(newVisitorCount, visitorRows.length),
+          meta: toPercentLabel(newVisitorCount, visitorCount),
           count: newVisitorCount,
         },
         {
           key: "returning",
           label: "재방문자",
-          meta: toPercentLabel(returningVisitorCount, visitorRows.length),
+          meta: toPercentLabel(returningVisitorCount, visitorCount),
           count: returningVisitorCount,
         },
       ].filter((row) => row.count > 0),
@@ -648,6 +652,25 @@ export async function getAnalyticsSummary(start: Date, end: Date): Promise<Analy
       "Analytics 테이블을 확인할 수 없습니다. Prisma migration 적용 상태를 확인하세요.",
     );
   }
+}
+
+const ANALYTICS_CACHE_REVALIDATE_SECONDS = 60;
+
+const getCachedAnalyticsSummary = unstable_cache(
+  (startMs: number, endMs: number) => getAnalyticsSummary(new Date(startMs), new Date(endMs)),
+  ["analytics-summary"],
+  { revalidate: ANALYTICS_CACHE_REVALIDATE_SECONDS },
+);
+
+// 어드민 대시보드 진입점. 무거운 집계(~38쿼리)를 윈도(끝을 분 단위로 버킷팅한 키)로
+// 캐시해 반복 진입·기간 토글마다 전체 재실행하지 않는다. 활성 사용자 타일은 캐시
+// TTL(최대 60초)만큼 stale할 수 있으나 2분 활성 윈도 안이라 허용 범위다.
+// unstable_cache가 결과를 직렬화하며 Date를 문자열로 바꾸므로 표시용 start/end는
+// 호출 측의 실제 Date로 복원한다.
+export async function getAnalyticsSummaryForRange(start: Date, end: Date): Promise<AnalyticsSummary> {
+  const bucketedEndMs = Math.floor(end.getTime() / 60_000) * 60_000;
+  const cached = await getCachedAnalyticsSummary(start.getTime(), bucketedEndMs);
+  return { ...cached, start, end };
 }
 
 function getEmptyAnalyticsSummary(

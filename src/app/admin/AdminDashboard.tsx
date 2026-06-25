@@ -6,7 +6,7 @@ import type {
 import Link from "next/link";
 import { hasAdminSession, isAdminPasswordConfigured } from "@/lib/admin-auth";
 import {
-  getAnalyticsSummary,
+  getAnalyticsSummaryForRange,
   type AnalyticsMetric,
   type AnalyticsSummary,
   type AnalyticsTableRow,
@@ -161,7 +161,7 @@ async function AdminDashboard({
         orderBy: { createdAt: "desc" },
         take: 20,
       }),
-      getAnalyticsSummary(analyticsWindow.start, analyticsWindow.end),
+      getAnalyticsSummaryForRange(analyticsWindow.start, analyticsWindow.end),
     ]);
   const selectedCompetition =
     (selectedId

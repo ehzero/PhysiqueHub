@@ -74,6 +74,22 @@ export function loadBotDetectionRules(prismaClient: PrismaClient = prisma) {
   });
 }
 
+const BOT_RULES_CACHE_TTL_MS = 60_000;
+let cachedBotRules: { rules: BotDetectionRule[]; expiresAt: number } | null = null;
+
+// 봇 규칙은 거의 변하지 않으므로 모듈 스코프에 짧게 캐시한다. 수집 hot path에서
+// 매 요청마다 BotDetectionRule을 다시 조회하는 비용을 없앤다.
+export async function getCachedBotDetectionRules(prismaClient: PrismaClient = prisma) {
+  const now = Date.now();
+  if (cachedBotRules && cachedBotRules.expiresAt > now) {
+    return cachedBotRules.rules;
+  }
+
+  const rules = await loadBotDetectionRules(prismaClient);
+  cachedBotRules = { rules, expiresAt: now + BOT_RULES_CACHE_TTL_MS };
+  return rules;
+}
+
 export function getDeviceCategoryFromUserAgent(userAgent: string | null) {
   if (!userAgent) return null;
   if (/Macintosh/i.test(userAgent) && /Mobile\/\w+ Safari/i.test(userAgent)) return "tablet";
