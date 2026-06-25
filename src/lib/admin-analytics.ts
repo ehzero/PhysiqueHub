@@ -1,6 +1,6 @@
 import "server-only";
 
-import type { Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/prisma";
 
@@ -120,7 +120,36 @@ type CompetitionActionCountMap = Map<string, Map<(typeof COMPETITION_ACTION_NAME
 
 const numberFormatter = new Intl.NumberFormat("ko-KR");
 
-export async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSummary> {
+export type AnalyticsSegment = { dimension: "channel" | "device"; value: string };
+
+// 세그먼트 → 세션 where 필터. humanSessionFilter에 합치면 모든 Prisma 기반
+// 세션/이벤트(session.is) 쿼리에 자동 전파된다.
+function toSessionSegmentFilter(segment?: AnalyticsSegment): Prisma.AnalyticsSessionWhereInput {
+  if (!segment) return {};
+  return segment.dimension === "channel"
+    ? { channel: segment.value }
+    : { deviceCategory: segment.value };
+}
+
+// 원시 SQL용 세그먼트 조건. qualifier는 "s." (별칭) 또는 "" (별칭 없음).
+// qualifier/column은 고정 식별자라 raw로, 값은 파라미터로 바인딩한다.
+function segmentSql(segment: AnalyticsSegment | undefined, qualifier = ""): Prisma.Sql {
+  if (!segment) return Prisma.empty;
+  const column = segment.dimension === "channel" ? "channel" : "deviceCategory";
+  return Prisma.sql`AND ${Prisma.raw(`${qualifier}"${column}"`)} = ${segment.value}`;
+}
+
+export function parseAnalyticsSegment(dimension: string, value: string): AnalyticsSegment | undefined {
+  if (!value) return undefined;
+  if (dimension === "channel" || dimension === "device") return { dimension, value };
+  return undefined;
+}
+
+export async function getAnalyticsSummary(
+  start: Date,
+  end: Date,
+  segment?: AnalyticsSegment,
+): Promise<AnalyticsSummary> {
   try {
     const activeSince = new Date(end.getTime() - ACTIVE_SESSION_WINDOW_MS);
     const eventWindow: Prisma.AnalyticsEventWhereInput = {
@@ -137,6 +166,7 @@ export async function getAnalyticsSummary(start: Date, end: Date): Promise<Analy
     };
     const humanSessionFilter: Prisma.AnalyticsSessionWhereInput = {
       trafficType: "human",
+      ...toSessionSegmentFilter(segment),
     };
     const botSessionFilter: Prisma.AnalyticsSessionWhereInput = {
       trafficType: { in: ["bot", "suspected_bot"] },
@@ -214,6 +244,7 @@ export async function getAnalyticsSummary(start: Date, end: Date): Promise<Analy
         WHERE s."trafficType" = 'human'
           AND s."startedAt" >= ${start}
           AND s."startedAt" <= ${end}
+          ${segmentSql(segment, "s.")}
       `,
       prisma.analyticsSession.count({ where: humanSessionWindow }),
       prisma.analyticsEvent.count({
@@ -359,6 +390,7 @@ export async function getAnalyticsSummary(start: Date, end: Date): Promise<Analy
         SELECT COUNT(DISTINCT "visitorId")::int AS count
         FROM "AnalyticsSession"
         WHERE "trafficType" = 'human' AND "lastSeenAt" >= ${activeSince}
+        ${segmentSql(segment, "")}
       `,
       prisma.analyticsSession.count({
         where: {
@@ -411,6 +443,7 @@ export async function getAnalyticsSummary(start: Date, end: Date): Promise<Analy
             AND e."occurredAt" >= ${start}
             AND e."occurredAt" <= ${end}
             AND s."trafficType" = 'human'
+            ${segmentSql(segment, "s.")}
           GROUP BY e."sessionId"
         )
         SELECT
@@ -454,6 +487,7 @@ export async function getAnalyticsSummary(start: Date, end: Date): Promise<Analy
         JOIN "AnalyticsSession" s ON s."id" = e."sessionId"
         WHERE s."trafficType" = 'human'
           AND e."occurredAt" >= ${start} AND e."occurredAt" <= ${end}
+          ${segmentSql(segment, "s.")}
       `,
       prisma.analyticsEvent.count({
         where: { ...humanEventWindow, name: "contact_open" },
@@ -577,7 +611,7 @@ export async function getAnalyticsSummary(start: Date, end: Date): Promise<Analy
     const prevStart = new Date(start.getTime() - periodMs);
     const prevEnd = new Date(start.getTime());
     const [prevCounts, heroSeries] = await Promise.all([
-      getWindowCounts(prevStart, prevEnd),
+      getWindowCounts(prevStart, prevEnd, segment),
       getHeroSeries(start, end),
     ]);
 
@@ -642,7 +676,10 @@ export async function getAnalyticsSummary(start: Date, end: Date): Promise<Analy
         count: row._count._all,
       })),
       funnelRows: getFunnelRows(counts),
-      heroMetrics: withDeltas(buildHeroMetrics(counts, heroSeries), buildHeroMetrics(prevCounts)),
+      heroMetrics: withDeltas(
+        buildHeroMetrics(counts, segment ? undefined : heroSeries),
+        buildHeroMetrics(prevCounts),
+      ),
       leadCompetitionRows: toLeadCompetitionRows(leadCompetitionMap, competitionById),
       leadFunnelRows: getLeadFunnelRows(counts),
       leadMetrics: withDeltas(getLeadMetrics(counts), getLeadMetrics(prevCounts)),
@@ -722,7 +759,12 @@ export async function getAnalyticsSummary(start: Date, end: Date): Promise<Analy
 const ANALYTICS_CACHE_REVALIDATE_SECONDS = 60;
 
 const getCachedAnalyticsSummary = unstable_cache(
-  (startMs: number, endMs: number) => getAnalyticsSummary(new Date(startMs), new Date(endMs)),
+  (startMs: number, endMs: number, segDimension: string, segValue: string) =>
+    getAnalyticsSummary(
+      new Date(startMs),
+      new Date(endMs),
+      parseAnalyticsSegment(segDimension, segValue),
+    ),
   ["analytics-summary"],
   { revalidate: ANALYTICS_CACHE_REVALIDATE_SECONDS },
 );
@@ -732,9 +774,18 @@ const getCachedAnalyticsSummary = unstable_cache(
 // TTL(최대 60초)만큼 stale할 수 있으나 2분 활성 윈도 안이라 허용 범위다.
 // unstable_cache가 결과를 직렬화하며 Date를 문자열로 바꾸므로 표시용 start/end는
 // 호출 측의 실제 Date로 복원한다.
-export async function getAnalyticsSummaryForRange(start: Date, end: Date): Promise<AnalyticsSummary> {
+export async function getAnalyticsSummaryForRange(
+  start: Date,
+  end: Date,
+  segment?: AnalyticsSegment,
+): Promise<AnalyticsSummary> {
   const bucketedEndMs = Math.floor(end.getTime() / 60_000) * 60_000;
-  const cached = await getCachedAnalyticsSummary(start.getTime(), bucketedEndMs);
+  const cached = await getCachedAnalyticsSummary(
+    start.getTime(),
+    bucketedEndMs,
+    segment?.dimension ?? "",
+    segment?.value ?? "",
+  );
   return { ...cached, start, end };
 }
 
@@ -1289,13 +1340,21 @@ async function getHeroSeries(start: Date, end: Date): Promise<HeroSeries> {
 
 // 직전 동일기간의 윈도 스칼라 카운트(델타 비교용). 현재 윈도 배치는 건드리지 않고
 // 여기서만 다시 계산한다. 실시간(활성) 카운트는 windowless이므로 0으로 둔다.
-async function getWindowCounts(start: Date, end: Date): Promise<AnalyticsCountInputs> {
+async function getWindowCounts(
+  start: Date,
+  end: Date,
+  segment?: AnalyticsSegment,
+): Promise<AnalyticsCountInputs> {
   const eventWindow: Prisma.AnalyticsEventWhereInput = { occurredAt: { gte: start, lte: end } };
+  const humanSessionFilter: Prisma.AnalyticsSessionWhereInput = {
+    trafficType: "human",
+    ...toSessionSegmentFilter(segment),
+  };
   const humanEventWindow: Prisma.AnalyticsEventWhereInput = {
-    AND: [eventWindow, { session: { is: { trafficType: "human" } } }],
+    AND: [eventWindow, { session: { is: humanSessionFilter } }],
   };
   const humanSessionWindow: Prisma.AnalyticsSessionWhereInput = {
-    AND: [{ startedAt: { gte: start, lte: end } }, { trafficType: "human" }],
+    AND: [{ startedAt: { gte: start, lte: end } }, humanSessionFilter],
   };
   const listPageViewFilter: Prisma.AnalyticsEventWhereInput = {
     OR: [{ path: "/competitions" }, { path: { startsWith: "/competitions?" } }],
@@ -1338,6 +1397,7 @@ async function getWindowCounts(start: Date, end: Date): Promise<AnalyticsCountIn
       FROM "AnalyticsSession" s
       WHERE s."trafficType" = 'human'
         AND s."startedAt" >= ${start} AND s."startedAt" <= ${end}
+        ${segmentSql(segment, "s.")}
     `,
     prisma.analyticsSession.count({ where: humanSessionWindow }),
     prisma.$queryRaw<{ count: number }[]>`
@@ -1346,6 +1406,7 @@ async function getWindowCounts(start: Date, end: Date): Promise<AnalyticsCountIn
       JOIN "AnalyticsSession" s ON s."id" = e."sessionId"
       WHERE s."trafficType" = 'human'
         AND e."occurredAt" >= ${start} AND e."occurredAt" <= ${end}
+        ${segmentSql(segment, "s.")}
     `,
     eventCount("page_view"),
     eventCount("page_view", listPageViewFilter),
@@ -1384,6 +1445,7 @@ async function getWindowCounts(start: Date, end: Date): Promise<AnalyticsCountIn
           AND e."propertiesJson" LIKE '{%'
           AND e."occurredAt" >= ${start} AND e."occurredAt" <= ${end}
           AND s."trafficType" = 'human'
+          ${segmentSql(segment, "s.")}
         GROUP BY e."sessionId"
       )
       SELECT

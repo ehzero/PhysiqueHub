@@ -8,7 +8,9 @@ import { hasAdminSession, isAdminPasswordConfigured } from "@/lib/admin-auth";
 import {
   getAnalyticsSummaryForRange,
   getCompetitionFunnel,
+  parseAnalyticsSegment,
   type AnalyticsMetric,
+  type AnalyticsSegment,
   type AnalyticsSummary,
   type AnalyticsTableRow,
   type CompetitionFunnel,
@@ -103,6 +105,7 @@ async function AdminDashboard({
   analyticsFrom,
   analyticsTo,
   analyticsComp,
+  analyticsSeg,
 }: {
   activeSection: AdminSection;
   selectedId?: string;
@@ -114,10 +117,12 @@ async function AdminDashboard({
   analyticsFrom?: string;
   analyticsTo?: string;
   analyticsComp?: string;
+  analyticsSeg?: string;
 }) {
   const seasonYear = new Date().getFullYear();
   const selectedAnalyticsRange = toAnalyticsRange(analyticsRange);
   const analyticsWindow = getAnalyticsWindow(selectedAnalyticsRange, analyticsFrom, analyticsTo);
+  const analyticsSegment = toAnalyticsSegment(analyticsSeg);
   const competitionFunnel =
     activeSection === "analytics" && analyticsComp
       ? await getCompetitionFunnel(analyticsComp, analyticsWindow.start, analyticsWindow.end)
@@ -182,7 +187,7 @@ async function AdminDashboard({
         orderBy: { createdAt: "desc" },
         take: 20,
       }),
-      getAnalyticsSummaryForRange(analyticsWindow.start, analyticsWindow.end),
+      getAnalyticsSummaryForRange(analyticsWindow.start, analyticsWindow.end, analyticsSegment),
     ]);
   const selectedCompetition =
     (selectedId
@@ -279,6 +284,7 @@ async function AdminDashboard({
             competitionFunnel={competitionFunnel}
             from={analyticsFrom}
             range={selectedAnalyticsRange}
+            segment={analyticsSegment}
             to={analyticsTo}
           />
         )}
@@ -756,24 +762,40 @@ function AnalyticsDashboardSection({
   range,
   from,
   to,
+  segment,
   competitionFunnel,
 }: {
   analytics: AnalyticsSummary;
   range: AnalyticsRange;
   from?: string;
   to?: string;
+  segment?: AnalyticsSegment;
   competitionFunnel: CompetitionFunnel | null;
 }) {
-  // 대회 행 → 미니퍼널 드릴다운 링크(기간 유지). competitionId가 없는 행은 비활성.
+  const segStr = segment ? `${segment.dimension}:${segment.value}` : undefined;
+  // 대회 행 → 미니퍼널 드릴다운(기간·세그먼트 유지). competitionId 없는 행은 비활성.
   const compHref = (row: AnalyticsTableRow) =>
     row.key && row.key !== "unknown"
-      ? buildAnalyticsHref({ range, from, to, comp: row.key })
+      ? buildAnalyticsHref({ range, from, to, seg: segStr, comp: row.key })
       : undefined;
-  const clearCompHref = buildAnalyticsHref({ range, from, to });
+  // 채널 행 key는 `${channel}:${referrerHost}` → 앞부분(channel)만 세그먼트 값으로.
+  const channelHref = (row: AnalyticsTableRow) => {
+    const channel = row.key.split(":")[0];
+    return channel && channel !== "unknown"
+      ? buildAnalyticsHref({ range, from, to, seg: `channel:${channel}` })
+      : undefined;
+  };
+  const deviceHref = (row: AnalyticsTableRow) =>
+    row.key && row.key !== "unknown"
+      ? buildAnalyticsHref({ range, from, to, seg: `device:${row.key}` })
+      : undefined;
+  const clearCompHref = buildAnalyticsHref({ range, from, to, seg: segStr });
+  const clearSegHref = buildAnalyticsHref({ range, from, to });
 
   return (
     <section aria-label="이용 분석">
       {range === "custom" && <DateRangeForm from={from} to={to} />}
+      {segment && <SegmentBanner clearHref={clearSegHref} segment={segment} />}
       {competitionFunnel && (
         <CompetitionFunnelPanel backHref={clearCompHref} funnel={competitionFunnel} />
       )}
@@ -905,6 +927,7 @@ function AnalyticsDashboardSection({
           />
           <AnalyticsTable
             emptyLabel="유입 채널 데이터가 없습니다."
+            hrefForRow={channelHref}
             rows={analytics.channelRows}
             title="유입 채널"
           />
@@ -915,6 +938,7 @@ function AnalyticsDashboardSection({
           />
           <AnalyticsTable
             emptyLabel="기기 환경 데이터가 없습니다."
+            hrefForRow={deviceHref}
             rows={analytics.deviceRows}
             title="기기 환경"
           />
@@ -971,6 +995,26 @@ function DateRangeForm({ from, to }: { from?: string; to?: string }) {
         적용
       </button>
     </form>
+  );
+}
+
+function SegmentBanner({
+  segment,
+  clearHref,
+}: {
+  segment: AnalyticsSegment;
+  clearHref: string;
+}) {
+  const dimLabel = segment.dimension === "channel" ? "채널" : "기기";
+  return (
+    <div className="ac-seg-banner">
+      <span>
+        {dimLabel} 세그먼트: <strong>{segment.value}</strong>
+      </span>
+      <Link className="ac-seg-clear" href={clearHref}>
+        해제 ✕
+      </Link>
+    </div>
   );
 }
 
@@ -1547,6 +1591,7 @@ function buildAnalyticsHref(opts: {
   from?: string;
   to?: string;
   comp?: string;
+  seg?: string;
 }) {
   const params = new URLSearchParams();
 
@@ -1556,6 +1601,9 @@ function buildAnalyticsHref(opts: {
   if (opts.range === "custom") {
     if (isYmd(opts.from)) params.set("from", opts.from);
     if (isYmd(opts.to)) params.set("to", opts.to);
+  }
+  if (opts.seg) {
+    params.set("seg", opts.seg);
   }
   if (opts.comp) {
     params.set("comp", opts.comp);
@@ -1584,6 +1632,12 @@ function isAnalyticsRange(value: string | undefined): value is AnalyticsRange {
 
 function toAnalyticsRange(value: string | undefined): AnalyticsRange {
   return isAnalyticsRange(value) ? value : "7d";
+}
+
+function toAnalyticsSegment(seg?: string): AnalyticsSegment | undefined {
+  if (!seg) return undefined;
+  const [dimension, ...rest] = seg.split(":");
+  return parseAnalyticsSegment(dimension, rest.join(":"));
 }
 
 function getAnalyticsWindow(range: AnalyticsRange, from?: string, to?: string) {
@@ -1740,8 +1794,10 @@ export async function AdminSectionPage({
   const paramsPromise: NonNullable<AdminPageProps["searchParams"]> =
     searchParams ?? Promise.resolve({});
 
-  const [{ analyticsRange, from, to, comp, error, id, status, confidence, org, issue }, isAuthed] =
-    await Promise.all([paramsPromise, hasAdminSession()]);
+  const [
+    { analyticsRange, from, to, comp, seg, error, id, status, confidence, org, issue },
+    isAuthed,
+  ] = await Promise.all([paramsPromise, hasAdminSession()]);
 
   if (!isAuthed) {
     return <AdminLogin error={error} />;
@@ -1753,6 +1809,7 @@ export async function AdminSectionPage({
       analyticsComp={comp}
       analyticsFrom={from}
       analyticsRange={analyticsRange}
+      analyticsSeg={seg}
       analyticsTo={to}
       confidenceFilter={confidence}
       issueFilter={issue}
