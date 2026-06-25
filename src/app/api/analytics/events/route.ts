@@ -19,6 +19,8 @@ export const dynamic = "force-dynamic";
 
 const MAX_EVENTS_PER_BATCH = 20;
 const MAX_BODY_BYTES = 48_000;
+const OCCURRED_AT_MAX_FUTURE_MS = 5 * 60 * 1_000;
+const OCCURRED_AT_MAX_PAST_MS = 2 * 24 * 60 * 60 * 1_000;
 
 type AnalyticsEventsPayload = {
   session?: Partial<AnalyticsSessionInput>;
@@ -27,6 +29,7 @@ type AnalyticsEventsPayload = {
 
 type RawAnalyticsEvent = {
   name?: unknown;
+  eventId?: unknown;
   path?: unknown;
   occurredAt?: unknown;
   competitionId?: unknown;
@@ -64,7 +67,7 @@ export async function POST(request: Request) {
   const classification = await classifyAnalyticsTraffic({ ipAddress, userAgent });
   const events = payload.events
     .slice(0, MAX_EVENTS_PER_BATCH)
-    .map((event) => normalizeEvent(event, session, ipAddress, userAgent))
+    .map((event) => normalizeEvent(event, session, ipAddress, userAgent, now))
     .filter((event): event is NonNullable<typeof event> => Boolean(event));
 
   await prisma.analyticsSession.upsert({
@@ -93,19 +96,15 @@ export async function POST(request: Request) {
       reverseDnsHost: classification.reverseDnsHost,
       classifiedAt: classification.classifiedAt,
       classificationVersion: classification.classificationVersion,
+      displayMode: session.displayMode,
       startedAt: now,
       lastSeenAt: now,
     },
     update: {
+      // 유입 속성(referrer/referrerHost/channel/utm*)은 진입 시점 값이므로
+      // create에서만 기록하고 update에서는 건드리지 않는다. 매 배치마다 현재 URL
+      // 기준으로 덮어쓰면 UTM 랜딩을 벗어난 뒤 어트리뷰션이 유실된다.
       visitorId: session.visitorId,
-      referrer: session.referrer,
-      referrerHost: session.referrerHost,
-      channel: session.channel,
-      utmSource: session.utmSource,
-      utmMedium: session.utmMedium,
-      utmCampaign: session.utmCampaign,
-      utmContent: session.utmContent,
-      utmTerm: session.utmTerm,
       ipAddress,
       userAgent,
       deviceCategory: client.deviceCategory,
@@ -123,7 +122,9 @@ export async function POST(request: Request) {
   });
 
   if (events.length > 0) {
-    await prisma.analyticsEvent.createMany({ data: events });
+    // skipDuplicates: 재시도로 같은 eventId가 다시 들어오면 ON CONFLICT DO
+    // NOTHING으로 중복 삽입을 건너뛴다(멱등).
+    await prisma.analyticsEvent.createMany({ data: events, skipDuplicates: true });
   }
 
   return NextResponse.json({ ok: true, count: events.length }, { status: 202 });
@@ -153,6 +154,7 @@ function normalizeSession(value: unknown) {
     deviceCategory: truncateAnalyticsString(input.deviceCategory, 40),
     browserName: truncateAnalyticsString(input.browserName, 80),
     osName: truncateAnalyticsString(input.osName, 80),
+    displayMode: truncateAnalyticsString(input.displayMode, 40),
   };
 }
 
@@ -161,6 +163,7 @@ function normalizeEvent(
   session: NonNullable<ReturnType<typeof normalizeSession>>,
   ipAddress: string | null,
   userAgent: string | null,
+  now: Date,
 ) {
   if (!value || typeof value !== "object") return null;
   const input = value as RawAnalyticsEvent;
@@ -173,11 +176,12 @@ function normalizeEvent(
   if (!path) return null;
 
   return {
+    eventId: normalizeId(input.eventId),
     sessionId: session.sessionId,
     visitorId: session.visitorId,
     name: input.name,
     path,
-    occurredAt: normalizeDate(input.occurredAt),
+    occurredAt: normalizeDate(input.occurredAt, now),
     competitionId: truncateAnalyticsString(
       typeof input.competitionId === "string" ? input.competitionId : null,
       120,
@@ -199,11 +203,17 @@ function normalizeId(value: unknown) {
   return normalized.slice(0, 80);
 }
 
-function normalizeDate(value: unknown) {
-  if (typeof value !== "string") return new Date();
+function normalizeDate(value: unknown, now: Date) {
+  if (typeof value !== "string") return now;
 
   const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return new Date();
+  if (Number.isNaN(date.getTime())) return now;
+
+  // 클록 스큐 클램핑: 미래로 과도하거나 너무 과거인 클라이언트 시각은 서버
+  // 수신 시각으로 대체해 시간 버킷(일/기간) 왜곡과 윈도 누락을 막는다.
+  const time = date.getTime();
+  if (time > now.getTime() + OCCURRED_AT_MAX_FUTURE_MS) return now;
+  if (time < now.getTime() - OCCURRED_AT_MAX_PAST_MS) return now;
   return date;
 }
 

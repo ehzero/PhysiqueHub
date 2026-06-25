@@ -26,6 +26,7 @@ export type AnalyticsPropertyValue = string | number | boolean | null;
 
 export interface AnalyticsEventInput {
   name: AnalyticsEventName;
+  eventId?: string;
   path?: string;
   occurredAt?: string;
   competitionId?: string;
@@ -49,6 +50,7 @@ export interface AnalyticsSessionInput {
   deviceCategory?: string | null;
   browserName?: string | null;
   osName?: string | null;
+  displayMode?: string | null;
 }
 
 export const ANALYTICS_ALLOWED_PROPERTY_KEYS = new Set([

@@ -16,7 +16,7 @@ export default function PrivacyPage() {
       description="피지크허브의 개인정보 처리 기준을 안내합니다."
     >
       <article>
-        <p className="policy-date">시행일: 2026년 6월 9일</p>
+        <p className="policy-date">시행일: 2026년 6월 25일</p>
         <p>
           개인정보처리자는 피지크허브 운영자입니다. 피지크허브는 이용자의
           자유와 권리 보호를 위해 개인정보 보호법 및 관계 법령을 준수하며,
@@ -132,8 +132,11 @@ export default function PrivacyPage() {
             정당하다고 인정되어 반영될 때까지
           </li>
           <li>
-            접속 로그, 이용 행동 이벤트 로그, 오류 로그, 보안 로그: 수집일로부터
-            최대 180일 또는 보안 및 장애 대응에 필요한 기간
+            접속 로그, 이용 행동 이벤트 로그, 오류 로그, 보안 로그: 원문 IP
+            주소와 전체 User-Agent 등 식별 가능 정보는 수집일로부터 90일이
+            지나면 삭제(비식별 처리)합니다. 식별 정보를 제거한 비식별 이용
+            통계는 통계 분석 목적 달성 시까지 보관합니다. 다만 보안 및 장애
+            대응에 필요한 경우 해당 범위에서 더 보관할 수 있습니다.
           </li>
           <li>관심 대회 식별자: 이용자가 브라우저 저장소를 삭제할 때까지</li>
           <li>화면 테마 쿠키: 설정일로부터 최대 1년</li>
@@ -298,6 +301,9 @@ export default function PrivacyPage() {
           <li>ph-analytics-visitor-id: 익명 방문자 식별자</li>
           <li>ph-analytics-session-id: 익명 세션 식별자</li>
           <li>ph-analytics-landing-path: 세션 최초 진입 경로</li>
+          <li>
+            ph-analytics-acquisition: 세션 유입 정보(참조 URL, 채널, UTM) 스냅샷
+          </li>
           <li>ph-analytics-session-started: 세션 시작 이벤트 전송 여부</li>
         </ul>
         <p>
@@ -349,6 +355,7 @@ export default function PrivacyPage() {
           공개합니다.
         </p>
         <ul>
+          <li>2026-06-25: 이용 통계 로그의 식별 정보 90일 비식별 보관 기준 반영</li>
           <li>2026-06-09: 자체 이용 행동 이벤트 로그 수집 항목 반영</li>
           <li>2026-06-08: 개인정보 처리방침 제정</li>
         </ul>

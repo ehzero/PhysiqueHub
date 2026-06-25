@@ -180,6 +180,7 @@ model AnalyticsSession {
   deviceCategory String?
   browserName    String?
   osName         String?
+  displayMode    String?
   trafficType    String           @default("human")
   botName        String?
   botReason      String?
@@ -200,10 +201,12 @@ model AnalyticsSession {
   @@index([trafficType])
   @@index([botName])
   @@index([classifiedAt])
+  @@index([createdAt])
 }
 
 model AnalyticsEvent {
   id             String           @id @default(cuid())
+  eventId        String?          @unique
   sessionId      String
   session        AnalyticsSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   visitorId      String
@@ -223,6 +226,7 @@ model AnalyticsEvent {
   @@index([name, occurredAt])
   @@index([competitionId])
   @@index([occurredAt])
+  @@index([createdAt])
 }
 
 model BotDetectionRule {

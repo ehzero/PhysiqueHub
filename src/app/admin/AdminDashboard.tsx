@@ -2,10 +2,15 @@ import type {
   CompetitionSchedule,
   ContactAttachment,
   ContactInquiry,
-  Prisma,
 } from "@prisma/client";
 import Link from "next/link";
 import { hasAdminSession, isAdminPasswordConfigured } from "@/lib/admin-auth";
+import {
+  getAnalyticsSummary,
+  type AnalyticsMetric,
+  type AnalyticsSummary,
+  type AnalyticsTableRow,
+} from "@/lib/admin-analytics";
 import { prisma } from "@/lib/prisma";
 import { loginAdmin, logoutAdmin, updateCompetitionReview } from "./actions";
 
@@ -28,7 +33,6 @@ const CONFIDENCE_LEVELS = ["high", "medium", "low"] as const;
 const REGISTRATION_STATUSES = ["unknown", "scheduled", "open", "closing-soon", "closed", "cancelled"] as const;
 const ISSUE_FILTERS = ["date", "location", "registration", "low-confidence"] as const;
 const ANALYTICS_RANGES = ["today", "7d", "30d"] as const;
-const ACTIVE_SESSION_WINDOW_MS = 2 * 60 * 1_000;
 type AnalyticsRange = (typeof ANALYTICS_RANGES)[number];
 
 function getErrorMessage(error?: string) {
@@ -690,45 +694,6 @@ function AdminTab({
   );
 }
 
-type AnalyticsSummary = {
-  accessModeRows: AnalyticsTableRow[];
-  activeSessionCount: number;
-  activeVisitorCount: number;
-  botEventCount: number;
-  botPageViewCount: number;
-  botRows: AnalyticsTableRow[];
-  botSessionCount: number;
-  botTopPages: AnalyticsTableRow[];
-  botVisitorCount: number;
-  browserSessionCount: number;
-  browserRows: AnalyticsTableRow[];
-  channelRows: AnalyticsTableRow[];
-  competitionViewCount: number;
-  contactSubmitCount: number;
-  deviceRows: AnalyticsTableRow[];
-  end: Date;
-  eventRows: AnalyticsTableRow[];
-  newVisitorCount: number;
-  pageViewCount: number;
-  pwaSessionCount: number;
-  registrationClickCount: number;
-  returningVisitorCount: number;
-  saveCompetitionCount: number;
-  sessionCount: number;
-  shareClickCount: number;
-  osRows: AnalyticsTableRow[];
-  start: Date;
-  topCompetitions: AnalyticsTableRow[];
-  topSavedCompetitions: AnalyticsTableRow[];
-  topSharedCompetitions: AnalyticsTableRow[];
-  topPages: AnalyticsTableRow[];
-  topSearches: AnalyticsTableRow[];
-  unsaveCompetitionCount: number;
-  unavailableMessage?: string;
-  visitorCount: number;
-  visitorTypeRows: AnalyticsTableRow[];
-};
-
 function AnalyticsDashboardSection({
   analytics,
   range,
@@ -765,127 +730,113 @@ function AnalyticsDashboardSection({
         <div className="admin-empty">{analytics.unavailableMessage}</div>
       )}
 
-      <section className="admin-metrics admin-analytics-metrics" aria-label="이용 분석 요약">
-        <div>
-          <span className="admin-metric-value">{formatNumber(analytics.activeVisitorCount)}</span>
-          <span className="admin-metric-label">활성 사용자 (2분)</span>
-        </div>
-        <div>
-          <span className="admin-metric-value">{formatNumber(analytics.activeSessionCount)}</span>
-          <span className="admin-metric-label">활성 세션 (2분)</span>
-        </div>
-        <div>
-          <span className="admin-metric-value">{formatNumber(analytics.visitorCount)}</span>
-          <span className="admin-metric-label">방문자</span>
-        </div>
-        <div>
-          <span className="admin-metric-value">{formatNumber(analytics.sessionCount)}</span>
-          <span className="admin-metric-label">세션</span>
-        </div>
-        <div>
-          <span className="admin-metric-value">{formatNumber(analytics.newVisitorCount)}</span>
-          <span className="admin-metric-label">신규 방문자</span>
-        </div>
-        <div>
-          <span className="admin-metric-value">{formatNumber(analytics.returningVisitorCount)}</span>
-          <span className="admin-metric-label">재방문자</span>
-        </div>
-        <div>
-          <span className="admin-metric-value">{formatNumber(analytics.pageViewCount)}</span>
-          <span className="admin-metric-label">페이지뷰</span>
-        </div>
-        <div>
-          <span className="admin-metric-value">{formatNumber(analytics.competitionViewCount)}</span>
-          <span className="admin-metric-label">대회 상세 조회</span>
-        </div>
-        <div>
-          <span className="admin-metric-value">{formatNumber(analytics.registrationClickCount)}</span>
-          <span className="admin-metric-label">접수 링크 클릭</span>
-        </div>
-        <div>
-          <span className="admin-metric-value">{formatNumber(analytics.shareClickCount)}</span>
-          <span className="admin-metric-label">공유 클릭</span>
-        </div>
-        <div>
-          <span className="admin-metric-value">{formatNumber(analytics.saveCompetitionCount)}</span>
-          <span className="admin-metric-label">내 대회 저장</span>
-        </div>
-        <div>
-          <span className="admin-metric-value">{formatNumber(analytics.unsaveCompetitionCount)}</span>
-          <span className="admin-metric-label">내 대회 해제</span>
-        </div>
-        <div>
-          <span className="admin-metric-value">{formatNumber(analytics.contactSubmitCount)}</span>
-          <span className="admin-metric-label">문의 전환</span>
-        </div>
-        <div>
-          <span className="admin-metric-value">{formatNumber(analytics.pwaSessionCount)}</span>
-          <span className="admin-metric-label">PWA 세션</span>
-        </div>
-      </section>
+      <AnalyticsMetricGrid
+        ariaLabel="이용 분석 핵심 지표"
+        metrics={analytics.overviewMetrics}
+      />
 
-      <div className="admin-analytics-grid">
-        <AnalyticsTable
-          emptyLabel="방문자 유형 데이터가 없습니다."
-          rows={analytics.visitorTypeRows}
-          title="방문자 유형"
+      <AnalyticsBlock eyebrow="Funnel" title="대회 탐색 퍼널">
+        <div className="admin-analytics-grid">
+          <AnalyticsTable
+            emptyLabel="대회 탐색 퍼널 데이터가 없습니다."
+            rows={analytics.funnelRows}
+            title="목록에서 접수까지"
+          />
+          <AnalyticsMetricGrid
+            ariaLabel="전환·의도 지표"
+            metrics={analytics.conversionMetrics}
+          />
+        </div>
+      </AnalyticsBlock>
+
+      <AnalyticsBlock eyebrow="Search" title="검색 품질">
+        <AnalyticsMetricGrid
+          ariaLabel="검색 품질 지표"
+          metrics={analytics.searchQualityMetrics}
         />
-        <AnalyticsTable
-          emptyLabel="접근 모드 데이터가 없습니다."
-          rows={analytics.accessModeRows}
-          title="접근 모드"
-        />
-        <AnalyticsTable
-          emptyLabel="기기 환경 데이터가 없습니다."
-          rows={analytics.deviceRows}
-          title="기기 환경"
-        />
-        <AnalyticsTable
-          emptyLabel="브라우저 데이터가 없습니다."
-          rows={analytics.browserRows}
-          title="브라우저"
-        />
-        <AnalyticsTable
-          emptyLabel="운영체제 데이터가 없습니다."
-          rows={analytics.osRows}
-          title="운영체제"
-        />
-        <AnalyticsTable
-          emptyLabel="페이지뷰 데이터가 없습니다."
-          rows={analytics.topPages}
-          title="상위 페이지"
-        />
-        <AnalyticsTable
-          emptyLabel="대회 상세 조회 데이터가 없습니다."
-          rows={analytics.topCompetitions}
-          title="상위 대회"
-        />
-        <AnalyticsTable
-          emptyLabel="대회 공유 데이터가 없습니다."
-          rows={analytics.topSharedCompetitions}
-          title="공유된 대회"
-        />
-        <AnalyticsTable
-          emptyLabel="대회 저장 데이터가 없습니다."
-          rows={analytics.topSavedCompetitions}
-          title="저장된 대회"
-        />
-        <AnalyticsTable
-          emptyLabel="검색어 데이터가 없습니다."
-          rows={analytics.topSearches}
-          title="상위 검색어"
-        />
-        <AnalyticsTable
-          emptyLabel="유입 채널 데이터가 없습니다."
-          rows={analytics.channelRows}
-          title="유입 채널"
-        />
-        <AnalyticsTable
-          emptyLabel="이벤트 데이터가 없습니다."
-          rows={analytics.eventRows}
-          title="이벤트 믹스"
-        />
-      </div>
+        <div className="admin-analytics-grid">
+          <AnalyticsTable
+            emptyLabel="검색어 데이터가 없습니다."
+            rows={analytics.topSearches}
+            title="상위 검색어"
+          />
+          <AnalyticsTable
+            emptyLabel="0건 검색어 데이터가 없습니다."
+            rows={analytics.zeroResultSearches}
+            title="0건 검색어"
+          />
+        </div>
+      </AnalyticsBlock>
+
+      <AnalyticsBlock eyebrow="Demand" title="콘텐츠 수요">
+        <div className="admin-analytics-grid">
+          <AnalyticsTable
+            emptyLabel="대회 상세 조회 데이터가 없습니다."
+            rows={analytics.topCompetitions}
+            title="상위 상세 조회 대회"
+          />
+          <AnalyticsTable
+            emptyLabel="접수 클릭 데이터가 없습니다."
+            rows={analytics.topRegistrationCompetitions}
+            title="접수 클릭 많은 대회"
+          />
+          <AnalyticsTable
+            emptyLabel="대회 저장 데이터가 없습니다."
+            rows={analytics.topSavedCompetitions}
+            title="저장된 대회"
+          />
+          <AnalyticsTable
+            emptyLabel="대회 공유 데이터가 없습니다."
+            rows={analytics.topSharedCompetitions}
+            title="공유된 대회"
+          />
+          <AnalyticsTable
+            emptyLabel="페이지뷰 데이터가 없습니다."
+            rows={analytics.topPages}
+            title="상위 페이지"
+          />
+          <AnalyticsTable
+            emptyLabel="이벤트 데이터가 없습니다."
+            rows={analytics.eventRows}
+            title="이벤트 믹스"
+          />
+        </div>
+      </AnalyticsBlock>
+
+      <AnalyticsBlock eyebrow="Traffic" title="유입·환경">
+        <div className="admin-analytics-grid">
+          <AnalyticsTable
+            emptyLabel="방문자 유형 데이터가 없습니다."
+            rows={analytics.visitorRows}
+            title="방문자 유형"
+          />
+          <AnalyticsTable
+            emptyLabel="유입 채널 데이터가 없습니다."
+            rows={analytics.channelRows}
+            title="유입 채널"
+          />
+          <AnalyticsTable
+            emptyLabel="접근 모드 데이터가 없습니다."
+            rows={analytics.accessModeRows}
+            title="접근 모드"
+          />
+          <AnalyticsTable
+            emptyLabel="기기 환경 데이터가 없습니다."
+            rows={analytics.deviceRows}
+            title="기기 환경"
+          />
+          <AnalyticsTable
+            emptyLabel="브라우저 데이터가 없습니다."
+            rows={analytics.browserRows}
+            title="브라우저"
+          />
+          <AnalyticsTable
+            emptyLabel="운영체제 데이터가 없습니다."
+            rows={analytics.osRows}
+            title="운영체제"
+          />
+        </div>
+      </AnalyticsBlock>
 
       <section className="admin-analytics-bots" aria-label="봇/크롤러 접근">
         <div className="admin-section-head compact">
@@ -894,24 +845,10 @@ function AnalyticsDashboardSection({
             <h3>봇/크롤러 접근</h3>
           </div>
         </div>
-        <section className="admin-metrics admin-analytics-metrics" aria-label="봇/크롤러 요약">
-          <div>
-            <span className="admin-metric-value">{formatNumber(analytics.botVisitorCount)}</span>
-            <span className="admin-metric-label">봇 방문자</span>
-          </div>
-          <div>
-            <span className="admin-metric-value">{formatNumber(analytics.botSessionCount)}</span>
-            <span className="admin-metric-label">봇 세션</span>
-          </div>
-          <div>
-            <span className="admin-metric-value">{formatNumber(analytics.botEventCount)}</span>
-            <span className="admin-metric-label">봇 이벤트</span>
-          </div>
-          <div>
-            <span className="admin-metric-value">{formatNumber(analytics.botPageViewCount)}</span>
-            <span className="admin-metric-label">봇 페이지뷰</span>
-          </div>
-        </section>
+        <AnalyticsMetricGrid
+          ariaLabel="봇/크롤러 요약"
+          metrics={analytics.botMetrics}
+        />
         <div className="admin-analytics-grid">
           <AnalyticsTable
             emptyLabel="봇/크롤러 데이터가 없습니다."
@@ -925,6 +862,50 @@ function AnalyticsDashboardSection({
           />
         </div>
       </section>
+    </section>
+  );
+}
+
+function AnalyticsBlock({
+  children,
+  eyebrow,
+  title,
+}: {
+  children: React.ReactNode;
+  eyebrow: string;
+  title: string;
+}) {
+  return (
+    <section className="admin-analytics-block">
+      <div className="admin-section-head compact">
+        <div>
+          <p className="eyebrow">{eyebrow}</p>
+          <h3>{title}</h3>
+        </div>
+      </div>
+      {children}
+    </section>
+  );
+}
+
+function AnalyticsMetricGrid({
+  ariaLabel,
+  metrics,
+}: {
+  ariaLabel: string;
+  metrics: AnalyticsMetric[];
+}) {
+  return (
+    <section className="admin-metrics admin-analytics-metrics" aria-label={ariaLabel}>
+      {metrics.map((metric) => (
+        <div key={metric.key}>
+          <span className="admin-metric-value">{formatAnalyticsMetricValue(metric)}</span>
+          <span className="admin-metric-copy">
+            <span className="admin-metric-label">{metric.label}</span>
+            {metric.meta && <span className="admin-metric-meta">{metric.meta}</span>}
+          </span>
+        </div>
+      ))}
     </section>
   );
 }
@@ -1032,451 +1013,6 @@ type QualityIssue = {
   message?: string;
   severity?: string;
 };
-
-type AnalyticsTableRow = {
-  key: string;
-  label: string;
-  meta?: string;
-  count: number;
-};
-
-type CompetitionAnalyticsGroupRow = {
-  competitionId: string | null;
-  _count: {
-    _all: number;
-  };
-};
-
-type CompetitionAnalyticsSummary = {
-  id: string;
-  organizationName: string;
-  organizationShortName: string | null;
-  title: string;
-};
-
-async function getAnalyticsSummary(start: Date, end: Date): Promise<AnalyticsSummary> {
-  try {
-    const activeSince = new Date(end.getTime() - ACTIVE_SESSION_WINDOW_MS);
-    const eventWindow: Prisma.AnalyticsEventWhereInput = {
-      occurredAt: {
-        gte: start,
-        lte: end,
-      },
-    };
-    const sessionWindow: Prisma.AnalyticsSessionWhereInput = {
-      startedAt: {
-        gte: start,
-        lte: end,
-      },
-    };
-    const humanSessionFilter: Prisma.AnalyticsSessionWhereInput = {
-      trafficType: "human",
-    };
-    const botSessionFilter: Prisma.AnalyticsSessionWhereInput = {
-      trafficType: { in: ["bot", "suspected_bot"] },
-    };
-    const humanSessionWindow: Prisma.AnalyticsSessionWhereInput = {
-      AND: [sessionWindow, humanSessionFilter],
-    };
-    const botSessionWindow: Prisma.AnalyticsSessionWhereInput = {
-      AND: [sessionWindow, botSessionFilter],
-    };
-    const humanEventWindow: Prisma.AnalyticsEventWhereInput = {
-      AND: [eventWindow, { session: { is: humanSessionFilter } }],
-    };
-    const botEventWindow: Prisma.AnalyticsEventWhereInput = {
-      AND: [eventWindow, { session: { is: botSessionFilter } }],
-    };
-
-  const [
-    visitorRows,
-    sessionCount,
-    pageViewCount,
-	    competitionViewCount,
-	    registrationClickCount,
-	    shareClickCount,
-	    saveCompetitionCount,
-	    unsaveCompetitionCount,
-	    contactSubmitCount,
-	    topPageRows,
-	    topCompetitionRows,
-	    topSharedCompetitionRows,
-	    topSavedCompetitionRows,
-	    topSearchRows,
-	    channelGroupRows,
-	    eventGroupRows,
-	    sessionStartEvents,
-	    activeVisitorRows,
-	    activeSessionCount,
-	    deviceGroupRows,
-	    browserGroupRows,
-	    osGroupRows,
-      botVisitorRows,
-      botSessionCount,
-      botEventCount,
-      botPageViewCount,
-      botNameRows,
-      botTopPageRows,
-	  ] = await Promise.all([
-    prisma.analyticsSession.findMany({
-      distinct: ["visitorId"],
-      select: { visitorId: true },
-      where: humanSessionWindow,
-    }),
-    prisma.analyticsSession.count({ where: humanSessionWindow }),
-    prisma.analyticsEvent.count({
-      where: { ...humanEventWindow, name: "page_view" },
-    }),
-    prisma.analyticsEvent.count({
-      where: { ...humanEventWindow, name: "competition_view" },
-    }),
-	    prisma.analyticsEvent.count({
-	      where: { ...humanEventWindow, name: "registration_link_click" },
-	    }),
-	    prisma.analyticsEvent.count({
-	      where: { ...humanEventWindow, name: "share_click" },
-	    }),
-	    prisma.analyticsEvent.count({
-	      where: { ...humanEventWindow, name: "save_competition" },
-	    }),
-	    prisma.analyticsEvent.count({
-	      where: { ...humanEventWindow, name: "unsave_competition" },
-	    }),
-	    prisma.analyticsEvent.count({
-	      where: { ...humanEventWindow, name: "contact_submit_success" },
-	    }),
-    prisma.analyticsEvent.groupBy({
-      by: ["path"],
-      where: { ...humanEventWindow, name: "page_view" },
-      _count: { _all: true },
-      orderBy: { _count: { path: "desc" } },
-      take: 10,
-    }),
-    prisma.analyticsEvent.groupBy({
-      by: ["competitionId"],
-      where: {
-        ...humanEventWindow,
-        name: "competition_view",
-        competitionId: { not: null },
-      },
-      _count: { _all: true },
-	      orderBy: { _count: { competitionId: "desc" } },
-	      take: 10,
-	    }),
-	    prisma.analyticsEvent.groupBy({
-	      by: ["competitionId"],
-	      where: {
-	        ...humanEventWindow,
-	        name: "share_click",
-	        competitionId: { not: null },
-	      },
-	      _count: { _all: true },
-	      orderBy: { _count: { competitionId: "desc" } },
-	      take: 10,
-	    }),
-	    prisma.analyticsEvent.groupBy({
-	      by: ["competitionId"],
-	      where: {
-	        ...humanEventWindow,
-	        name: "save_competition",
-	        competitionId: { not: null },
-	      },
-	      _count: { _all: true },
-	      orderBy: { _count: { competitionId: "desc" } },
-	      take: 10,
-	    }),
-	    prisma.analyticsEvent.groupBy({
-	      by: ["searchQuery"],
-      where: {
-        ...humanEventWindow,
-        name: "search_performed",
-        searchQuery: { not: null },
-      },
-      _count: { _all: true },
-      orderBy: { _count: { searchQuery: "desc" } },
-      take: 10,
-    }),
-    prisma.analyticsSession.groupBy({
-      by: ["channel", "referrerHost"],
-      where: humanSessionWindow,
-      _count: { _all: true },
-      orderBy: { _count: { referrerHost: "desc" } },
-      take: 10,
-    }),
-	    prisma.analyticsEvent.groupBy({
-	      by: ["name"],
-	      where: humanEventWindow,
-	      _count: { _all: true },
-	      orderBy: { _count: { name: "desc" } },
-	      take: 10,
-	    }),
-	    prisma.analyticsEvent.findMany({
-	      select: { propertiesJson: true },
-	      where: { ...humanEventWindow, name: "session_start" },
-	    }),
-	    prisma.analyticsSession.findMany({
-	      distinct: ["visitorId"],
-	      select: { visitorId: true },
-	      where: {
-          AND: [{ lastSeenAt: { gte: activeSince } }, humanSessionFilter],
-        },
-	    }),
-	    prisma.analyticsSession.count({
-	      where: {
-          AND: [{ lastSeenAt: { gte: activeSince } }, humanSessionFilter],
-        },
-	    }),
-	    prisma.analyticsSession.groupBy({
-	      by: ["deviceCategory"],
-	      where: humanSessionWindow,
-	      _count: { _all: true },
-	      orderBy: { _count: { deviceCategory: "desc" } },
-	      take: 10,
-	    }),
-	    prisma.analyticsSession.groupBy({
-	      by: ["browserName"],
-	      where: humanSessionWindow,
-	      _count: { _all: true },
-	      orderBy: { _count: { browserName: "desc" } },
-	      take: 10,
-	    }),
-	    prisma.analyticsSession.groupBy({
-	      by: ["osName"],
-	      where: humanSessionWindow,
-	      _count: { _all: true },
-	      orderBy: { _count: { osName: "desc" } },
-	      take: 10,
-	    }),
-      prisma.analyticsSession.findMany({
-        distinct: ["visitorId"],
-        select: { visitorId: true },
-        where: botSessionWindow,
-      }),
-      prisma.analyticsSession.count({ where: botSessionWindow }),
-      prisma.analyticsEvent.count({ where: botEventWindow }),
-      prisma.analyticsEvent.count({
-        where: { ...botEventWindow, name: "page_view" },
-      }),
-      prisma.analyticsSession.groupBy({
-        by: ["botName"],
-        where: botSessionWindow,
-        _count: { _all: true },
-        orderBy: { _count: { botName: "desc" } },
-        take: 50,
-      }),
-      prisma.analyticsEvent.groupBy({
-        by: ["path"],
-        where: { ...botEventWindow, name: "page_view" },
-        _count: { _all: true },
-        orderBy: { _count: { path: "desc" } },
-        take: 10,
-      }),
-	  ]);
-	  const visitorIds = visitorRows.map((row) => row.visitorId);
-	  const returningVisitorRows =
-	    visitorIds.length > 0
-	      ? await prisma.analyticsSession.findMany({
-	          distinct: ["visitorId"],
-	          select: { visitorId: true },
-	          where: {
-	            AND: [
-                { startedAt: { lt: start }, visitorId: { in: visitorIds } },
-                humanSessionFilter,
-              ],
-	          },
-	        })
-	      : [];
-	  const returningVisitorCount = returningVisitorRows.length;
-	  const newVisitorCount = Math.max(visitorRows.length - returningVisitorCount, 0);
-	  const accessModeCounts = sessionStartEvents.reduce(
-	    (counts, event) => {
-	      counts[toSessionAccessMode(event.propertiesJson)] += 1;
-	      return counts;
-	    },
-	    { browser: 0, pwa: 0, unknown: 0 },
-	  );
-	  const pwaSessionCount = accessModeCounts.pwa;
-	  const browserSessionCount = accessModeCounts.browser;
-	  const competitionIds = [
-	    ...topCompetitionRows,
-	    ...topSharedCompetitionRows,
-	    ...topSavedCompetitionRows,
-	  ]
-	    .map((row) => row.competitionId)
-	    .filter((id): id is string => Boolean(id));
-  const competitions =
-    competitionIds.length > 0
-      ? await prisma.competitionSchedule.findMany({
-          select: {
-            id: true,
-            organizationShortName: true,
-            organizationName: true,
-            title: true,
-          },
-          where: { id: { in: competitionIds } },
-        })
-      : [];
-  const competitionById = new Map(competitions.map((competition) => [competition.id, competition]));
-
-	  return {
-	    accessModeRows: [
-	      {
-	        key: "browser",
-	        label: "브라우저",
-	        meta: toPercentLabel(browserSessionCount, sessionStartEvents.length),
-	        count: browserSessionCount,
-	      },
-	      {
-	        key: "pwa",
-	        label: "PWA",
-	        meta: toPercentLabel(pwaSessionCount, sessionStartEvents.length),
-	        count: pwaSessionCount,
-	      },
-	      {
-	        key: "unknown",
-	        label: "알 수 없음",
-	        meta: toPercentLabel(accessModeCounts.unknown, sessionStartEvents.length),
-	        count: accessModeCounts.unknown,
-	      },
-	    ].filter((row) => row.count > 0),
-	    activeSessionCount,
-	    activeVisitorCount: activeVisitorRows.length,
-      botEventCount,
-      botPageViewCount,
-      botRows: toBotRows(botNameRows),
-      botSessionCount,
-      botTopPages: botTopPageRows.map((row) => ({
-        key: row.path,
-        label: row.path,
-        count: row._count._all,
-      })),
-      botVisitorCount: botVisitorRows.length,
-	    browserSessionCount,
-	    browserRows: browserGroupRows.map((row) => ({
-	      key: row.browserName ?? "unknown",
-	      label: row.browserName ?? "알 수 없음",
-	      meta: toPercentLabel(row._count._all, sessionCount),
-	      count: row._count._all,
-	    })),
-	    channelRows: channelGroupRows.map((row) => ({
-	      key: `${row.channel ?? "unknown"}:${row.referrerHost ?? "none"}`,
-      label: toAnalyticsChannelLabel(row.channel),
-      meta: row.referrerHost ?? "referrer 없음",
-      count: row._count._all,
-    })),
-	    competitionViewCount,
-	    contactSubmitCount,
-	    deviceRows: deviceGroupRows.map((row) => ({
-	      key: row.deviceCategory ?? "unknown",
-	      label: toDeviceCategoryLabel(row.deviceCategory),
-	      meta: toPercentLabel(row._count._all, sessionCount),
-	      count: row._count._all,
-	    })),
-	    end,
-	    eventRows: eventGroupRows.map((row) => ({
-	      key: row.name,
-	      label: toAnalyticsEventLabel(row.name),
-	      meta: row.name,
-	      count: row._count._all,
-	    })),
-	    newVisitorCount,
-	    pageViewCount,
-	    pwaSessionCount,
-	    registrationClickCount,
-	    returningVisitorCount,
-	    saveCompetitionCount,
-	    sessionCount,
-	    shareClickCount,
-	    osRows: osGroupRows.map((row) => ({
-	      key: row.osName ?? "unknown",
-	      label: row.osName ?? "알 수 없음",
-	      meta: toPercentLabel(row._count._all, sessionCount),
-	      count: row._count._all,
-	    })),
-	    start,
-	    topCompetitions: toCompetitionRows(topCompetitionRows, competitionById),
-	    topSavedCompetitions: toCompetitionRows(topSavedCompetitionRows, competitionById),
-	    topSharedCompetitions: toCompetitionRows(topSharedCompetitionRows, competitionById),
-    topPages: topPageRows.map((row) => ({
-      key: row.path,
-      label: row.path,
-      count: row._count._all,
-    })),
-    topSearches: topSearchRows.map((row) => ({
-      key: row.searchQuery ?? "unknown",
-      label: row.searchQuery ?? "알 수 없는 검색어",
-      count: row._count._all,
-		    })),
-		    unsaveCompetitionCount,
-		    visitorCount: visitorRows.length,
-	    visitorTypeRows: [
-	      {
-	        key: "new",
-	        label: "신규 방문자",
-	        meta: toPercentLabel(newVisitorCount, visitorRows.length),
-	        count: newVisitorCount,
-	      },
-	      {
-	        key: "returning",
-	        label: "재방문자",
-	        meta: toPercentLabel(returningVisitorCount, visitorRows.length),
-	        count: returningVisitorCount,
-	      },
-	    ].filter((row) => row.count > 0),
-	  };
-  } catch {
-    return getEmptyAnalyticsSummary(
-      start,
-      end,
-      "Analytics 테이블을 확인할 수 없습니다. Prisma migration 적용 상태를 확인하세요.",
-    );
-  }
-}
-
-function getEmptyAnalyticsSummary(
-  start: Date,
-  end: Date,
-  unavailableMessage?: string,
-): AnalyticsSummary {
-  return {
-    accessModeRows: [],
-    activeSessionCount: 0,
-    activeVisitorCount: 0,
-    botEventCount: 0,
-    botPageViewCount: 0,
-    botRows: [],
-    botSessionCount: 0,
-    botTopPages: [],
-    botVisitorCount: 0,
-    browserSessionCount: 0,
-    browserRows: [],
-    channelRows: [],
-    competitionViewCount: 0,
-    contactSubmitCount: 0,
-    deviceRows: [],
-    end,
-    eventRows: [],
-    newVisitorCount: 0,
-    pageViewCount: 0,
-    pwaSessionCount: 0,
-    registrationClickCount: 0,
-    returningVisitorCount: 0,
-    saveCompetitionCount: 0,
-    sessionCount: 0,
-    shareClickCount: 0,
-    osRows: [],
-    start,
-    topCompetitions: [],
-    topSavedCompetitions: [],
-    topSharedCompetitions: [],
-    topPages: [],
-    topSearches: [],
-    unsaveCompetitionCount: 0,
-    unavailableMessage,
-    visitorCount: 0,
-    visitorTypeRows: [],
-  };
-}
 
 function getQueueWhere(
   seasonYear: number,
@@ -1850,85 +1386,6 @@ function toAdminSectionDescription(value: AdminSection) {
   return "원본 링크를 확인하면서 날짜, 장소, 접수 정보와 신뢰도를 보정하세요.";
 }
 
-function toAnalyticsChannelLabel(value: string | null) {
-  if (value === "direct") return "직접 방문";
-  if (value === "internal") return "내부 이동";
-  if (value === "organic_search") return "검색 유입";
-  if (value === "paid") return "유료 유입";
-  if (value === "referral") return "추천 유입";
-  if (value === "social") return "소셜 유입";
-  return "알 수 없음";
-}
-
-function toDeviceCategoryLabel(value: string | null) {
-  if (value === "mobile") return "모바일";
-  if (value === "tablet") return "태블릿";
-  if (value === "desktop") return "데스크톱";
-  return "알 수 없음";
-}
-
-function toBotRows(
-  rows: Array<{
-    botName: string | null;
-    _count: { _all: number };
-  }>,
-): AnalyticsTableRow[] {
-  return rows
-    .map((row) => ({
-      key: row.botName ?? "unknown_bot",
-      label: row.botName ?? "알 수 없는 봇",
-      count: row._count._all,
-    }))
-    .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
-    .slice(0, 10);
-}
-
-function toCompetitionRows(
-  rows: CompetitionAnalyticsGroupRow[],
-  competitionById: Map<string, CompetitionAnalyticsSummary>,
-): AnalyticsTableRow[] {
-  return rows.map((row) => {
-    const competition = row.competitionId ? competitionById.get(row.competitionId) : null;
-    return {
-      key: row.competitionId ?? "unknown",
-      label: competition?.title ?? row.competitionId ?? "알 수 없는 대회",
-      meta:
-        competition?.organizationShortName ??
-        competition?.organizationName ??
-        row.competitionId ??
-        undefined,
-      count: row._count._all,
-    };
-  });
-}
-
-function toAnalyticsEventLabel(value: string) {
-  const labels: Record<string, string> = {
-    contact_open: "문의 열기",
-    contact_submit_success: "문의 제출 성공",
-    competition_detail_click: "드로어 상세 클릭",
-    competition_open: "대회 드로어 열기",
-    competition_view: "대회 상세 조회",
-    empty_search_result: "0건 결과",
-    engagement_ping: "활성 ping",
-    filter_applied: "필터 적용",
-    filter_reset: "필터 초기화",
-    page_view: "페이지뷰",
-    registration_link_click: "접수 링크 클릭",
-    related_competition_click: "관련 대회 클릭",
-    save_competition: "관심 대회 저장",
-    search_performed: "검색 수행",
-    session_start: "세션 시작",
-    share_click: "공유 클릭",
-    sort_changed: "정렬 변경",
-    source_link_click: "출처 링크 클릭",
-    unsave_competition: "관심 대회 해제",
-    view_mode_changed: "보기 변경",
-  };
-
-  return labels[value] ?? value;
-}
-
 function toContactStatusLabel(value: string) {
   if (value === "done") return "처리 완료";
   if (value === "archived") return "보관";
@@ -1966,27 +1423,11 @@ function formatFileSize(bytes: number) {
   return `${(bytes / 1024 / 1024).toFixed(1)}MB`;
 }
 
-function toPercentLabel(count: number, total: number) {
-  if (total <= 0) return "0%";
-  return `${Math.round((count / total) * 100)}%`;
-}
-
-function toSessionAccessMode(propertiesJson: string): "browser" | "pwa" | "unknown" {
-  try {
-    const properties = JSON.parse(propertiesJson) as Record<string, unknown>;
-    if (properties.isPwa === true) return "pwa";
-    if (
-      properties.displayMode === "standalone" ||
-      properties.displayMode === "fullscreen" ||
-      properties.displayMode === "minimal-ui"
-    ) {
-      return "pwa";
-    }
-    if (properties.isPwa === false || properties.displayMode === "browser") return "browser";
-    return "unknown";
-  } catch {
-    return "unknown";
-  }
+function formatAnalyticsMetricValue(metric: AnalyticsMetric) {
+  if (metric.format === "percent") return `${Math.round(metric.value)}%`;
+  if (metric.format === "decimal") return metric.value.toFixed(1);
+  if (metric.format === "seconds") return `${Math.round(metric.value)}초`;
+  return formatNumber(metric.value);
 }
 
 function formatNumber(value: number) {

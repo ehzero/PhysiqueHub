@@ -74,7 +74,9 @@ export function AnalyticsTracker({ pathname }: AnalyticsTrackerProps) {
       return;
     }
 
-    activeSecondsRef.current = 0;
+    // activeSeconds는 세션 전체에 걸쳐 누적한다(라우트 변경 시 리셋하지 않음).
+    // MAX(activeSeconds) 집계가 '세션 총 활성 시간'이 되도록. scrollDepth는
+    // 페이지 단위 지표이므로 페이지 전환 시 리셋한다.
     maxScrollDepthRef.current = 0;
     lastPingAtRef.current = 0;
     trackPageView(getRouteType(pathname));

@@ -14,6 +14,7 @@ PhysiqueHub는 `@vercel/analytics`를 사용하지 않고 자체 이용 행동 �
 | analytics API 호출 래퍼 | `src/lib/analytics-api.ts` |
 | 수집 API route | `src/app/api/analytics/events/route.ts` |
 | DB 모델 | `prisma/schema.prisma` |
+| 식별 정보 비식별 보관 잡 | `src/lib/analytics-retention.ts` |
 | 개인정보 고지 | `src/app/(site)/privacy/page.tsx` |
 
 ## 수집 단위
@@ -33,6 +34,7 @@ PhysiqueHub는 `@vercel/analytics`를 사용하지 않고 자체 이용 행동 �
 | `ipAddress` | 요청 헤더에서 추출한 원문 IP. |
 | `userAgent` | 요청의 전체 User-Agent. |
 | `deviceCategory`, `browserName`, `osName` | 요청 User-Agent에서 서버가 파싱한 기기/브라우저/OS 요약. |
+| `displayMode` | 진입 시 화면 표시 모드(`standalone`/`fullscreen`/`minimal-ui`/`browser`). 접근 모드 집계 기준. 진입 시 1회만 기록. |
 | `trafficType` | `human`, `bot`, `suspected_bot`, `unknown` 중 하나인 트래픽 분류. |
 | `botName`, `botReason`, `botVerified` | 봇으로 분류된 경우의 봇 이름, 판정 근거, 검증 여부. |
 | `reverseDnsHost` | IP reverse DNS 조회 결과. 조회하지 않았거나 실패하면 `null`. |
@@ -56,10 +58,11 @@ Yeti, Naver Web Crawler, Headless Chrome 등을 분류한다.
 
 | 필드 | 의미 |
 | --- | --- |
+| `eventId` | 클라이언트가 enqueue 시 생성하는 멱등 키(고유). 재시도로 같은 배치가 재전송돼도 `createMany({ skipDuplicates: true })`가 중복 삽입을 건너뛴다. 구버전/누락 시 `null`. |
 | `sessionId`, `visitorId` | 세션/방문자 연결 키. |
 | `name` | 이벤트명. `src/lib/analytics.ts`의 `ANALYTICS_EVENT_NAMES`만 허용한다. |
 | `path` | 이벤트가 발생한 경로. |
-| `occurredAt` | 클라이언트 기준 발생 시각. 잘못된 값이면 서버 수신 시각으로 대체된다. |
+| `occurredAt` | 클라이언트 기준 발생 시각. 잘못된 값이거나 서버 시각 대비 과도한 미래(5분 초과)·과거(2일 초과)면 서버 수신 시각으로 대체된다. |
 | `competitionId` | 대회 관련 이벤트의 대회 ID. |
 | `searchQuery` | 검색어. 이메일/전화번호 패턴은 `[redacted]`로 치환한다. |
 | `resultCount` | 검색/필터/목록 조작 시점의 결과 수. |
@@ -112,9 +115,9 @@ Yeti, Naver Web Crawler, Headless Chrome 등을 분류한다.
   `visitorId` 수로 추정한다. 활성 세션은 같은 기준의 세션 수로 본다.
 - 신규/재방문자는 기간 내 `AnalyticsSession.visitorId`가 기간 시작 전에도 세션을
   가진 적이 있는지로 구분한다.
-- PWA 접근은 `session_start.propertiesJson.isPwa` 또는 `displayMode`가
-  `standalone`, `fullscreen`, `minimal-ui`인지로 본다. 해당 속성이 없는 기존
-  세션은 접근 모드를 `알 수 없음`으로 본다.
+- 접근 모드(브라우저/PWA)는 `AnalyticsSession.displayMode` 컬럼을 기준으로 본다.
+  `standalone`, `fullscreen`, `minimal-ui`는 PWA, `browser`는 브라우저, 그 외나
+  값이 없는 기존 세션은 `알 수 없음`이다.
 - 기기 환경, 브라우저, OS 분포는 요청의 원문 User-Agent를 서버에서 파싱한
   `AnalyticsSession.deviceCategory`, `browserName`, `osName`을 기준으로 본다.
   User-Agent가 없거나 파싱이 어려운 경우 클라이언트가 보낸 요약값을 보조로 쓴다.
@@ -123,7 +126,8 @@ Yeti, Naver Web Crawler, Headless Chrome 등을 분류한다.
   나타내며 신규 데이터에서는 `bot` 값을 쓰지 않는다.
 - `/admin/analytics`의 기본 이용 분석 지표는 `trafficType = human` 세션과 해당
   세션의 이벤트만 포함한다. `bot`, `suspected_bot`은 같은 화면의 별도 섹션에서
-  본다.
+  본다. `unknown`(재분류로만 생길 수 있음)은 어느 쪽에도 포함되지 않으므로 합계가
+  전체와 다를 수 있다.
 - 공개 헤더 방문자 카운터는 운영 노출용 신호로, 요청에 따라 `trafficType`을
   필터링하지 않고 `AnalyticsSession.visitorId`의 고유 수를 표시한다. 오늘
   방문자는 Asia/Seoul 날짜 경계의 `startedAt` 기준이며, 전체 방문자는 전체 기간의
@@ -134,6 +138,44 @@ Yeti, Naver Web Crawler, Headless Chrome 등을 분류한다.
   `filter_applied` 또는 `filter_reset`으로 본다.
 - `empty_search_result`는 검색과 필터 양쪽에서 발생할 수 있으므로 원인 구분이
   필요하면 `propertiesJson.source` 같은 허용 속성을 추가한 뒤 분석한다.
+
+### 어드민 분석 대시보드 지표
+
+`/admin/analytics`는 기존 로그만 사용해 선택 기간의 사람 트래픽을 분석한다.
+스키마, 이벤트명, 클라이언트 수집 속성을 추가하지 않는 범위에서 다음 지표를
+계산한다.
+
+- 재방문율은 기간 내 고유 방문자 중 기간 시작 전에도 세션이 있었던 방문자의
+  비율로 본다. 재분류 안정성을 위해 과거 세션의 `trafficType`은 따지지 않는다.
+- per-세션 비율(페이지뷰/세션, 참여 세션율, 문의 전환율)의 분모는 "활동 세션"
+  = 기간 내 이벤트가 1건 이상인 `human` 세션 수다. 세션 시작 시각(`startedAt`)이
+  아니라 활동(`occurredAt`) 기준이라 이벤트 분자와 모집단이 일치한다.
+- 페이지뷰/세션은 `page_view` 수를 활동 세션 수로 나눈다.
+- 참여 세션율은 `engagement_ping`이 1회 이상 있는 세션 / 활동 세션으로 본다.
+- 평균 활성 시간은 세션별 `engagement_ping.propertiesJson.activeSeconds`의
+  최대값을 구한 뒤 그 평균으로 계산한다. `activeSeconds`는 페이지 전환 시
+  리셋하지 않고 세션 내내 누적하므로, 세션별 최대값이 곧 세션 총 활성 시간이다.
+- 대회 목록 조회는 `page_view.path`가 `/competitions` 또는 `/competitions?`로
+  시작하는 이벤트만 포함한다. 상세 페이지(`/competitions/{slug}`) 조회는 제외한다.
+- 대회 탐색 퍼널은 목록 조회 → `competition_open` → `competition_detail_click`
+  → `competition_view` → `registration_link_click` 순서로 표시한다.
+  `competition_view`에는 검색 유입 등 직접 상세 진입이 포함될 수 있으므로 이전
+  단계 대비 전환율이 100%를 넘을 수 있다.
+- 접수 의도율은 `registration_link_click / competition_view`로 본다.
+- 저장률과 공유율은 각각 `save_competition / competition_view`,
+  `share_click / competition_view`로 본다.
+- 문의 전환율은 `contact_submit_success / 활동 세션`으로 본다.
+- 0건 결과율은 `empty_search_result / (search_performed + filter_applied)`로
+  본다. 검색·필터 두 경로를 합산한 상호작용 기준 비율이다.
+- 평균 검색 결과는 `search_performed.resultCount` 평균으로 본다.
+- 대회 수요 표의 관련 행동 수는 화면에 노출된 상위 대회 ID에 대해 같은 기간의
+  `competition_view`, `registration_link_click`, `save_competition`,
+  `share_click`을 다시 집계해 표시한다.
+
+현재 대시보드는 기존 로그만 사용하므로 필터별 0건 원인, 검색과 필터의 상세
+조합, 상세 페이지 직접 진입의 정확한 유입 단계 분해는 하지 않는다. 이런 분석이
+필요하면 새 허용 속성 또는 이벤트를 추가한 뒤 이 문서와 개인정보 고지를 함께
+검토한다.
 
 ## 허용 속성
 
@@ -183,6 +225,17 @@ Yeti, Naver Web Crawler, Headless Chrome 등을 분류한다.
 
 - 원문 IP와 전체 User-Agent를 저장하므로 analytics 변경 시
   `src/app/(site)/privacy/page.tsx`의 고지 내용과 보관 기간을 함께 확인한다.
+- 식별 정보 보관 정책(B안): 원문 IP와 전체 User-Agent는 수집일(`createdAt`)
+  기준 90일이 지나면 `AnalyticsSession`과 `AnalyticsEvent` 양쪽에서 `null`로
+  비운다(`src/lib/analytics-retention.ts`의 `ANALYTICS_IDENTIFIER_RETENTION_DAYS`).
+  비식별 이벤트·세션 행 자체는 추세 분석을 위해 계속 보관하고, 이미 파생된
+  `deviceCategory`/`browserName`/`osName`/`trafficType`/`channel`/`referrerHost`
+  같은 요약값은 그대로 둔다. 만료된 `AnalyticsDnsCache` 행도 함께 삭제한다.
+- 비식별 보관 잡은 `/api/analytics/retention`(Vercel Cron, `CRON_SECRET`
+  Bearer 토큰으로 보호)이 매일 1회 실행한다. 수동 실행과 최초 백필은
+  `npm run analytics:anonymize`로 하며 `--dry-run`, `--days=`, `--batch=`를
+  지원한다. 테이블이 이미 큰 경우 초기 백필은 함수 타임아웃을 피하기 위해
+  크론이 아닌 스크립트로 먼저 돌린다.
 - 어드민 분석 대시보드는 원문 IP와 전체 User-Agent를 기본 노출하지 않는다.
   집계에는 사용할 수 있지만 화면에는 채널, 기기, 브라우저, OS 같은 요약값만
   표시한다.
@@ -191,7 +244,11 @@ Yeti, Naver Web Crawler, Headless Chrome 등을 분류한다.
   있으므로 검색어를 노출하는 관리자 UI나 export를 만들 때 별도 검토한다.
 - 브라우저 저장소 키는 `ph-analytics-visitor-id`,
   `ph-analytics-session-id`, `ph-analytics-session-started`,
-  `ph-analytics-landing-path`다.
+  `ph-analytics-landing-path`, `ph-analytics-acquisition`다.
+- 유입 속성(referrer/channel/utm*)은 세션 진입 시점에 `ph-analytics-acquisition`
+  으로 한 번만 스냅샷해 고정한다. 서버 세션 upsert도 이 속성들을 `create`에서만
+  기록하고 `update`에서는 덮어쓰지 않는다. flush마다 현재 URL로 다시 계산하면
+  UTM 랜딩을 벗어난 뒤 세션 어트리뷰션이 유실되기 때문이다.
 - 특정 브라우저를 수집에서 제외하려면 개발자 콘솔에서
   `localStorage.setItem("ph-analytics-opt-out", "1")`을 실행한다. 해제하려면
   `localStorage.removeItem("ph-analytics-opt-out")`을 실행한다.

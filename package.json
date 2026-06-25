@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "analytics:classify": "tsx scripts/classify-analytics.ts",
+    "analytics:anonymize": "tsx scripts/anonymize-analytics.ts",
     "crawl:sync": "tsx scripts/crawl-sync.ts",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
