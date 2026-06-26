@@ -9,6 +9,6 @@ interface HomeShellProps {
 }
 
 export function HomeShell({ data }: HomeShellProps) {
-  const today = useClientToday();
+  const today = useClientToday(data.today);
   return <HomeView data={data} today={today} />;
 }

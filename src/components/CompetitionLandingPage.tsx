@@ -90,7 +90,7 @@ function CompetitionLandingView({
 }: {
   context: CompetitionLandingContext;
 }) {
-  const { taxon, competitions, total, relatedTaxons, seasonYear } =
+  const { taxon, competitions, total, relatedTaxons, seasonYear, today } =
     context;
   const breadcrumbJsonLd = getBreadcrumbJsonLd(context);
   const itemListJsonLd = total > 0 ? getItemListJsonLd(context) : null;
@@ -152,7 +152,10 @@ function CompetitionLandingView({
           </div>
 
           {competitions.length > 0 ? (
-            <CompetitionLandingList competitions={competitions} />
+            <CompetitionLandingList
+              competitions={competitions}
+              initialToday={today}
+            />
           ) : (
             <div className="competition-landing-empty">
               <p className="eyebrow">No upcoming competitions</p>

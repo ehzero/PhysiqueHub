@@ -3,8 +3,10 @@
 import { useEffect, useState } from "react";
 import { parseDate } from "@/lib/data";
 
-export function useClientToday() {
-  const [today, setToday] = useState<Date | null>(null);
+export function useClientToday(initialToday?: string) {
+  const [today, setToday] = useState<Date | null>(() =>
+    initialToday ? parseDate(initialToday) : null,
+  );
 
   useEffect(() => {
     const timer = window.setTimeout(() => {

@@ -10,12 +10,14 @@ import { CompDrawer } from "@/components/CompDrawer";
 
 interface SavedShellProps {
   competitions: Competition[];
+  initialToday?: string;
 }
 
 export function SavedShell({
   competitions,
+  initialToday,
 }: SavedShellProps) {
-  const today = useClientToday();
+  const today = useClientToday(initialToday);
   const { saved, toggleSave } = useSiteShell();
   const { openedComp, drawerOpen, openComp, closeDrawer } =
     useCompetitionDrawer({ closePath: "/saved" });

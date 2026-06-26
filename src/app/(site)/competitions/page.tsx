@@ -26,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function CompetitionsPage() {
-  const { competitionPage, filterOptions, seasonYear } =
+  const { competitionPage, filterOptions, seasonYear, today } =
     await getUpcomingCompetitionContext({ includeFilters: true });
   const initialFilterState = parseListFilterQuery(new URLSearchParams());
   const description = getCompetitionListDescription(seasonYear);
@@ -37,6 +37,7 @@ export default async function CompetitionsPage() {
       initialFilterOptions={filterOptions!}
       initialFilterState={initialFilterState}
       description={description}
+      initialToday={today}
     />
   );
 }

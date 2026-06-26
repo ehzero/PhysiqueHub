@@ -29,6 +29,7 @@ export default async function SavedPage() {
   return (
     <SavedShell
       competitions={competitionPage.items}
+      initialToday={today}
     />
   );
 }

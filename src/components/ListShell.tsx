@@ -21,6 +21,7 @@ interface ListShellProps {
   initialFilterState: ListFilterQueryState;
   initialOpenedCompetitionId?: string;
   description: string;
+  initialToday?: string;
 }
 
 export function ListShell({
@@ -29,8 +30,9 @@ export function ListShell({
   initialFilterState,
   initialOpenedCompetitionId,
   description,
+  initialToday,
 }: ListShellProps) {
-  const today = useClientToday();
+  const today = useClientToday(initialToday);
   const { saved, toggleSave } = useSiteShell();
   const { filters, setFilters, search, setSearch, scope, setScope, currentPath } =
     useListFilterQueryState(initialFilterState);

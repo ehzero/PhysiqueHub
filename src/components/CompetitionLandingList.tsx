@@ -10,12 +10,14 @@ import { useSiteShell } from "@/components/SiteShell";
 
 interface CompetitionLandingListProps {
   competitions: Competition[];
+  initialToday?: string;
 }
 
 export function CompetitionLandingList({
   competitions,
+  initialToday,
 }: CompetitionLandingListProps) {
-  const today = useClientToday();
+  const today = useClientToday(initialToday);
   const { saved, toggleSave } = useSiteShell();
   const [closePath] = useState(() =>
     typeof window === "undefined"
