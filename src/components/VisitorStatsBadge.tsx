@@ -41,24 +41,30 @@ export function VisitorStatsBadge() {
     };
   }, []);
 
-  if (!stats) return null;
-
   return (
     <div className="nav-visitor-stats" aria-label={getVisitorStatsLabel(stats)}>
       <span>
         오늘{" "}
-        <b className="mono">{stats.todayVisitors.toLocaleString("ko-KR")}</b>
+        <b className="mono">{formatVisitorCount(stats?.todayVisitors)}</b>
       </span>
       <span className="nav-visitor-divider" aria-hidden="true" />
       <span>
         전체{" "}
-        <b className="mono">{stats.totalVisitors.toLocaleString("ko-KR")}</b>
+        <b className="mono">{formatVisitorCount(stats?.totalVisitors)}</b>
       </span>
     </div>
   );
 }
 
-function getVisitorStatsLabel(stats: VisitorStats) {
+function formatVisitorCount(value: number | undefined) {
+  return typeof value === "number" ? value.toLocaleString("ko-KR") : "-";
+}
+
+function getVisitorStatsLabel(stats: VisitorStats | null) {
+  if (!stats) {
+    return "방문자 수를 불러오는 중";
+  }
+
   return `오늘 방문자 ${stats.todayVisitors.toLocaleString(
     "ko-KR",
   )}명, 전체 방문자 ${stats.totalVisitors.toLocaleString("ko-KR")}명`;
