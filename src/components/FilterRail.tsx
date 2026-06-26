@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { Competition, Filters, parseDate, regStatusAt } from "@/lib/data";
+import { Competition, Filters, regStatusAt } from "@/lib/data";
 import {
   COMPETITION_TIER_LABELS,
   COMPETITION_TIERS,
@@ -138,8 +138,9 @@ export function FilterRail({
     filters.regions?.includes(r.name),
   );
   const showOverseasRegions = showOverseas || hasSelectedOverseas;
-  const effectiveToday = today ?? getKoreaTodayDate();
-  const statusCounts = getRegistrationStatusCounts(allComps, effectiveToday);
+  const statusCounts = today
+    ? getRegistrationStatusCounts(allComps, today)
+    : getInitialRegistrationStatusCounts(filterOptions);
 
   const statusOptions: { key: string; label: string; dot?: string; count?: number }[] = [
     { key: "open", label: "접수 중", dot: OK, count: statusCounts.get("open") ?? 0 },
@@ -406,6 +407,38 @@ function getRegistrationStatusCounts(comps: Competition[], today: Date) {
   }, new Map<string, number>());
 }
 
+function getInitialRegistrationStatusCounts(
+  filterOptions: CompetitionFilterOptions | undefined,
+) {
+  return (filterOptions?.registrationStatuses ?? []).reduce(
+    (counts, item) => {
+      const status = normalizeRegistrationStatusKind(item.status);
+      counts.set(status, (counts.get(status) ?? 0) + item.count);
+      return counts;
+    },
+    new Map<string, number>(),
+  );
+}
+
+function normalizeRegistrationStatusKind(status: string) {
+  switch (status) {
+    case "open":
+    case "urgent":
+    case "soon":
+    case "unknown":
+      return status;
+    case "closing-soon":
+      return "urgent";
+    case "scheduled":
+      return "soon";
+    case "closed":
+    case "cancelled":
+      return "closed";
+    default:
+      return "unknown";
+  }
+}
+
 function getAttributeCounts(comps: Competition[]) {
   return {
     global: comps.filter((competition) => competition.attributes.global).length,
@@ -432,17 +465,6 @@ function mapCounts(values: string[]) {
   )
     .map(([name, count]) => ({ name, count }))
     .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, "ko-KR"));
-}
-
-function getKoreaTodayDate() {
-  const today = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Asia/Seoul",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date());
-
-  return parseDate(today);
 }
 
 // keep export for any legacy usage
