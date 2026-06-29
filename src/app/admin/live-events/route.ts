@@ -5,8 +5,9 @@ import { prisma } from "@/lib/prisma";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// 라이브 활동 피드에 보여줄 "의미 있는" 사람 행동만. engagement_ping·page_view·
-// session_start 같은 고빈도/저신호 이벤트는 제외해 피드가 노이즈로 도배되지 않게 한다.
+// 라이브 활동 피드에 보여줄 "의미 있는" 사람 행동. engagement_ping·session_start 같은
+// 고빈도/저신호 이벤트는 제외한다. page_view는 둘러보기 생동감을 위해 별도로 포함하되
+// (아래 OR 절) 대회 상세 경로는 competition_view와 중복되므로 거른다.
 const FEED_EVENT_NAMES = [
   "competition_open",
   "competition_detail_click",
@@ -42,7 +43,12 @@ export async function GET(request: Request) {
 
   const rows = await prisma.analyticsEvent.findMany({
     where: {
-      name: { in: FEED_EVENT_NAMES },
+      OR: [
+        { name: { in: FEED_EVENT_NAMES } },
+        // page_view: 둘러보기 생동감용. 단 대회 상세(/competitions/<slug>)는 competition_view가
+        // 대회명으로 이미 보여주므로 제외해 같은 진입이 두 줄로 찍히지 않게 한다.
+        { name: "page_view", NOT: { path: { startsWith: "/competitions/" } } },
+      ],
       ...(after ? { occurredAt: { gt: after } } : {}),
       session: { is: { trafficType: "human" } },
     },
