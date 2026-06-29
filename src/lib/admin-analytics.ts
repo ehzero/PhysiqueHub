@@ -46,6 +46,7 @@ export type AnalyticsSummary = {
   channelRows: AnalyticsTableRow[];
   conversionMetrics: AnalyticsMetric[];
   deviceRows: AnalyticsTableRow[];
+  directFunnelRows: AnalyticsTableRow[];
   end: Date;
   eventRows: AnalyticsTableRow[];
   funnelRows: AnalyticsTableRow[];
@@ -56,6 +57,7 @@ export type AnalyticsSummary = {
   leadSourceRows: AnalyticsTableRow[];
   overviewMetrics: AnalyticsMetric[];
   osRows: AnalyticsTableRow[];
+  retentionMetrics: AnalyticsMetric[];
   searchQualityMetrics: AnalyticsMetric[];
   start: Date;
   topCompetitions: AnalyticsTableRow[];
@@ -66,6 +68,7 @@ export type AnalyticsSummary = {
   topSearches: AnalyticsTableRow[];
   topSharedCompetitions: AnalyticsTableRow[];
   unavailableMessage?: string;
+  visitorBehaviorRows: AnalyticsTableRow[];
   visitorRows: AnalyticsTableRow[];
   zeroResultSearches: AnalyticsTableRow[];
 };
@@ -87,6 +90,32 @@ type CompetitionAnalyticsSummary = {
 type EngagementSummaryRow = {
   engagedSessionCount: bigint | number;
   averageActiveSeconds: number | null;
+};
+
+type FunnelSessionRow = {
+  list1: number;
+  list2: number;
+  list3: number;
+  list4: number;
+  list5: number;
+  direct1: number;
+  direct2: number;
+};
+
+type BehaviorRow = {
+  returning: boolean;
+  sessions: number;
+  views: number;
+  regs: number;
+};
+
+type CohortRow = {
+  c1: number;
+  k1: number;
+  c7: number;
+  k7: number;
+  c30: number;
+  k30: number;
 };
 
 type AnalyticsCountInputs = {
@@ -233,6 +262,9 @@ export async function getAnalyticsSummary(
       sourceLinkClickCount,
       contactEventRows,
       topFilterRows,
+      funnelSessionRows,
+      behaviorRows,
+      cohortRows,
     ] = await Promise.all([
       prisma.$queryRaw<{ total: number; returning: number }[]>`
         SELECT
@@ -536,6 +568,108 @@ export async function getAnalyticsSummary(
         console.error("Failed to compute analytics top filters", error);
         return [];
       }),
+      // 탐색 퍼널(세션 단위·단조). 세션별로 각 단계 이벤트 발생 여부(bool_or)를 모은 뒤,
+      // 목록 주도 경로는 직전 단계를 모두 거친 세션만 누적(부분집합)해 진짜 깔때기가 되게 한다.
+      // 직접 진입(direct)은 목록 페이지뷰 없이 상세를 본 세션 → SEO/공유 유입을 분리 집계.
+      prisma.$queryRaw<FunnelSessionRow[]>`
+        WITH per_session AS (
+          SELECT
+            e."sessionId",
+            bool_or(e."name" = 'page_view'
+              AND (e."path" = '/competitions' OR e."path" LIKE '/competitions?%')) AS has_list,
+            bool_or(e."name" = 'competition_open') AS has_open,
+            bool_or(e."name" = 'competition_detail_click') AS has_click,
+            bool_or(e."name" = 'competition_view') AS has_view,
+            bool_or(e."name" = 'registration_link_click') AS has_reg
+          FROM "AnalyticsEvent" e
+          JOIN "AnalyticsSession" s ON s."id" = e."sessionId"
+          WHERE s."trafficType" = 'human'
+            AND e."occurredAt" >= ${start} AND e."occurredAt" <= ${end}
+            ${segmentSql(segment, "s.")}
+          GROUP BY e."sessionId"
+        )
+        SELECT
+          COUNT(*) FILTER (WHERE has_list)::int AS list1,
+          COUNT(*) FILTER (WHERE has_list AND has_open)::int AS list2,
+          COUNT(*) FILTER (WHERE has_list AND has_open AND has_click)::int AS list3,
+          COUNT(*) FILTER (WHERE has_list AND has_open AND has_click AND has_view)::int AS list4,
+          COUNT(*) FILTER (WHERE has_list AND has_open AND has_click AND has_view AND has_reg)::int AS list5,
+          COUNT(*) FILTER (WHERE NOT has_list AND has_view)::int AS direct1,
+          COUNT(*) FILTER (WHERE NOT has_list AND has_view AND has_reg)::int AS direct2
+        FROM per_session
+      `.catch((error): FunnelSessionRow[] => {
+        console.error("Failed to compute analytics session funnel", error);
+        return [];
+      }),
+      // 신규/재방문 행동 비교: 윈도 내 사람 세션을 (윈도 시작 이전 세션 존재 여부로)
+      // 신규/재방문 분류하고, 세션별 상세조회·접수클릭 도달을 집계해 전환을 비교한다.
+      prisma.$queryRaw<BehaviorRow[]>`
+        WITH classified AS (
+          SELECT s."id" AS sid,
+            EXISTS (
+              SELECT 1 FROM "AnalyticsSession" p
+              WHERE p."visitorId" = s."visitorId" AND p."startedAt" < ${start}
+            ) AS is_returning
+          FROM "AnalyticsSession" s
+          WHERE s."trafficType" = 'human'
+            AND s."startedAt" >= ${start} AND s."startedAt" <= ${end}
+            ${segmentSql(segment, "s.")}
+        ),
+        ev AS (
+          SELECT e."sessionId",
+            bool_or(e."name" = 'competition_view') AS viewed,
+            bool_or(e."name" = 'registration_link_click') AS reg
+          FROM "AnalyticsEvent" e
+          JOIN classified c ON c.sid = e."sessionId"
+          WHERE e."occurredAt" >= ${start} AND e."occurredAt" <= ${end}
+          GROUP BY e."sessionId"
+        )
+        SELECT c.is_returning AS returning,
+          COUNT(*)::int AS sessions,
+          COUNT(*) FILTER (WHERE ev.viewed)::int AS views,
+          COUNT(*) FILTER (WHERE ev.reg)::int AS regs
+        FROM classified c
+        LEFT JOIN ev ON ev."sessionId" = c.sid
+        GROUP BY c.is_returning
+      `.catch((error): BehaviorRow[] => {
+        console.error("Failed to compute analytics visitor behavior", error);
+        return [];
+      }),
+      // 코호트 롤링 리텐션: 방문자의 최초 세션(first_at) 기준 D1/D7/D30 내 재방문 비율.
+      // 기준시각은 윈도 end(캐시 결정성). 성숙 코호트만(첫 방문이 end-N일 이전) 분모로.
+      // 세그먼트는 적용하지 않는다(전체 방문자 제품 건강 지표).
+      prisma.$queryRaw<CohortRow[]>`
+        WITH first_seen AS (
+          SELECT "visitorId", MIN("startedAt") AS first_at
+          FROM "AnalyticsSession"
+          WHERE "trafficType" = 'human'
+          GROUP BY "visitorId"
+        ),
+        ret AS (
+          SELECT fs."visitorId", fs.first_at,
+            bool_or(s."startedAt" > fs.first_at
+              AND s."startedAt" <= fs.first_at + interval '1 day') AS r1,
+            bool_or(s."startedAt" > fs.first_at
+              AND s."startedAt" <= fs.first_at + interval '7 day') AS r7,
+            bool_or(s."startedAt" > fs.first_at
+              AND s."startedAt" <= fs.first_at + interval '30 day') AS r30
+          FROM first_seen fs
+          JOIN "AnalyticsSession" s
+            ON s."visitorId" = fs."visitorId" AND s."trafficType" = 'human'
+          GROUP BY fs."visitorId", fs.first_at
+        )
+        SELECT
+          COUNT(*) FILTER (WHERE first_at <= ${new Date(end.getTime() - 86_400_000)})::int AS c1,
+          COUNT(*) FILTER (WHERE first_at <= ${new Date(end.getTime() - 86_400_000)} AND r1)::int AS k1,
+          COUNT(*) FILTER (WHERE first_at <= ${new Date(end.getTime() - 7 * 86_400_000)})::int AS c7,
+          COUNT(*) FILTER (WHERE first_at <= ${new Date(end.getTime() - 7 * 86_400_000)} AND r7)::int AS k7,
+          COUNT(*) FILTER (WHERE first_at <= ${new Date(end.getTime() - 30 * 86_400_000)})::int AS c30,
+          COUNT(*) FILTER (WHERE first_at <= ${new Date(end.getTime() - 30 * 86_400_000)} AND r30)::int AS k30
+        FROM ret
+      `.catch((error): CohortRow[] => {
+        console.error("Failed to compute analytics cohort retention", error);
+        return [];
+      }),
     ]);
 
     // 방문자/재방문/활성/봇/활동세션은 COUNT(DISTINCT) 스칼라로 받는다(행을 Node로
@@ -705,7 +839,8 @@ export async function getAnalyticsSummary(
         meta: row.name,
         count: row._count._all,
       })),
-      funnelRows: getFunnelRows(counts),
+      directFunnelRows: getDirectFunnelRows(funnelSessionRows[0]),
+      funnelRows: getSessionFunnelRows(funnelSessionRows[0]),
       heroMetrics: withDeltas(
         buildHeroMetrics(counts, segment ? undefined : heroSeries),
         buildHeroMetrics(prevCounts),
@@ -721,6 +856,7 @@ export async function getAnalyticsSummary(
         meta: toPercentLabel(row._count._all, sessionCount),
         count: row._count._all,
       })),
+      retentionMetrics: getRetentionMetrics(cohortRows[0]),
       searchQualityMetrics: withDeltas(getSearchQualityMetrics(counts), getSearchQualityMetrics(prevCounts)),
       start,
       topCompetitions: toCompetitionRows(
@@ -762,6 +898,7 @@ export async function getAnalyticsSummary(
         competitionActionCounts,
         "share_click",
       ),
+      visitorBehaviorRows: getVisitorBehaviorRows(behaviorRows),
       visitorRows: [
         {
           key: "new",
@@ -937,9 +1074,10 @@ function getEmptyAnalyticsSummary(
     channelRows: [],
     conversionMetrics: getConversionMetrics(counts),
     deviceRows: [],
+    directFunnelRows: getDirectFunnelRows(undefined),
     end,
     eventRows: [],
-    funnelRows: getFunnelRows(counts),
+    funnelRows: getSessionFunnelRows(undefined),
     heroMetrics: [],
     leadCompetitionRows: [],
     leadFunnelRows: getLeadFunnelRows(counts),
@@ -947,6 +1085,7 @@ function getEmptyAnalyticsSummary(
     leadSourceRows: [],
     overviewMetrics: getOverviewMetrics(counts),
     osRows: [],
+    retentionMetrics: getRetentionMetrics(undefined),
     searchQualityMetrics: getSearchQualityMetrics(counts),
     start,
     topCompetitions: [],
@@ -957,6 +1096,7 @@ function getEmptyAnalyticsSummary(
     topSearches: [],
     topSharedCompetitions: [],
     unavailableMessage,
+    visitorBehaviorRows: [],
     visitorRows: [],
     zeroResultSearches: [],
   };
@@ -1010,38 +1150,91 @@ function getOverviewMetrics(counts: AnalyticsCountInputs): AnalyticsMetric[] {
   ];
 }
 
-function getFunnelRows(counts: AnalyticsCountInputs): AnalyticsTableRow[] {
+const EMPTY_FUNNEL_ROW: FunnelSessionRow = {
+  list1: 0,
+  list2: 0,
+  list3: 0,
+  list4: 0,
+  list5: 0,
+  direct1: 0,
+  direct2: 0,
+};
+
+// 목록 주도 탐색 퍼널(세션 단위·단조). 각 단계는 직전 단계를 모두 거친 세션의 부분집합이라
+// 실제 깔때기처럼 단조감소한다(이벤트 카운트가 아니라 도달 세션 수).
+function getSessionFunnelRows(row: FunnelSessionRow | undefined): AnalyticsTableRow[] {
+  const r = row ?? EMPTY_FUNNEL_ROW;
+  return [
+    { key: "list-1", label: "목록 조회 세션", meta: "대회 목록을 본 세션", count: r.list1 },
+    {
+      key: "list-2",
+      label: "드로어 열기",
+      meta: `목록 대비 ${toPercentLabel(r.list2, r.list1)}`,
+      count: r.list2,
+    },
+    {
+      key: "list-3",
+      label: "드로어 상세 클릭",
+      meta: `드로어 대비 ${toPercentLabel(r.list3, r.list2)}`,
+      count: r.list3,
+    },
+    {
+      key: "list-4",
+      label: "상세 조회",
+      meta: `상세클릭 대비 ${toPercentLabel(r.list4, r.list3)}`,
+      count: r.list4,
+    },
+    {
+      key: "list-5",
+      label: "접수 클릭",
+      meta: `상세조회 대비 ${toPercentLabel(r.list5, r.list4)} · 목록 대비 ${toPercentLabel(r.list5, r.list1)}`,
+      count: r.list5,
+    },
+  ];
+}
+
+// 직접 진입 경로: 목록 페이지뷰 없이 상세를 본 세션(SEO·공유 유입)→접수. 목록 주도와 분리해
+// 서로 다른 두 유입 경로가 하나의 퍼널로 섞이지 않게 한다.
+function getDirectFunnelRows(row: FunnelSessionRow | undefined): AnalyticsTableRow[] {
+  const r = row ?? EMPTY_FUNNEL_ROW;
   return [
     {
-      key: "list-page-view",
-      label: "목록 조회",
-      meta: "대회 목록 페이지뷰",
-      count: counts.listPageViewCount,
+      key: "direct-1",
+      label: "상세 조회(직접)",
+      meta: "목록 없이 상세 진입 · SEO·공유",
+      count: r.direct1,
     },
     {
-      key: "competition-open",
-      label: "대회 드로어 열기",
-      meta: `목록 조회 대비 ${toPercentLabel(counts.competitionOpenCount, counts.listPageViewCount)} · 상호작용 기준`,
-      count: counts.competitionOpenCount,
+      key: "direct-2",
+      label: "접수 클릭",
+      meta: `상세 대비 ${toPercentLabel(r.direct2, r.direct1)}`,
+      count: r.direct2,
     },
-    {
-      key: "competition-detail-click",
-      label: "드로어 상세 클릭",
-      meta: `드로어 대비 ${toPercentLabel(counts.competitionDetailClickCount, counts.competitionOpenCount)}`,
-      count: counts.competitionDetailClickCount,
-    },
-    {
-      key: "competition-view",
-      label: "상세 페이지 조회",
-      meta: `상세 클릭 대비 ${toPercentLabel(counts.competitionViewCount, counts.competitionDetailClickCount)} · 직접 진입 포함`,
-      count: counts.competitionViewCount,
-    },
-    {
-      key: "registration-link-click",
-      label: "접수 링크 클릭",
-      meta: `상세 조회 대비 ${toPercentLabel(counts.registrationClickCount, counts.competitionViewCount)}`,
-      count: counts.registrationClickCount,
-    },
+  ];
+}
+
+// 신규/재방문 행동 비교: 그룹별 세션 수와 상세조회·접수도달률. 재방문자가 실제로 더 잘
+// 전환하는지(접수도달률)를 한눈에 본다. count는 접수 도달 세션, meta에 비율을 싣는다.
+function getVisitorBehaviorRows(rows: BehaviorRow[]): AnalyticsTableRow[] {
+  return [...rows]
+    .sort((a, b) => Number(a.returning) - Number(b.returning))
+    .filter((row) => row.sessions > 0)
+    .map((row) => ({
+      key: row.returning ? "returning" : "new",
+      label: row.returning ? "재방문자" : "신규 방문자",
+      meta: `세션 ${formatCount(row.sessions)} · 상세조회 ${toPercentLabel(row.views, row.sessions)} · 접수도달 ${toPercentLabel(row.regs, row.sessions)}`,
+      count: row.regs,
+    }));
+}
+
+// 코호트 롤링 리텐션(D1/D7/D30). 윈도 end 기준 성숙 코호트만 분모. 윈도/세그먼트와 무관한
+// 제품 건강 지표라 직전 대비 델타는 붙이지 않는다.
+function getRetentionMetrics(row: CohortRow | undefined): AnalyticsMetric[] {
+  const r = row ?? { c1: 0, k1: 0, c7: 0, k7: 0, c30: 0, k30: 0 };
+  return [
+    metric("retention-d1", "D1 리텐션", toRate(r.k1, r.c1), "percent", `재방문 ${formatCount(r.k1)} / 코호트 ${formatCount(r.c1)}명`),
+    metric("retention-d7", "D7 리텐션", toRate(r.k7, r.c7), "percent", `${formatCount(r.k7)} / ${formatCount(r.c7)}명`),
+    metric("retention-d30", "D30 리텐션", toRate(r.k30, r.c30), "percent", `${formatCount(r.k30)} / ${formatCount(r.c30)}명`),
   ];
 }
 

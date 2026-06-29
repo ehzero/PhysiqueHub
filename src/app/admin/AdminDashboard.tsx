@@ -818,6 +818,13 @@ function AnalyticsDashboardSection({
         />
       </AnalyticsBlock>
 
+      <AnalyticsBlock tag="Retention" title="리텐션 코호트">
+        <AnalyticsMetricGrid
+          ariaLabel="코호트 리텐션 지표"
+          metrics={analytics.retentionMetrics}
+        />
+      </AnalyticsBlock>
+
       <AnalyticsBlock tag="Revenue" title="광고 리드">
         <AnalyticsMetricGrid
           ariaLabel="광고 리드 핵심 지표"
@@ -845,10 +852,22 @@ function AnalyticsDashboardSection({
 
       <AnalyticsBlock tag="Funnel" title="대회 탐색 퍼널">
         <FunnelBars
-          emptyLabel="대회 탐색 퍼널 데이터가 없습니다."
+          emptyLabel="목록 주도 탐색 데이터가 없습니다."
           rows={analytics.funnelRows}
-          title="목록에서 접수까지"
+          title="목록 주도 탐색 (세션 단위)"
         />
+        <FunnelBars
+          emptyLabel="직접 진입 데이터가 없습니다."
+          rows={analytics.directFunnelRows}
+          title="직접 진입 → 접수 (SEO·공유)"
+        />
+        <div className="ac-tables">
+          <AnalyticsTable
+            emptyLabel="신규·재방문 데이터가 없습니다."
+            rows={analytics.visitorBehaviorRows}
+            title="신규·재방문 접수 도달"
+          />
+        </div>
         <AnalyticsMetricGrid
           ariaLabel="전환·의도 지표"
           metrics={analytics.conversionMetrics}
