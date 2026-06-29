@@ -59,6 +59,7 @@ export type AnalyticsSummary = {
   searchQualityMetrics: AnalyticsMetric[];
   start: Date;
   topCompetitions: AnalyticsTableRow[];
+  topFilters: AnalyticsTableRow[];
   topPages: AnalyticsTableRow[];
   topRegistrationCompetitions: AnalyticsTableRow[];
   topSavedCompetitions: AnalyticsTableRow[];
@@ -231,6 +232,7 @@ export async function getAnalyticsSummary(
       relatedCompetitionClickCount,
       sourceLinkClickCount,
       contactEventRows,
+      topFilterRows,
     ] = await Promise.all([
       prisma.$queryRaw<{ total: number; returning: number }[]>`
         SELECT
@@ -507,6 +509,33 @@ export async function getAnalyticsSummary(
         },
         select: { name: true, propertiesJson: true, competitionId: true },
       }),
+      // 상위 필터: filter_applied의 propertiesJson.filterKeys(제어문자 US로 연결)를
+      // 행으로 펼쳐 라벨별 빈도를 센다. propertiesJson은 TEXT라 객체('{'로 시작)만
+      // ::jsonb 캐스트하고, filterKeys가 없는(구버전) 행은 ->> 가 NULL이라 제외된다.
+      // 구분자는 클라이언트 join과 동일한 US(chr(31)) — 라벨에 절대 안 나오는 문자.
+      prisma.$queryRaw<{ key: string; count: number }[]>`
+        SELECT key, COUNT(*)::int AS count
+        FROM (
+          SELECT unnest(
+            string_to_array(e."propertiesJson"::jsonb ->> 'filterKeys', chr(31))
+          ) AS key
+          FROM "AnalyticsEvent" e
+          JOIN "AnalyticsSession" s ON s."id" = e."sessionId"
+          WHERE e."name" = 'filter_applied'
+            AND e."propertiesJson" LIKE '{%'
+            AND e."occurredAt" >= ${start}
+            AND e."occurredAt" <= ${end}
+            AND s."trafficType" = 'human'
+            ${segmentSql(segment, "s.")}
+        ) t
+        WHERE key IS NOT NULL AND key <> ''
+        GROUP BY key
+        ORDER BY count DESC, key ASC
+        LIMIT 12
+      `.catch((error): { key: string; count: number }[] => {
+        console.error("Failed to compute analytics top filters", error);
+        return [];
+      }),
     ]);
 
     // 방문자/재방문/활성/봇/활동세션은 COUNT(DISTINCT) 스칼라로 받는다(행을 Node로
@@ -717,6 +746,11 @@ export async function getAnalyticsSummary(
         competitionActionCounts,
         "save_competition",
       ),
+      topFilters: topFilterRows.map((row) => ({
+        key: row.key,
+        label: row.key,
+        count: row.count,
+      })),
       topSearches: topSearchRows.map((row) => ({
         key: row.searchQuery ?? "unknown",
         label: row.searchQuery ?? "알 수 없는 검색어",
@@ -916,6 +950,7 @@ function getEmptyAnalyticsSummary(
     searchQualityMetrics: getSearchQualityMetrics(counts),
     start,
     topCompetitions: [],
+    topFilters: [],
     topPages: [],
     topRegistrationCompetitions: [],
     topSavedCompetitions: [],

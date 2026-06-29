@@ -381,12 +381,24 @@ export function ListView({
     if (lastFilterSignatureRef.current === filterSignature) return;
     lastFilterSignatureRef.current = filterSignature;
 
+    const appliedFilterLabels = [
+      ...activeFilterChips.map((chip) => chip.label),
+      ...(scope === "all" ? [] : [scope === "domestic" ? "국내 대회" : "해외 대회"]),
+    ];
+
     trackAnalyticsEvent(activeFilterCount > 0 ? "filter_applied" : "filter_reset", {
       searchQuery: search || undefined,
       resultCount: sorted.length,
       properties: {
         scope,
         activeFilterCount,
+        // 어떤 필터가 켜졌는지 어드민 "상위 필터" 집계용으로 라벨을 구분자로 이어 기록.
+        // 주최/지역/종목 라벨은 자유 문자열이라 '|' 같은 흔한 문자는 충돌 위험이 있어,
+        // 라벨에 절대 나오지 않는 제어문자 US(\x1f)로 구분한다(서버도 동일 분리).
+        // filter_reset(0개)일 때는 의미가 없어 생략한다.
+        ...(activeFilterCount > 0
+          ? { filterKeys: appliedFilterLabels.join("\u001f") }
+          : {}),
       },
     });
 
@@ -400,7 +412,7 @@ export function ListView({
         },
       });
     }
-  }, [activeFilterCount, filterSignature, scope, search, sorted.length]);
+  }, [activeFilterChips, activeFilterCount, filterSignature, scope, search, sorted.length]);
 
   const segmentTabs: { id: CompetitionLocationScope; label: string; count: number }[] = [
     { id: "all", label: "전체", count: comps.length },

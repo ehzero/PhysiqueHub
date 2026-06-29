@@ -64,6 +64,7 @@ export const ANALYTICS_ALLOWED_PROPERTY_KEYS = new Set([
   "displayMode",
   "filterCount",
   "filterKey",
+  "filterKeys",
   "filterValue",
   "hadRegistrationUrl",
   "isPwa",

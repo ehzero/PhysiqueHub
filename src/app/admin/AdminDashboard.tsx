@@ -871,6 +871,11 @@ function AnalyticsDashboardSection({
             rows={analytics.zeroResultSearches}
             title="0건 검색어"
           />
+          <AnalyticsTable
+            emptyLabel="필터 데이터가 없습니다."
+            rows={analytics.topFilters}
+            title="상위 필터"
+          />
         </div>
       </AnalyticsBlock>
 
