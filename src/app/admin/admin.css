@@ -521,6 +521,61 @@ dl.ac-kpis .ac-kpi-value {
 }
 
 /* Hero KPI cards (value + delta + sparkline) */
+/* 실시간(최근 2분) 라이브 인디케이터 — 기간 지표와 시각적으로 분리 */
+.ac-live {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid var(--ac-line);
+  border-radius: 999px;
+  background: var(--ac-elev);
+  font-size: 12px;
+  color: var(--ac-ink-3);
+}
+.ac-live-dot {
+  align-self: center;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ac-pos);
+  animation: ac-live-pulse 1.8s ease-in-out infinite;
+}
+.ac-live-label {
+  font-family: var(--ac-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--ac-pos);
+}
+.ac-live-stat strong {
+  color: var(--ac-ink);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.ac-live-sep {
+  color: var(--ac-line);
+}
+.ac-live-note {
+  margin-left: 2px;
+  font-size: 11px;
+  color: var(--ac-ink-4);
+}
+@keyframes ac-live-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ac-live-dot {
+    animation: none;
+  }
+}
+
 .ac-hero-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

@@ -1112,13 +1112,8 @@ function getOverviewMetrics(counts: AnalyticsCountInputs): AnalyticsMetric[] {
       `신규 ${formatCount(counts.newVisitorCount)} / 재방문 ${formatCount(counts.returningVisitorCount)}`,
     ),
     metric("sessions", "세션", counts.sessionCount, "number"),
-    metric(
-      "active-visitors",
-      "활성 사용자",
-      counts.activeVisitorCount,
-      "number",
-      `최근 2분 · 세션 ${formatCount(counts.activeSessionCount)}`,
-    ),
+    // 활성 사용자(최근 2분)는 시점 지표라 기간 그리드에서 제외하고 별도 라이브
+    // 인디케이터(LiveIndicator)로 분리한다. 직전 대비 델타도 의미가 없어 붙이지 않는다.
     metric(
       "returning-rate",
       "재방문율",

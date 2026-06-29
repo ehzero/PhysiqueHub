@@ -794,6 +794,10 @@ function AnalyticsDashboardSection({
 
   return (
     <section aria-label="이용 분석">
+      <LiveIndicator
+        sessions={analytics.activeSessionCount}
+        visitors={analytics.activeVisitorCount}
+      />
       {range === "custom" && <DateRangeForm from={from} to={to} />}
       {segment && <SegmentBanner clearHref={clearSegHref} segment={segment} />}
       {competitionFunnel && (
@@ -1127,6 +1131,25 @@ function DeltaBadge({ metric }: { metric: AnalyticsMetric }) {
       <span aria-hidden="true">{up ? "▲" : "▼"}</span>
       {Math.abs(rounded)}%<span className="ac-sr"> {up ? "증가" : "감소"} (이전 기간 대비)</span>
     </span>
+  );
+}
+
+// 실시간(최근 2분) 활성 지표. 기간/세그먼트와 무관한 시점 게이지라 기간 그리드와
+// 분리해 별도 라이브 인디케이터로 표시한다(집계 캐시 주기상 최대 60초 지연 가능).
+function LiveIndicator({ visitors, sessions }: { visitors: number; sessions: number }) {
+  return (
+    <div className="ac-live" role="status" aria-label="실시간 활성 사용자 (최근 2분)">
+      <span className="ac-live-dot" aria-hidden="true" />
+      <span className="ac-live-label">LIVE</span>
+      <span className="ac-live-stat">
+        <strong>{formatNumber(visitors)}</strong> 활성 사용자
+      </span>
+      <span className="ac-live-sep" aria-hidden="true">·</span>
+      <span className="ac-live-stat">
+        <strong>{formatNumber(sessions)}</strong> 활성 세션
+      </span>
+      <span className="ac-live-note">최근 2분</span>
+    </div>
   );
 }
 
