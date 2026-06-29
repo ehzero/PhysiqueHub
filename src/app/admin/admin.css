@@ -238,7 +238,7 @@
 .ac-main {
   max-width: 1600px;
   margin: 0 auto;
-  padding: 0 16px 56px;
+  padding: 20px 16px 56px;
 }
 
 /* ── Shared atoms ── */
@@ -771,6 +771,20 @@ dl.ac-kpis .ac-kpi-value {
 /* Visual funnel (drop-off bars + worst-step highlight) */
 .ac-funnel {
   min-width: 0;
+}
+/* 두 탐색 퍼널: 폭이 넉넉하면 가로 2열, 좁으면 1열로 접히며 행 간격 확보 */
+.ac-funnel-pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  column-gap: 16px;
+  row-gap: 16px;
+  margin-top: 12px;
+}
+.ac-funnel-pair > .ac-funnel {
+  min-width: 0;
+}
+.ac-funnel-pair + * {
+  margin-top: 14px;
 }
 .ac-funnel-list {
   margin: 0;

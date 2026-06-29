@@ -855,16 +855,18 @@ function AnalyticsDashboardSection({
       </AnalyticsBlock>
 
       <AnalyticsBlock tag="Funnel" title="대회 탐색 퍼널">
-        <FunnelBars
-          emptyLabel="목록 주도 탐색 데이터가 없습니다."
-          rows={analytics.funnelRows}
-          title="목록 주도 탐색 (세션 단위)"
-        />
-        <FunnelBars
-          emptyLabel="직접 진입 데이터가 없습니다."
-          rows={analytics.directFunnelRows}
-          title="직접 진입 → 접수 (SEO·공유)"
-        />
+        <div className="ac-funnel-pair">
+          <FunnelBars
+            emptyLabel="목록 주도 탐색 데이터가 없습니다."
+            rows={analytics.funnelRows}
+            title="목록 주도 탐색 (세션 단위)"
+          />
+          <FunnelBars
+            emptyLabel="직접 진입 데이터가 없습니다."
+            rows={analytics.directFunnelRows}
+            title="직접 진입 → 접수 (SEO·공유)"
+          />
+        </div>
         <div className="ac-tables">
           <AnalyticsTable
             emptyLabel="신규·재방문 데이터가 없습니다."
