@@ -577,8 +577,71 @@ dl.ac-kpis .ac-kpi-value {
 }
 
 /* 실시간 활동 피드 — 폴링 기반, 라이브 인디케이터 바로 아래 컴팩트 패널 */
+.ac-feed-wrap {
+  margin-top: 10px;
+}
+.ac-feed-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.ac-feed-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ac-ink-3);
+}
+.ac-feed-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px 3px 7px;
+  border: 1px solid var(--ac-line);
+  border-radius: 999px;
+  background: var(--ac-elev);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ac-ink-3);
+  cursor: pointer;
+}
+.ac-feed-toggle:hover {
+  border-color: var(--ac-line);
+  color: var(--ac-ink-2);
+}
+.ac-feed-switch {
+  position: relative;
+  width: 22px;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--ac-line);
+  transition: background 0.15s ease;
+}
+.ac-feed-switch::after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ac-ink-4);
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease;
+}
+.ac-feed-toggle[aria-checked="true"] {
+  color: var(--ac-ink);
+}
+.ac-feed-toggle[aria-checked="true"] .ac-feed-switch {
+  background: var(--ac-accent);
+}
+.ac-feed-toggle[aria-checked="true"] .ac-feed-switch::after {
+  transform: translateX(10px);
+  background: var(--ac-bg);
+}
 .ac-feed {
-  margin: 10px 0 0;
+  margin: 0;
   padding: 0;
   list-style: none;
   max-height: 196px;
