@@ -17,6 +17,7 @@ import {
 } from "@/lib/admin-analytics";
 import { prisma } from "@/lib/prisma";
 import { Sparkline } from "./AnalyticsCharts";
+import { LiveFeed } from "./LiveFeed";
 import { loginAdmin, logoutAdmin, updateCompetitionReview } from "./actions";
 
 export type AdminSection = "analytics" | "contact" | "review";
@@ -798,6 +799,7 @@ function AnalyticsDashboardSection({
         sessions={analytics.activeSessionCount}
         visitors={analytics.activeVisitorCount}
       />
+      <LiveFeed />
       {range === "custom" && <DateRangeForm from={from} to={to} />}
       {segment && <SegmentBanner clearHref={clearSegHref} segment={segment} />}
       {competitionFunnel && (

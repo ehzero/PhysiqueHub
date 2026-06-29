@@ -576,6 +576,78 @@ dl.ac-kpis .ac-kpi-value {
   }
 }
 
+/* 실시간 활동 피드 — 폴링 기반, 라이브 인디케이터 바로 아래 컴팩트 패널 */
+.ac-feed {
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  max-height: 196px;
+  overflow-y: auto;
+  border: 1px solid var(--ac-line);
+  border-radius: var(--ac-radius);
+  background: var(--ac-elev);
+}
+.ac-feed-empty {
+  padding: 12px;
+  font-size: 12px;
+  color: var(--ac-ink-4);
+}
+.ac-feed-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--ac-line-soft);
+  font-size: 12px;
+  animation: ac-feed-in 0.4s ease-out;
+}
+.ac-feed-row:last-child {
+  border-bottom: 0;
+}
+.ac-feed-time {
+  flex: 0 0 auto;
+  width: 50px;
+  font-family: var(--ac-mono);
+  font-size: 11px;
+  color: var(--ac-ink-4);
+  font-variant-numeric: tabular-nums;
+}
+.ac-feed-label {
+  flex: 0 0 auto;
+  font-weight: 700;
+  color: var(--ac-ink);
+}
+.ac-feed-target {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ac-ink-3);
+}
+.ac-feed-device {
+  flex: 0 0 auto;
+  font-family: var(--ac-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  color: var(--ac-ink-4);
+}
+@keyframes ac-feed-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ac-feed-row {
+    animation: none;
+  }
+}
+
 .ac-hero-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

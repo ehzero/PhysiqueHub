@@ -1824,7 +1824,7 @@ function toDeviceCategoryLabel(value: string | null) {
   return "알 수 없음";
 }
 
-function toAnalyticsEventLabel(value: string) {
+export function toAnalyticsEventLabel(value: string) {
   const labels: Record<string, string> = {
     contact_open: "문의 열기",
     contact_submit_success: "문의 제출 성공",
