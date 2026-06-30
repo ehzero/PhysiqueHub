@@ -3275,7 +3275,8 @@ ol {
   .mobile-more-sheet {
     position: fixed;
     right: 0;
-    bottom: calc(62px + env(safe-area-inset-bottom));
+    /* 탭바 높이(57px)에 맞춰 시트를 탭바 위에 딱 붙인다(하단 5px 여백 제거). */
+    bottom: calc(57px + env(safe-area-inset-bottom));
     left: 0;
     z-index: 91;
     display: grid;
@@ -5623,11 +5624,12 @@ ol {
   .lv-quickfilters {
     padding: 10px 20px;
   }
-}
-@media (max-width: 720px) {
+  /* 네비게이션 바가 ≤980px에서 57px로 줄어드므로 스티키 칩바 top도 맞춘다(태블릿 여백 제거). */
   .lv-chipbar {
     top: 57px;
   }
+}
+@media (max-width: 720px) {
   .lv-qf-more {
     display: inline-flex;
   }
