@@ -320,7 +320,8 @@ export function ListView({
   }, [filters, setFilters]);
 
   const hasActiveFilters = activeFilterChips.length > 0 || !!search;
-  const activeFilterCount = activeFilterChips.length + (scope !== "all" ? 1 : 0);
+  // 기본 노출이 국내(domestic)로 바뀌어, 기본은 0개·해외 포함(all 등)일 때만 +1로 센다.
+  const activeFilterCount = activeFilterChips.length + (scope !== "domestic" ? 1 : 0);
   const filterSignature = JSON.stringify({ filters, scope });
 
   useEffect(() => {
@@ -378,7 +379,8 @@ export function ListView({
 
     const appliedFilterLabels = [
       ...activeFilterChips.map((chip) => chip.label),
-      ...(scope === "all" ? [] : [scope === "domestic" ? "국내 대회" : "해외 대회"]),
+      // 기본 국내는 baseline이라 라벨 없음. 해외 포함(all)이 실제 사용자 액션이라 기록한다.
+      ...(scope === "domestic" ? [] : [scope === "all" ? "해외 포함" : "해외만"]),
     ];
 
     trackAnalyticsEvent(activeFilterCount > 0 ? "filter_applied" : "filter_reset", {
@@ -697,7 +699,7 @@ export function ListView({
                     onClick={() => {
                       setFilters(() => ({}));
                       setSearch("");
-                      setScope("all");
+                      setScope("domestic");
                     }}
                   >
                     필터 초기화
