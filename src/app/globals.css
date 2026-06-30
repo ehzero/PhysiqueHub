@@ -5533,7 +5533,9 @@ ol {
   gap: 6px;
   overflow-x: auto;
   scrollbar-width: none;
-  padding: 10px 32px;
+  /* 칩바는 풀폭이지만 첫/마지막 칩을 .container(max 1440·거터 32px)의 좌우 본문선에 맞춘다.
+     넓은 화면에선 중앙정렬 거터만큼, 1440 이하에선 32px로 수렴. */
+  padding: 10px max(32px, calc((100% - 1440px) / 2 + 32px));
 }
 .lv-quickfilters::-webkit-scrollbar {
   display: none;
