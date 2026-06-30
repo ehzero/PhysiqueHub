@@ -5520,6 +5520,119 @@ ol {
 }
 .lv-segcount b { color: var(--ph-ink); font-weight: 600; }
 
+/* ── Quick-filter chip bar (전체/국내/해외 세그먼트 바 대체) ──────────
+   해외 포함 토글 + 인기 종목 칩을 1탭으로. 풀폭 가로 스크롤이며 좌우 패딩은
+   .container와 동일(32/20px)해 첫 칩이 콘텐츠 좌측선에 정렬되고 칩은 화면 끝까지 흐른다. */
+.lv-chiprow {
+  width: 100%;
+}
+.lv-quickfilters {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 10px 32px;
+}
+.lv-quickfilters::-webkit-scrollbar {
+  display: none;
+}
+.lv-qf-chip,
+.lv-qf-scope {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border: 1px solid var(--ph-line-soft);
+  border-radius: var(--ph-radius-pill);
+  background: var(--ph-elev);
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  font-family: inherit;
+}
+.lv-qf-chip {
+  color: var(--ph-ink-3);
+}
+.lv-qf-chip.is-on {
+  border-color: var(--ph-accent);
+  background: var(--ph-accent-soft);
+  color: var(--ph-accent);
+}
+.lv-qf-scope {
+  color: var(--ph-ink-2);
+  font-weight: 700;
+}
+.lv-qf-scope.is-on {
+  border-color: var(--ph-accent);
+  background: var(--ph-accent);
+  color: var(--ph-accent-ink);
+}
+.lv-qf-count {
+  font-size: 11px;
+  opacity: 0.6;
+}
+.lv-qf-scope.is-on .lv-qf-count {
+  opacity: 0.85;
+}
+.lv-qf-div {
+  flex: 0 0 auto;
+  align-self: stretch;
+  width: 1px;
+  margin: 4px 4px;
+  background: var(--ph-line-soft);
+}
+/* 더보기: 퀵칩 끝에서 전체 필터 시트 열기(모바일 전용 — 데스크톱은 레일이 대체) */
+.lv-qf-more {
+  display: none;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 12px;
+  border: 1px dashed var(--ph-line);
+  border-radius: var(--ph-radius-pill);
+  background: transparent;
+  color: var(--ph-ink-3);
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  font-family: inherit;
+}
+.lv-qf-more-chev {
+  display: inline-flex;
+  transform: rotate(-90deg);
+}
+.lv-qf-more-chev svg {
+  width: 14px;
+  height: 14px;
+}
+.lv-sort-count {
+  font-size: 12px;
+  color: var(--ph-ink-4);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.lv-sort-count b {
+  color: var(--ph-ink);
+  font-weight: 600;
+}
+@media (max-width: 980px) {
+  .lv-quickfilters {
+    padding: 10px 20px;
+  }
+}
+@media (max-width: 720px) {
+  .lv-chipbar {
+    top: 57px;
+  }
+  .lv-qf-more {
+    display: inline-flex;
+  }
+}
+
 /* ── Body grid layout ──────────────────────────────────────────── */
 .lv-body-wrap {
   background: var(--ph-paper);
@@ -5729,6 +5842,21 @@ ol {
 }
 
 /* Search bar */
+.lv-searchrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.lv-searchrow .lv-search {
+  flex: 1;
+  min-width: 0;
+}
+/* 검색 입력 왼쪽 필터 버튼(모바일 전용)은 입력 높이·모서리에 맞춰 한 묶음처럼 보이게 */
+.lv-searchrow .lv-filter-btn {
+  flex: 0 0 auto;
+  height: 46px;
+  border-radius: 8px;
+}
 .lv-search {
   display: flex;
   align-items: center;

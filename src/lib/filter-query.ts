@@ -104,7 +104,8 @@ export function buildListFilterPath(
   const params = new URLSearchParams();
 
   appendStringParam(params, "q", state.search);
-  if (state.scope !== "all") {
+  // 기본 노출은 국내(domestic). 국내가 아닐 때만(해외 포함=all, 또는 overseas) scope를 쓴다.
+  if (state.scope !== "domestic") {
     appendStringParam(params, "scope", state.scope);
   }
   appendListParam(params, "region", state.filters.regions);
@@ -224,7 +225,8 @@ function getBooleanParam(params: QueryParamsLike, key: string) {
 function getLocationScopeParam(params: QueryParamsLike): CompetitionLocationScope {
   const value = params.get("scope")?.trim();
 
-  return value === "domestic" || value === "overseas" ? value : "all";
+  // 기본값은 국내(domestic). 명시적으로 all/overseas일 때만 그 값을 쓴다.
+  return value === "all" || value === "overseas" ? value : "domestic";
 }
 
 function appendStringParam(

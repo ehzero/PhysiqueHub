@@ -122,7 +122,7 @@ export function FilterRail({
   const naturalCount =
     filterOptions?.flags?.natural ?? allComps.filter((competition) => competition.natural).length;
 
-  // Open/close state — order: 지역 > 주최단체 > 종목 > 대회 유형 > 부가속성 > 접수상태
+  // Open/close state — order: 주최단체 > 지역 > 종목 > 대회 유형 > 부가속성 > 접수상태
   const [openOrgs, setOpenOrgs] = useState(true);
   const [openTiers, setOpenTiers] = useState(true);
   const [openCats, setOpenCats] = useState(true);
@@ -225,6 +225,25 @@ export function FilterRail({
           )}
         </div>
 
+        {/* 주최 단체 */}
+        <FilterSection
+          title="주최 단체"
+          count={orgs.length}
+          open={openOrgs}
+          onToggle={() => setOpenOrgs((o) => !o)}
+        >
+          {orgs.map((o) => (
+            <FilterCheckRow
+              key={o.name}
+              selected={isOn("orgs", o.name)}
+              onClick={() => toggle("orgs", o.name)}
+              count={o.count}
+            >
+              {o.name}
+            </FilterCheckRow>
+          ))}
+        </FilterSection>
+
         {/* 지역 */}
         <FilterSection
           title="지역"
@@ -273,25 +292,6 @@ export function FilterRail({
                 ))}
             </>
           )}
-        </FilterSection>
-
-        {/* 주최 단체 */}
-        <FilterSection
-          title="주최 단체"
-          count={orgs.length}
-          open={openOrgs}
-          onToggle={() => setOpenOrgs((o) => !o)}
-        >
-          {orgs.map((o) => (
-            <FilterCheckRow
-              key={o.name}
-              selected={isOn("orgs", o.name)}
-              onClick={() => toggle("orgs", o.name)}
-              count={o.count}
-            >
-              {o.name}
-            </FilterCheckRow>
-          ))}
         </FilterSection>
 
         {/* 종목 */}

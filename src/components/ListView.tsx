@@ -11,7 +11,7 @@ import { CompRow } from "./CompRow";
 import { CompetitionGridCard } from "./CompetitionListItem";
 import { FilterRail } from "./FilterRail";
 import { EmptyState, PageMain } from "./PageLayout";
-import { Intro, SegmentButton, StickyControlBar } from "./UIPrimitives";
+import { Intro, StickyControlBar } from "./UIPrimitives";
 import { trackAnalyticsEvent } from "@/lib/analytics-client";
 
 const MONTH_KR = [
@@ -59,7 +59,6 @@ export function ListView({
 }: ListViewProps) {
   void saved;
   void toggleSave;
-  void allComps;
 
   const [sortKey, setSortKey] = useState<SortKey>("date");
   const [viewMode, setViewMode] = useState<ViewMode>("list");
@@ -203,10 +202,6 @@ export function ListView({
     });
   }, [sorted]);
 
-  const domesticCount = useMemo(
-    () => comps.filter((c) => c.country === "KR").length,
-    [comps],
-  );
   const overseasCount = useMemo(
     () => comps.filter((c) => c.country !== "KR").length,
     [comps],
@@ -414,17 +409,45 @@ export function ListView({
     }
   }, [activeFilterChips, activeFilterCount, filterSignature, scope, search, sorted.length]);
 
-  const segmentTabs: { id: CompetitionLocationScope; label: string; count: number }[] = [
-    { id: "all", label: "전체", count: comps.length },
-    { id: "domestic", label: "국내 대회", count: domesticCount },
-    { id: "overseas", label: "해외 대회", count: overseasCount },
-  ];
-
   const sortOptions: { key: SortKey; label: string }[] = [
     { key: "date", label: "빠른 일정순" },
     { key: "deadline", label: "접수 마감순" },
   ];
   const currentSortLabel = sortOptions.find((o) => o.key === sortKey)?.label ?? sortOptions[0].label;
+
+  // 해외 포함 토글: 기본은 국내(domestic). 켜면 all(국내+해외). 세그먼트 바를 대체한다.
+  const overseasIncluded = scope === "all";
+  const toggleOverseas = () => setScope(overseasIncluded ? "domestic" : "all");
+
+  // 주최단체 퀵칩: 실제 필터 사용에서 단체 비중이 가장 높아 상단에 1탭 칩으로 노출.
+  // 현재 스코프(기본 국내)에 해당하는 대회로 카운트해 상위 8개 — 국내 기본일 때 국내
+  // 단체가 앞서도록(글로벌 단체가 끼지 않게). 값은 c.org(=필터 값·레일 표시명)와 일치.
+  const quickOrgs = useMemo(() => {
+    const scoped =
+      scope === "domestic"
+        ? allComps.filter((c) => c.country === "KR")
+        : scope === "overseas"
+          ? allComps.filter((c) => c.country !== "KR")
+          : allComps;
+    const counts = new Map<string, number>();
+    for (const c of scoped) {
+      if (!c.org) continue;
+      counts.set(c.org, (counts.get(c.org) ?? 0) + 1);
+    }
+    return [...counts.entries()]
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 8);
+  }, [allComps, scope]);
+  const activeOrgs = filters.orgs ?? [];
+  const toggleQuickOrg = (name: string) =>
+    setFilters((f) => {
+      const orgs = f.orgs ?? [];
+      return {
+        ...f,
+        orgs: orgs.includes(name) ? orgs.filter((o) => o !== name) : [...orgs, name],
+      };
+    });
 
   return (
     <PageMain className="competition-index">
@@ -451,24 +474,45 @@ export function ListView({
         </div>
       </div>
 
-      {/* ── Sticky segment bar ─────────────────────────────── */}
-      <StickyControlBar className="lv-segbar" containerClassName="container lv-segrow">
-          <div className="lv-segs">
-            {segmentTabs.map((t) => (
-              <SegmentButton
-                key={t.id}
-                active={scope === t.id}
-                className="lv-seg"
-                onClick={() => setScope(t.id)}
-              >
-                {t.label}
-                <span className="cnt mono">{t.count}</span>
-              </SegmentButton>
-            ))}
+      {/* ── Sticky quick-filter bar (세그먼트 바 대체) ────────── */}
+      <StickyControlBar className="lv-chipbar" containerClassName="lv-chiprow">
+          <div className="lv-quickfilters" role="group" aria-label="빠른 필터">
+            <button
+              type="button"
+              className={`lv-qf-scope${overseasIncluded ? " is-on" : ""}`}
+              aria-pressed={overseasIncluded}
+              onClick={toggleOverseas}
+            >
+              해외 포함
+              {overseasCount > 0 && <span className="lv-qf-count mono">+{overseasCount}</span>}
+            </button>
+            <span className="lv-qf-div" aria-hidden="true" />
+            {quickOrgs.map((org) => {
+              const on = activeOrgs.includes(org.name);
+              return (
+                <button
+                  key={org.name}
+                  type="button"
+                  className={`lv-qf-chip${on ? " is-on" : ""}`}
+                  aria-pressed={on}
+                  onClick={() => toggleQuickOrg(org.name)}
+                >
+                  {org.name}
+                  <span className="lv-qf-count mono">{org.count}</span>
+                </button>
+              );
+            })}
+            {/* 모바일: 퀵칩 끝에서 전체 필터 시트 열기 */}
+            <button
+              type="button"
+              className="lv-qf-more"
+              onClick={() => setFilterSheetOpen(true)}
+              aria-label="전체 필터 열기"
+            >
+              더보기
+              <span className="lv-qf-more-chev" aria-hidden="true">{Icons.chevronDown}</span>
+            </button>
           </div>
-          <span className="lv-segcount mono">
-            결과 <b>{sorted.length.toLocaleString("ko-KR")}</b>개
-          </span>
       </StickyControlBar>
 
       {/* ── Body: filter rail + main content ───────────────── */}
@@ -485,7 +529,20 @@ export function ListView({
           <div className="lv-main">
             {/* Toolbar: search + sort controls */}
             <div className="lv-toolbar">
-              {/* Search bar */}
+              {/* Search bar — 모바일에선 필터 버튼을 입력 왼쪽에 배치 */}
+              <div className="lv-searchrow">
+                <button
+                  className="lv-filter-btn"
+                  type="button"
+                  onClick={() => setFilterSheetOpen(true)}
+                  aria-label="필터 열기"
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+                  필터
+                  {activeFilterChips.length > 0 && (
+                    <span className="fb-count mono">{activeFilterChips.length}</span>
+                  )}
+                </button>
               <label className="lv-search">
                 <span className="lv-search-ico">{Icons.search}</span>
                 <input
@@ -506,22 +563,13 @@ export function ListView({
                 )}
                 <kbd className="lv-search-kbd">⌘ K</kbd>
               </label>
+              </div>
 
               {/* Sort + view toggle */}
               <div className="lv-sort">
-                {/* Mobile filter button */}
-                <button
-                  className="lv-filter-btn"
-                  type="button"
-                  onClick={() => setFilterSheetOpen(true)}
-                  aria-label="필터 열기"
-                >
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
-                  필터
-                  {activeFilterChips.length > 0 && (
-                    <span className="fb-count mono">{activeFilterChips.length}</span>
-                  )}
-                </button>
+                <span className="lv-sort-count mono">
+                  결과 <b>{sorted.length.toLocaleString("ko-KR")}</b>개
+                </span>
                 <span className="lv-sort-spacer" />
 
                 {/* Sort dropdown */}
