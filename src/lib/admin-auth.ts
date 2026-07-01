@@ -97,5 +97,13 @@ export async function setAdminSessionCookie(role: AdminRole) {
 
 export async function clearAdminSessionCookie() {
   const cookieStore = await cookies();
-  cookieStore.delete(ADMIN_SESSION_COOKIE);
+  // 세션 쿠키는 path:"/admin"으로 설정되므로, 삭제도 동일 path·속성으로 만료시켜야
+  // 브라우저가 실제로 제거한다(path 미지정 delete는 "/" 기준이라 안 지워짐 → 로그아웃 실패).
+  cookieStore.set(ADMIN_SESSION_COOKIE, "", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/admin",
+    maxAge: 0,
+  });
 }
