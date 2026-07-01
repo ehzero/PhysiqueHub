@@ -115,6 +115,19 @@
   gap: 14px;
   margin-left: auto;
 }
+/* 게스트(읽기 전용) 표시 배지 */
+.ac-readonly-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border: 1px solid var(--ac-warn);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--ac-warn);
+  white-space: nowrap;
+}
 
 /* Section nav (segmented) */
 .ac-nav {
@@ -1125,6 +1138,18 @@ dl.ac-kpis .ac-kpi-value {
 .ac-editor-form {
   display: grid;
   gap: 14px;
+}
+/* 리뷰 폼 래퍼(fieldset) — 기본 스타일 제거. disabled 시 읽기 전용으로 흐리게. */
+.ac-editor-fieldset {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.ac-editor-fieldset:disabled {
+  opacity: 0.65;
 }
 .ac-editor-head {
   display: flex;

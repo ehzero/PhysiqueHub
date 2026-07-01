@@ -4,9 +4,9 @@ import { revalidatePath, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import {
   clearAdminSessionCookie,
-  hasAdminSession,
   isAdminPasswordConfigured,
-  isValidAdminPassword,
+  isAdminSessionWritable,
+  resolveAdminRole,
   setAdminSessionCookie,
 } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
@@ -18,12 +18,13 @@ export async function loginAdmin(formData: FormData) {
   }
 
   const password = String(formData.get("password") || "");
+  const role = resolveAdminRole(password);
 
-  if (!isValidAdminPassword(password)) {
+  if (!role) {
     redirect("/admin?error=invalid-password");
   }
 
-  await setAdminSessionCookie();
+  await setAdminSessionCookie(role);
   redirect("/admin");
 }
 
@@ -33,8 +34,9 @@ export async function logoutAdmin() {
 }
 
 export async function updateCompetitionReview(formData: FormData) {
-  if (!(await hasAdminSession())) {
-    redirect("/admin");
+  // 쓰기 작업이므로 admin만 허용(guest 읽기 전용은 차단).
+  if (!(await isAdminSessionWritable())) {
+    redirect("/admin/review");
   }
 
   const id = getString(formData, "id");

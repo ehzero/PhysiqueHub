@@ -4,7 +4,7 @@ import type {
   ContactInquiry,
 } from "@prisma/client";
 import Link from "next/link";
-import { hasAdminSession, isAdminPasswordConfigured } from "@/lib/admin-auth";
+import { getAdminSessionRole, isAdminPasswordConfigured } from "@/lib/admin-auth";
 import {
   getAnalyticsSummaryForRange,
   getCompetitionFunnel,
@@ -97,6 +97,7 @@ export function AdminLogin({ error }: { error?: string }) {
 
 async function AdminDashboard({
   activeSection,
+  canEdit,
   selectedId,
   statusFilter,
   confidenceFilter,
@@ -109,6 +110,7 @@ async function AdminDashboard({
   analyticsSeg,
 }: {
   activeSection: AdminSection;
+  canEdit: boolean;
   selectedId?: string;
   statusFilter?: string;
   confidenceFilter?: string;
@@ -257,6 +259,11 @@ async function AdminDashboard({
         </nav>
 
         <div className="ac-bar-right">
+          {!canEdit && (
+            <span className="ac-readonly-badge" title="게스트 계정은 조회만 가능합니다">
+              읽기 전용
+            </span>
+          )}
           {activeSection === "analytics" && (
             <div className="ac-seg" role="group" aria-label="분석 기간">
               {ANALYTICS_RANGES.map((value) => (
@@ -508,6 +515,8 @@ async function AdminDashboard({
                     })} />
                     <input name="nextRedirectTo" type="hidden" value={nextCompetitionHref} />
 
+                    {/* guest(읽기 전용)는 fieldset disabled로 모든 입력·제출 버튼을 비활성화 */}
+                    <fieldset className="ac-editor-fieldset" disabled={!canEdit}>
                     <div className="ac-editor-head">
                       <div className="ac-editor-id">
                         <span className="ac-flabel">{selectedCompetition.organizationName}</span>
@@ -685,6 +694,7 @@ async function AdminDashboard({
                         <dd>{selectedCompetition.rawRegistrationText ?? "-"}</dd>
                       </dl>
                     </details>
+                    </fieldset>
                   </form>
                 ) : (
                   <div className="ac-empty">검수할 대회 일정이 없습니다.</div>
@@ -1846,16 +1856,17 @@ export async function AdminSectionPage({
 
   const [
     { analyticsRange, from, to, comp, seg, error, id, status, confidence, org, issue },
-    isAuthed,
-  ] = await Promise.all([paramsPromise, hasAdminSession()]);
+    role,
+  ] = await Promise.all([paramsPromise, getAdminSessionRole()]);
 
-  if (!isAuthed) {
+  if (!role) {
     return <AdminLogin error={error} />;
   }
 
   return (
     <AdminDashboard
       activeSection={activeSection}
+      canEdit={role === "admin"}
       analyticsComp={comp}
       analyticsFrom={from}
       analyticsRange={analyticsRange}
