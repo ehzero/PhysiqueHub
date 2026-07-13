@@ -1836,6 +1836,8 @@ export function toAnalyticsEventLabel(value: string) {
     filter_applied: "필터 적용",
     filter_reset: "필터 초기화",
     page_view: "페이지뷰",
+    owned_promo_click: "자사 프로모션 클릭",
+    owned_promo_impression: "자사 프로모션 노출",
     registration_link_click: "접수 링크 클릭",
     related_competition_click: "관련 대회 클릭",
     save_competition: "관심 대회 저장",

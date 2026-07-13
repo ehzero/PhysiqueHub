@@ -7,6 +7,7 @@ import type { CompetitionFilterOptions } from "@/lib/competition-public";
 import type { CompetitionLocationScope } from "@/lib/filter-query";
 import { Icons } from "./Icons";
 import { AdInquiryBanner } from "./AdInquiryBanner";
+import { LoofitPromoBanner } from "./LoofitPromoBanner";
 import { CompRow } from "./CompRow";
 import { CompetitionGridCard } from "./CompetitionListItem";
 import { FilterRail } from "./FilterRail";
@@ -183,9 +184,9 @@ export function ListView({
     }
     return [...segmented].sort((a, b) => a.date.localeCompare(b.date));
   }, [segmented, sortKey]);
-  const inlineAdAfterCompetitionId =
-    sorted.length > 0
-      ? sorted[Math.min(INLINE_AD_AFTER_INDEX, sorted.length - 1)].id
+  const inlinePromoAfterCompetitionId =
+    sorted.length > INLINE_AD_AFTER_INDEX
+      ? sorted[INLINE_AD_AFTER_INDEX].id
       : null;
 
   const byMonth = useMemo(() => {
@@ -726,10 +727,11 @@ export function ListView({
                         openComp(c);
                       }}
                     />
-                    {inlineAdAfterCompetitionId === c.id && (
-                      <AdInquiryBanner
+                    {inlinePromoAfterCompetitionId === c.id && (
+                      <LoofitPromoBanner
                         className="lv-grid-inline-ad"
-                        source="competition_grid_inline_ad"
+                        source="competition_grid_owned_promo"
+                        variant="inline"
                       />
                     )}
                   </Fragment>
@@ -758,17 +760,12 @@ export function ListView({
                             onToggleSave={toggleSave}
                             today={today}
                           />
-                          {inlineAdAfterCompetitionId === c.id && (
-                            <>
-                              <AdInquiryBanner
-                                className="lv-list-inline-ad"
-                                source="competition_list_inline_ad"
-                              />
-                              <AdInquiryBanner
-                                className="lv-list-mobile-ad"
-                                source="competition_list_mobile_ad"
-                              />
-                            </>
+                          {inlinePromoAfterCompetitionId === c.id && (
+                            <LoofitPromoBanner
+                              className="lv-list-inline-ad"
+                              source="competition_list_owned_promo"
+                              variant="inline"
+                            />
                           )}
                         </Fragment>
                       ))}

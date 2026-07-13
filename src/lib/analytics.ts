@@ -19,6 +19,8 @@ export const ANALYTICS_EVENT_NAMES = [
   "unsave_competition",
   "contact_open",
   "contact_submit_success",
+  "owned_promo_impression",
+  "owned_promo_click",
 ] as const;
 
 export type AnalyticsEventName = (typeof ANALYTICS_EVENT_NAMES)[number];
@@ -72,6 +74,7 @@ export const ANALYTICS_ALLOWED_PROPERTY_KEYS = new Set([
   "maxScrollDepth",
   "organizationId",
   "osName",
+  "promotionId",
   "referrerHost",
   "registrationStatus",
   "routeType",
@@ -85,6 +88,7 @@ export const ANALYTICS_ALLOWED_PROPERTY_KEYS = new Set([
   "utmMedium",
   "utmSource",
   "utmTerm",
+  "variant",
   "viewMode",
 ]);
 

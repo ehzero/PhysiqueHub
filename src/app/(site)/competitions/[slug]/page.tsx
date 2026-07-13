@@ -5,7 +5,7 @@ import { notFound, redirect } from "next/navigation";
 import { ShareButton } from "@/components/ShareButton";
 import { CompetitionDetailSaveButton } from "@/components/CompetitionDetailSaveButton";
 import { CompetitionDetailAnalytics } from "@/components/CompetitionDetailAnalytics";
-import { AdInquiryBanner } from "@/components/AdInquiryBanner";
+import { LoofitPromoBanner } from "@/components/LoofitPromoBanner";
 import { PosterFigure, posterFigureColor } from "@/components/PosterFigure";
 import { StatusPill } from "@/components/UIPrimitives";
 import { TrackedExternalLink } from "@/components/TrackedExternalLink";
@@ -366,13 +366,11 @@ export default async function CompetitionDetailPage({
               </div>
             </section>
 
-            <AdInquiryBanner
+            <LoofitPromoBanner
               as="section"
               className="det-mobile-ad-section"
-              source="competition_detail_mobile_ad"
-              competitionId={competition.id}
-              tier={competition.tier}
-              organizationId={competition.organizationId ?? undefined}
+              source="competition_detail_mobile_owned_promo"
+              variant="mobile"
             />
           </div>
 
@@ -455,13 +453,10 @@ export default async function CompetitionDetailPage({
               </div>
             </div>
 
-            <AdInquiryBanner
+            <LoofitPromoBanner
               className="det-side-ad"
-              source="competition_detail_side_ad"
-              competitionId={competition.id}
-              tier={competition.tier}
-              organizationId={competition.organizationId ?? undefined}
-              description="헬스·웨이트 트레이닝과 피트니스 대회에 관심 있는 사용자에게 브랜드를 소개하세요."
+              source="competition_detail_side_owned_promo"
+              variant="side"
             />
           </aside>
         </div>

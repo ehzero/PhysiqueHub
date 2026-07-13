@@ -95,6 +95,8 @@ Yeti, Naver Web Crawler, Headless Chrome 등을 분류한다.
 | `unsave_competition` | 관심 대회 저장 해제. | 저장 해제 분석 |
 | `contact_open` | 문의 drawer 열기. | 문의 의도 분석 |
 | `contact_submit_success` | 문의 제출 성공. | 문의 전환 분석 |
+| `owned_promo_impression` | 피지크허브 자사 서비스 프로모션이 화면에 50% 이상 노출됨. 같은 URL·슬롯에서는 클라이언트 실행 중 한 번만 수집한다. | 자사 프로모션 실노출 분석 |
+| `owned_promo_click` | 자사 서비스 프로모션의 외부 이동 링크 클릭. | 자사 프로모션 클릭·CTR 분석 |
 
 ## 지표 해석 기준
 
@@ -108,6 +110,10 @@ Yeti, Naver Web Crawler, Headless Chrome 등을 분류한다.
 - 상세 페이지가 실제 렌더링된 조회는 `competition_view`로 본다.
 - 광고 문의 배너 클릭은 별도 이벤트를 추가하지 않고 `contact_open`의
   `propertiesJson.source`가 `*_ad` 또는 `*_ad_rail`인 값으로 구분한다.
+- 자사 서비스 프로모션은 광고 문의와 분리해 `owned_promo_impression`과
+  `owned_promo_click`으로 수집한다. 슬롯별 CTR은 같은 `source`·`promotionId`·
+  `variant` 조합의 클릭 수를 실노출 수로 나누어 계산한다. 노출은
+  `IntersectionObserver`에서 프로모션 영역이 50% 이상 보인 경우에만 기록한다.
 - 광고 리드 어트리뷰션: `contact_open`과 `contact_submit_success`는 열린 시점의
   컨텍스트를 동일하게 싣는다 — `propertiesJson.source`(슬롯), 그리고 상세·드로어
   배너처럼 대회 맥락이 있는 경우 `competitionId`와 `propertiesJson.tier`/
@@ -192,6 +198,10 @@ Yeti, Naver Web Crawler, Headless Chrome 등을 분류한다.
 필요하면 새 허용 속성 또는 이벤트를 추가한 뒤 이 문서와 개인정보 고지를 함께
 검토한다.
 
+자사 서비스 프로모션 이벤트는 현재 이벤트 믹스 원시 집계에 포함되지만 전용
+관리자 KPI나 슬롯별 CTR 표는 제공하지 않는다. 운영 데이터가 쌓인 뒤
+`source`·`promotionId`·`variant` 기준의 노출, 클릭, CTR 지표를 추가한다.
+
 다음 이벤트는 수집하되 전용 지표 없이 진단/원시 로그 용도로만 둔다(이벤트 믹스
 표에만 나타날 수 있음): `filter_reset`, `sort_changed`, `view_mode_changed`.
 허용 속성 중 `maxScrollDepth`는 수집하지만 아직 지표로 쓰지 않는다(향후 스크롤
@@ -227,6 +237,7 @@ Yeti, Naver Web Crawler, Headless Chrome 등을 분류한다.
 - `maxScrollDepth`
 - `organizationId`
 - `osName`
+- `promotionId`
 - `referrerHost`
 - `registrationStatus`
 - `routeType`
@@ -240,6 +251,7 @@ Yeti, Naver Web Crawler, Headless Chrome 등을 분류한다.
 - `utmMedium`
 - `utmSource`
 - `utmTerm`
+- `variant`
 - `viewMode`
 
 ## 개인정보 및 운영 주의사항

@@ -5642,8 +5642,7 @@ ol {
   background: var(--ph-paper);
 }
 .lv-list-inline-ad,
-.lv-grid-inline-ad,
-.lv-list-mobile-ad {
+.lv-grid-inline-ad {
   position: relative;
   display: flex;
   align-items: center;
@@ -5665,11 +5664,285 @@ ol {
   justify-self: stretch;
   margin: 4px auto;
 }
-.lv-list-mobile-ad {
-  display: none;
+.loofit-promo-link {
+  display: grid;
+  grid-template-areas: "icon copy action";
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px 18px;
   width: 100%;
-  min-height: 100px;
-  margin: 4px 0;
+  min-height: inherit;
+  height: 100%;
+  padding: 16px 20px;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(194, 255, 54, 0.20), transparent 34%),
+    linear-gradient(135deg, #17191b, #080909 70%);
+  color: #f7f7f2;
+  text-decoration: none;
+  text-align: left;
+  transition: filter 0.16s ease;
+}
+.loofit-promo-link:hover {
+  filter: brightness(1.08);
+}
+.loofit-promo-icon {
+  grid-area: icon;
+  width: 68px;
+  height: 68px;
+  border-radius: 16px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28);
+}
+.loofit-promo-copy {
+  grid-area: copy;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+}
+.loofit-promo-kicker {
+  color: #c2ff36;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+.loofit-promo-title {
+  color: #fff;
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  word-break: keep-all;
+}
+.loofit-promo-description {
+  max-width: 620px;
+  color: rgba(255, 255, 255, 0.68);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.45;
+  word-break: keep-all;
+}
+.loofit-promo-action {
+  grid-area: action;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 8px 13px;
+  border-radius: var(--ph-radius-pill);
+  background: #c2ff36;
+  color: #0a0b0b;
+  font-size: 11px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+.hub-loofit-showcase {
+  padding: 72px 0;
+  background: var(--ph-elev);
+}
+.home-loofit-showcase {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 20px;
+  box-shadow: 0 24px 60px rgba(12, 13, 13, 0.16);
+}
+.loofit-promo-link.is-showcase {
+  grid-template-areas:
+    "icon copy visual"
+    "icon action visual";
+  grid-template-columns: auto minmax(0, 1fr) minmax(280px, 340px);
+  align-items: start;
+  min-height: 260px;
+  padding: 34px;
+  gap: 18px 24px;
+  background:
+    radial-gradient(circle at 8% 18%, rgba(194, 255, 54, 0.22), transparent 28%),
+    radial-gradient(circle at 88% 80%, rgba(116, 161, 42, 0.18), transparent 34%),
+    linear-gradient(135deg, #17191b, #070808 72%);
+}
+.loofit-promo-link.is-showcase .loofit-promo-icon {
+  width: 88px;
+  height: 88px;
+  border-radius: 20px;
+}
+.loofit-promo-link.is-showcase .loofit-promo-copy {
+  gap: 8px;
+  align-self: center;
+}
+.loofit-promo-link.is-showcase .loofit-promo-kicker {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+.loofit-promo-link.is-showcase .loofit-promo-title {
+  max-width: 700px;
+  font-size: clamp(26px, 3vw, 42px);
+  line-height: 1.12;
+}
+.loofit-promo-link.is-showcase .loofit-promo-description {
+  max-width: 680px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.loofit-promo-link.is-showcase .loofit-promo-action {
+  justify-self: start;
+  align-self: start;
+  min-height: 40px;
+  padding: 10px 16px;
+  font-size: 12px;
+}
+.loofit-showcase-widget-scene {
+  grid-area: visual;
+  position: relative;
+  display: block;
+  align-self: stretch;
+  min-width: 0;
+  min-height: 258px;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(207, 245, 106, 0.09), transparent 56%),
+    #0c0d10;
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.04),
+    0 20px 44px rgba(0, 0, 0, 0.22);
+}
+.loofit-showcase-widget-stack {
+  position: absolute;
+  inset: 18px;
+}
+.loofit-showcase-heatmap-widget {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  display: flex;
+  width: 184px;
+  aspect-ratio: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 30px;
+  background: #141418;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.28);
+  transform: rotate(2.5deg);
+}
+.loofit-showcase-heatmap-weekdays,
+.loofit-showcase-heatmap-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+}
+.loofit-showcase-heatmap-weekdays {
+  margin-bottom: 4px;
+}
+.loofit-showcase-heatmap-weekdays span {
+  color: #7c7c82;
+  font-size: 8px;
+  line-height: 10px;
+  font-weight: 800;
+  text-align: center;
+}
+.loofit-showcase-heatmap-weekdays .is-weekend {
+  color: #c87a7a;
+}
+.loofit-showcase-heatmap-grid {
+  flex: 1;
+}
+.loofit-showcase-heatmap-grid span {
+  display: grid;
+  min-width: 0;
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: 3px;
+  background: #1b1b1f;
+  color: #7c7c82;
+  font-size: 8px;
+  line-height: 10px;
+  font-weight: 800;
+}
+.loofit-showcase-heatmap-grid .is-level-1 {
+  background: #424c2d;
+  color: #f4f4f2;
+}
+.loofit-showcase-heatmap-grid .is-level-2 {
+  background: #6f8140;
+  color: #f4f4f2;
+}
+.loofit-showcase-heatmap-grid .is-level-3 {
+  background: #9fbb55;
+  color: #0b0b0b;
+}
+.loofit-showcase-heatmap-grid .is-level-4 {
+  background: #cff56a;
+  color: #0b0b0b;
+}
+.loofit-showcase-heatmap-grid .is-placeholder {
+  background: transparent;
+  color: transparent;
+}
+.loofit-showcase-heatmap-summary {
+  margin-top: 7px;
+  color: #8a8a90;
+  font-size: 10px;
+  line-height: 14px;
+  font-weight: 600;
+  opacity: 0.72;
+  text-align: right;
+  white-space: nowrap;
+}
+.loofit-showcase-widget {
+  position: absolute;
+  z-index: 2;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  width: 190px;
+  max-width: 100%;
+  aspect-ratio: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 32px;
+  background: #141418;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.34);
+}
+.loofit-showcase-widget-label {
+  color: #c9c9ce;
+  font-size: 16px;
+  line-height: 21px;
+  font-weight: 800;
+}
+.loofit-showcase-widget-content {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.loofit-showcase-widget-content strong {
+  color: #fff;
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: 800;
+}
+.loofit-showcase-widget-content span {
+  color: #8a8a90;
+  font-size: 16px;
+  line-height: 21px;
+  font-weight: 600;
+}
+.loofit-showcase-widget-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 38px;
+  border-radius: 16px;
+  background: #cff56a;
+  color: #0b0b0b;
+  font-size: 16px;
+  line-height: 21px;
+  font-weight: 800;
 }
 .ad-inquiry-banner {
   display: grid;
@@ -5764,14 +6037,32 @@ ol {
   justify-self: start;
   margin-top: 6px;
 }
+.loofit-promo-link.is-side {
+  grid-template-areas:
+    "icon"
+    "copy"
+    "action";
+  grid-template-columns: 1fr;
+  align-content: start;
+  align-items: start;
+  gap: 13px;
+  padding: 22px 18px 18px;
+}
+.loofit-promo-link.is-side .loofit-promo-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 14px;
+}
+.loofit-promo-link.is-side .loofit-promo-title {
+  font-size: 19px;
+}
+.loofit-promo-link.is-side .loofit-promo-description {
+  font-size: 11.5px;
+}
+.loofit-promo-link.is-side .loofit-promo-action {
+  justify-self: start;
+}
 @media (max-width: 899px) {
-  .lv-list-inline-ad,
-  .lv-grid-inline-ad {
-    display: none;
-  }
-  .lv-list-mobile-ad {
-    display: flex;
-  }
   .ad-inquiry-banner {
     grid-template-columns: 1fr;
     gap: 6px;
@@ -5788,6 +6079,118 @@ ol {
     grid-row: auto;
     justify-self: start;
     margin-top: 3px;
+  }
+  .loofit-promo-link:not(.is-side):not(.is-showcase) {
+    grid-template-areas:
+      "icon copy"
+      "icon action";
+    grid-template-columns: auto minmax(0, 1fr);
+    justify-items: start;
+    gap: 8px 14px;
+    padding: 16px;
+  }
+  .loofit-promo-link:not(.is-side):not(.is-showcase) .loofit-promo-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 14px;
+  }
+  .loofit-promo-link:not(.is-side):not(.is-showcase) .loofit-promo-title {
+    font-size: 16px;
+  }
+  .loofit-promo-link:not(.is-side):not(.is-showcase) .loofit-promo-description {
+    font-size: 11px;
+  }
+  .loofit-promo-link:not(.is-side):not(.is-showcase) .loofit-promo-action {
+    min-height: 30px;
+    padding: 6px 11px;
+  }
+}
+@media (max-width: 980px) {
+  .loofit-promo-link.is-showcase {
+    grid-template-areas:
+      "icon copy"
+      "action action"
+      "visual visual";
+    grid-template-columns: auto minmax(0, 1fr);
+    min-height: 0;
+    padding: 28px;
+  }
+  .loofit-promo-link.is-showcase .loofit-promo-copy {
+    align-self: center;
+  }
+  .loofit-showcase-widget-scene {
+    width: min(100%, 340px);
+    min-height: 258px;
+    justify-self: center;
+  }
+}
+@media (max-width: 640px) {
+  .hub-loofit-showcase {
+    padding: 48px 0;
+  }
+  .home-loofit-showcase {
+    border-radius: 16px;
+  }
+  .loofit-promo-link.is-showcase {
+    grid-template-areas:
+      "icon"
+      "copy"
+      "action"
+      "visual";
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    padding: 22px;
+  }
+  .loofit-promo-link.is-showcase .loofit-promo-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 17px;
+  }
+  .loofit-promo-link.is-showcase .loofit-promo-title {
+    font-size: clamp(25px, 8vw, 34px);
+  }
+  .loofit-promo-link.is-showcase .loofit-promo-description {
+    font-size: 13px;
+  }
+  .loofit-showcase-widget-scene {
+    min-height: 218px;
+    padding: 20px;
+  }
+  .loofit-showcase-heatmap-widget {
+    width: 158px;
+    padding: 12px;
+    border-radius: 24px;
+  }
+  .loofit-showcase-heatmap-summary {
+    margin-top: 5px;
+    font-size: 8px;
+    line-height: 10px;
+  }
+  .loofit-showcase-widget {
+    width: 158px;
+    padding: 12px;
+    border-radius: 24px;
+  }
+  .loofit-showcase-widget-label {
+    font-size: 12px;
+    line-height: 16px;
+  }
+  .loofit-showcase-widget-content {
+    gap: 4px;
+  }
+  .loofit-showcase-widget-content strong {
+    font-size: 16px;
+    line-height: 21px;
+  }
+  .loofit-showcase-widget-content span {
+    font-size: 12px;
+    line-height: 16px;
+  }
+  .loofit-showcase-widget-action {
+    height: 28px;
+    border-radius: 12px;
+    font-size: 12px;
+    line-height: 16px;
   }
 }
 .lv-body-grid {
@@ -7599,7 +8002,6 @@ ol {
 /* ── Ad inquiry banners ── */
 [data-theme="dark"] .lv-list-inline-ad,
 [data-theme="dark"] .lv-grid-inline-ad,
-[data-theme="dark"] .lv-list-mobile-ad,
 [data-theme="dark"] .lv-ad-rail,
 [data-theme="dark"] .drawer-inline-ad,
 [data-theme="dark"] .det-mobile-ad-section,

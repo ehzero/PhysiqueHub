@@ -14,6 +14,7 @@ import { regStatusAt, CATEGORY_GUIDE } from "@/lib/data";
 import type { HomeHubData, HomeExploreType } from "@/lib/home-hub";
 import { getOrganizationDisplayName } from "@/lib/organization-display";
 import { ActionButton, Intro, SectionBlock, StatusPill } from "./UIPrimitives";
+import { LoofitPromoBanner } from "./LoofitPromoBanner";
 
 const EXPLORE_AXIS_VISIBLE_COUNT = 8;
 const COUNT_UP_DURATION_MS = 900;
@@ -141,9 +142,24 @@ export function HomeView({ data, today }: HomeViewProps) {
       />
       <MajorsSection majors={data.globalMajors} today={effectiveToday} />
       <UpcomingSection items={data.upcoming} today={effectiveToday} />
+      <LoofitShowcase />
       <RookieSection items={data.rookieFriendly} today={effectiveToday} />
       <GuideSection />
     </main>
+  );
+}
+
+function LoofitShowcase() {
+  return (
+    <div className="hub-loofit-showcase">
+      <div className="container">
+        <LoofitPromoBanner
+          className="home-loofit-showcase"
+          source="home_owned_promo"
+          variant="showcase"
+        />
+      </div>
+    </div>
   );
 }
 
