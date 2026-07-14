@@ -3,6 +3,7 @@ import "server-only";
 import { Prisma } from "@prisma/client";
 import { unstable_cache } from "next/cache";
 import { prisma } from "@/lib/prisma";
+import { LOOFIT_PROMOTION_ID } from "@/lib/site";
 
 const ACTIVE_SESSION_WINDOW_MS = 2 * 60 * 1_000;
 const COMPETITION_ACTION_NAMES = [
@@ -55,6 +56,8 @@ export type AnalyticsSummary = {
   leadFunnelRows: AnalyticsTableRow[];
   leadMetrics: AnalyticsMetric[];
   leadSourceRows: AnalyticsTableRow[];
+  loofitPromoMetrics: AnalyticsMetric[];
+  loofitPromoSourceRows: AnalyticsTableRow[];
   overviewMetrics: AnalyticsMetric[];
   osRows: AnalyticsTableRow[];
   retentionMetrics: AnalyticsMetric[];
@@ -116,6 +119,13 @@ type CohortRow = {
   k7: number;
   c30: number;
   k30: number;
+};
+
+type OwnedPromoCounts = {
+  source: string;
+  variant: string;
+  impressions: number;
+  clicks: number;
 };
 
 type AnalyticsCountInputs = {
@@ -261,6 +271,7 @@ export async function getAnalyticsSummary(
       relatedCompetitionClickCount,
       sourceLinkClickCount,
       contactEventRows,
+      ownedPromoEventRows,
       topFilterRows,
       funnelSessionRows,
       behaviorRows,
@@ -541,6 +552,15 @@ export async function getAnalyticsSummary(
         },
         select: { name: true, propertiesJson: true, competitionId: true },
       }),
+      // 자사 프로모션은 저빈도 이벤트이며 propertiesJson이 TEXT다. 기간·사람 트래픽·
+      // 세그먼트는 DB에서 먼저 제한하고, JSON은 행별로 안전하게 파싱해 손상 로그를 무시한다.
+      prisma.analyticsEvent.findMany({
+        where: {
+          ...humanEventWindow,
+          name: { in: ["owned_promo_impression", "owned_promo_click"] },
+        },
+        select: { name: true, propertiesJson: true },
+      }),
       // 상위 필터: filter_applied의 propertiesJson.filterKeys(제어문자 US로 연결)를
       // 행으로 펼쳐 라벨별 빈도를 센다. propertiesJson은 TEXT라 객체('{'로 시작)만
       // ::jsonb 캐스트하고, filterKeys가 없는(구버전) 행은 ->> 가 NULL이라 제외된다.
@@ -704,6 +724,7 @@ export async function getAnalyticsSummary(
         addLeadCount(leadCompetitionMap, row.competitionId, isSubmit);
       }
     }
+    const loofitPromoSummary = getLoofitPromoSummary(ownedPromoEventRows);
     const competitionIds = [
       ...topCompetitionRows,
       ...topRegistrationCompetitionRows,
@@ -849,6 +870,8 @@ export async function getAnalyticsSummary(
       leadFunnelRows: getLeadFunnelRows(counts),
       leadMetrics: withDeltas(getLeadMetrics(counts), getLeadMetrics(prevCounts)),
       leadSourceRows: toLeadSourceRows(leadSourceMap),
+      loofitPromoMetrics: loofitPromoSummary.metrics,
+      loofitPromoSourceRows: loofitPromoSummary.sourceRows,
       overviewMetrics: withDeltas(getOverviewMetrics(counts), getOverviewMetrics(prevCounts)),
       osRows: osGroupRows.map((row) => ({
         key: row.osName ?? "unknown",
@@ -1083,6 +1106,8 @@ function getEmptyAnalyticsSummary(
     leadFunnelRows: getLeadFunnelRows(counts),
     leadMetrics: getLeadMetrics(counts),
     leadSourceRows: [],
+    loofitPromoMetrics: getLoofitPromoMetrics(0, 0),
+    loofitPromoSourceRows: [],
     overviewMetrics: getOverviewMetrics(counts),
     osRows: [],
     retentionMetrics: getRetentionMetrics(undefined),
@@ -1281,6 +1306,121 @@ function getConversionMetrics(counts: AnalyticsCountInputs): AnalyticsMetric[] {
 }
 
 type LeadCounts = { opens: number; submits: number };
+
+function getLoofitPromoSummary(
+  rows: Array<{ name: string; propertiesJson: string }>,
+): { metrics: AnalyticsMetric[]; sourceRows: AnalyticsTableRow[] } {
+  const countsBySlot = new Map<string, OwnedPromoCounts>();
+  let impressions = 0;
+  let clicks = 0;
+
+  for (const row of rows) {
+    const slot = toLoofitPromoSlot(row.propertiesJson);
+    if (!slot) continue;
+
+    const key = `${slot.source}\u001f${slot.variant}`;
+    const counts = countsBySlot.get(key) ?? {
+      ...slot,
+      impressions: 0,
+      clicks: 0,
+    };
+
+    if (row.name === "owned_promo_impression") {
+      counts.impressions += 1;
+      impressions += 1;
+    } else if (row.name === "owned_promo_click") {
+      counts.clicks += 1;
+      clicks += 1;
+    } else {
+      continue;
+    }
+    countsBySlot.set(key, counts);
+  }
+
+  const sourceRows = Array.from(countsBySlot.entries())
+    .map(([key, counts]) => ({
+      key,
+      label: toLoofitPromoSourceLabel(counts.source),
+      meta: `${toLoofitPromoVariantLabel(counts.variant)} · 노출 ${formatCount(counts.impressions)} · 이벤트 CTR ${toPercentLabel(counts.clicks, counts.impressions)}`,
+      count: counts.clicks,
+    }))
+    .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label));
+
+  return {
+    metrics: getLoofitPromoMetrics(impressions, clicks),
+    sourceRows,
+  };
+}
+
+function getLoofitPromoMetrics(impressions: number, clicks: number): AnalyticsMetric[] {
+  return [
+    metric(
+      "loofit-promo-impressions",
+      "총 노출",
+      impressions,
+      "number",
+      "화면에 50% 이상 표시된 이벤트",
+    ),
+    metric(
+      "loofit-promo-clicks",
+      "총 클릭",
+      clicks,
+      "number",
+      "App Store 이동 링크 클릭",
+    ),
+    metric(
+      "loofit-promo-event-ctr",
+      "이벤트 CTR",
+      toRate(clicks, impressions),
+      "percent",
+      `클릭 ${formatCount(clicks)} / 노출 ${formatCount(impressions)} · 반복 클릭 포함`,
+    ),
+  ];
+}
+
+function toLoofitPromoSlot(propertiesJson: string): Pick<OwnedPromoCounts, "source" | "variant"> | null {
+  try {
+    const parsed: unknown = JSON.parse(propertiesJson);
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return null;
+
+    const properties = parsed as Record<string, unknown>;
+    if (properties.promotionId !== LOOFIT_PROMOTION_ID) return null;
+
+    return {
+      source:
+        typeof properties.source === "string" && properties.source
+          ? properties.source
+          : "unknown",
+      variant:
+        typeof properties.variant === "string" && properties.variant
+          ? properties.variant
+          : "unknown",
+    };
+  } catch {
+    return null;
+  }
+}
+
+function toLoofitPromoSourceLabel(source: string): string {
+  const labels: Record<string, string> = {
+    home_owned_promo: "홈 쇼케이스",
+    competition_grid_owned_promo: "대회 그리드 배너",
+    competition_list_owned_promo: "대회 목록 배너",
+    competition_detail_mobile_owned_promo: "대회 상세 모바일 배너",
+    competition_detail_side_owned_promo: "대회 상세 사이드 배너",
+  };
+  return labels[source] ?? source;
+}
+
+function toLoofitPromoVariantLabel(variant: string): string {
+  const labels: Record<string, string> = {
+    showcase: "쇼케이스",
+    inline: "인라인",
+    mobile: "모바일",
+    side: "사이드",
+  };
+  return labels[variant] ?? variant;
+}
 
 function addLeadCount(map: Map<string, LeadCounts>, key: string, isSubmit: boolean) {
   const bucket = map.get(key) ?? { opens: 0, submits: 0 };

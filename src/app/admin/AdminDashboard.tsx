@@ -866,6 +866,20 @@ function AnalyticsDashboardSection({
         </div>
       </AnalyticsBlock>
 
+      <AnalyticsBlock tag="Owned Promo" title="루핏 프로모션">
+        <AnalyticsMetricGrid
+          ariaLabel="루핏 프로모션 노출·클릭 지표"
+          metrics={analytics.loofitPromoMetrics}
+        />
+        <div className="ac-tables">
+          <AnalyticsTable
+            emptyLabel="루핏 프로모션 노출·클릭 데이터가 없습니다."
+            rows={analytics.loofitPromoSourceRows}
+            title="노출 위치별 클릭"
+          />
+        </div>
+      </AnalyticsBlock>
+
       <AnalyticsBlock tag="Funnel" title="대회 탐색 퍼널">
         <div className="ac-funnel-pair">
           <FunnelBars
