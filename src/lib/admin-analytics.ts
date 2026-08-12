@@ -1406,6 +1406,7 @@ function toLoofitPromoSourceLabel(source: string): string {
     home_owned_promo: "홈 쇼케이스",
     competition_grid_owned_promo: "대회 그리드 배너",
     competition_list_owned_promo: "대회 목록 배너",
+    competition_list_side_owned_promo: "대회 목록 우측 배너",
     competition_detail_mobile_owned_promo: "대회 상세 모바일 배너",
     competition_detail_side_owned_promo: "대회 상세 사이드 배너",
   };

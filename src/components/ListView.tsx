@@ -6,7 +6,6 @@ import { COMPETITION_TIER_LABELS } from "@/lib/competition-classification";
 import type { CompetitionFilterOptions } from "@/lib/competition-public";
 import type { CompetitionLocationScope } from "@/lib/filter-query";
 import { Icons } from "./Icons";
-import { AdInquiryBanner } from "./AdInquiryBanner";
 import { LoofitPromoBanner } from "./LoofitPromoBanner";
 import { CompRow } from "./CompRow";
 import { CompetitionGridCard } from "./CompetitionListItem";
@@ -776,11 +775,11 @@ export function ListView({
             )}
           </div>
 
-          <AdInquiryBanner
+          <LoofitPromoBanner
             className="lv-ad-rail"
-            source="competition_list_ad_rail"
-            title="광고 문의"
-            description="헬스·웨이트 트레이닝 관심층이 모이는 화면에 브랜드를 노출하세요."
+            mediaOrientation="vertical"
+            source="competition_list_side_owned_promo"
+            variant="side"
           />
         </div>
       </div>
